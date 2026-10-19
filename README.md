@@ -60,21 +60,21 @@ Cada tarefa do board tem uma tag no título e um valor no campo **Priority**.
 
 Os detalhes e as decisões ainda em aberto estão em [BUSINESS.md](BUSINESS.md#8-stack).
 
-## Estrutura prevista do repositório
-
-A estrutura abaixo é uma proposta e deve ser ajustada quando o código começar.
+## Estrutura do repositório
 
 ```text
-petlive/
+PetLive/
   apps/
     tutor/        App do tutor (Expo)
     lojista/      App do lojista no celular
-    web/          Site e painel do lojista
+    web/          Site, página pública do QR e painel do lojista
   supabase/       Migrações, regras de acesso e funções
-  docs/           Documentação e decisões
-  BUSINESS.md
-  README.md
+  docs/backlog/   Tasks em arquivo e script de importação
+  prototipo/      Código-fonte das telas do protótipo
+  BUSINESS.md     Escopo do negócio
 ```
+
+Cada pasta de `apps/` e `supabase/` tem um README com o que ela cobre. Ainda não há código.
 
 ## Como começar
 
@@ -101,4 +101,4 @@ O PetLive organiza informações de saúde e não substitui o atendimento veteri
 
 ## Licença
 
-A definir.
+Todos os direitos reservados. Veja [LICENSE](LICENSE).
