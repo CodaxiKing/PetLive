@@ -4,6 +4,8 @@ Código-fonte das 66 telas e páginas do protótipo, mais o `canvas.json` com a 
 
 O protótipo navegável está em https://claude.ai/artifact/UFhxFUGwCYokbjPKCXDqKK. Estes arquivos são a referência de layout, textos e fluxos para a implementação. Eles não são o código do app.
 
+Imagens de todas as telas: [imagens/README.md](imagens/README.md).
+
 ## Convenções
 
 | Padrão de nome | O que é |

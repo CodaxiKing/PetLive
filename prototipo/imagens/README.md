@@ -1,0 +1,83 @@
+# Imagens das telas
+
+Capturas das telas do protótipo, geradas a partir de `prototipo/*.dc.html`. O protótipo navegável está no [canvas publicado](https://claude.ai/artifact/UFhxFUGwCYokbjPKCXDqKK).
+
+## App do tutor (37)
+
+| | | | |
+| --- | --- | --- | --- |
+| <img src="tutor/01-boas-vindas.png" width="160"><br>1 · Boas-vindas | <img src="tutor/02-criar-conta.png" width="160"><br>2 · Criar conta | <img src="tutor/03-cadastro-do-pet.png" width="160"><br>3 · Cadastro do pet | <img src="tutor/04-inicio.png" width="160"><br>4 · Início |
+| <img src="tutor/05-meus-pets.png" width="160"><br>5 · Meus pets | <img src="tutor/06-pet-vacinas.png" width="160"><br>6 · Pet, vacinas | <img src="tutor/07-registrar-vacina.png" width="160"><br>7 · Registrar vacina | <img src="tutor/08-peso.png" width="160"><br>8 · Peso |
+| <img src="tutor/09-consultas.png" width="160"><br>9 · Consultas | <img src="tutor/10-lembretes.png" width="160"><br>10 · Lembretes | <img src="tutor/11-novo-lembrete.png" width="160"><br>11 · Novo lembrete | <img src="tutor/12-novo-remedio.png" width="160"><br>12 · Novo remédio |
+| <img src="tutor/13-medicamentos.png" width="160"><br>13 · Medicamentos | <img src="tutor/14-lembrete-personalizado.png" width="160"><br>14 · Lembrete personalizado | <img src="tutor/15-avisos.png" width="160"><br>15 · Avisos | <img src="tutor/16-mapa.png" width="160"><br>16 · Mapa |
+| <img src="tutor/17-ficha-do-lugar.png" width="160"><br>17 · Ficha do lugar | <img src="tutor/18-perfil-do-tutor.png" width="160"><br>18 · Perfil do tutor | <img src="tutor/19-premium.png" width="160"><br>19 · Premium | <img src="tutor/20-carteira-em-pdf.png" width="160"><br>20 · Carteira em PDF |
+| <img src="tutor/21-qr-da-coleira.png" width="160"><br>21 · QR da coleira | <img src="tutor/22-loja.png" width="160"><br>22 · Loja | <img src="tutor/23-produto.png" width="160"><br>23 · Produto | <img src="tutor/24-solicitacao.png" width="160"><br>24 · Solicitação |
+| <img src="tutor/25-acompanhar-solicitacao.png" width="160"><br>25 · Acompanhar solicitação | <img src="tutor/26-servicos-da-loja.png" width="160"><br>26 · Serviços da loja | <img src="tutor/27-agendar-horario.png" width="160"><br>27 · Agendar horário | <img src="tutor/28-horario-reservado.png" width="160"><br>28 · Horário reservado |
+| <img src="tutor/29-produto-com-receita-so-na-loja.png" width="160"><br>29 · Produto com receita (só na loja) | <img src="tutor/30-pagamento.png" width="160"><br>30 · Pagamento | <img src="tutor/31-pagar-com-pix.png" width="160"><br>31 · Pagar com Pix | <img src="tutor/32-pagamento-confirmado.png" width="160"><br>32 · Pagamento confirmado |
+| <img src="tutor/33-reservar-hotelzinho.png" width="160"><br>33 · Reservar hotelzinho | <img src="tutor/34-agendar-passeio.png" width="160"><br>34 · Agendar passeio | <img src="tutor/35-reservar-creche.png" width="160"><br>35 · Reservar creche | <img src="tutor/36-passeio-ao-vivo.png" width="160"><br>36 · Passeio ao vivo |
+| <img src="tutor/37-passeio-concluido.png" width="160"><br>37 · Passeio concluído | | | |
+
+## App do lojista (celular) (17)
+
+| | | | |
+| --- | --- | --- | --- |
+| <img src="lojista-celular/00-passeador-passeio-de-hoje.png" width="160"><br>Passeador · Passeio de hoje | <img src="lojista-celular/01-painel.png" width="160"><br>Lojista celular · 1 · Painel | <img src="lojista-celular/02-solicitacoes.png" width="160"><br>Lojista celular · 2 · Solicitações | <img src="lojista-celular/03-catalogo.png" width="160"><br>Lojista celular · 3 · Catálogo |
+| <img src="lojista-celular/04-agenda.png" width="160"><br>Lojista celular · 4 · Agenda | <img src="lojista-celular/05-horarios-de-atendimento.png" width="160"><br>Lojista celular · 5 · Horários de atendimento | <img src="lojista-celular/06-editar-servico.png" width="160"><br>Lojista celular · 6 · Editar serviço | <img src="lojista-celular/07-cadastrar-produto.png" width="160"><br>Lojista celular · 7 · Cadastrar produto |
+| <img src="lojista-celular/08-configuracoes-da-loja.png" width="160"><br>Lojista celular · 8 · Configurações da loja | <img src="lojista-celular/09-o-que-a-loja-oferece.png" width="160"><br>Lojista celular · 9 · O que a loja oferece | <img src="lojista-celular/10-escolher-servicos.png" width="160"><br>Lojista celular · 10 · Escolher serviços | <img src="lojista-celular/11-hotelzinho-pet.png" width="160"><br>Lojista celular · 11 · Hotelzinho pet |
+| <img src="lojista-celular/12-passeador.png" width="160"><br>Lojista celular · 12 · Passeador | <img src="lojista-celular/13-creche-pet.png" width="160"><br>Lojista celular · 13 · Creche pet | <img src="lojista-celular/14-cadastro-dados-da-loja.png" width="160"><br>Lojista celular · 14 · Cadastro, dados da loja | <img src="lojista-celular/15-cadastro-endereco-e-contato.png" width="160"><br>Lojista celular · 15 · Cadastro, endereço e contato |
+| <img src="lojista-celular/16-publicar-loja.png" width="160"><br>Lojista celular · 16 · Publicar loja | | | |
+
+## Painel do lojista (computador) (9)
+
+### Lojista computador · 1 · Solicitações e aceite
+
+![Lojista computador · 1 · Solicitações e aceite](lojista-computador/01-solicitacoes-e-aceite.png)
+
+### Lojista computador · 2 · Catálogo
+
+![Lojista computador · 2 · Catálogo](lojista-computador/02-catalogo.png)
+
+### Lojista computador · 3 · Produto com receita
+
+![Lojista computador · 3 · Produto com receita](lojista-computador/03-produto-com-receita.png)
+
+### Lojista computador · 4 · Agenda
+
+![Lojista computador · 4 · Agenda](lojista-computador/04-agenda.png)
+
+### Lojista computador · 5 · Recebimentos
+
+![Lojista computador · 5 · Recebimentos](lojista-computador/05-recebimentos.png)
+
+### Lojista computador · 6 · Cadastrar produto
+
+![Lojista computador · 6 · Cadastrar produto](lojista-computador/06-cadastrar-produto.png)
+
+### Lojista computador · 7 · Configurações: perfil e contato
+
+![Lojista computador · 7 · Configurações: perfil e contato](lojista-computador/07-configuracoes-perfil-e-contato.png)
+
+### Lojista computador · 8 · Retirada, entrega e pagamentos
+
+![Lojista computador · 8 · Retirada, entrega e pagamentos](lojista-computador/08-retirada-entrega-e-pagamentos.png)
+
+### Lojista computador · 9 · Serviços da loja
+
+![Lojista computador · 9 · Serviços da loja](lojista-computador/09-servicos-da-loja.png)
+
+## Site PetLive (2)
+
+### Site PetLive · Página inicial
+
+![Site PetLive · Página inicial](site/00-pagina-inicial.png)
+
+### Site PetLive · Para lojistas
+
+![Site PetLive · Para lojistas](site/00-para-lojistas.png)
+
+## Página pública do QR (1)
+
+| | | | |
+| --- | --- | --- | --- |
+| <img src="publico/00-pet-encontrado-quem-escaneia.png" width="160"><br>Pet encontrado (quem escaneia) | | | |
+
