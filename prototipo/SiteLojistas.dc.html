@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>PetLive para lojistas, site</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<style>
+body{margin:0;font-family:'Plus Jakarta Sans',system-ui,sans-serif;color:#111}
+a{text-decoration:none;color:inherit}
+@media (prefers-reduced-motion:no-preference){
+@keyframes rise{from{opacity:0;translate:0 18px}to{opacity:1;translate:0 0}}
+@keyframes bob{0%,100%{translate:0 0}50%{translate:0 -2.5%}}
+@keyframes sway{0%,100%{rotate:-7deg}50%{rotate:7deg}}
+@keyframes pulse{0%{transform:scale(.7);opacity:.8}100%{transform:scale(1.8);opacity:0}}
+@keyframes grow{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@keyframes draw{to{stroke-dashoffset:0}}
+div[style*="border-radius:2"][style*="padding"],div[style*="border-radius:3"][style*="padding"]{animation:rise .6s cubic-bezier(.2,.7,.2,1) both}
+div[style*="border-radius:2"][style*="padding"]:nth-child(2),div[style*="border-radius:3"][style*="padding"]:nth-child(2){animation-delay:.08s}
+div[style*="border-radius:2"][style*="padding"]:nth-child(3),div[style*="border-radius:3"][style*="padding"]:nth-child(3){animation-delay:.16s}
+div[style*="border-radius:2"][style*="padding"]:nth-child(4),div[style*="border-radius:3"][style*="padding"]:nth-child(4){animation-delay:.24s}
+div[style*="border-radius:2"][style*="padding"]:nth-child(5),div[style*="border-radius:3"][style*="padding"]:nth-child(5){animation-delay:.32s}
+svg[viewBox="0 0 200 200"]{animation:bob 3.4s ease-in-out infinite}
+svg[stroke="#fff"][viewBox="0 0 24 24"]{transform-origin:50% 50%;animation:sway 5s ease-in-out infinite}
+circle[fill-opacity]{transform-box:fill-box;transform-origin:center;animation:pulse 2.2s ease-out infinite}
+polyline[stroke="#111"]{stroke-dasharray:800;stroke-dashoffset:800;animation:draw 1.6s .25s ease-out forwards}
+div[style*="border-radius:4px"][style*="width:"]{transform-origin:left;animation:grow 1.1s .3s cubic-bezier(.2,.7,.2,1) both}
+a{transition:transform .18s ease}
+a[style*="border-radius:32px"]:hover,a[style*="border-radius:28px"]:hover{transform:translateY(-2px)}
+a[style*="border-radius:32px"]:active,a[style*="border-radius:28px"]:active{transform:scale(.97)}
+nav a:hover{transform:translateY(-3px)}
+}
+</style>
+</helmet>
+<div style="width:1440px;height:3760px;box-sizing:border-box;background:#fff;overflow:hidden;position:relative">
+
+  <header style="height:88px;display:flex;align-items:center;justify-content:space-between;padding:0 120px;box-sizing:border-box;background:#111;color:#fff">
+    <a href="SitePetLive.dc.html" style="display:flex;align-items:center;gap:10px;font-weight:800;font-size:26px;letter-spacing:-0.03em"><span style="width:40px;height:40px;border-radius:50%;background:#2A2A2A;display:flex;align-items:center;justify-content:center"><svg width="22" height="22" viewBox="0 0 24 24" fill="#9AD6F8" aria-hidden="true"><circle cx="6" cy="10" r="1.9"/><circle cx="10" cy="6" r="1.9"/><circle cx="14" cy="6" r="1.9"/><circle cx="18" cy="10" r="1.9"/><path d="M12 12c-3 0-5 2.5-5 4.5 0 1.5 1.2 2 2.6 2 1 0 1.6-.4 2.4-.4s1.4.4 2.4.4c1.4 0 2.6-.5 2.6-2 0-2-2-4.5-5-4.5z"/></svg></span>PetLive <span style="font-size:11px;font-weight:800;letter-spacing:0.04em;background:#9AD6F8;color:#111;border-radius:999px;padding:4px 10px">LOJISTAS</span></a>
+    <nav style="display:flex;gap:36px;font-size:15px;font-weight:600;color:#C9D0DB"><span>Benefícios</span><span>Serviços</span><span>Como começar</span><span>Planos</span></nav>
+    <div style="display:flex;gap:10px;align-items:center"><a href="SitePetLive.dc.html" style="height:46px;padding:0 20px;border-radius:23px;display:flex;align-items:center;font-size:14px;font-weight:600;color:#C9D0DB">Sou tutor</a><a href="LojaCadastro1.dc.html" style="height:48px;padding:0 6px 0 24px;border-radius:24px;background:#9AD6F8;color:#111;display:flex;align-items:center;gap:14px;font-size:14px;font-weight:700">Cadastrar minha loja<span style="width:36px;height:36px;border-radius:50%;background:#111;display:flex;align-items:center;justify-content:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9AD6F8" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a></div>
+  </header>
+
+  <section style="position:relative;height:680px;background:#111;color:#fff;overflow:hidden">
+    <svg style="position:absolute;left:560px;top:30px" width="340" height="340" viewBox="0 0 24 24" fill="none" stroke="#2A2A2A" stroke-width="0.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="10" r="1.8"/><circle cx="10" cy="6" r="1.8"/><circle cx="14" cy="6" r="1.8"/><circle cx="18" cy="10" r="1.8"/><path d="M12 12c-3 0-5 2.5-5 4.5 0 1.5 1.2 2 2.6 2 1 0 1.6-.4 2.4-.4s1.4.4 2.4.4c1.4 0 2.6-.5 2.6-2 0-2-2-4.5-5-4.5z"/></svg>
+    <div style="position:absolute;left:120px;top:80px;width:600px">
+      <span style="display:inline-block;background:#9AD6F8;color:#111;border-radius:999px;padding:8px 18px;font-size:13px;font-weight:700">Para petshops, clínicas e prestadores</span>
+      <h1 style="margin:22px 0 0;font-weight:500;font-size:74px;line-height:1.03;letter-spacing:-0.04em">Venda e agende pelo PetLive</h1>
+      <p style="margin:22px 0 0;font-size:20px;line-height:1.5;color:#B8C2D3;max-width:540px">Receba solicitações de produtos, reservas de banho e tosa, passeio, creche e hotelzinho, e acompanhe tudo num painel simples.</p>
+      <div style="display:flex;gap:14px;margin-top:34px"><a href="LojaCadastro1.dc.html" style="height:64px;padding:0 8px 0 30px;border-radius:32px;background:#9AD6F8;color:#111;display:flex;align-items:center;gap:18px;font-size:16px;font-weight:700">Cadastrar minha loja<span style="width:48px;height:48px;border-radius:50%;background:#111;display:flex;align-items:center;justify-content:center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9AD6F8" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a><span style="height:64px;padding:0 28px;border-radius:32px;border:1.5px solid #3A3A3A;display:flex;align-items:center;font-size:15px;font-weight:600">Ver como funciona</span></div>
+      <div style="margin-top:22px;font-size:13px;color:#8A93A3">Sem mensalidade na vitrine e na agenda.</div>
+    </div>
+
+    <div style="position:absolute;right:100px;top:84px;width:640px;height:440px;border-radius:30px;background:#F5F6FA;color:#111;display:flex;overflow:hidden;box-shadow:0 30px 70px rgba(0,0,0,0.5)">
+      <div style="width:130px;background:#111;border-right:1px solid #2A2A2A;padding:18px 12px;display:flex;flex-direction:column;gap:6px;color:#C9D0DB;font-size:11px;font-weight:600"><div style="color:#fff;font-weight:800;font-size:13px;padding-bottom:8px">PetLive</div><div style="background:#9AD6F8;color:#111;border-radius:10px;padding:8px 10px;font-weight:700">Solicitações</div><div style="padding:8px 10px">Catálogo</div><div style="padding:8px 10px">Agenda</div><div style="padding:8px 10px">Recebimentos</div></div>
+      <div style="flex:1;padding:18px;display:flex;flex-direction:column;gap:8px">
+        <div style="font-weight:500;font-size:20px;letter-spacing:-0.02em">Solicitações</div>
+        <div style="display:flex;gap:6px"><span style="background:#111;color:#fff;border-radius:12px;padding:5px 12px;font-size:10px;font-weight:700">Novas · 3</span><span style="background:#fff;border-radius:12px;padding:5px 12px;font-size:10px;font-weight:600">Em andamento</span></div>
+        <div style="background:#fff;border:2px solid #111;border-radius:16px;padding:10px 12px;display:flex;justify-content:space-between;align-items:center"><div><div style="font-weight:700;font-size:11px">Diego · Rex</div><div style="font-size:10px;color:#5E6878">Ração adulto 10 kg · retirar hoje</div></div><span style="font-size:9px;font-weight:700;background:#DDF3E6;color:#25683F;border-radius:999px;padding:3px 8px">Pago via Pix</span></div>
+        <div style="background:#fff;border-radius:16px;padding:10px 12px;display:flex;justify-content:space-between;align-items:center"><div><div style="font-weight:700;font-size:11px">Ana · Mia</div><div style="font-size:10px;color:#5E6878">Banho e tosa · amanhã, 10:30</div></div><span style="font-size:9px;font-weight:700;background:#FFF1C9;color:#7A5F0A;border-radius:999px;padding:3px 8px">Aguardando</span></div>
+        <div style="background:#fff;border-radius:16px;padding:10px 12px;display:flex;justify-content:space-between;align-items:center"><div><div style="font-weight:700;font-size:11px">Rafa · Thor</div><div style="font-size:10px;color:#5E6878">Hotelzinho · 22 a 25 de out.</div></div><span style="font-size:9px;font-weight:700;background:#EEF1F5;border-radius:999px;padding:3px 8px">Pagar na loja</span></div>
+        <div style="display:flex;gap:6px;margin-top:auto"><span style="flex:1;background:#111;color:#fff;border-radius:16px;padding:9px;text-align:center;font-size:10px;font-weight:700">Aceitar e separar</span><span style="background:#fff;border-radius:16px;padding:9px 16px;font-size:10px;font-weight:600">Recusar</span></div>
+      </div>
+    </div>
+    <svg style="position:absolute;left:0;bottom:-1px" width="1440" height="60" viewBox="0 0 1440 60" preserveAspectRatio="none" aria-hidden="true"><path d="M0 60V32C80 8 170 10 250 30C330 50 420 52 500 32C590 8 690 12 770 32C850 52 950 50 1030 30C1120 6 1230 12 1310 30C1370 44 1410 36 1440 28V60z" fill="#fff"/></svg>
+  </section>
+
+  <section style="height:480px;padding:60px 120px 0;box-sizing:border-box;text-align:center">
+    <div style="font-size:14px;font-weight:700;color:#2F6F93">Benefícios</div>
+    <h2 style="margin:10px 0 0;font-weight:500;font-size:50px;letter-spacing:-0.03em">Tudo para vender e atender melhor</h2>
+    <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;margin-top:44px;text-align:left">
+      <div style="background:#EBDDFB;border-radius:36px;padding:28px;height:270px;box-sizing:border-box"><span style="width:56px;height:56px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8h14l-1 12H6z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg></span><div style="font-weight:800;font-size:22px;margin-top:20px">Vitrine e solicitações</div><div style="font-size:15px;line-height:1.5;color:#4B3A73;margin-top:8px">Mostre produtos com preço e estoque. O tutor solicita e você aceita pelo celular ou pelo computador.</div></div>
+      <div style="background:#FFF1C9;border-radius:36px;padding:28px;height:270px;box-sizing:border-box"><span style="width:56px;height:56px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="3"/><path d="M4 10h16M9 3v4M15 3v4"/></svg></span><div style="font-weight:800;font-size:22px;margin-top:20px">Agenda com horários livres</div><div style="font-size:15px;line-height:1.5;color:#5C4807;margin-top:8px">Você define dias, horários, vagas e folgas. O app mostra só o que está livre e evita encavalar reservas.</div></div>
+      <div style="background:#DDF3E6;border-radius:36px;padding:28px;height:270px;box-sizing:border-box"><span style="width:56px;height:56px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="18" height="13" rx="3"/><path d="M3 10h18M16 14h2"/></svg></span><div style="font-weight:800;font-size:22px;margin-top:20px">Recebimento por Pix</div><div style="font-size:15px;line-height:1.5;color:#245E3A;margin-top:8px">Quando você ativar, o tutor paga no app, a confirmação é automática e o repasse cai na sua chave Pix.</div></div>
+    </div>
+  </section>
+
+  <section style="height:680px;background:#F5F6FA;padding:60px 120px 0;box-sizing:border-box">
+    <div style="text-align:center"><div style="font-size:14px;font-weight:700;color:#5B3C8F">Serviços</div><h2 style="margin:10px 0 0;font-weight:500;font-size:46px;letter-spacing:-0.03em">Para clínicas, petshops e prestadores</h2><p style="margin:10px auto 0;font-size:17px;color:#5E6878;max-width:680px">Escolha o que a sua loja oferece: produtos, serviços ou os dois. Cada serviço tem a sua própria forma de reserva, configurada por você.</p></div>
+    <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin-top:40px">
+      <div style="background:#FFF1C9;border-radius:32px;padding:24px;height:230px;box-sizing:border-box"><div style="font-weight:800;font-size:20px">Petshop</div><div style="font-size:12px;font-weight:700;background:#fff;border-radius:999px;padding:4px 10px;display:inline-block;margin-top:8px">Produtos</div><div style="font-size:14px;line-height:1.5;color:#5C4807;margin-top:14px">Vitrine com preço e estoque, solicitação pelo app e retirada ou entrega pela loja.</div></div>
+      <div style="background:#fff;border:1.5px solid #D7DDE8;border-radius:32px;padding:24px;height:230px;box-sizing:border-box"><div style="font-weight:800;font-size:20px">Clínica veterinária</div><div style="font-size:12px;font-weight:700;background:#F3F5F8;border-radius:999px;padding:4px 10px;display:inline-block;margin-top:8px">Por horário e produtos</div><div style="font-size:14px;line-height:1.5;color:#3A4352;margin-top:14px">Consulta e vacinação por horário. Medicamentos com receita ficam listados, com venda só no local.</div></div>
+      <div style="background:#EBDDFB;border-radius:32px;padding:24px;height:230px;box-sizing:border-box"><div style="font-weight:800;font-size:20px">Banho e tosa</div><div style="font-size:12px;font-weight:700;background:#fff;border-radius:999px;padding:4px 10px;display:inline-block;margin-top:8px">Por horário</div><div style="font-size:14px;line-height:1.5;color:#4B3A73;margin-top:14px">Duração, vagas por horário, profissionais e intervalo entre atendimentos.</div></div>
+      <div style="background:#DDF3E6;border-radius:32px;padding:24px;height:230px;box-sizing:border-box"><div style="font-weight:800;font-size:20px">Passeador</div><div style="font-size:12px;font-weight:700;background:#fff;border-radius:999px;padding:4px 10px;display:inline-block;margin-top:8px">Passeio</div><div style="font-size:14px;line-height:1.5;color:#245E3A;margin-top:14px">Passeios de 30 ou 60 min, raio de atuação e trajeto com fotos para o tutor.</div></div>
+      <div style="background:#FCE1EF;border-radius:32px;padding:24px;height:230px;box-sizing:border-box"><div style="font-weight:800;font-size:20px">Creche pet</div><div style="font-size:12px;font-weight:700;background:#fff;border-radius:999px;padding:4px 10px;display:inline-block;margin-top:8px">Por dia</div><div style="font-size:14px;line-height:1.5;color:#7A2A52;margin-top:14px">Dia inteiro ou meio período, vagas por dia e pacotes mensais.</div></div>
+      <div style="background:#E3F3FC;border-radius:32px;padding:24px;height:230px;box-sizing:border-box"><div style="font-weight:800;font-size:20px">Hotelzinho pet</div><div style="font-size:12px;font-weight:700;background:#fff;border-radius:999px;padding:4px 10px;display:inline-block;margin-top:8px">Diárias</div><div style="font-size:14px;line-height:1.5;color:#174A68;margin-top:14px">Preço por porte, check-in e check-out, extras e vacinas em dia.</div></div>
+    </div>
+  </section>
+
+  <section style="height:360px;padding:60px 120px 0;box-sizing:border-box">
+    <div style="background:#FFF1C9;border-radius:44px;height:240px;padding:0 56px;display:flex;align-items:center;gap:48px;box-sizing:border-box">
+      <span style="width:96px;height:96px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;flex:none"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="3"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span>
+      <div><div style="font-weight:500;font-size:38px;letter-spacing:-0.03em;line-height:1.1">Produtos com receita aparecem só para consulta</div><p style="margin:12px 0 0;font-size:17px;line-height:1.5;color:#5C4807;max-width:760px">Para itens que exigem receita veterinária, o tutor vê preço e estoque, mas a compra é feita somente na loja. Você escolhe a mensagem que aparece.</p></div>
+    </div>
+  </section>
+
+  <section style="height:400px;padding:50px 120px 0;box-sizing:border-box;text-align:center">
+    <div style="font-size:14px;font-weight:700;color:#2F6F93">Como começar</div>
+    <h2 style="margin:10px 0 0;font-weight:500;font-size:46px;letter-spacing:-0.03em">Sua loja no ar em três passos</h2>
+    <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;margin-top:44px;text-align:left">
+      <div style="display:flex;gap:18px;align-items:flex-start"><span style="width:52px;height:52px;border-radius:50%;background:#111;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:20px;flex:none">1</span><div><div style="font-weight:800;font-size:20px">Crie a conta da loja</div><div style="font-size:15px;line-height:1.5;color:#5E6878;margin-top:6px">Dados, endereço e contato. Se a loja já está no mapa, assuma o perfil.</div></div></div>
+      <div style="display:flex;gap:18px;align-items:flex-start"><span style="width:52px;height:52px;border-radius:50%;background:#111;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:20px;flex:none">2</span><div><div style="font-weight:800;font-size:20px">Escolha o que oferece</div><div style="font-size:15px;line-height:1.5;color:#5E6878;margin-top:6px">Produtos, serviços ou os dois. Configure preços, horários e vagas.</div></div></div>
+      <div style="display:flex;gap:18px;align-items:flex-start"><span style="width:52px;height:52px;border-radius:50%;background:#111;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:20px;flex:none">3</span><div><div style="font-weight:800;font-size:20px">Publique e receba</div><div style="font-size:15px;line-height:1.5;color:#5E6878;margin-top:6px">Sua loja aparece no mapa e na vitrine. Aceite solicitações no celular ou no computador.</div></div></div>
+    </div>
+  </section>
+
+  <section style="height:480px;background:#F5F6FA;padding:56px 120px 0;box-sizing:border-box;text-align:center">
+    <div style="font-size:14px;font-weight:700;color:#2F6F93">Planos para lojistas</div>
+    <h2 style="margin:10px 0 0;font-weight:500;font-size:44px;letter-spacing:-0.03em">Só paga quando vende pelo app</h2>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:36px;text-align:left">
+      <div style="background:#fff;border-radius:40px;padding:32px;height:260px;box-sizing:border-box"><div style="display:flex;justify-content:space-between;align-items:center"><span style="font-weight:800;font-size:22px">Vitrine e agenda</span><span style="font-size:12px;font-weight:700;background:#DDF3E6;color:#25683F;border-radius:999px;padding:5px 12px">Grátis</span></div><div style="display:flex;flex-direction:column;gap:10px;margin-top:20px;font-size:15px;font-weight:600"><span>✓ Catálogo de produtos e serviços</span><span>✓ Solicitações e reservas</span><span>✓ Painel no celular e no computador</span><span>✓ Pagamento direto na loja</span></div></div>
+      <div style="background:#111;color:#fff;border-radius:40px;padding:32px;height:260px;box-sizing:border-box"><div style="display:flex;justify-content:space-between;align-items:center"><span style="font-weight:800;font-size:22px">Pix pelo app</span><span style="font-size:12px;font-weight:700;background:#9AD6F8;color:#111;border-radius:999px;padding:5px 12px">Comissão [x]%</span></div><div style="display:flex;flex-direction:column;gap:10px;margin-top:20px;font-size:15px;font-weight:600"><span>✓ Tudo da vitrine e agenda</span><span>✓ Pagamento por Pix dentro do app</span><span>✓ Confirmação automática e extrato</span><span>✓ Repasse na sua chave Pix</span></div></div>
+    </div>
+  </section>
+
+  <section style="height:320px;padding:50px 120px 0;box-sizing:border-box">
+    <div style="background:#111;color:#fff;border-radius:44px;height:220px;padding:0 56px;display:flex;align-items:center;justify-content:space-between;gap:40px;box-sizing:border-box">
+      <div><div style="font-weight:500;font-size:42px;letter-spacing:-0.03em;line-height:1.1">Coloque a sua loja no PetLive</div><div style="font-size:16px;color:#B8C2D3;margin-top:10px">O cadastro leva poucos minutos.</div></div>
+      <a href="LojaCadastro1.dc.html" style="height:64px;padding:0 8px 0 30px;border-radius:32px;background:#9AD6F8;color:#111;display:flex;align-items:center;gap:18px;font-size:16px;font-weight:700;flex:none">Cadastrar minha loja<span style="width:48px;height:48px;border-radius:50%;background:#111;display:flex;align-items:center;justify-content:center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9AD6F8" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a>
+    </div>
+  </section>
+
+  <footer style="height:260px;background:#111;color:#fff;padding:52px 120px 0;box-sizing:border-box;display:flex;justify-content:space-between;margin-top:-0px">
+    <div style="max-width:380px"><div style="font-weight:800;font-size:24px;letter-spacing:-0.03em">PetLive</div><div style="font-size:13px;line-height:1.6;color:#B8C2D3;margin-top:12px">Ferramentas para lojas, clínicas e prestadores de serviços pet.</div></div>
+    <div style="display:flex;gap:90px;font-size:14px"><div style="display:flex;flex-direction:column;gap:10px"><b>Lojistas</b><span style="color:#B8C2D3">Benefícios</span><span style="color:#B8C2D3">Planos</span><a href="LojaCadastro1.dc.html" style="color:#B8C2D3">Cadastrar loja</a></div><div style="display:flex;flex-direction:column;gap:10px"><b>PetLive</b><a href="SitePetLive.dc.html" style="color:#B8C2D3">Para tutores</a><span style="color:#B8C2D3">Contato</span></div><div style="display:flex;flex-direction:column;gap:10px"><b>Legal</b><span style="color:#B8C2D3">Termos para lojistas</span><span style="color:#B8C2D3">Privacidade e LGPD</span></div></div>
+  </footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":3760}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Lojista web, catálogo</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<style>
+body{margin:0;font-family:'Plus Jakarta Sans',system-ui,sans-serif;color:#111}
+a{text-decoration:none;color:inherit}
+@media (prefers-reduced-motion:no-preference){
+@keyframes rise{from{opacity:0;translate:0 18px}to{opacity:1;translate:0 0}}
+@keyframes bob{0%,100%{translate:0 0}50%{translate:0 -2.5%}}
+@keyframes sway{0%,100%{rotate:-7deg}50%{rotate:7deg}}
+@keyframes pulse{0%{transform:scale(.7);opacity:.8}100%{transform:scale(1.8);opacity:0}}
+@keyframes grow{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@keyframes draw{to{stroke-dashoffset:0}}
+div[style*="border-radius:2"][style*="padding"],div[style*="border-radius:3"][style*="padding"]{animation:rise .6s cubic-bezier(.2,.7,.2,1) both}
+div[style*="border-radius:2"][style*="padding"]:nth-child(2),div[style*="border-radius:3"][style*="padding"]:nth-child(2){animation-delay:.08s}
+div[style*="border-radius:2"][style*="padding"]:nth-child(3),div[style*="border-radius:3"][style*="padding"]:nth-child(3){animation-delay:.16s}
+div[style*="border-radius:2"][style*="padding"]:nth-child(4),div[style*="border-radius:3"][style*="padding"]:nth-child(4){animation-delay:.24s}
+div[style*="border-radius:2"][style*="padding"]:nth-child(5),div[style*="border-radius:3"][style*="padding"]:nth-child(5){animation-delay:.32s}
+svg[viewBox="0 0 200 200"]{animation:bob 3.4s ease-in-out infinite}
+svg[stroke="#fff"][viewBox="0 0 24 24"]{transform-origin:50% 50%;animation:sway 5s ease-in-out infinite}
+circle[fill-opacity]{transform-box:fill-box;transform-origin:center;animation:pulse 2.2s ease-out infinite}
+polyline[stroke="#111"]{stroke-dasharray:800;stroke-dashoffset:800;animation:draw 1.6s .25s ease-out forwards}
+div[style*="border-radius:4px"][style*="width:"]{transform-origin:left;animation:grow 1.1s .3s cubic-bezier(.2,.7,.2,1) both}
+a{transition:transform .18s ease}
+a[style*="border-radius:32px"]:hover,a[style*="border-radius:28px"]:hover{transform:translateY(-2px)}
+a[style*="border-radius:32px"]:active,a[style*="border-radius:28px"]:active{transform:scale(.97)}
+nav a:hover{transform:translateY(-3px)}
+}
+</style>
+</helmet>
+<div style="width:1280px;height:800px;box-sizing:border-box;display:flex;background:#F5F6FA;overflow:hidden">
+  <aside style="width:240px;flex:none;background:#111;color:#fff;padding:24px 16px;display:flex;flex-direction:column;gap:6px;box-sizing:border-box">
+    <div style="display:flex;align-items:center;gap:10px;padding:0 8px 18px"><span style="font-weight:800;font-size:20px;letter-spacing:-0.02em">PetLive</span><span style="font-size:10px;font-weight:800;letter-spacing:0.04em;background:#9AD6F8;color:#111;border-radius:999px;padding:3px 8px">LOJISTA</span></div>
+    <a href="WebSolicitacoes.dc.html" style="display:flex;align-items:center;gap:12px;height:46px;border-radius:14px;color:#C9D0DB;padding:0 14px;font-weight:600;font-size:14px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 13l2-8h12l2 8v6H4z"/><path d="M4 13h5l1 2h4l1-2h5"/></svg>Solicitações<span style="margin-left:auto;font-size:11px;font-weight:800;background:#9AD6F8;color:#111;border-radius:10px;padding:2px 8px">3</span></a>
+    <a href="WebCatalogo.dc.html" style="display:flex;align-items:center;gap:12px;height:46px;border-radius:14px;background:#9AD6F8;color:#111;padding:0 14px;font-weight:700;font-size:14px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="7" height="7" rx="2"/><rect x="13" y="4" width="7" height="7" rx="2"/><rect x="4" y="13" width="7" height="7" rx="2"/><rect x="13" y="13" width="7" height="7" rx="2"/></svg>Catálogo</a>
+    <a href="WebAgenda.dc.html" style="display:flex;align-items:center;gap:12px;height:46px;border-radius:14px;color:#C9D0DB;padding:0 14px;font-weight:600;font-size:14px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="3"/><path d="M4 10h16M9 3v4M15 3v4"/></svg>Agenda</a>
+    <a href="WebRecebimentos.dc.html" style="display:flex;align-items:center;gap:12px;height:46px;border-radius:14px;color:#C9D0DB;padding:0 14px;font-weight:600;font-size:14px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="18" height="13" rx="3"/><path d="M3 10h18M16 14h2"/></svg>Recebimentos</a>
+    <a href="WebConfigLoja.dc.html" style="display:flex;align-items:center;gap:12px;height:46px;border-radius:14px;color:#C9D0DB;padding:0 14px;font-weight:600;font-size:14px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"/></svg>Configurações</a>
+    <div style="margin-top:auto;background:#1E1E1E;border-radius:18px;padding:14px;display:flex;align-items:center;gap:10px"><span style="width:40px;height:40px;border-radius:12px;background:#9AD6F8;color:#111;display:flex;align-items:center;justify-content:center;font-weight:800">L</span><div style="flex:1;min-width:0"><div style="font-weight:700;font-size:13px">[Nome da loja]</div><div style="font-size:11px;color:#9AD6F8">Loja aberta</div></div></div>
+  </aside>
+
+  <main style="flex:1;padding:28px 32px;display:flex;flex-direction:column;gap:18px;overflow:hidden;min-width:0">
+    <div style="display:flex;align-items:center;gap:16px">
+      <h1 style="margin:0;font-weight:500;font-size:34px;letter-spacing:-0.03em;flex:1">Catálogo</h1>
+      <a href="WebNovoProduto.dc.html" style="height:48px;padding:0 6px 0 22px;border-radius:24px;background:#111;color:#fff;display:flex;align-items:center;gap:14px;font-weight:600;font-size:14px">Novo produto<span style="width:36px;height:36px;border-radius:50%;background:#9AD6F8;display:flex;align-items:center;justify-content:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2.8" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></span></a>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center">
+      <span style="height:38px;padding:0 16px;border-radius:19px;background:#111;color:#fff;display:flex;align-items:center;font-size:13px;font-weight:600">Todos · 24</span>
+      <span style="height:38px;padding:0 16px;border-radius:19px;background:#fff;display:flex;align-items:center;font-size:13px;font-weight:600">Produtos · 18</span>
+      <a href="WebServicos.dc.html" style="height:38px;padding:0 16px;border-radius:19px;background:#fff;display:flex;align-items:center;font-size:13px;font-weight:600">Serviços · 4</a>
+      <span style="height:38px;padding:0 16px;border-radius:19px;background:#FFF1C9;display:flex;align-items:center;gap:6px;font-size:13px;font-weight:700;color:#7A5F0A"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#7A5F0A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="3"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>Com receita · 3</span>
+      <div style="margin-left:auto;height:38px;width:260px;border-radius:19px;background:#fff;display:flex;align-items:center;padding:0 16px;font-size:13px;color:#6A7484">Buscar no catálogo</div>
+    </div>
+
+    <div style="background:#fff;border-radius:28px;padding:8px 8px 4px;display:flex;flex-direction:column;flex:1;min-height:0">
+      <div style="display:grid;grid-template-columns:2.4fr 1fr 1fr 1fr 1.6fr 80px;gap:12px;padding:12px 20px;font-size:11px;font-weight:700;color:#5E6878"><span>PRODUTO</span><span>CATEGORIA</span><span>PREÇO</span><span>ESTOQUE</span><span>VENDA</span><span>ATIVO</span></div>
+
+      <a href="WebProduto.dc.html" style="display:grid;grid-template-columns:2.4fr 1fr 1fr 1fr 1.6fr 80px;gap:12px;padding:10px 20px;align-items:center;border-top:1px solid #EEF1F5;font-size:14px;font-weight:600">
+        <span style="display:flex;align-items:center;gap:12px"><span style="width:46px;height:46px;border-radius:14px;background:#EBDDFB;display:flex;align-items:center;justify-content:center"><svg width="32" height="32" viewBox="0 0 100 100" aria-hidden="true"><path d="M24 22l8-10h36l8 10v66H24z" fill="#8ED1FC"/><rect x="34" y="40" width="32" height="28" rx="6" fill="#fff"/><circle cx="50" cy="54" r="7" fill="#E3AD6A"/></svg></span>Ração adulto 10 kg</span><span>Ração</span><span>R$ [valor]</span><span>12</span>
+        <span><span style="font-size:12px;font-weight:700;background:#DDF3E6;color:#25683F;border-radius:999px;padding:5px 12px">Pelo app · Pix</span></span>
+        <span style="width:44px;height:26px;border-radius:13px;background:#111;position:relative;display:block"><span style="position:absolute;right:3px;top:3px;width:20px;height:20px;border-radius:50%;background:#9AD6F8;display:block"></span></span>
+      </a>
+      <div style="display:grid;grid-template-columns:2.4fr 1fr 1fr 1fr 1.6fr 80px;gap:12px;padding:10px 20px;align-items:center;border-top:1px solid #EEF1F5;font-size:14px;font-weight:600">
+        <span style="display:flex;align-items:center;gap:12px"><span style="width:46px;height:46px;border-radius:14px;background:#FCE1EF;display:flex;align-items:center;justify-content:center"><svg width="32" height="32" viewBox="0 0 100 100" aria-hidden="true"><path d="M24 22l8-10h36l8 10v66H24z" fill="#FFB4C8"/><rect x="34" y="40" width="32" height="28" rx="6" fill="#fff"/></svg></span>Ração gatos 3 kg</span><span>Ração</span><span>R$ [valor]</span><span>7</span>
+        <span><span style="font-size:12px;font-weight:700;background:#DDF3E6;color:#25683F;border-radius:999px;padding:5px 12px">Pelo app · Pix</span></span>
+        <span style="width:44px;height:26px;border-radius:13px;background:#111;position:relative;display:block"><span style="position:absolute;right:3px;top:3px;width:20px;height:20px;border-radius:50%;background:#9AD6F8;display:block"></span></span>
+      </div>
+      <div style="display:grid;grid-template-columns:2.4fr 1fr 1fr 1fr 1.6fr 80px;gap:12px;padding:10px 20px;align-items:center;border-top:1px solid #EEF1F5;font-size:14px;font-weight:600">
+        <span style="display:flex;align-items:center;gap:12px"><span style="width:46px;height:46px;border-radius:14px;background:#FFF1C9;display:flex;align-items:center;justify-content:center"><svg width="32" height="32" viewBox="0 0 100 100" aria-hidden="true"><rect x="22" y="34" width="56" height="32" rx="16" fill="#fff" stroke="#111" stroke-width="3"/><path d="M50 34v32" stroke="#111" stroke-width="3"/></svg></span>Antipulgas e carrapatos</span><span>Saúde</span><span>R$ [valor]</span><span>9</span>
+        <span><span style="display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;background:#FFF1C9;color:#7A5F0A;border-radius:999px;padding:5px 12px"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#7A5F0A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="3"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>Só no local · receita</span></span>
+        <span style="width:44px;height:26px;border-radius:13px;background:#111;position:relative;display:block"><span style="position:absolute;right:3px;top:3px;width:20px;height:20px;border-radius:50%;background:#9AD6F8;display:block"></span></span>
+      </div>
+      <div style="display:grid;grid-template-columns:2.4fr 1fr 1fr 1fr 1.6fr 80px;gap:12px;padding:10px 20px;align-items:center;border-top:1px solid #EEF1F5;font-size:14px;font-weight:600">
+        <span style="display:flex;align-items:center;gap:12px"><span style="width:46px;height:46px;border-radius:14px;background:#DDF3E6;display:flex;align-items:center;justify-content:center"><svg width="32" height="32" viewBox="0 0 100 100" aria-hidden="true"><rect x="22" y="34" width="56" height="32" rx="16" fill="#fff" stroke="#111" stroke-width="3"/><path d="M50 34v32" stroke="#111" stroke-width="3"/></svg></span>Vermífugo comprimido</span><span>Saúde</span><span>R$ [valor]</span><span>14</span>
+        <span><span style="display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;background:#FFF1C9;color:#7A5F0A;border-radius:999px;padding:5px 12px"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#7A5F0A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="3"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>Só no local · receita</span></span>
+        <span style="width:44px;height:26px;border-radius:13px;background:#111;position:relative;display:block"><span style="position:absolute;right:3px;top:3px;width:20px;height:20px;border-radius:50%;background:#9AD6F8;display:block"></span></span>
+      </div>
+      <div style="display:grid;grid-template-columns:2.4fr 1fr 1fr 1fr 1.6fr 80px;gap:12px;padding:10px 20px;align-items:center;border-top:1px solid #EEF1F5;font-size:14px;font-weight:600">
+        <span style="display:flex;align-items:center;gap:12px"><span style="width:46px;height:46px;border-radius:14px;background:#DDF3E6;display:flex;align-items:center;justify-content:center"><svg width="32" height="32" viewBox="0 0 100 100" aria-hidden="true"><g transform="rotate(-35 50 50)" fill="#F5D9A8"><rect x="25" y="44" width="50" height="12" rx="6"/><circle cx="26" cy="43" r="8"/><circle cx="26" cy="57" r="8"/><circle cx="74" cy="43" r="8"/><circle cx="74" cy="57" r="8"/></g></svg></span>Osso natural</span><span>Petiscos</span><span>R$ [valor]</span><span>20</span>
+        <span><span style="font-size:12px;font-weight:700;background:#DDF3E6;color:#25683F;border-radius:999px;padding:5px 12px">Pelo app · Pix</span></span>
+        <span style="width:44px;height:26px;border-radius:13px;background:#111;position:relative;display:block"><span style="position:absolute;right:3px;top:3px;width:20px;height:20px;border-radius:50%;background:#9AD6F8;display:block"></span></span>
+      </div>
+      <div style="display:grid;grid-template-columns:2.4fr 1fr 1fr 1fr 1.6fr 80px;gap:12px;padding:10px 20px;align-items:center;border-top:1px solid #EEF1F5;font-size:14px;font-weight:600">
+        <span style="display:flex;align-items:center;gap:12px"><span style="width:46px;height:46px;border-radius:14px;background:#FFF1C9;display:flex;align-items:center;justify-content:center"><svg width="32" height="32" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="30" fill="#8ED1FC"/><path d="M24 40c14 6 38 6 52 0M24 62c14-6 38-6 52 0" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round"/></svg></span>Bolinha de borracha</span><span>Brinquedos</span><span>R$ [valor]</span><span style="color:#C0392B">Sem estoque</span>
+        <span><span style="font-size:12px;font-weight:700;background:#EEF1F5;border-radius:999px;padding:5px 12px">Oculto no app</span></span>
+        <span style="width:44px;height:26px;border-radius:13px;background:#D5DBE3;position:relative;display:block"><span style="position:absolute;left:3px;top:3px;width:20px;height:20px;border-radius:50%;background:#fff;display:block"></span></span>
+      </div>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":800}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>

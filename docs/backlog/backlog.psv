@@ -1,0 +1,150 @@
+# TAG|MODULO|FASE|TITULO
+APP-CLIENTE|Base e conta|F1|Configurar projeto Expo com TypeScript e Expo Router
+APP-CLIENTE|Base e conta|F1|Criar tema PetLive: cores, tipografia e componentes (pílula, card, menu flutuante)
+APP-CLIENTE|Base e conta|F1|Configurar animações (cards, pets, gráfico e barras de progresso)
+APP-CLIENTE|Base e conta|F1|Tela Boas-vindas
+APP-CLIENTE|Base e conta|F1|Telas Criar conta e Entrar (e-mail e Google)
+APP-CLIENTE|Base e conta|F1|Aceite de termos de uso e LGPD
+APP-CLIENTE|Base e conta|F1|Perfil do tutor e sair da conta
+APP-CLIENTE|Base e conta|F1|Excluir conta e exportar meus dados
+APP-CLIENTE|Pets|F1|Cadastro do pet com foto (Conheça seu pet)
+APP-CLIENTE|Pets|F1|Lista Meus pets
+APP-CLIENTE|Pets|F1|Tela do pet: resumo, abas e etiquetas
+APP-CLIENTE|Pets|F1|Editar e excluir pet
+APP-CLIENTE|Pets|F2|Vários pets com limite por plano
+APP-CLIENTE|Saúde|F1|Registrar vacina (escolha, datas, atalhos e observação)
+APP-CLIENTE|Saúde|F1|Calendário sugerido de vacinas por espécie e idade
+APP-CLIENTE|Saúde|F1|Histórico de vacinas do pet
+APP-CLIENTE|Saúde|F1|Peso: gráfico e histórico
+APP-CLIENTE|Saúde|F1|Registrar peso
+APP-CLIENTE|Saúde|F1|Consultas: histórico
+APP-CLIENTE|Saúde|F1|Registrar consulta
+APP-CLIENTE|Saúde|F2|Anexar foto do cartão de vacina e exames
+APP-CLIENTE|Lembretes e remédios|F1|Tela Lembretes (semana, hoje e mês)
+APP-CLIENTE|Lembretes e remédios|F1|Novo lembrete: escolha do tipo
+APP-CLIENTE|Lembretes e remédios|F1|Lembrete personalizado (banho e tosa, consulta, outro)
+APP-CLIENTE|Lembretes e remédios|F1|Novo remédio: dose, frequência, horários e duração
+APP-CLIENTE|Lembretes e remédios|F1|Tela Medicamentos: progresso e confirmar dose
+APP-CLIENTE|Lembretes e remédios|F1|Notificações locais e push (expo-notifications) com permissão
+APP-CLIENTE|Lembretes e remédios|F1|Tela Avisos: ligar e desligar por tipo, horário e Não perturbe
+APP-CLIENTE|Mapa|F1|Mapa com MapLibre e tiles gratuitos
+APP-CLIENTE|Mapa|F1|Busca e filtros (clínicas, banho e tosa, petshop, 24h)
+APP-CLIENTE|Mapa|F1|Pins por tipo e lugar selecionado
+APP-CLIENTE|Mapa|F1|Ficha do lugar (endereço, horário e contato)
+APP-CLIENTE|Mapa|F1|Ligar, WhatsApp e traçar rota
+APP-CLIENTE|Mapa|F1|Atalho "vacina vence" para clínicas por perto
+APP-CLIENTE|Mapa|F1|Permissão e uso da localização
+APP-CLIENTE|Início|F1|Tela Início: busca, categorias, lembretes e aviso de vacina
+APP-CLIENTE|Início|F1|Menu inferior flutuante e navegação entre abas
+APP-CLIENTE|Premium e segurança|F2|Tela Premium e assinatura pela loja de apps
+APP-CLIENTE|Premium e segurança|F2|Carteira em PDF: prévia, escolher o que incluir, gerar e enviar
+APP-CLIENTE|Premium e segurança|F2|QR da coleira: gerar, escolher o que aparece e baixar etiqueta
+APP-CLIENTE|Premium e segurança|F2|Compartilhar acesso com a família
+APP-CLIENTE|Loja e serviços|F5-E1|Loja: vitrine de produtos com categorias
+APP-CLIENTE|Loja e serviços|F5-E1|Produto: detalhe e quantidade
+APP-CLIENTE|Loja e serviços|F5-E1|Produto com receita: só consulta, aviso e Como chegar
+APP-CLIENTE|Loja e serviços|F5-E1|Solicitação: retirada ou entrega, horário e mensagem
+APP-CLIENTE|Loja e serviços|F5-E1|Acompanhar solicitação: status e conversa com a loja
+APP-CLIENTE|Loja e serviços|F5-E1|Serviços da loja: lista por tipo
+APP-CLIENTE|Loja e serviços|F5-E1|Agendar banho e tosa: pet, serviço, dia e horários livres
+APP-CLIENTE|Loja e serviços|F5-E1|Agendar passeio: duração, dia, horário e endereço
+APP-CLIENTE|Loja e serviços|F5-E1|Reservar creche: dias, período e pacote
+APP-CLIENTE|Loja e serviços|F5-E1|Reservar hotelzinho: calendário de entrada e saída, extras
+APP-CLIENTE|Loja e serviços|F5-E1|Horário reservado: ticket, adicionar à agenda, remarcar e cancelar
+APP-CLIENTE|Pagamentos|F5-E2|Tela Pagamento: Pix ou pagar na loja, cupom e total
+APP-CLIENTE|Pagamentos|F5-E2|Pagar com Pix: QR Code, copia e cola, expiração e status
+APP-CLIENTE|Pagamentos|F5-E2|Pagamento confirmado e comprovante
+APP-CLIENTE|Passeio ao vivo|F5-E2|Passeio ao vivo: mapa, status, fotos e conversa
+APP-CLIENTE|Passeio ao vivo|F5-E2|Passeio concluído: resumo e avaliação
+APP-CLIENTE|Qualidade|F1|Testes ponta a ponta dos fluxos principais (cadastro, vacina, lembrete e mapa)
+APP-CLIENTE|Qualidade|F1|Sentry para monitorar erros
+APP-CLIENTE|Qualidade|F1|Acessibilidade: contraste, leitor de tela e tamanhos de fonte
+APP-CLIENTE|Qualidade|F1|Publicar nas lojas de apps (EAS Build e EAS Update)
+APP-LOJISTA|Cadastro da loja|F5-E1|Passo 1: dados da loja (CNPJ ou CPF) e conta de acesso
+APP-LOJISTA|Cadastro da loja|F5-E1|Passo 2: endereço, contato e assumir lugar do mapa
+APP-LOJISTA|Cadastro da loja|F5-E1|Passo 3: o que a loja oferece (produtos, serviços ou os dois)
+APP-LOJISTA|Cadastro da loja|F5-E1|Passo 4: escolher serviços
+APP-LOJISTA|Cadastro da loja|F5-E1|Passo 5: checklist e publicar a loja
+APP-LOJISTA|Painel e solicitações|F5-E1|Painel: indicadores, solicitações novas e agenda de hoje
+APP-LOJISTA|Painel e solicitações|F5-E1|Solicitações: filtros, aceitar, recusar e responder
+APP-LOJISTA|Painel e solicitações|F5-E1|Push de nova solicitação
+APP-LOJISTA|Painel e solicitações|F5-E1|Marcar pronto para retirada e concluir
+APP-LOJISTA|Catálogo|F5-E1|Catálogo: lista com ativo e estoque
+APP-LOJISTA|Catálogo|F5-E1|Cadastrar produto (foto, código de barras, preço e estoque)
+APP-LOJISTA|Catálogo|F5-E1|Tipo de venda: pelo app, só no local com receita ou oculto
+APP-LOJISTA|Catálogo|F5-E1|Aba Serviços do catálogo
+APP-LOJISTA|Serviços|F5-E1|Editar banho e tosa (preço, duração, vagas e profissionais)
+APP-LOJISTA|Serviços|F5-E1|Configurar hotelzinho (preço por porte, check-in e check-out, extras, vacinas)
+APP-LOJISTA|Serviços|F5-E1|Configurar creche (períodos, vagas e pacotes)
+APP-LOJISTA|Serviços|F5-E1|Configurar passeador (preço, raio, pets por passeio, janela e trajeto)
+APP-LOJISTA|Serviços|F5-E1|Horários de atendimento (dias, intervalo, vagas e folgas)
+APP-LOJISTA|Serviços|F5-E1|Confirmação automática ou manual
+APP-LOJISTA|Agenda|F5-E1|Agenda do dia e da semana
+APP-LOJISTA|Agenda|F5-E1|Confirmar, remarcar e bloquear horário
+APP-LOJISTA|Passeios|F5-E2|Passeio de hoje: cheguei, passeando e voltando
+APP-LOJISTA|Passeios|F5-E2|Rastreamento por GPS em segundo plano e envio do trajeto
+APP-LOJISTA|Passeios|F5-E2|Fotos e registros (xixi, cocô e água) durante o passeio
+APP-LOJISTA|Passeios|F5-E2|Encerrar passeio e enviar resumo
+APP-LOJISTA|Configurações|F5-E1|Menu de configurações da loja
+APP-LOJISTA|Configurações|F5-E1|Perfil e contato
+APP-LOJISTA|Configurações|F5-E1|Retirada e entrega
+APP-LOJISTA|Configurações|F5-E2|Pagamentos e chave Pix
+APP-LOJISTA|Configurações|F5-E1|Equipe e permissões (falta desenhar a tela)
+APP-LOJISTA|Configurações|F5-E1|Avisos e políticas (falta desenhar a tela)
+WEB|Site|F1|Site: página inicial (herói, recursos, passos, serviços, planos e perguntas)
+WEB|Site|F1|Site: página para lojistas
+WEB|Site|F1|Site: páginas legais (termos, privacidade e LGPD)
+WEB|Site|F1|Site: botões de download das lojas de apps e SEO
+WEB|Site|F1|Site: analytics e consentimento de cookies
+WEB|Site|F1|Site: formulário de contato
+WEB|Site|F1|Site: layout responsivo para celular, tablet e computador
+WEB|Página pública do QR|F2|Rota pública do pet (petlive.app/r/id) mostrando só os dados permitidos
+WEB|Página pública do QR|F2|Botões Ligar e WhatsApp para o tutor
+WEB|Página pública do QR|F2|Enviar localização ao tutor, com consentimento
+WEB|Painel do lojista|F5-E1|Login e sessão do lojista na web
+WEB|Painel do lojista|F5-E1|Estrutura do painel: menu lateral e cabeçalho
+WEB|Painel do lojista|F5-E1|Solicitações: lista, detalhe, aceitar, recusar e responder
+WEB|Painel do lojista|F5-E1|Catálogo: tabela, filtros e ativar ou desativar
+WEB|Painel do lojista|F5-E1|Cadastrar e editar produto (fotos, categoria e código de barras)
+WEB|Painel do lojista|F5-E1|Produto com receita: tipo de venda, o que o tutor vê e prévia
+WEB|Painel do lojista|F5-E1|Importar produtos por planilha
+WEB|Painel do lojista|F5-E1|Aba Serviços do catálogo com cards
+WEB|Painel do lojista|F5-E1|Agenda semanal com reservas, intervalos e folgas
+WEB|Painel do lojista|F5-E1|Configurações: perfil e contato
+WEB|Painel do lojista|F5-E1|Configurações: retirada, entrega, pagamentos e políticas
+WEB|Painel do lojista|F5-E1|Notificações web (push) de novas solicitações
+WEB|Painel do lojista|F5-E2|Recebimentos: saldo, a receber, movimentações e saque via Pix
+WEB|Painel do lojista|F5-E2|Extrato e exportação
+BACKEND|Base|F1|Criar projeto Supabase e ambientes (desenvolvimento e produção)
+BACKEND|Base|F1|Schema: profiles, pets, vaccinations, dewormings, weights, visits, medications, reminders e push_tokens
+BACKEND|Base|F1|Regras de acesso (RLS) por tutor
+BACKEND|Base|F1|Storage para fotos de pets e anexos
+BACKEND|Base|F1|Autenticação por e-mail e Google
+BACKEND|Base|F1|Função agendada que gera e envia os lembretes (push)
+BACKEND|Base|F1|Calendário de vacinas por espécie e idade (tabela e regras)
+BACKEND|Mapa|F1|Importar lugares do OpenStreetMap (Overpass) para a tabela places, Rio de Janeiro
+BACKEND|Mapa|F1|Consulta de lugares por distância e tipo
+BACKEND|Base|F1|Exclusão e exportação de dados (LGPD)
+BACKEND|Base|F1|Monitoramento e backups
+BACKEND|Premium e QR|F2|Assinaturas: integração com as lojas de apps e webhooks
+BACKEND|Premium e QR|F2|Limites por plano
+BACKEND|Premium e QR|F2|Gerar PDF da carteira
+BACKEND|Premium e QR|F2|Endpoint público do QR com os dados permitidos
+BACKEND|Premium e QR|F2|Endpoint da localização enviada por quem achou o pet
+BACKEND|Marketplace|F5-E1|Tabelas: stores, store_members, products, services, store_hours, time_off, requests, request_items e request_events
+BACKEND|Marketplace|F5-E1|Campos de venda dos produtos: venda, mostrar_preco, mostrar_estoque e mensagem_tutor
+BACKEND|Marketplace|F5-E1|Bloquear requests e payments para produtos local_com_receita
+BACKEND|Marketplace|F5-E1|Regras por serviço: lodging_rates, daycare_plans e walk_rules
+BACKEND|Marketplace|F5-E1|Função de horários livres (horários da loja, folgas, reservas, vagas e duração)
+BACKEND|Marketplace|F5-E1|Máquina de estados da solicitação e notificações
+BACKEND|Marketplace|F5-E1|Assumir lugar do mapa com verificação do dono
+BACKEND|Marketplace|F5-E1|Fluxo de cadastro e publicação da loja
+BACKEND|Marketplace|F5-E1|Moderação básica de anúncios e denúncias
+BACKEND|Pagamentos|F5-E2|Integração Pix (provedor) com QR Code e webhook
+BACKEND|Pagamentos|F5-E2|Repasse e comissão por pedido
+BACKEND|Pagamentos|F5-E2|Cupons de desconto
+BACKEND|Pagamentos|F5-E2|Comprovantes de pagamento
+BACKEND|Pagamentos|F5-E2|Recebimentos e extrato do lojista
+BACKEND|Passeio ao vivo|F5-E2|Tempo real do passeio (localização e fotos)
+BACKEND|Entrega|F5-E3|Entrega integrada
+BACKEND|Entrega|F5-E3|Assinatura recorrente de ração

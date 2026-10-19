@@ -1,0 +1,149 @@
+[APP-CLIENTE] Base e conta: Configurar projeto Expo com TypeScript e Expo Router
+[APP-CLIENTE] Base e conta: Criar tema PetLive: cores, tipografia e componentes (pílula, card, menu flutuante)
+[APP-CLIENTE] Base e conta: Configurar animações (cards, pets, gráfico e barras de progresso)
+[APP-CLIENTE] Base e conta: Tela Boas-vindas
+[APP-CLIENTE] Base e conta: Telas Criar conta e Entrar (e-mail e Google)
+[APP-CLIENTE] Base e conta: Aceite de termos de uso e LGPD
+[APP-CLIENTE] Base e conta: Perfil do tutor e sair da conta
+[APP-CLIENTE] Base e conta: Excluir conta e exportar meus dados
+[APP-CLIENTE] Pets: Cadastro do pet com foto (Conheça seu pet)
+[APP-CLIENTE] Pets: Lista Meus pets
+[APP-CLIENTE] Pets: Tela do pet: resumo, abas e etiquetas
+[APP-CLIENTE] Pets: Editar e excluir pet
+[APP-CLIENTE] Pets: Vários pets com limite por plano
+[APP-CLIENTE] Saúde: Registrar vacina (escolha, datas, atalhos e observação)
+[APP-CLIENTE] Saúde: Calendário sugerido de vacinas por espécie e idade
+[APP-CLIENTE] Saúde: Histórico de vacinas do pet
+[APP-CLIENTE] Saúde: Peso: gráfico e histórico
+[APP-CLIENTE] Saúde: Registrar peso
+[APP-CLIENTE] Saúde: Consultas: histórico
+[APP-CLIENTE] Saúde: Registrar consulta
+[APP-CLIENTE] Saúde: Anexar foto do cartão de vacina e exames
+[APP-CLIENTE] Lembretes e remédios: Tela Lembretes (semana, hoje e mês)
+[APP-CLIENTE] Lembretes e remédios: Novo lembrete: escolha do tipo
+[APP-CLIENTE] Lembretes e remédios: Lembrete personalizado (banho e tosa, consulta, outro)
+[APP-CLIENTE] Lembretes e remédios: Novo remédio: dose, frequência, horários e duração
+[APP-CLIENTE] Lembretes e remédios: Tela Medicamentos: progresso e confirmar dose
+[APP-CLIENTE] Lembretes e remédios: Notificações locais e push (expo-notifications) com permissão
+[APP-CLIENTE] Lembretes e remédios: Tela Avisos: ligar e desligar por tipo, horário e Não perturbe
+[APP-CLIENTE] Mapa: Mapa com MapLibre e tiles gratuitos
+[APP-CLIENTE] Mapa: Busca e filtros (clínicas, banho e tosa, petshop, 24h)
+[APP-CLIENTE] Mapa: Pins por tipo e lugar selecionado
+[APP-CLIENTE] Mapa: Ficha do lugar (endereço, horário e contato)
+[APP-CLIENTE] Mapa: Ligar, WhatsApp e traçar rota
+[APP-CLIENTE] Mapa: Atalho "vacina vence" para clínicas por perto
+[APP-CLIENTE] Mapa: Permissão e uso da localização
+[APP-CLIENTE] Início: Tela Início: busca, categorias, lembretes e aviso de vacina
+[APP-CLIENTE] Início: Menu inferior flutuante e navegação entre abas
+[APP-CLIENTE] Premium e segurança: Tela Premium e assinatura pela loja de apps
+[APP-CLIENTE] Premium e segurança: Carteira em PDF: prévia, escolher o que incluir, gerar e enviar
+[APP-CLIENTE] Premium e segurança: QR da coleira: gerar, escolher o que aparece e baixar etiqueta
+[APP-CLIENTE] Premium e segurança: Compartilhar acesso com a família
+[APP-CLIENTE] Loja e serviços: Loja: vitrine de produtos com categorias
+[APP-CLIENTE] Loja e serviços: Produto: detalhe e quantidade
+[APP-CLIENTE] Loja e serviços: Produto com receita: só consulta, aviso e Como chegar
+[APP-CLIENTE] Loja e serviços: Solicitação: retirada ou entrega, horário e mensagem
+[APP-CLIENTE] Loja e serviços: Acompanhar solicitação: status e conversa com a loja
+[APP-CLIENTE] Loja e serviços: Serviços da loja: lista por tipo
+[APP-CLIENTE] Loja e serviços: Agendar banho e tosa: pet, serviço, dia e horários livres
+[APP-CLIENTE] Loja e serviços: Agendar passeio: duração, dia, horário e endereço
+[APP-CLIENTE] Loja e serviços: Reservar creche: dias, período e pacote
+[APP-CLIENTE] Loja e serviços: Reservar hotelzinho: calendário de entrada e saída, extras
+[APP-CLIENTE] Loja e serviços: Horário reservado: ticket, adicionar à agenda, remarcar e cancelar
+[APP-CLIENTE] Pagamentos: Tela Pagamento: Pix ou pagar na loja, cupom e total
+[APP-CLIENTE] Pagamentos: Pagar com Pix: QR Code, copia e cola, expiração e status
+[APP-CLIENTE] Pagamentos: Pagamento confirmado e comprovante
+[APP-CLIENTE] Passeio ao vivo: Passeio ao vivo: mapa, status, fotos e conversa
+[APP-CLIENTE] Passeio ao vivo: Passeio concluído: resumo e avaliação
+[APP-CLIENTE] Qualidade: Testes ponta a ponta dos fluxos principais (cadastro, vacina, lembrete e mapa)
+[APP-CLIENTE] Qualidade: Sentry para monitorar erros
+[APP-CLIENTE] Qualidade: Acessibilidade: contraste, leitor de tela e tamanhos de fonte
+[APP-CLIENTE] Qualidade: Publicar nas lojas de apps (EAS Build e EAS Update)
+[APP-LOJISTA] Cadastro da loja: Passo 1: dados da loja (CNPJ ou CPF) e conta de acesso
+[APP-LOJISTA] Cadastro da loja: Passo 2: endereço, contato e assumir lugar do mapa
+[APP-LOJISTA] Cadastro da loja: Passo 3: o que a loja oferece (produtos, serviços ou os dois)
+[APP-LOJISTA] Cadastro da loja: Passo 4: escolher serviços
+[APP-LOJISTA] Cadastro da loja: Passo 5: checklist e publicar a loja
+[APP-LOJISTA] Painel e solicitações: Painel: indicadores, solicitações novas e agenda de hoje
+[APP-LOJISTA] Painel e solicitações: Solicitações: filtros, aceitar, recusar e responder
+[APP-LOJISTA] Painel e solicitações: Push de nova solicitação
+[APP-LOJISTA] Painel e solicitações: Marcar pronto para retirada e concluir
+[APP-LOJISTA] Catálogo: Catálogo: lista com ativo e estoque
+[APP-LOJISTA] Catálogo: Cadastrar produto (foto, código de barras, preço e estoque)
+[APP-LOJISTA] Catálogo: Tipo de venda: pelo app, só no local com receita ou oculto
+[APP-LOJISTA] Catálogo: Aba Serviços do catálogo
+[APP-LOJISTA] Serviços: Editar banho e tosa (preço, duração, vagas e profissionais)
+[APP-LOJISTA] Serviços: Configurar hotelzinho (preço por porte, check-in e check-out, extras, vacinas)
+[APP-LOJISTA] Serviços: Configurar creche (períodos, vagas e pacotes)
+[APP-LOJISTA] Serviços: Configurar passeador (preço, raio, pets por passeio, janela e trajeto)
+[APP-LOJISTA] Serviços: Horários de atendimento (dias, intervalo, vagas e folgas)
+[APP-LOJISTA] Serviços: Confirmação automática ou manual
+[APP-LOJISTA] Agenda: Agenda do dia e da semana
+[APP-LOJISTA] Agenda: Confirmar, remarcar e bloquear horário
+[APP-LOJISTA] Passeios: Passeio de hoje: cheguei, passeando e voltando
+[APP-LOJISTA] Passeios: Rastreamento por GPS em segundo plano e envio do trajeto
+[APP-LOJISTA] Passeios: Fotos e registros (xixi, cocô e água) durante o passeio
+[APP-LOJISTA] Passeios: Encerrar passeio e enviar resumo
+[APP-LOJISTA] Configurações: Menu de configurações da loja
+[APP-LOJISTA] Configurações: Perfil e contato
+[APP-LOJISTA] Configurações: Retirada e entrega
+[APP-LOJISTA] Configurações: Pagamentos e chave Pix
+[APP-LOJISTA] Configurações: Equipe e permissões (falta desenhar a tela)
+[APP-LOJISTA] Configurações: Avisos e políticas (falta desenhar a tela)
+[WEB] Site: Site: página inicial (herói, recursos, passos, serviços, planos e perguntas)
+[WEB] Site: Site: página para lojistas
+[WEB] Site: Site: páginas legais (termos, privacidade e LGPD)
+[WEB] Site: Site: botões de download das lojas de apps e SEO
+[WEB] Site: Site: analytics e consentimento de cookies
+[WEB] Site: Site: formulário de contato
+[WEB] Site: Site: layout responsivo para celular, tablet e computador
+[WEB] Página pública do QR: Rota pública do pet (petlive.app/r/id) mostrando só os dados permitidos
+[WEB] Página pública do QR: Botões Ligar e WhatsApp para o tutor
+[WEB] Página pública do QR: Enviar localização ao tutor, com consentimento
+[WEB] Painel do lojista: Login e sessão do lojista na web
+[WEB] Painel do lojista: Estrutura do painel: menu lateral e cabeçalho
+[WEB] Painel do lojista: Solicitações: lista, detalhe, aceitar, recusar e responder
+[WEB] Painel do lojista: Catálogo: tabela, filtros e ativar ou desativar
+[WEB] Painel do lojista: Cadastrar e editar produto (fotos, categoria e código de barras)
+[WEB] Painel do lojista: Produto com receita: tipo de venda, o que o tutor vê e prévia
+[WEB] Painel do lojista: Importar produtos por planilha
+[WEB] Painel do lojista: Aba Serviços do catálogo com cards
+[WEB] Painel do lojista: Agenda semanal com reservas, intervalos e folgas
+[WEB] Painel do lojista: Configurações: perfil e contato
+[WEB] Painel do lojista: Configurações: retirada, entrega, pagamentos e políticas
+[WEB] Painel do lojista: Notificações web (push) de novas solicitações
+[WEB] Painel do lojista: Recebimentos: saldo, a receber, movimentações e saque via Pix
+[WEB] Painel do lojista: Extrato e exportação
+[BACKEND] Base: Criar projeto Supabase e ambientes (desenvolvimento e produção)
+[BACKEND] Base: Schema: profiles, pets, vaccinations, dewormings, weights, visits, medications, reminders e push_tokens
+[BACKEND] Base: Regras de acesso (RLS) por tutor
+[BACKEND] Base: Storage para fotos de pets e anexos
+[BACKEND] Base: Autenticação por e-mail e Google
+[BACKEND] Base: Função agendada que gera e envia os lembretes (push)
+[BACKEND] Base: Calendário de vacinas por espécie e idade (tabela e regras)
+[BACKEND] Mapa: Importar lugares do OpenStreetMap (Overpass) para a tabela places, Rio de Janeiro
+[BACKEND] Mapa: Consulta de lugares por distância e tipo
+[BACKEND] Base: Exclusão e exportação de dados (LGPD)
+[BACKEND] Base: Monitoramento e backups
+[BACKEND] Premium e QR: Assinaturas: integração com as lojas de apps e webhooks
+[BACKEND] Premium e QR: Limites por plano
+[BACKEND] Premium e QR: Gerar PDF da carteira
+[BACKEND] Premium e QR: Endpoint público do QR com os dados permitidos
+[BACKEND] Premium e QR: Endpoint da localização enviada por quem achou o pet
+[BACKEND] Marketplace: Tabelas: stores, store_members, products, services, store_hours, time_off, requests, request_items e request_events
+[BACKEND] Marketplace: Campos de venda dos produtos: venda, mostrar_preco, mostrar_estoque e mensagem_tutor
+[BACKEND] Marketplace: Bloquear requests e payments para produtos local_com_receita
+[BACKEND] Marketplace: Regras por serviço: lodging_rates, daycare_plans e walk_rules
+[BACKEND] Marketplace: Função de horários livres (horários da loja, folgas, reservas, vagas e duração)
+[BACKEND] Marketplace: Máquina de estados da solicitação e notificações
+[BACKEND] Marketplace: Assumir lugar do mapa com verificação do dono
+[BACKEND] Marketplace: Fluxo de cadastro e publicação da loja
+[BACKEND] Marketplace: Moderação básica de anúncios e denúncias
+[BACKEND] Pagamentos: Integração Pix (provedor) com QR Code e webhook
+[BACKEND] Pagamentos: Repasse e comissão por pedido
+[BACKEND] Pagamentos: Cupons de desconto
+[BACKEND] Pagamentos: Comprovantes de pagamento
+[BACKEND] Pagamentos: Recebimentos e extrato do lojista
+[BACKEND] Passeio ao vivo: Tempo real do passeio (localização e fotos)
+[BACKEND] Entrega: Entrega integrada
+[BACKEND] Entrega: Assinatura recorrente de ração
