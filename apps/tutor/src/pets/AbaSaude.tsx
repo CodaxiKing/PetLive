@@ -99,6 +99,14 @@ export function AbaSaude() {
     })
   }
 
+  const novoPeso = () => {
+    if (!petAtivo) return
+    router.push({
+      pathname: '/pet/[id]/peso',
+      params: { id: petAtivo.id },
+    })
+  }
+
   /** Toque longo: remover vacina, ou encerrar tratamento de remédio. */
   const aoSegurar = (chave: string, item: OutroRegistro) => {
     if (chave === 'vacinas') {
@@ -241,6 +249,15 @@ export function AbaSaude() {
           style={({ pressed }) => [estilos.botaoRegistrar, pressed && estilos.pressionado]}
         >
           <Text style={estilos.botaoRegistrarTexto}>＋ Remédio</Text>
+        </Pressable>
+
+        <Pressable
+          accessibilityRole="button"
+          onPress={novoPeso}
+          disabled={!petAtivo || salvando}
+          style={({ pressed }) => [estilos.botaoRegistrar, pressed && estilos.pressionado]}
+        >
+          <Text style={estilos.botaoRegistrarTexto}>＋ Peso</Text>
         </Pressable>
       </View>
 
