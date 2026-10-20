@@ -143,7 +143,7 @@ export default function Home() {
               Baixar na App Store
             </span>
           </div>
-          <p className="mt-5.5 text-[13px] font-medium text-azul-escuro">
+          <p className="mt-5.5 text-[13px] font-medium text-azul-texto">
             Feito para tutores de cães e gatos no Rio de Janeiro.
           </p>
         </div>
@@ -239,8 +239,11 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Miniatura do app de agendamento */}
-          <div className="mx-auto w-full max-w-[300px] overflow-hidden rounded-[44px] border-[9px] border-[#2A2A2A] bg-fundo text-tinta">
+          {/* Miniatura do app de agendamento (ilustração decorativa) */}
+          <div
+            aria-hidden="true"
+            className="mx-auto w-full max-w-[300px] overflow-hidden rounded-[44px] border-[9px] border-[#2A2A2A] bg-fundo text-tinta"
+          >
             <div className="h-24 bg-azul-hero px-4 pt-7 text-xl font-medium tracking-tight">
               Agendar horário
             </div>
@@ -255,11 +258,11 @@ export default function Home() {
               <p className="mt-1 text-[11px] font-bold">Horários disponíveis</p>
               <div className="grid grid-cols-3 gap-1.5 text-center text-[11px] font-semibold">
                 <span className="rounded-2xl border-[1.5px] border-borda py-2">09:00</span>
-                <span className="rounded-2xl bg-suave py-2 text-[#A0A8B5] line-through">10:30</span>
+                <span className="rounded-2xl bg-suave py-2 text-cinza line-through">10:30</span>
                 <span className="rounded-2xl border-[1.5px] border-borda py-2">13:00</span>
                 <span className="rounded-2xl bg-tinta py-2 text-white">14:30</span>
                 <span className="rounded-2xl border-[1.5px] border-borda py-2">16:00</span>
-                <span className="rounded-2xl bg-suave py-2 text-[#A0A8B5] line-through">17:30</span>
+                <span className="rounded-2xl bg-suave py-2 text-cinza line-through">17:30</span>
               </div>
               <p className="rounded-2xl bg-roxo-fundo p-2.5 text-[11px] font-bold">
                 Banho e tosa · Rex
