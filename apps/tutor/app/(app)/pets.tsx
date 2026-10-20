@@ -11,12 +11,13 @@ import {
 import { router } from 'expo-router'
 import { IconeBusca } from '../../src/components/Layout'
 import { Mascote } from '../../src/components/Mascote'
+import { AvatarPet } from '../../src/pets/AvatarPet'
 import { usePets } from '../../src/pets/PetsProvider'
 import { idadeEmAnos } from '../../src/pets/types'
 import type { Pet } from '../../src/pets/types'
 import { colors } from '../../src/theme/colors'
 import { typography } from '../../src/theme/typography'
-import { components, radius, shadow, spacing } from '../../src/theme/tokens'
+import { components, shadow, spacing } from '../../src/theme/tokens'
 
 export default function Pets() {
   const { pets, carregando, definirPetAtivo, recarregar } = usePets()
@@ -45,9 +46,7 @@ export default function Pets() {
         onPress={() => abrirPet(item)}
         style={({ pressed }) => [components.card, estilos.cartao, pressed && estilos.pressionado]}
       >
-        <View style={estilos.avatar}>
-          <Mascote especie={item.especie} size={52} recorte />
-        </View>
+        <AvatarPet especie={item.especie} foto={item.foto_url} size={52} />
         <View style={estilos.flex}>
           <Text style={estilos.nome}>{item.nome}</Text>
           {detalhe ? <Text style={estilos.detalhe}>{detalhe}</Text> : null}
@@ -151,13 +150,6 @@ const estilos = StyleSheet.create({
   },
   lista: { paddingHorizontal: spacing.xl, paddingBottom: 130, gap: spacing.md },
   cartao: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
-  avatar: {
-    width: 52,
-    height: 52,
-    borderRadius: radius.md,
-    backgroundColor: colors.primarySurface,
-    overflow: 'hidden',
-  },
   nome: { ...typography.h3, color: colors.black },
   detalhe: {
     ...typography.caption,

@@ -2,14 +2,15 @@ import { useEffect, useState } from 'react'
 import { Alert, Pressable, StyleSheet, Text, View } from 'react-native'
 import { router, useLocalSearchParams } from 'expo-router'
 import { CabecalhoTela } from '../../../src/components/CabecalhoTela'
-import { Mascote } from '../../../src/components/Mascote'
+import { AvatarPet } from '../../../src/pets/AvatarPet'
 import { AbaCalendario } from '../../../src/pets/AbaCalendario'
 import { AbaGeral } from '../../../src/pets/AbaGeral'
 import { AbaSaude } from '../../../src/pets/AbaSaude'
+import { ResumoPet } from '../../../src/pets/ResumoPet'
 import { usePets } from '../../../src/pets/PetsProvider'
 import { colors } from '../../../src/theme/colors'
 import { typography } from '../../../src/theme/typography'
-import { radius, spacing } from '../../../src/theme/tokens'
+import { spacing } from '../../../src/theme/tokens'
 
 const ABAS = ['Geral', 'Saúde', 'Calendário'] as const
 type Aba = (typeof ABAS)[number]
@@ -58,26 +59,26 @@ export default function PetDetalhe() {
       <CabecalhoTela titulo={pet.nome} acao="Editar" onAcao={() => router.push({ pathname: '/pet/[id]/editar', params: { id: pet.id } })} />
 
       <View style={estilos.topo}>
-        <View style={estilos.avatar}>
-          <Mascote especie={pet.especie} size={72} recorte />
-        </View>
+        <AvatarPet especie={pet.especie} foto={pet.foto_url} size={72} />
+      </View>
 
-        <View style={estilos.abas}>
-          {ABAS.map((op) => {
-            const ativa = op === aba
-            return (
-              <Pressable
-                key={op}
-                accessibilityRole="tab"
-                accessibilityState={{ selected: ativa }}
-                onPress={() => setAba(op)}
-                style={[estilos.aba, ativa && estilos.abaAtiva]}
-              >
-                <Text style={[estilos.abaTexto, ativa && estilos.abaTextoAtivo]}>{op}</Text>
-              </Pressable>
-            )
-          })}
-        </View>
+      <ResumoPet pet={pet} />
+
+      <View style={estilos.abas}>
+        {ABAS.map((op) => {
+          const ativa = op === aba
+          return (
+            <Pressable
+              key={op}
+              accessibilityRole="tab"
+              accessibilityState={{ selected: ativa }}
+              onPress={() => setAba(op)}
+              style={[estilos.aba, ativa && estilos.abaAtiva]}
+            >
+              <Text style={[estilos.abaTexto, ativa && estilos.abaTextoAtivo]}>{op}</Text>
+            </Pressable>
+          )
+        })}
       </View>
 
       <View style={estilos.flex}>
@@ -104,26 +105,18 @@ const estilos = StyleSheet.create({
   tela: { flex: 1, backgroundColor: colors.background },
   flex: { flex: 1 },
   topo: {
-    flexDirection: 'row',
     alignItems: 'center',
-    gap: spacing.md,
     paddingHorizontal: spacing.xl,
-    paddingBottom: spacing.md,
-  },
-  avatar: {
-    width: 72,
-    height: 72,
-    borderRadius: radius.lg,
-    backgroundColor: colors.primarySurface,
-    overflow: 'hidden',
+    paddingBottom: spacing.sm,
   },
   abas: {
-    flex: 1,
     flexDirection: 'row',
     gap: 4,
     backgroundColor: colors.disabled,
     borderRadius: 26,
     padding: 4,
+    marginHorizontal: spacing.xl,
+    marginBottom: spacing.sm,
   },
   aba: {
     flex: 1,
