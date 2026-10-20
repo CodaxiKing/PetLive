@@ -1,0 +1,14 @@
+{
+  "name": "petlive",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Carteira de saúde do pet, com lembretes e mapa, que conecta tutores a clínicas, petshops e prestadores de serviço pet.",
+  "scripts": {
+    "tutor": "pnpm --filter petlive-tutor start",
+    "tutor:android": "pnpm --filter petlive-tutor android",
+    "tutor:ios": "pnpm --filter petlive-tutor ios",
+    "tutor:typecheck": "pnpm --filter petlive-tutor typecheck",
+    "typecheck": "pnpm -r typecheck"
+  },
+  "packageManager": "pnpm@11.5.2"
+}

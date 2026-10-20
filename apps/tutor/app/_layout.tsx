@@ -1,0 +1,78 @@
+import { Stack } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
+import { ActivityIndicator, StyleSheet, View } from 'react-native';
+import {
+  useFonts,
+  PlusJakartaSans_400Regular,
+  PlusJakartaSans_500Medium,
+  PlusJakartaSans_600SemiBold,
+  PlusJakartaSans_700Bold,
+  PlusJakartaSans_800ExtraBold,
+} from '@expo-google-fonts/plus-jakarta-sans';
+import { AuthProvider, useAuth } from '../src/auth/AuthProvider';
+import { colors } from '../src/theme/colors';
+
+/** Decide para onde a rota raiz aponta, conforme a sessão. */
+function RaizProtegida() {
+  const { session, carregando } = useAuth();
+
+  if (carregando) {
+    return (
+      <View style={estilos.carregando}>
+        <ActivityIndicator size="large" color={colors.primaryDark} />
+      </View>
+    );
+  }
+
+  return (
+    <Stack
+      screenOptions={{
+        headerShown: false,
+        contentStyle: { backgroundColor: colors.surface },
+        animation: 'slide_from_right',
+      }}
+    >
+      <Stack.Protected guard={Boolean(session)}>
+        <Stack.Screen name="(app)" />
+      </Stack.Protected>
+      <Stack.Protected guard={!session}>
+        <Stack.Screen name="(auth)" />
+      </Stack.Protected>
+    </Stack>
+  );
+}
+
+export default function RootLayout() {
+  const [carregandoFontes] = useFonts({
+    PlusJakartaSans_400Regular,
+    PlusJakartaSans_500Medium,
+    PlusJakartaSans_600SemiBold,
+    PlusJakartaSans_700Bold,
+    PlusJakartaSans_800ExtraBold,
+  });
+
+  // Espera as fontes: sem isso as telas piscam com a fonte do sistema.
+  if (carregandoFontes) {
+    return (
+      <View style={estilos.carregando}>
+        <ActivityIndicator size="large" color={colors.primaryDark} />
+      </View>
+    );
+  }
+
+  return (
+    <AuthProvider>
+      <StatusBar style="dark" />
+      <RaizProtegida />
+    </AuthProvider>
+  );
+}
+
+const estilos = StyleSheet.create({
+  carregando: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.surface,
+  },
+});
