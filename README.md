@@ -2,7 +2,7 @@
 
 A carteira de saúde do seu pet, com lembretes e mapa, que também conecta tutores a clínicas, petshops e prestadores de serviço pet.
 
-> **Status:** em planejamento. O protótipo e o plano estão prontos, e ainda não há código. O escopo completo está em [BUSINESS.md](BUSINESS.md).
+> **Status:** em planejamento. O protótipo e o plano estão prontos, e ainda não há código. O escopo e os fluxos completos está em [BUSINESS.md](BUSINESS.md).
 
 ## O que é o PetLive
 
@@ -24,12 +24,12 @@ A carteira de saúde do seu pet, com lembretes e mapa, que também conecta tutor
 
 | Documento | Para quê |
 | --- | --- |
-| [BUSINESS.md](BUSINESS.md) | Escopo do negócio, regras, fases e riscos |
-| [Protótipo](https://claude.ai/artifact/UFhxFUGwCYokbjPKCXDqKK) | 100 telas e páginas navegáveis: app do tutor, app e painel do lojista, painel admin, site |
+| [BUSINESS.md](BUSINESS.md) | Escopo, regras, papéis, mapa de telas e rotas, fluxos, estados, dados, notificações, backend e ordem de construção |
+| [Protótipo](https://claude.ai/artifact/UFhxFUGwCYokbjPKCXDqKK) | 98 telas e páginas navegáveis: app do tutor, app e painel do lojista, painel admin, site |
 | [prototipo/](prototipo/README.md) | Código-fonte das telas do protótipo, como referência de layout |
 | [docs/backlog/](docs/backlog) | As 149 tasks em arquivo, e o script que cria os itens no GitHub Project |
 | [Plano de criação](https://claude.ai/code/artifact/871f3a23-4e21-4456-861f-b630c089235f) | Arquitetura, modelo de dados, roadmap e backlog |
-| [Board de tarefas](https://github.com/users/CodaxiKing/projects/5) | 149 tasks com tag, módulo e prioridade |
+| [Board de tarefas](https://github.com/users/CodaxiKing/projects/5) | 194 tasks com tag, módulo e prioridade |
 
 ## Tags e prioridades das tarefas
 
