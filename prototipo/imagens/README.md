@@ -81,3 +81,45 @@ Capturas das telas do protótipo, geradas a partir de `prototipo/*.dc.html`. O p
 | --- | --- | --- | --- |
 | <img src="publico/00-pet-encontrado-quem-escaneia.png" width="160"><br>Pet encontrado (quem escaneia) | | | |
 
+## Painel admin (computador) (10)
+
+### Painel admin · 1 · Visão geral
+
+![Painel admin · 1 · Visão geral](admin/01-visao-geral.png)
+
+### Painel admin · 2 · Assinaturas Premium
+
+![Painel admin · 2 · Assinaturas Premium](admin/02-assinaturas-premium.png)
+
+### Painel admin · 3 · Avaliações nas lojas de apps
+
+![Painel admin · 3 · Avaliações nas lojas de apps](admin/03-avaliacoes-nas-lojas-de-apps.png)
+
+### Painel admin · 4 · Usuários e pets
+
+![Painel admin · 4 · Usuários e pets](admin/04-usuarios-e-pets.png)
+
+### Painel admin · 5 · Lojistas e aprovação
+
+![Painel admin · 5 · Lojistas e aprovação](admin/05-lojistas-e-aprovacao.png)
+
+### Painel admin · 6 · Financeiro
+
+![Painel admin · 6 · Financeiro](admin/06-financeiro.png)
+
+### Painel admin · 7 · Moderação
+
+![Painel admin · 7 · Moderação](admin/07-moderacao.png)
+
+### Painel admin · 8 · Campanhas e notificações
+
+![Painel admin · 8 · Campanhas e notificações](admin/08-campanhas-e-notificacoes.png)
+
+### Painel admin · 9 · Sistema
+
+![Painel admin · 9 · Sistema](admin/09-sistema.png)
+
+### Painel admin · 10 · Equipe e permissões
+
+![Painel admin · 10 · Equipe e permissões](admin/10-equipe-e-permissoes.png)
+

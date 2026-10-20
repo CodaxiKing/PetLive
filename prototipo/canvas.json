@@ -1,84 +1,745 @@
 {
-  "v": 3,
-  "createdOnFiles": { "v": 1, "at": "2026-10-19T12:00:00Z" },
-  "title": "Wireframes App de Pets",
-  "launch": { "view": "canvas" },
-  "pages": [],
-  "boards": {
-    "Welcome.dc.html": { "x": 0, "y": 0, "w": 390, "h": 844, "title": "1 · Boas-vindas", "is_interactive": true },
-    "Login.dc.html": { "x": 470, "y": 0, "w": 390, "h": 844, "title": "2 · Criar conta", "is_interactive": true },
-    "Main.dc.html": { "x": 940, "y": 0, "w": 390, "h": 844, "title": "3 · Cadastro do pet", "is_interactive": true },
-    "Inicio.dc.html": { "x": 1410, "y": 0, "w": 390, "h": 844, "title": "4 · Início", "is_interactive": true },
-    "MeusPets.dc.html": { "x": 1880, "y": 0, "w": 390, "h": 844, "title": "5 · Meus pets", "is_interactive": true },
-    "Pet.dc.html": { "x": 2350, "y": 0, "w": 390, "h": 844, "title": "6 · Pet, vacinas", "is_interactive": true },
-    "Vacina.dc.html": { "x": 0, "y": 964, "w": 390, "h": 844, "title": "7 · Registrar vacina", "is_interactive": true },
-    "Peso.dc.html": { "x": 470, "y": 964, "w": 390, "h": 844, "title": "8 · Peso", "is_interactive": true },
-    "Consultas.dc.html": { "x": 940, "y": 964, "w": 390, "h": 844, "title": "9 · Consultas", "is_interactive": true },
-    "Lembretes.dc.html": { "x": 1410, "y": 964, "w": 390, "h": 844, "title": "10 · Lembretes", "is_interactive": true },
-    "NovoLembrete.dc.html": { "x": 1880, "y": 964, "w": 390, "h": 844, "title": "11 · Novo lembrete", "is_interactive": true },
-    "Remedio.dc.html": { "x": 2350, "y": 964, "w": 390, "h": 844, "title": "12 · Novo remédio", "is_interactive": true },
-    "Medicamentos.dc.html": { "x": 0, "y": 1928, "w": 390, "h": 844, "title": "13 · Medicamentos", "is_interactive": true },
-    "Lembrete.dc.html": { "x": 470, "y": 1928, "w": 390, "h": 844, "title": "14 · Lembrete personalizado", "is_interactive": true },
-    "Notificacoes.dc.html": { "x": 940, "y": 1928, "w": 390, "h": 844, "title": "15 · Avisos", "is_interactive": true },
-    "Mapa.dc.html": { "x": 1410, "y": 1928, "w": 390, "h": 844, "title": "16 · Mapa", "is_interactive": true },
-    "Lugar.dc.html": { "x": 1880, "y": 1928, "w": 390, "h": 844, "title": "17 · Ficha do lugar", "is_interactive": true },
-    "Perfil.dc.html": { "x": 2350, "y": 1928, "w": 390, "h": 844, "title": "18 · Perfil do tutor", "is_interactive": true },
-    "Premium.dc.html": { "x": 0, "y": 2892, "w": 390, "h": 844, "title": "19 · Premium", "is_interactive": true },
-    "Compartilhar.dc.html": { "x": 470, "y": 2892, "w": 390, "h": 844, "title": "20 · Carteira em PDF", "is_interactive": true },
-    "QR.dc.html": { "x": 940, "y": 2892, "w": 390, "h": 844, "title": "21 · QR da coleira", "is_interactive": true },
-    "Loja.dc.html": { "x": 1410, "y": 2892, "w": 390, "h": 844, "title": "22 · Loja", "is_interactive": true },
-    "Produto.dc.html": { "x": 1880, "y": 2892, "w": 390, "h": 844, "title": "23 · Produto", "is_interactive": true },
-    "Solicitar.dc.html": { "x": 2350, "y": 2892, "w": 390, "h": 844, "title": "24 · Solicitação", "is_interactive": true },
-    "Pedido.dc.html": { "x": 0, "y": 3856, "w": 390, "h": 844, "title": "25 · Acompanhar solicitação", "is_interactive": true },
-    "Servicos.dc.html": { "x": 470, "y": 3856, "w": 390, "h": 844, "title": "26 · Serviços da loja", "is_interactive": true },
-    "Agendar.dc.html": { "x": 940, "y": 3856, "w": 390, "h": 844, "title": "27 · Agendar horário", "is_interactive": true },
-    "Agendado.dc.html": { "x": 1410, "y": 3856, "w": 390, "h": 844, "title": "28 · Horário reservado", "is_interactive": true },
-    "ProdutoReceita.dc.html": { "x": 1880, "y": 3856, "w": 390, "h": 844, "title": "29 · Produto com receita (só na loja)", "is_interactive": true },
-    "Pagamento.dc.html": { "x": 2350, "y": 3856, "w": 390, "h": 844, "title": "30 · Pagamento", "is_interactive": true },
-    "PagamentoPix.dc.html": { "x": 0, "y": 4820, "w": 390, "h": 844, "title": "31 · Pagar com Pix", "is_interactive": true },
-    "PagamentoOk.dc.html": { "x": 470, "y": 4820, "w": 390, "h": 844, "title": "32 · Pagamento confirmado", "is_interactive": true },
-    "Painel.dc.html": { "x": 3700, "y": 0, "w": 390, "h": 844, "title": "Lojista celular · 1 · Painel", "is_interactive": true },
-    "Pedidos.dc.html": { "x": 4170, "y": 0, "w": 390, "h": 844, "title": "Lojista celular · 2 · Solicitações", "is_interactive": true },
-    "Catalogo.dc.html": { "x": 4640, "y": 0, "w": 390, "h": 844, "title": "Lojista celular · 3 · Catálogo", "is_interactive": true },
-    "Agenda.dc.html": { "x": 5110, "y": 0, "w": 390, "h": 844, "title": "Lojista celular · 4 · Agenda", "is_interactive": true },
-    "Horarios.dc.html": { "x": 5580, "y": 0, "w": 390, "h": 844, "title": "Lojista celular · 5 · Horários de atendimento", "is_interactive": true },
-    "ServicoEditar.dc.html": { "x": 6050, "y": 0, "w": 390, "h": 844, "title": "Lojista celular · 6 · Editar serviço", "is_interactive": true },
-    "WebSolicitacoes.dc.html": { "x": 3700, "y": 1300, "w": 1280, "h": 800, "title": "Lojista computador · 1 · Solicitações e aceite", "is_interactive": true },
-    "WebCatalogo.dc.html": { "x": 5060, "y": 1300, "w": 1280, "h": 800, "title": "Lojista computador · 2 · Catálogo", "is_interactive": true },
-    "WebProduto.dc.html": { "x": 6420, "y": 1300, "w": 1280, "h": 800, "title": "Lojista computador · 3 · Produto com receita", "is_interactive": true },
-    "WebAgenda.dc.html": { "x": 3700, "y": 2300, "w": 1280, "h": 800, "title": "Lojista computador · 4 · Agenda", "is_interactive": true },
-    "WebRecebimentos.dc.html": { "x": 5060, "y": 2300, "w": 1280, "h": 800, "title": "Lojista computador · 5 · Recebimentos", "is_interactive": true },
-    "NovoProdutoMobile.dc.html": { "x": 6520, "y": 0, "w": 390, "h": 844, "title": "Lojista celular · 7 · Cadastrar produto", "is_interactive": true },
-    "WebNovoProduto.dc.html": { "x": 6420, "y": 2300, "w": 1280, "h": 800, "title": "Lojista computador · 6 · Cadastrar produto", "is_interactive": true },
-    "ConfigLoja.dc.html": { "x": 6990, "y": 0, "w": 390, "h": 844, "title": "Lojista celular · 8 · Configurações da loja", "is_interactive": true },
-    "WebConfigLoja.dc.html": { "x": 3700, "y": 3300, "w": 1280, "h": 800, "title": "Lojista computador · 7 · Configurações: perfil e contato", "is_interactive": true },
-    "WebConfigOperacao.dc.html": { "x": 5060, "y": 3300, "w": 1280, "h": 800, "title": "Lojista computador · 8 · Retirada, entrega e pagamentos", "is_interactive": true },
-    "AgendarHotel.dc.html": { "x": 940, "y": 4820, "w": 390, "h": 844, "title": "33 · Reservar hotelzinho", "is_interactive": true },
-    "AgendarPasseio.dc.html": { "x": 1410, "y": 4820, "w": 390, "h": 844, "title": "34 · Agendar passeio", "is_interactive": true },
-    "AgendarCreche.dc.html": { "x": 1880, "y": 4820, "w": 390, "h": 844, "title": "35 · Reservar creche", "is_interactive": true },
-    "LojaTipo.dc.html": { "x": 7460, "y": 0, "w": 390, "h": 844, "title": "Lojista celular · 9 · O que a loja oferece", "is_interactive": true },
-    "LojaServicos.dc.html": { "x": 7930, "y": 0, "w": 390, "h": 844, "title": "Lojista celular · 10 · Escolher serviços", "is_interactive": true },
-    "ServicoHotel.dc.html": { "x": 8400, "y": 0, "w": 390, "h": 844, "title": "Lojista celular · 11 · Hotelzinho pet", "is_interactive": true },
-    "ServicoPasseio.dc.html": { "x": 8870, "y": 0, "w": 390, "h": 844, "title": "Lojista celular · 12 · Passeador", "is_interactive": true },
-    "ServicoCreche.dc.html": { "x": 9340, "y": 0, "w": 390, "h": 844, "title": "Lojista celular · 13 · Creche pet", "is_interactive": true },
-    "WebServicos.dc.html": { "x": 6420, "y": 3300, "w": 1280, "h": 800, "title": "Lojista computador · 9 · Serviços da loja", "is_interactive": true },
-    "PasseioAoVivo.dc.html": { "x": 2350, "y": 4820, "w": 390, "h": 844, "title": "36 · Passeio ao vivo", "is_interactive": true },
-    "PasseioResumo.dc.html": { "x": 0, "y": 5784, "w": 390, "h": 844, "title": "37 · Passeio concluído", "is_interactive": true },
-    "LojaCadastro1.dc.html": { "x": 9810, "y": 0, "w": 390, "h": 844, "title": "Lojista celular · 14 · Cadastro, dados da loja", "is_interactive": true },
-    "LojaCadastro2.dc.html": { "x": 10280, "y": 0, "w": 390, "h": 844, "title": "Lojista celular · 15 · Cadastro, endereço e contato", "is_interactive": true },
-    "LojaPublicar.dc.html": { "x": 10750, "y": 0, "w": 390, "h": 844, "title": "Lojista celular · 16 · Publicar loja", "is_interactive": true },
-    "PasseioIniciar.dc.html": { "x": 11220, "y": 0, "w": 390, "h": 844, "title": "Passeador · Passeio de hoje", "is_interactive": true },
-    "SitePetLive.dc.html": { "x": 12800, "y": 0, "w": 1440, "h": 3950, "title": "Site PetLive · Página inicial", "is_interactive": true },
-    "SiteLojistas.dc.html": { "x": 14400, "y": 0, "w": 1440, "h": 3760, "title": "Site PetLive · Para lojistas", "is_interactive": true },
-    "Encontrado.dc.html": { "x": 12100, "y": 0, "w": 390, "h": 844, "title": "Pet encontrado (quem escaneia)", "is_interactive": true }
+ "v": 3,
+ "createdOnFiles": {
+  "v": 1,
+  "at": "2026-10-19T12:00:00Z"
+ },
+ "title": "Wireframes App de Pets",
+ "launch": {
+  "view": "canvas"
+ },
+ "pages": [],
+ "boards": {
+  "Welcome.dc.html": {
+   "x": 0,
+   "y": 0,
+   "w": 390,
+   "h": 844,
+   "title": "1 · Boas-vindas",
+   "is_interactive": true
   },
-  "order": ["Welcome.dc.html", "Login.dc.html", "Main.dc.html", "Inicio.dc.html", "MeusPets.dc.html", "Pet.dc.html", "Vacina.dc.html", "Peso.dc.html", "Consultas.dc.html", "Lembretes.dc.html", "NovoLembrete.dc.html", "Remedio.dc.html", "Medicamentos.dc.html", "Lembrete.dc.html", "Notificacoes.dc.html", "Mapa.dc.html", "Lugar.dc.html", "Perfil.dc.html", "Premium.dc.html", "Compartilhar.dc.html", "QR.dc.html", "Loja.dc.html", "Produto.dc.html", "Solicitar.dc.html", "Pedido.dc.html", "Servicos.dc.html", "Agendar.dc.html", "Agendado.dc.html", "ProdutoReceita.dc.html", "Pagamento.dc.html", "PagamentoPix.dc.html", "PagamentoOk.dc.html", "Painel.dc.html", "Pedidos.dc.html", "Catalogo.dc.html", "Agenda.dc.html", "Horarios.dc.html", "ServicoEditar.dc.html", "WebSolicitacoes.dc.html", "WebCatalogo.dc.html", "WebProduto.dc.html", "WebAgenda.dc.html", "WebRecebimentos.dc.html", "NovoProdutoMobile.dc.html", "WebNovoProduto.dc.html", "ConfigLoja.dc.html", "WebConfigLoja.dc.html", "WebConfigOperacao.dc.html", "AgendarHotel.dc.html", "AgendarPasseio.dc.html", "AgendarCreche.dc.html", "LojaTipo.dc.html", "LojaServicos.dc.html", "ServicoHotel.dc.html", "ServicoPasseio.dc.html", "ServicoCreche.dc.html", "WebServicos.dc.html", "PasseioAoVivo.dc.html", "PasseioResumo.dc.html", "LojaCadastro1.dc.html", "LojaCadastro2.dc.html", "LojaPublicar.dc.html", "PasseioIniciar.dc.html", "SitePetLive.dc.html", "SiteLojistas.dc.html", "Encontrado.dc.html"],
-  "notes": {
-    "t-tutor": { "x": 0, "y": -260, "text": "App do tutor", "kind": "title1", "maxW": 2740 },
-    "t-lojista": { "x": 3700, "y": -260, "text": "App do lojista (celular)", "kind": "title1", "maxW": 7910 },
-    "t-web": { "x": 3700, "y": 1020, "text": "App do lojista (computador)", "kind": "title1", "maxW": 4000 },
-    "t-publico": { "x": 12100, "y": -260, "text": "Página pública do QR", "kind": "title1", "maxW": 390 },
-    "t-site": { "x": 12800, "y": -260, "text": "Site do PetLive", "kind": "title1", "maxW": 3040 }
+  "Login.dc.html": {
+   "x": 470,
+   "y": 0,
+   "w": 390,
+   "h": 844,
+   "title": "2 · Criar conta",
+   "is_interactive": true
   },
-  "designSystems": []
+  "Main.dc.html": {
+   "x": 940,
+   "y": 0,
+   "w": 390,
+   "h": 844,
+   "title": "3 · Cadastro do pet",
+   "is_interactive": true
+  },
+  "Inicio.dc.html": {
+   "x": 1410,
+   "y": 0,
+   "w": 390,
+   "h": 844,
+   "title": "4 · Início",
+   "is_interactive": true
+  },
+  "MeusPets.dc.html": {
+   "x": 1880,
+   "y": 0,
+   "w": 390,
+   "h": 844,
+   "title": "5 · Meus pets",
+   "is_interactive": true
+  },
+  "Pet.dc.html": {
+   "x": 2350,
+   "y": 0,
+   "w": 390,
+   "h": 844,
+   "title": "6 · Pet, vacinas",
+   "is_interactive": true
+  },
+  "Vacina.dc.html": {
+   "x": 0,
+   "y": 964,
+   "w": 390,
+   "h": 844,
+   "title": "7 · Registrar vacina",
+   "is_interactive": true
+  },
+  "Peso.dc.html": {
+   "x": 470,
+   "y": 964,
+   "w": 390,
+   "h": 844,
+   "title": "8 · Peso",
+   "is_interactive": true
+  },
+  "Consultas.dc.html": {
+   "x": 940,
+   "y": 964,
+   "w": 390,
+   "h": 844,
+   "title": "9 · Consultas",
+   "is_interactive": true
+  },
+  "Lembretes.dc.html": {
+   "x": 1410,
+   "y": 964,
+   "w": 390,
+   "h": 844,
+   "title": "10 · Lembretes",
+   "is_interactive": true
+  },
+  "NovoLembrete.dc.html": {
+   "x": 1880,
+   "y": 964,
+   "w": 390,
+   "h": 844,
+   "title": "11 · Novo lembrete",
+   "is_interactive": true
+  },
+  "Remedio.dc.html": {
+   "x": 2350,
+   "y": 964,
+   "w": 390,
+   "h": 844,
+   "title": "12 · Novo remédio",
+   "is_interactive": true
+  },
+  "Medicamentos.dc.html": {
+   "x": 0,
+   "y": 1928,
+   "w": 390,
+   "h": 844,
+   "title": "13 · Medicamentos",
+   "is_interactive": true
+  },
+  "Lembrete.dc.html": {
+   "x": 470,
+   "y": 1928,
+   "w": 390,
+   "h": 844,
+   "title": "14 · Lembrete personalizado",
+   "is_interactive": true
+  },
+  "Notificacoes.dc.html": {
+   "x": 940,
+   "y": 1928,
+   "w": 390,
+   "h": 844,
+   "title": "15 · Avisos",
+   "is_interactive": true
+  },
+  "Mapa.dc.html": {
+   "x": 1410,
+   "y": 1928,
+   "w": 390,
+   "h": 844,
+   "title": "16 · Mapa",
+   "is_interactive": true
+  },
+  "Lugar.dc.html": {
+   "x": 1880,
+   "y": 1928,
+   "w": 390,
+   "h": 844,
+   "title": "17 · Ficha do lugar",
+   "is_interactive": true
+  },
+  "Perfil.dc.html": {
+   "x": 2350,
+   "y": 1928,
+   "w": 390,
+   "h": 844,
+   "title": "18 · Perfil do tutor",
+   "is_interactive": true
+  },
+  "Premium.dc.html": {
+   "x": 0,
+   "y": 2892,
+   "w": 390,
+   "h": 844,
+   "title": "19 · Premium",
+   "is_interactive": true
+  },
+  "Compartilhar.dc.html": {
+   "x": 470,
+   "y": 2892,
+   "w": 390,
+   "h": 844,
+   "title": "20 · Carteira em PDF",
+   "is_interactive": true
+  },
+  "QR.dc.html": {
+   "x": 940,
+   "y": 2892,
+   "w": 390,
+   "h": 844,
+   "title": "21 · QR da coleira",
+   "is_interactive": true
+  },
+  "Loja.dc.html": {
+   "x": 1410,
+   "y": 2892,
+   "w": 390,
+   "h": 844,
+   "title": "22 · Loja",
+   "is_interactive": true
+  },
+  "Produto.dc.html": {
+   "x": 1880,
+   "y": 2892,
+   "w": 390,
+   "h": 844,
+   "title": "23 · Produto",
+   "is_interactive": true
+  },
+  "Solicitar.dc.html": {
+   "x": 2350,
+   "y": 2892,
+   "w": 390,
+   "h": 844,
+   "title": "24 · Solicitação",
+   "is_interactive": true
+  },
+  "Pedido.dc.html": {
+   "x": 0,
+   "y": 3856,
+   "w": 390,
+   "h": 844,
+   "title": "25 · Acompanhar solicitação",
+   "is_interactive": true
+  },
+  "Servicos.dc.html": {
+   "x": 470,
+   "y": 3856,
+   "w": 390,
+   "h": 844,
+   "title": "26 · Serviços da loja",
+   "is_interactive": true
+  },
+  "Agendar.dc.html": {
+   "x": 940,
+   "y": 3856,
+   "w": 390,
+   "h": 844,
+   "title": "27 · Agendar horário",
+   "is_interactive": true
+  },
+  "Agendado.dc.html": {
+   "x": 1410,
+   "y": 3856,
+   "w": 390,
+   "h": 844,
+   "title": "28 · Horário reservado",
+   "is_interactive": true
+  },
+  "ProdutoReceita.dc.html": {
+   "x": 1880,
+   "y": 3856,
+   "w": 390,
+   "h": 844,
+   "title": "29 · Produto com receita (só na loja)",
+   "is_interactive": true
+  },
+  "Pagamento.dc.html": {
+   "x": 2350,
+   "y": 3856,
+   "w": 390,
+   "h": 844,
+   "title": "30 · Pagamento",
+   "is_interactive": true
+  },
+  "PagamentoPix.dc.html": {
+   "x": 0,
+   "y": 4820,
+   "w": 390,
+   "h": 844,
+   "title": "31 · Pagar com Pix",
+   "is_interactive": true
+  },
+  "PagamentoOk.dc.html": {
+   "x": 470,
+   "y": 4820,
+   "w": 390,
+   "h": 844,
+   "title": "32 · Pagamento confirmado",
+   "is_interactive": true
+  },
+  "Painel.dc.html": {
+   "x": 3700,
+   "y": 0,
+   "w": 390,
+   "h": 844,
+   "title": "Lojista celular · 1 · Painel",
+   "is_interactive": true
+  },
+  "Pedidos.dc.html": {
+   "x": 4170,
+   "y": 0,
+   "w": 390,
+   "h": 844,
+   "title": "Lojista celular · 2 · Solicitações",
+   "is_interactive": true
+  },
+  "Catalogo.dc.html": {
+   "x": 4640,
+   "y": 0,
+   "w": 390,
+   "h": 844,
+   "title": "Lojista celular · 3 · Catálogo",
+   "is_interactive": true
+  },
+  "Agenda.dc.html": {
+   "x": 5110,
+   "y": 0,
+   "w": 390,
+   "h": 844,
+   "title": "Lojista celular · 4 · Agenda",
+   "is_interactive": true
+  },
+  "Horarios.dc.html": {
+   "x": 5580,
+   "y": 0,
+   "w": 390,
+   "h": 844,
+   "title": "Lojista celular · 5 · Horários de atendimento",
+   "is_interactive": true
+  },
+  "ServicoEditar.dc.html": {
+   "x": 6050,
+   "y": 0,
+   "w": 390,
+   "h": 844,
+   "title": "Lojista celular · 6 · Editar serviço",
+   "is_interactive": true
+  },
+  "WebSolicitacoes.dc.html": {
+   "x": 3700,
+   "y": 1300,
+   "w": 1280,
+   "h": 800,
+   "title": "Lojista computador · 1 · Solicitações e aceite",
+   "is_interactive": true
+  },
+  "WebCatalogo.dc.html": {
+   "x": 5060,
+   "y": 1300,
+   "w": 1280,
+   "h": 800,
+   "title": "Lojista computador · 2 · Catálogo",
+   "is_interactive": true
+  },
+  "WebProduto.dc.html": {
+   "x": 6420,
+   "y": 1300,
+   "w": 1280,
+   "h": 800,
+   "title": "Lojista computador · 3 · Produto com receita",
+   "is_interactive": true
+  },
+  "WebAgenda.dc.html": {
+   "x": 3700,
+   "y": 2300,
+   "w": 1280,
+   "h": 800,
+   "title": "Lojista computador · 4 · Agenda",
+   "is_interactive": true
+  },
+  "WebRecebimentos.dc.html": {
+   "x": 5060,
+   "y": 2300,
+   "w": 1280,
+   "h": 800,
+   "title": "Lojista computador · 5 · Recebimentos",
+   "is_interactive": true
+  },
+  "NovoProdutoMobile.dc.html": {
+   "x": 6520,
+   "y": 0,
+   "w": 390,
+   "h": 844,
+   "title": "Lojista celular · 7 · Cadastrar produto",
+   "is_interactive": true
+  },
+  "WebNovoProduto.dc.html": {
+   "x": 6420,
+   "y": 2300,
+   "w": 1280,
+   "h": 800,
+   "title": "Lojista computador · 6 · Cadastrar produto",
+   "is_interactive": true
+  },
+  "ConfigLoja.dc.html": {
+   "x": 6990,
+   "y": 0,
+   "w": 390,
+   "h": 844,
+   "title": "Lojista celular · 8 · Configurações da loja",
+   "is_interactive": true
+  },
+  "WebConfigLoja.dc.html": {
+   "x": 3700,
+   "y": 3300,
+   "w": 1280,
+   "h": 800,
+   "title": "Lojista computador · 7 · Configurações: perfil e contato",
+   "is_interactive": true
+  },
+  "WebConfigOperacao.dc.html": {
+   "x": 5060,
+   "y": 3300,
+   "w": 1280,
+   "h": 800,
+   "title": "Lojista computador · 8 · Retirada, entrega e pagamentos",
+   "is_interactive": true
+  },
+  "AgendarHotel.dc.html": {
+   "x": 940,
+   "y": 4820,
+   "w": 390,
+   "h": 844,
+   "title": "33 · Reservar hotelzinho",
+   "is_interactive": true
+  },
+  "AgendarPasseio.dc.html": {
+   "x": 1410,
+   "y": 4820,
+   "w": 390,
+   "h": 844,
+   "title": "34 · Agendar passeio",
+   "is_interactive": true
+  },
+  "AgendarCreche.dc.html": {
+   "x": 1880,
+   "y": 4820,
+   "w": 390,
+   "h": 844,
+   "title": "35 · Reservar creche",
+   "is_interactive": true
+  },
+  "LojaTipo.dc.html": {
+   "x": 7460,
+   "y": 0,
+   "w": 390,
+   "h": 844,
+   "title": "Lojista celular · 9 · O que a loja oferece",
+   "is_interactive": true
+  },
+  "LojaServicos.dc.html": {
+   "x": 7930,
+   "y": 0,
+   "w": 390,
+   "h": 844,
+   "title": "Lojista celular · 10 · Escolher serviços",
+   "is_interactive": true
+  },
+  "ServicoHotel.dc.html": {
+   "x": 8400,
+   "y": 0,
+   "w": 390,
+   "h": 844,
+   "title": "Lojista celular · 11 · Hotelzinho pet",
+   "is_interactive": true
+  },
+  "ServicoPasseio.dc.html": {
+   "x": 8870,
+   "y": 0,
+   "w": 390,
+   "h": 844,
+   "title": "Lojista celular · 12 · Passeador",
+   "is_interactive": true
+  },
+  "ServicoCreche.dc.html": {
+   "x": 9340,
+   "y": 0,
+   "w": 390,
+   "h": 844,
+   "title": "Lojista celular · 13 · Creche pet",
+   "is_interactive": true
+  },
+  "WebServicos.dc.html": {
+   "x": 6420,
+   "y": 3300,
+   "w": 1280,
+   "h": 800,
+   "title": "Lojista computador · 9 · Serviços da loja",
+   "is_interactive": true
+  },
+  "PasseioAoVivo.dc.html": {
+   "x": 2350,
+   "y": 4820,
+   "w": 390,
+   "h": 844,
+   "title": "36 · Passeio ao vivo",
+   "is_interactive": true
+  },
+  "PasseioResumo.dc.html": {
+   "x": 0,
+   "y": 5784,
+   "w": 390,
+   "h": 844,
+   "title": "37 · Passeio concluído",
+   "is_interactive": true
+  },
+  "LojaCadastro1.dc.html": {
+   "x": 9810,
+   "y": 0,
+   "w": 390,
+   "h": 844,
+   "title": "Lojista celular · 14 · Cadastro, dados da loja",
+   "is_interactive": true
+  },
+  "LojaCadastro2.dc.html": {
+   "x": 10280,
+   "y": 0,
+   "w": 390,
+   "h": 844,
+   "title": "Lojista celular · 15 · Cadastro, endereço e contato",
+   "is_interactive": true
+  },
+  "LojaPublicar.dc.html": {
+   "x": 10750,
+   "y": 0,
+   "w": 390,
+   "h": 844,
+   "title": "Lojista celular · 16 · Publicar loja",
+   "is_interactive": true
+  },
+  "PasseioIniciar.dc.html": {
+   "x": 11220,
+   "y": 0,
+   "w": 390,
+   "h": 844,
+   "title": "Passeador · Passeio de hoje",
+   "is_interactive": true
+  },
+  "SitePetLive.dc.html": {
+   "x": 12800,
+   "y": 0,
+   "w": 1440,
+   "h": 3950,
+   "title": "Site PetLive · Página inicial",
+   "is_interactive": true
+  },
+  "SiteLojistas.dc.html": {
+   "x": 14400,
+   "y": 0,
+   "w": 1440,
+   "h": 3760,
+   "title": "Site PetLive · Para lojistas",
+   "is_interactive": true
+  },
+  "Encontrado.dc.html": {
+   "x": 12100,
+   "y": 0,
+   "w": 390,
+   "h": 844,
+   "title": "Pet encontrado (quem escaneia)",
+   "is_interactive": true
+  },
+  "AdminVisao.dc.html": {
+   "x": 3700,
+   "y": 4600,
+   "w": 1280,
+   "h": 800,
+   "title": "Painel admin · 1 · Visão geral",
+   "is_interactive": true
+  },
+  "AdminAssinaturas.dc.html": {
+   "x": 5060,
+   "y": 4600,
+   "w": 1280,
+   "h": 800,
+   "title": "Painel admin · 2 · Assinaturas Premium",
+   "is_interactive": true
+  },
+  "AdminAvaliacoes.dc.html": {
+   "x": 6420,
+   "y": 4600,
+   "w": 1280,
+   "h": 800,
+   "title": "Painel admin · 3 · Avaliações nas lojas de apps",
+   "is_interactive": true
+  },
+  "AdminUsuarios.dc.html": {
+   "x": 3700,
+   "y": 5600,
+   "w": 1280,
+   "h": 800,
+   "title": "Painel admin · 4 · Usuários e pets",
+   "is_interactive": true
+  },
+  "AdminLojistas.dc.html": {
+   "x": 5060,
+   "y": 5600,
+   "w": 1280,
+   "h": 800,
+   "title": "Painel admin · 5 · Lojistas e aprovação",
+   "is_interactive": true
+  },
+  "AdminFinanceiro.dc.html": {
+   "x": 6420,
+   "y": 5600,
+   "w": 1280,
+   "h": 800,
+   "title": "Painel admin · 6 · Financeiro",
+   "is_interactive": true
+  },
+  "AdminModeracao.dc.html": {
+   "x": 3700,
+   "y": 6600,
+   "w": 1280,
+   "h": 800,
+   "title": "Painel admin · 7 · Moderação",
+   "is_interactive": true
+  },
+  "AdminCampanhas.dc.html": {
+   "x": 5060,
+   "y": 6600,
+   "w": 1280,
+   "h": 800,
+   "title": "Painel admin · 8 · Campanhas e notificações",
+   "is_interactive": true
+  },
+  "AdminSistema.dc.html": {
+   "x": 6420,
+   "y": 6600,
+   "w": 1280,
+   "h": 800,
+   "title": "Painel admin · 9 · Sistema",
+   "is_interactive": true
+  },
+  "AdminEquipe.dc.html": {
+   "x": 3700,
+   "y": 7600,
+   "w": 1280,
+   "h": 800,
+   "title": "Painel admin · 10 · Equipe e permissões",
+   "is_interactive": true
+  }
+ },
+ "order": [
+  "Welcome.dc.html",
+  "Login.dc.html",
+  "Main.dc.html",
+  "Inicio.dc.html",
+  "MeusPets.dc.html",
+  "Pet.dc.html",
+  "Vacina.dc.html",
+  "Peso.dc.html",
+  "Consultas.dc.html",
+  "Lembretes.dc.html",
+  "NovoLembrete.dc.html",
+  "Remedio.dc.html",
+  "Medicamentos.dc.html",
+  "Lembrete.dc.html",
+  "Notificacoes.dc.html",
+  "Mapa.dc.html",
+  "Lugar.dc.html",
+  "Perfil.dc.html",
+  "Premium.dc.html",
+  "Compartilhar.dc.html",
+  "QR.dc.html",
+  "Loja.dc.html",
+  "Produto.dc.html",
+  "Solicitar.dc.html",
+  "Pedido.dc.html",
+  "Servicos.dc.html",
+  "Agendar.dc.html",
+  "Agendado.dc.html",
+  "ProdutoReceita.dc.html",
+  "Pagamento.dc.html",
+  "PagamentoPix.dc.html",
+  "PagamentoOk.dc.html",
+  "Painel.dc.html",
+  "Pedidos.dc.html",
+  "Catalogo.dc.html",
+  "Agenda.dc.html",
+  "Horarios.dc.html",
+  "ServicoEditar.dc.html",
+  "WebSolicitacoes.dc.html",
+  "WebCatalogo.dc.html",
+  "WebProduto.dc.html",
+  "WebAgenda.dc.html",
+  "WebRecebimentos.dc.html",
+  "NovoProdutoMobile.dc.html",
+  "WebNovoProduto.dc.html",
+  "ConfigLoja.dc.html",
+  "WebConfigLoja.dc.html",
+  "WebConfigOperacao.dc.html",
+  "AgendarHotel.dc.html",
+  "AgendarPasseio.dc.html",
+  "AgendarCreche.dc.html",
+  "LojaTipo.dc.html",
+  "LojaServicos.dc.html",
+  "ServicoHotel.dc.html",
+  "ServicoPasseio.dc.html",
+  "ServicoCreche.dc.html",
+  "WebServicos.dc.html",
+  "PasseioAoVivo.dc.html",
+  "PasseioResumo.dc.html",
+  "LojaCadastro1.dc.html",
+  "LojaCadastro2.dc.html",
+  "LojaPublicar.dc.html",
+  "PasseioIniciar.dc.html",
+  "SitePetLive.dc.html",
+  "SiteLojistas.dc.html",
+  "Encontrado.dc.html",
+  "AdminVisao.dc.html",
+  "AdminAssinaturas.dc.html",
+  "AdminAvaliacoes.dc.html",
+  "AdminUsuarios.dc.html",
+  "AdminLojistas.dc.html",
+  "AdminFinanceiro.dc.html",
+  "AdminModeracao.dc.html",
+  "AdminCampanhas.dc.html",
+  "AdminSistema.dc.html",
+  "AdminEquipe.dc.html"
+ ],
+ "notes": {
+  "t-tutor": {
+   "x": 0,
+   "y": -260,
+   "text": "App do tutor",
+   "kind": "title1",
+   "maxW": 2740
+  },
+  "t-lojista": {
+   "x": 3700,
+   "y": -260,
+   "text": "App do lojista (celular)",
+   "kind": "title1",
+   "maxW": 7910
+  },
+  "t-web": {
+   "x": 3700,
+   "y": 1020,
+   "text": "App do lojista (computador)",
+   "kind": "title1",
+   "maxW": 4000
+  },
+  "t-publico": {
+   "x": 12100,
+   "y": -260,
+   "text": "Página pública do QR",
+   "kind": "title1",
+   "maxW": 390
+  },
+  "t-site": {
+   "x": 12800,
+   "y": -260,
+   "text": "Site do PetLive",
+   "kind": "title1",
+   "maxW": 3040
+  },
+  "t-admin": {
+   "x": 3700,
+   "y": 4340,
+   "text": "Painel admin (computador)",
+   "kind": "title1",
+   "maxW": 4000
+  }
+ },
+ "designSystems": []
 }
