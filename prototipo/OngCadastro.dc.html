@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Cadastro da ONG</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<style>
+body{margin:0;font-family:'Plus Jakarta Sans',system-ui,sans-serif;color:#111}
+a{text-decoration:none;color:inherit}
+@media (prefers-reduced-motion:no-preference){
+@keyframes rise{from{opacity:0;translate:0 18px}to{opacity:1;translate:0 0}}
+@keyframes bob{0%,100%{translate:0 0}50%{translate:0 -2.5%}}
+@keyframes sway{0%,100%{rotate:-7deg}50%{rotate:7deg}}
+@keyframes pulse{0%{transform:scale(.7);opacity:.8}100%{transform:scale(1.8);opacity:0}}
+@keyframes grow{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@keyframes draw{to{stroke-dashoffset:0}}
+div[style*="border-radius:2"][style*="padding"],div[style*="border-radius:3"][style*="padding"]{animation:rise .6s cubic-bezier(.2,.7,.2,1) both}
+div[style*="border-radius:2"][style*="padding"]:nth-child(2),div[style*="border-radius:3"][style*="padding"]:nth-child(2){animation-delay:.08s}
+div[style*="border-radius:2"][style*="padding"]:nth-child(3),div[style*="border-radius:3"][style*="padding"]:nth-child(3){animation-delay:.16s}
+div[style*="border-radius:2"][style*="padding"]:nth-child(4),div[style*="border-radius:3"][style*="padding"]:nth-child(4){animation-delay:.24s}
+div[style*="border-radius:2"][style*="padding"]:nth-child(5),div[style*="border-radius:3"][style*="padding"]:nth-child(5){animation-delay:.32s}
+svg[viewBox="0 0 200 200"]{animation:bob 3.4s ease-in-out infinite}
+svg[stroke="#fff"][viewBox="0 0 24 24"]{transform-origin:50% 50%;animation:sway 5s ease-in-out infinite}
+circle[fill-opacity]{transform-box:fill-box;transform-origin:center;animation:pulse 2.2s ease-out infinite}
+polyline[stroke="#111"]{stroke-dasharray:800;stroke-dashoffset:800;animation:draw 1.6s .25s ease-out forwards}
+div[style*="border-radius:4px"][style*="width:"]{transform-origin:left;animation:grow 1.1s .3s cubic-bezier(.2,.7,.2,1) both}
+a{transition:transform .18s ease}
+a[style*="border-radius:32px"]:hover,a[style*="border-radius:28px"]:hover{transform:translateY(-2px)}
+a[style*="border-radius:32px"]:active,a[style*="border-radius:28px"]:active{transform:scale(.97)}
+nav a:hover{transform:translateY(-3px)}
+}
+</style>
+</helmet>
+<div style="position:relative;width:390px;height:844px;box-sizing:border-box;background:#fff;overflow:hidden;display:flex;flex-direction:column">
+<div style="position:relative;height:230px;background:#FDE0E6;flex:none;overflow:hidden"><div style="position:absolute;left:24px;top:56px"><a href="Adocao.dc.html" aria-label="Voltar" style="width:46px;height:46px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;flex:none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></a></div><div style="position:absolute;left:24px;top:112px;font-size:14px;font-weight:500;color:#2F6F93">Adoção</div><h1 style="position:absolute;left:24px;top:132px;margin:0;font-weight:500;font-size:32px;line-height:1.05;letter-spacing:-0.03em">Sou de uma ONG</h1><svg style="position:absolute;left:0;bottom:-1px" width="390" height="46" viewBox="0 0 390 46" preserveAspectRatio="none" aria-hidden="true"><path d="M0 46V26C28 8 56 10 80 24C104 38 132 40 154 26C180 8 214 10 238 26C262 42 300 38 322 22C346 6 372 12 390 24V46z" fill="#fff"/></svg></div><div style="padding:0 24px;display:flex;flex-direction:column;gap:8px;flex:1;overflow:hidden">
+ <div style="background:#F5F6FA;border-radius:20px;padding:9px 16px"><div style="font-size:11px;font-weight:700;color:#6A7484">Nome da ONG ou do abrigo</div><div style="font-size:14px;font-weight:600">[Nome]</div></div>
+ <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div style="background:#F5F6FA;border-radius:20px;padding:9px 16px"><div style="font-size:11px;font-weight:700;color:#6A7484">CNPJ</div><div style="font-size:14px;font-weight:600">[00.000.000/0001-00]</div></div><div style="background:#F5F6FA;border-radius:20px;padding:9px 16px"><div style="font-size:11px;font-weight:700;color:#6A7484">Cidade e bairro</div><div style="font-size:14px;font-weight:600">[Rio] · [bairro]</div></div></div>
+ <div style="background:#F5F6FA;border-radius:20px;padding:9px 16px"><div style="font-size:11px;font-weight:700;color:#6A7484">Responsável</div><div style="font-size:14px;font-weight:600">[Nome] · [telefone]</div></div>
+ <div style="background:#F5F6FA;border-radius:20px;padding:9px 16px"><div style="font-size:11px;font-weight:700;color:#6A7484">Site ou Instagram (opcional)</div><div style="font-size:14px;font-weight:600">[@usuario]</div></div>
+ <div style="font-size:13px;font-weight:700;margin-top:2px">Documentos</div>
+ <div style="display:flex;align-items:center;gap:12px;background:#D8F2E3;border-radius:22px;padding:10px 16px 10px 10px"><span style="width:40px;height:40px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;flex:none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 6h12M8 12h12M8 18h12"/><circle cx="4" cy="6" r="1"/><circle cx="4" cy="12" r="1"/><circle cx="4" cy="18" r="1"/></svg></span><div style="flex:1;min-width:0"><div style="font-size:11px;color:#5E6878">Estatuto ou ato constitutivo</div><div style="font-size:14px;font-weight:600">Enviado ✓</div></div></div>
+ <div style="display:flex;align-items:center;gap:12px;background:#F3F5F8;border-radius:22px;padding:10px 16px 10px 10px"><span style="width:40px;height:40px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;flex:none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 6h12M8 12h12M8 18h12"/><circle cx="4" cy="6" r="1"/><circle cx="4" cy="12" r="1"/><circle cx="4" cy="18" r="1"/></svg></span><div style="flex:1;min-width:0"><div style="font-size:11px;color:#5E6878">Comprovante de endereço</div><div style="font-size:14px;font-weight:600">Enviar arquivo</div></div></div>
+ <div style="background:#FFF0C9;border-radius:18px;padding:10px 14px;font-size:12px;line-height:1.45;color:#8A6414">A análise leva até <b>[3] dias úteis</b>. Só ONGs verificadas publicam pets. O PetLive não vende animais e não cobra pela adoção.</div></div><div style="padding:12px 24px 28px;flex:none"><a href="OngCadastro.dc.html" style="height:64px;border-radius:32px;background:#111;color:#fff;display:flex;align-items:center;padding:0 8px;font-weight:700;font-size:16px"><span style="width:48px;height:48px;border-radius:50%;background:#9AD6F8;display:flex;align-items:center;justify-content:center;flex:none"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/><path d="M9 12l2 2 4-4"/></svg></span><span style="flex:1;text-align:center;margin-right:48px;white-space:nowrap">Enviar para análise</span></a></div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>

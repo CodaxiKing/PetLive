@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Conversa com a loja</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<style>
+body{margin:0;font-family:'Plus Jakarta Sans',system-ui,sans-serif;color:#111}
+a{text-decoration:none;color:inherit}
+@media (prefers-reduced-motion:no-preference){
+@keyframes rise{from{opacity:0;translate:0 18px}to{opacity:1;translate:0 0}}
+@keyframes bob{0%,100%{translate:0 0}50%{translate:0 -2.5%}}
+@keyframes sway{0%,100%{rotate:-7deg}50%{rotate:7deg}}
+@keyframes pulse{0%{transform:scale(.7);opacity:.8}100%{transform:scale(1.8);opacity:0}}
+@keyframes grow{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@keyframes draw{to{stroke-dashoffset:0}}
+div[style*="border-radius:2"][style*="padding"],div[style*="border-radius:3"][style*="padding"]{animation:rise .6s cubic-bezier(.2,.7,.2,1) both}
+div[style*="border-radius:2"][style*="padding"]:nth-child(2),div[style*="border-radius:3"][style*="padding"]:nth-child(2){animation-delay:.08s}
+div[style*="border-radius:2"][style*="padding"]:nth-child(3),div[style*="border-radius:3"][style*="padding"]:nth-child(3){animation-delay:.16s}
+div[style*="border-radius:2"][style*="padding"]:nth-child(4),div[style*="border-radius:3"][style*="padding"]:nth-child(4){animation-delay:.24s}
+div[style*="border-radius:2"][style*="padding"]:nth-child(5),div[style*="border-radius:3"][style*="padding"]:nth-child(5){animation-delay:.32s}
+svg[viewBox="0 0 200 200"]{animation:bob 3.4s ease-in-out infinite}
+svg[stroke="#fff"][viewBox="0 0 24 24"]{transform-origin:50% 50%;animation:sway 5s ease-in-out infinite}
+circle[fill-opacity]{transform-box:fill-box;transform-origin:center;animation:pulse 2.2s ease-out infinite}
+polyline[stroke="#111"]{stroke-dasharray:800;stroke-dashoffset:800;animation:draw 1.6s .25s ease-out forwards}
+div[style*="border-radius:4px"][style*="width:"]{transform-origin:left;animation:grow 1.1s .3s cubic-bezier(.2,.7,.2,1) both}
+a{transition:transform .18s ease}
+a[style*="border-radius:32px"]:hover,a[style*="border-radius:28px"]:hover{transform:translateY(-2px)}
+a[style*="border-radius:32px"]:active,a[style*="border-radius:28px"]:active{transform:scale(.97)}
+nav a:hover{transform:translateY(-3px)}
+}
+</style>
+</helmet>
+<div style="position:relative;width:390px;height:844px;box-sizing:border-box;background:#fff;overflow:hidden;display:flex;flex-direction:column">
+
+  <div style="position:relative;height:150px;background:#A9DCF6;flex:none;overflow:hidden">
+    <div style="position:absolute;left:24px;top:54px;display:flex;align-items:center;gap:12px;right:24px"><a href="Pedido.dc.html" aria-label="Voltar" style="width:46px;height:46px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;flex:none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></a><div style="flex:1;min-width:0"><div style="font-weight:700;font-size:18px;letter-spacing:-0.02em">[Nome da loja]</div><div style="font-size:12px;font-weight:600;color:#2F6F93">Responde em minutos</div></div><span style="font-size:12px;font-weight:700;background:#fff;border-radius:999px;padding:5px 12px">Pedido #[10482]</span></div>
+    <svg style="position:absolute;left:0;bottom:-1px" width="390" height="46" viewBox="0 0 390 46" preserveAspectRatio="none" aria-hidden="true"><path d="M0 46V26C28 8 56 10 80 24C104 38 132 40 154 26C180 8 214 10 238 26C262 42 300 38 322 22C346 6 372 12 390 24V46z" fill="#fff"/></svg>
+  </div>
+  <div style="flex:1;padding:12px 24px 0;display:flex;flex-direction:column;gap:12px;overflow:hidden">
+    <div style="align-self:center;font-size:12px;font-weight:600;color:#6A7484;background:#F5F6FA;border-radius:999px;padding:5px 12px">Hoje</div>
+    <div style="display:flex;justify-content:flex-end"><div style="max-width:78%;background:#111;color:#fff;border-radius:22px;padding:11px 16px;font-size:14px;line-height:1.4">Oi! Pode separar a ração até as 17h?</div></div>
+    <div style="display:flex;justify-content:flex-start"><div style="max-width:78%;background:#F1F3F7;color:#111;border-radius:22px;padding:11px 16px;font-size:14px;line-height:1.4">Claro! Já separei aqui. Quando você vem buscar?</div></div>
+    <div style="display:flex;justify-content:flex-end"><div style="max-width:78%;background:#111;color:#fff;border-radius:22px;padding:11px 16px;font-size:14px;line-height:1.4">Chego às 16h30.</div></div>
+    <div style="display:flex;justify-content:flex-start"><div style="max-width:78%;background:#F1F3F7;color:#111;border-radius:22px;padding:11px 16px;font-size:14px;line-height:1.4">Perfeito, deixo no balcão com o seu nome. 🐶</div></div>
+  </div>
+  <div style="padding:0 24px 12px;display:flex;gap:8px;flex:none"><span style="font-size:12px;font-weight:700;background:#EADCFB;border-radius:999px;padding:8px 14px">Posso trocar o horário?</span><span style="font-size:12px;font-weight:700;background:#E0F1FA;border-radius:999px;padding:8px 14px">Aceitam Pix?</span></div>
+  <div style="padding:0 24px 28px;display:flex;gap:10px;align-items:center;flex:none"><div style="flex:1;height:52px;border-radius:26px;background:#F5F6FA;display:flex;align-items:center;padding:0 20px;font-size:14px;color:#6A7484">Escreva uma mensagem…</div><span style="width:52px;height:52px;border-radius:50%;background:#111;display:flex;align-items:center;justify-content:center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9AD6F8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z"/></svg></span></div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>
