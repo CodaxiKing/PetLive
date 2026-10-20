@@ -2,7 +2,7 @@
 
 Capturas das telas do protótipo, geradas a partir de `prototipo/*.dc.html`. O protótipo navegável está no [canvas publicado](https://claude.ai/artifact/UFhxFUGwCYokbjPKCXDqKK).
 
-## App do tutor (37)
+## App do tutor (40)
 
 | | | | |
 | --- | --- | --- | --- |
@@ -15,7 +15,7 @@ Capturas das telas do protótipo, geradas a partir de `prototipo/*.dc.html`. O p
 | <img src="tutor/25-acompanhar-solicitacao.png" width="160"><br>25 · Acompanhar solicitação | <img src="tutor/26-servicos-da-loja.png" width="160"><br>26 · Serviços da loja | <img src="tutor/27-agendar-horario.png" width="160"><br>27 · Agendar horário | <img src="tutor/28-horario-reservado.png" width="160"><br>28 · Horário reservado |
 | <img src="tutor/29-produto-com-receita-so-na-loja.png" width="160"><br>29 · Produto com receita (só na loja) | <img src="tutor/30-pagamento.png" width="160"><br>30 · Pagamento | <img src="tutor/31-pagar-com-pix.png" width="160"><br>31 · Pagar com Pix | <img src="tutor/32-pagamento-confirmado.png" width="160"><br>32 · Pagamento confirmado |
 | <img src="tutor/33-reservar-hotelzinho.png" width="160"><br>33 · Reservar hotelzinho | <img src="tutor/34-agendar-passeio.png" width="160"><br>34 · Agendar passeio | <img src="tutor/35-reservar-creche.png" width="160"><br>35 · Reservar creche | <img src="tutor/36-passeio-ao-vivo.png" width="160"><br>36 · Passeio ao vivo |
-| <img src="tutor/37-passeio-concluido.png" width="160"><br>37 · Passeio concluído | | | |
+| <img src="tutor/37-passeio-concluido.png" width="160"><br>37 · Passeio concluído | <img src="tutor/38-chat-com-a-loja.png" width="160"><br>38 · Chat com a loja | <img src="tutor/39-cupom-de-desconto.png" width="160"><br>39 · Cupom de desconto | <img src="tutor/40-avaliar-loja-e-servico.png" width="160"><br>40 · Avaliar loja e serviço |
 
 ## App do lojista (celular) (17)
 
@@ -27,7 +27,7 @@ Capturas das telas do protótipo, geradas a partir de `prototipo/*.dc.html`. O p
 | <img src="lojista-celular/12-passeador.png" width="160"><br>Lojista celular · 12 · Passeador | <img src="lojista-celular/13-creche-pet.png" width="160"><br>Lojista celular · 13 · Creche pet | <img src="lojista-celular/14-cadastro-dados-da-loja.png" width="160"><br>Lojista celular · 14 · Cadastro, dados da loja | <img src="lojista-celular/15-cadastro-endereco-e-contato.png" width="160"><br>Lojista celular · 15 · Cadastro, endereço e contato |
 | <img src="lojista-celular/16-publicar-loja.png" width="160"><br>Lojista celular · 16 · Publicar loja | | | |
 
-## Painel do lojista (computador) (9)
+## Painel do lojista (computador) (15)
 
 ### Lojista computador · 1 · Solicitações e aceite
 
@@ -65,6 +65,30 @@ Capturas das telas do protótipo, geradas a partir de `prototipo/*.dc.html`. O p
 
 ![Lojista computador · 9 · Serviços da loja](lojista-computador/09-servicos-da-loja.png)
 
+### Lojista computador · 10 · Mensagens
+
+![Lojista computador · 10 · Mensagens](lojista-computador/10-mensagens.png)
+
+### Lojista computador · 11 · Estoque
+
+![Lojista computador · 11 · Estoque](lojista-computador/11-estoque.png)
+
+### Lojista computador · 12 · Promoções e cupons
+
+![Lojista computador · 12 · Promoções e cupons](lojista-computador/12-promocoes-e-cupons.png)
+
+### Lojista computador · 13 · Avaliações da loja
+
+![Lojista computador · 13 · Avaliações da loja](lojista-computador/13-avaliacoes-da-loja.png)
+
+### Lojista computador · 14 · Relatórios
+
+![Lojista computador · 14 · Relatórios](lojista-computador/14-relatorios.png)
+
+### Lojista computador · 15 · Equipe da loja
+
+![Lojista computador · 15 · Equipe da loja](lojista-computador/15-equipe-da-loja.png)
+
 ## Site PetLive (2)
 
 ### Site PetLive · Página inicial
@@ -81,45 +105,77 @@ Capturas das telas do protótipo, geradas a partir de `prototipo/*.dc.html`. O p
 | --- | --- | --- | --- |
 | <img src="publico/00-pet-encontrado-quem-escaneia.png" width="160"><br>Pet encontrado (quem escaneia) | | | |
 
-## Painel admin (computador) (10)
+## Painel admin (computador) (18)
 
-### Painel admin · 1 · Visão geral
+### Painel admin · 1 · Entrar com verificação
 
-![Painel admin · 1 · Visão geral](admin/01-visao-geral.png)
+![Painel admin · 1 · Entrar com verificação](admin/01-entrar-com-verificacao.png)
 
-### Painel admin · 2 · Assinaturas Premium
+### Painel admin · 2 · Visão geral
 
-![Painel admin · 2 · Assinaturas Premium](admin/02-assinaturas-premium.png)
+![Painel admin · 2 · Visão geral](admin/02-visao-geral.png)
 
-### Painel admin · 3 · Avaliações nas lojas de apps
+### Painel admin · 3 · Relatórios
 
-![Painel admin · 3 · Avaliações nas lojas de apps](admin/03-avaliacoes-nas-lojas-de-apps.png)
+![Painel admin · 3 · Relatórios](admin/03-relatorios.png)
 
-### Painel admin · 4 · Usuários e pets
+### Painel admin · 4 · Assinaturas Premium
 
-![Painel admin · 4 · Usuários e pets](admin/04-usuarios-e-pets.png)
+![Painel admin · 4 · Assinaturas Premium](admin/04-assinaturas-premium.png)
 
-### Painel admin · 5 · Lojistas e aprovação
+### Painel admin · 5 · Planos, preços e cupons
 
-![Painel admin · 5 · Lojistas e aprovação](admin/05-lojistas-e-aprovacao.png)
+![Painel admin · 5 · Planos, preços e cupons](admin/05-planos-precos-e-cupons.png)
 
-### Painel admin · 6 · Financeiro
+### Painel admin · 6 · Pedidos e disputas
 
-![Painel admin · 6 · Financeiro](admin/06-financeiro.png)
+![Painel admin · 6 · Pedidos e disputas](admin/06-pedidos-e-disputas.png)
 
-### Painel admin · 7 · Moderação
+### Painel admin · 7 · Financeiro
 
-![Painel admin · 7 · Moderação](admin/07-moderacao.png)
+![Painel admin · 7 · Financeiro](admin/07-financeiro.png)
 
-### Painel admin · 8 · Campanhas e notificações
+### Painel admin · 8 · Avaliações nas lojas de apps
 
-![Painel admin · 8 · Campanhas e notificações](admin/08-campanhas-e-notificacoes.png)
+![Painel admin · 8 · Avaliações nas lojas de apps](admin/08-avaliacoes-nas-lojas-de-apps.png)
 
-### Painel admin · 9 · Sistema
+### Painel admin · 9 · Usuários e pets
 
-![Painel admin · 9 · Sistema](admin/09-sistema.png)
+![Painel admin · 9 · Usuários e pets](admin/09-usuarios-e-pets.png)
 
-### Painel admin · 10 · Equipe e permissões
+### Painel admin · 10 · Lojistas e aprovação
 
-![Painel admin · 10 · Equipe e permissões](admin/10-equipe-e-permissoes.png)
+![Painel admin · 10 · Lojistas e aprovação](admin/10-lojistas-e-aprovacao.png)
+
+### Painel admin · 11 · Suporte
+
+![Painel admin · 11 · Suporte](admin/11-suporte.png)
+
+### Painel admin · 12 · Moderação
+
+![Painel admin · 12 · Moderação](admin/12-moderacao.png)
+
+### Painel admin · 13 · Campanhas e notificações
+
+![Painel admin · 13 · Campanhas e notificações](admin/13-campanhas-e-notificacoes.png)
+
+### Painel admin · 14 · Conteúdo mestre
+
+![Painel admin · 14 · Conteúdo mestre](admin/14-conteudo-mestre.png)
+
+### Painel admin · 15 · Integrações
+
+![Painel admin · 15 · Integrações](admin/15-integracoes.png)
+
+### Painel admin · 16 · Sistema
+
+![Painel admin · 16 · Sistema](admin/16-sistema.png)
+
+### Painel admin · 17 · Privacidade e LGPD
+
+![Painel admin · 17 · Privacidade e LGPD](admin/17-privacidade-e-lgpd.png)
+
+### Painel admin · 18 · Equipe e permissões
+
+![Painel admin · 18 · Equipe e permissões](admin/18-equipe-e-permissoes.png)
 

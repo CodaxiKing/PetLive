@@ -539,84 +539,220 @@
    "is_interactive": true
   },
   "AdminVisao.dc.html": {
-   "x": 3700,
-   "y": 4600,
    "w": 1280,
    "h": 800,
-   "title": "Painel admin · 1 · Visão geral",
-   "is_interactive": true
+   "is_interactive": true,
+   "x": 5060,
+   "y": 6700,
+   "title": "Painel admin · 2 · Visão geral"
   },
   "AdminAssinaturas.dc.html": {
-   "x": 5060,
-   "y": 4600,
    "w": 1280,
    "h": 800,
-   "title": "Painel admin · 2 · Assinaturas Premium",
-   "is_interactive": true
+   "is_interactive": true,
+   "x": 3700,
+   "y": 7700,
+   "title": "Painel admin · 4 · Assinaturas Premium"
   },
   "AdminAvaliacoes.dc.html": {
-   "x": 6420,
-   "y": 4600,
    "w": 1280,
    "h": 800,
-   "title": "Painel admin · 3 · Avaliações nas lojas de apps",
-   "is_interactive": true
+   "is_interactive": true,
+   "x": 5060,
+   "y": 8700,
+   "title": "Painel admin · 8 · Avaliações nas lojas de apps"
   },
   "AdminUsuarios.dc.html": {
-   "x": 3700,
-   "y": 5600,
    "w": 1280,
    "h": 800,
-   "title": "Painel admin · 4 · Usuários e pets",
-   "is_interactive": true
+   "is_interactive": true,
+   "x": 6420,
+   "y": 8700,
+   "title": "Painel admin · 9 · Usuários e pets"
   },
   "AdminLojistas.dc.html": {
-   "x": 5060,
-   "y": 5600,
    "w": 1280,
    "h": 800,
-   "title": "Painel admin · 5 · Lojistas e aprovação",
-   "is_interactive": true
+   "is_interactive": true,
+   "x": 3700,
+   "y": 9700,
+   "title": "Painel admin · 10 · Lojistas e aprovação"
   },
   "AdminFinanceiro.dc.html": {
-   "x": 6420,
-   "y": 5600,
    "w": 1280,
    "h": 800,
-   "title": "Painel admin · 6 · Financeiro",
-   "is_interactive": true
+   "is_interactive": true,
+   "x": 3700,
+   "y": 8700,
+   "title": "Painel admin · 7 · Financeiro"
   },
   "AdminModeracao.dc.html": {
-   "x": 3700,
-   "y": 6600,
    "w": 1280,
    "h": 800,
-   "title": "Painel admin · 7 · Moderação",
-   "is_interactive": true
+   "is_interactive": true,
+   "x": 6420,
+   "y": 9700,
+   "title": "Painel admin · 12 · Moderação"
   },
   "AdminCampanhas.dc.html": {
-   "x": 5060,
-   "y": 6600,
    "w": 1280,
    "h": 800,
-   "title": "Painel admin · 8 · Campanhas e notificações",
-   "is_interactive": true
+   "is_interactive": true,
+   "x": 3700,
+   "y": 10700,
+   "title": "Painel admin · 13 · Campanhas e notificações"
   },
   "AdminSistema.dc.html": {
-   "x": 6420,
-   "y": 6600,
    "w": 1280,
    "h": 800,
-   "title": "Painel admin · 9 · Sistema",
-   "is_interactive": true
+   "is_interactive": true,
+   "x": 3700,
+   "y": 11700,
+   "title": "Painel admin · 16 · Sistema"
   },
   "AdminEquipe.dc.html": {
-   "x": 3700,
-   "y": 7600,
    "w": 1280,
    "h": 800,
-   "title": "Painel admin · 10 · Equipe e permissões",
-   "is_interactive": true
+   "is_interactive": true,
+   "x": 6420,
+   "y": 11700,
+   "title": "Painel admin · 18 · Equipe e permissões"
+  },
+  "AdminLogin.dc.html": {
+   "w": 1280,
+   "h": 800,
+   "is_interactive": true,
+   "x": 3700,
+   "y": 6700,
+   "title": "Painel admin · 1 · Entrar com verificação"
+  },
+  "AdminRelatorios.dc.html": {
+   "w": 1280,
+   "h": 800,
+   "is_interactive": true,
+   "x": 6420,
+   "y": 6700,
+   "title": "Painel admin · 3 · Relatórios"
+  },
+  "AdminPlanos.dc.html": {
+   "w": 1280,
+   "h": 800,
+   "is_interactive": true,
+   "x": 5060,
+   "y": 7700,
+   "title": "Painel admin · 5 · Planos, preços e cupons"
+  },
+  "AdminPedidos.dc.html": {
+   "w": 1280,
+   "h": 800,
+   "is_interactive": true,
+   "x": 6420,
+   "y": 7700,
+   "title": "Painel admin · 6 · Pedidos e disputas"
+  },
+  "AdminSuporte.dc.html": {
+   "w": 1280,
+   "h": 800,
+   "is_interactive": true,
+   "x": 5060,
+   "y": 9700,
+   "title": "Painel admin · 11 · Suporte"
+  },
+  "AdminConteudo.dc.html": {
+   "w": 1280,
+   "h": 800,
+   "is_interactive": true,
+   "x": 5060,
+   "y": 10700,
+   "title": "Painel admin · 14 · Conteúdo mestre"
+  },
+  "AdminIntegracoes.dc.html": {
+   "w": 1280,
+   "h": 800,
+   "is_interactive": true,
+   "x": 6420,
+   "y": 10700,
+   "title": "Painel admin · 15 · Integrações"
+  },
+  "AdminLGPD.dc.html": {
+   "w": 1280,
+   "h": 800,
+   "is_interactive": true,
+   "x": 5060,
+   "y": 11700,
+   "title": "Painel admin · 17 · Privacidade e LGPD"
+  },
+  "WebMensagens.dc.html": {
+   "w": 1280,
+   "h": 800,
+   "is_interactive": true,
+   "x": 3700,
+   "y": 4300,
+   "title": "Lojista computador · 10 · Mensagens"
+  },
+  "WebEstoque.dc.html": {
+   "w": 1280,
+   "h": 800,
+   "is_interactive": true,
+   "x": 5060,
+   "y": 4300,
+   "title": "Lojista computador · 11 · Estoque"
+  },
+  "WebPromocoes.dc.html": {
+   "w": 1280,
+   "h": 800,
+   "is_interactive": true,
+   "x": 6420,
+   "y": 4300,
+   "title": "Lojista computador · 12 · Promoções e cupons"
+  },
+  "WebAvaliacoes.dc.html": {
+   "w": 1280,
+   "h": 800,
+   "is_interactive": true,
+   "x": 3700,
+   "y": 5300,
+   "title": "Lojista computador · 13 · Avaliações da loja"
+  },
+  "WebRelatorios.dc.html": {
+   "w": 1280,
+   "h": 800,
+   "is_interactive": true,
+   "x": 5060,
+   "y": 5300,
+   "title": "Lojista computador · 14 · Relatórios"
+  },
+  "WebEquipe.dc.html": {
+   "w": 1280,
+   "h": 800,
+   "is_interactive": true,
+   "x": 6420,
+   "y": 5300,
+   "title": "Lojista computador · 15 · Equipe da loja"
+  },
+  "Chat.dc.html": {
+   "w": 390,
+   "h": 844,
+   "is_interactive": true,
+   "x": 470,
+   "y": 5784,
+   "title": "38 · Chat com a loja"
+  },
+  "Cupom.dc.html": {
+   "w": 390,
+   "h": 844,
+   "is_interactive": true,
+   "x": 940,
+   "y": 5784,
+   "title": "39 · Cupom de desconto"
+  },
+  "Avaliar.dc.html": {
+   "w": 390,
+   "h": 844,
+   "is_interactive": true,
+   "x": 1410,
+   "y": 5784,
+   "title": "40 · Avaliar loja e serviço"
   }
  },
  "order": [
@@ -695,7 +831,24 @@
   "AdminModeracao.dc.html",
   "AdminCampanhas.dc.html",
   "AdminSistema.dc.html",
-  "AdminEquipe.dc.html"
+  "AdminEquipe.dc.html",
+  "AdminLogin.dc.html",
+  "AdminRelatorios.dc.html",
+  "AdminPlanos.dc.html",
+  "AdminPedidos.dc.html",
+  "AdminSuporte.dc.html",
+  "AdminConteudo.dc.html",
+  "AdminIntegracoes.dc.html",
+  "AdminLGPD.dc.html",
+  "WebMensagens.dc.html",
+  "WebEstoque.dc.html",
+  "WebPromocoes.dc.html",
+  "WebAvaliacoes.dc.html",
+  "WebRelatorios.dc.html",
+  "WebEquipe.dc.html",
+  "Chat.dc.html",
+  "Cupom.dc.html",
+  "Avaliar.dc.html"
  ],
  "notes": {
   "t-tutor": {
@@ -735,7 +888,7 @@
   },
   "t-admin": {
    "x": 3700,
-   "y": 4340,
+   "y": 6440,
    "text": "Painel admin (computador)",
    "kind": "title1",
    "maxW": 4000
