@@ -4,7 +4,7 @@ Este documento é a fonte única do escopo do PetLive. A **Parte A** (seções 1
 
 | Recurso | Link |
 | --- | --- |
-| Protótipo (149 telas e páginas, separadas por fase no canvas, com a paleta de cores) | https://claude.ai/artifact/UFhxFUGwCYokbjPKCXDqKK |
+| Protótipo (151 telas e páginas, separadas por fase no canvas, com a paleta de cores) | https://claude.ai/artifact/UFhxFUGwCYokbjPKCXDqKK |
 | Imagens das telas | [prototipo/imagens](prototipo/imagens/README.md) |
 | Plano de criação | https://claude.ai/code/artifact/871f3a23-4e21-4456-861f-b630c089235f |
 | Board de tarefas (194 tasks) | https://github.com/users/CodaxiKing/projects/5 |
@@ -560,6 +560,15 @@ O PetLive organiza informações e não substitui o atendimento veterinário. Es
 - Quem recebe vê uma página só de leitura (`FichaVista`) com a data e a hora em que foi gerada e o aviso de que **as informações são do tutor e devem ser confirmadas**. A página não mostra pagamentos, endereço de casa nem histórico completo.
 - Cada abertura do link fica registrada, e o tutor é avisado quando a clínica abriu a ficha.
 
+**Fase 2: o que aparece quando alguém abre o link (telas 78, 90 e 91)**
+- O link abre uma **página pública no navegador**, sem login e sem instalar nada, no **celular** (`FichaVista`) e no **computador** da clínica (`FichaVistaPC`), em `petlive.app/ficha/[codigo]`.
+- **Topo:** faixa vermelha "Ficha de emergência", foto, nome, espécie, raça, idade, peso e sexo do pet, e uma faixa amarela com **quando foi gerada e até quando vale**.
+- **Corpo:** alergias e condições (em destaque), remédios em uso (nome, dose e horário), vacinas e vermífugo com a situação, peso com a data da medida, veterinário habitual, observações do tutor e o **contato do tutor**. Só aparecem os campos que o tutor escolheu.
+- **Ações:** **Ligar para o tutor**, **Chamar no WhatsApp** do tutor e **Imprimir ou salvar em PDF** (a clínica pode anexar ao prontuário). Se o tutor não incluiu o telefone, as ações de contato não aparecem.
+- **Aviso fixo no rodapé:** as informações são do tutor, pelo PetLive, e devem ser confirmadas; não substituem o histórico da clínica; o tutor é avisado de que a ficha foi aberta; não precisa de login.
+- **Link expirado ou cancelado (`FichaExpirada`):** a página mostra "Este link da ficha expirou" e orienta a pedir um **novo link** ao tutor. **Nenhum dado do pet aparece**, nem o nome.
+- A página não indexa em buscadores, não mostra endereço de casa nem dados de pagamento, e limita o número de acessos por link e por IP.
+
 **Fase 2: enviar a ficha para a clínica pelo mapa (WhatsApp)**
 - Na **ficha de qualquer lugar do tipo clínica ou hospital veterinário** (e no cartão da clínica na tela SOS), aparece **Enviar a ficha do [pet] para esta clínica**.
 - O app usa o **telefone que o Google informa** para o lugar. Se for um número de celular, abre o **WhatsApp da clínica** com a mensagem pronta e o link da ficha (link `wa.me`, aberto no aparelho do tutor). O PetLive **não envia a mensagem por API**: quem envia é o tutor, no próprio WhatsApp.
@@ -1001,7 +1010,7 @@ A coluna **Fase** diz quando a tela entra. No canvas do protótipo, as telas tam
 
 Cada linha liga a tela do protótipo (arquivo `prototipo/<nome>.dc.html` e imagem em `prototipo/imagens`) à rota sugerida e aos dados que ela usa. As rotas seguem o Expo Router no app e a estrutura de pastas equivalente na web.
 
-### 18.1 App do tutor (telas 1 a 18 e 46 a 51 na Fase 1; 19 a 21, 43 a 45, 52 a 59, 68 a 75, 77, 78, 82 a 85, 88 e 89 na Fase 2; 22 a 42, 76, 79, 86 e 87 na Fase 3; 62 e 63 na Fase 4; 60, 61, 64 a 67, 80 e 81 na Fase 5)
+### 18.1 App do tutor (telas 1 a 18 e 46 a 51 na Fase 1; 19 a 21, 43 a 45, 52 a 59, 68 a 75, 77, 78, 82 a 85 e 88 a 91 (mais a versão para computador do link) na Fase 2; 22 a 42, 76, 79, 86 e 87 na Fase 3; 62 e 63 na Fase 4; 60, 61, 64 a 67, 80 e 81 na Fase 5)
 
 Navegação por abas: **Início**, **Pets**, **Mapa**, **Lembretes** e **Perfil**. A loja abre a partir do Mapa, do Início e da ficha do lugar.
 
@@ -1054,7 +1063,9 @@ Navegação por abas: **Início**, **Pets**, **Mapa**, **Lembretes** e **Perfil*
 | Widget e atalhos | `WidgetAtalhos` | `/ajustes/widget` | Configuração do aparelho | 2 |
 | Cartão do pet | `CartaoPet` | `/pets/[id]/cartao` | `pets`, `pet_badges` (imagem gerada no aparelho) | 2 |
 | Ficha de emergência | `FichaEmergencia` | `/pets/[id]/ficha-emergencia` | `emergency_cards` | 2 |
-| Ficha de emergência (quem recebe) | `FichaVista` | `/ficha/[token]` (público, sem login) | `emergency_cards` via função pública | 2 |
+| Link da ficha, no celular (quem recebe) | `FichaVista` | `/ficha/[token]` (público, sem login) | `emergency_cards` via função pública | 2 |
+| Link da ficha, no computador da clínica | `FichaVistaPC` | `/ficha/[token]` (mesma rota, layout largo) | `emergency_cards` via função pública | 2 |
+| Link da ficha expirado ou cancelado | `FichaExpirada` | `/ficha/[token]` (quando vencida ou cancelada) | Nenhum dado do pet | 2 |
 | Ficha da clínica com enviar ficha | `LugarClinica` | `/lugares/[id]` (variante de clínica) | Google Places via `place-details`, `emergency_cards` | 2 |
 | Enviar ficha à clínica | `EnviarFichaClinica` | `/lugares/[id]/enviar-ficha` | `emergency_cards`, `emergency_card_shares` | 2 |
 | Estou a caminho | `EstouACaminho` | `/sos/a-caminho` | `emergency_arrivals` (Realtime) | 3 |
@@ -2418,7 +2429,7 @@ Uma tabela para consultar de uma vez: cada funcionalidade com a fase, a regra, a
 | Fogos e trovão | 5.33 | 73 | `content_fireworks`, `calm_mode` | `fireworks-alerts` |
 | Widget e atalhos | 5.34 | 74 | Configuração do aparelho | Atualização do widget |
 | Cartão do pet | 5.35 | 75 | `pets`, `pet_badges` | Imagem gerada no aparelho |
-| Ficha de emergência por link e envio à clínica pelo mapa | 5.37 | 77, 78, 88, 89 | `emergency_cards`, `emergency_card_views` | `create-emergency-card`, `emergency-card-view`, `expire-emergency-cards` |
+| Ficha de emergência por link, página do link e envio à clínica pelo mapa | 5.37 | 77, 78, 88 a 91 | `emergency_cards`, `emergency_card_views` | `create-emergency-card`, `emergency-card-view`, `expire-emergency-cards` |
 | Modo memorial | 5.39 | 82, 83 | `pets.status`, `memorial_settings` | `memorial-start` |
 | Pet sênior e qualidade de vida | 5.40 | 84, 85 | `quality_of_life_logs`, `calc_tables` | `senior-check` |
 | Painel admin básico | 4.4, 17.3 | 19 telas do admin | `admin_members`, `audit_log`, `content_*` | Vários |

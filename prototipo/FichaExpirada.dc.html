@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Link da ficha expirado</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<style>
+body{margin:0;font-family:'Plus Jakarta Sans',system-ui,sans-serif;color:#111}
+a{text-decoration:none;color:inherit}
+@media (prefers-reduced-motion:no-preference){
+@keyframes rise{from{opacity:0;translate:0 18px}to{opacity:1;translate:0 0}}
+@keyframes bob{0%,100%{translate:0 0}50%{translate:0 -2.5%}}
+@keyframes sway{0%,100%{rotate:-7deg}50%{rotate:7deg}}
+@keyframes pulse{0%{transform:scale(.7);opacity:.8}100%{transform:scale(1.8);opacity:0}}
+@keyframes grow{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@keyframes draw{to{stroke-dashoffset:0}}
+div[style*="border-radius:2"][style*="padding"],div[style*="border-radius:3"][style*="padding"]{animation:rise .6s cubic-bezier(.2,.7,.2,1) both}
+div[style*="border-radius:2"][style*="padding"]:nth-child(2),div[style*="border-radius:3"][style*="padding"]:nth-child(2){animation-delay:.08s}
+div[style*="border-radius:2"][style*="padding"]:nth-child(3),div[style*="border-radius:3"][style*="padding"]:nth-child(3){animation-delay:.16s}
+div[style*="border-radius:2"][style*="padding"]:nth-child(4),div[style*="border-radius:3"][style*="padding"]:nth-child(4){animation-delay:.24s}
+div[style*="border-radius:2"][style*="padding"]:nth-child(5),div[style*="border-radius:3"][style*="padding"]:nth-child(5){animation-delay:.32s}
+svg[viewBox="0 0 200 200"]{animation:bob 3.4s ease-in-out infinite}
+svg[stroke="#fff"][viewBox="0 0 24 24"]{transform-origin:50% 50%;animation:sway 5s ease-in-out infinite}
+circle[fill-opacity]{transform-box:fill-box;transform-origin:center;animation:pulse 2.2s ease-out infinite}
+polyline[stroke="#111"]{stroke-dasharray:800;stroke-dashoffset:800;animation:draw 1.6s .25s ease-out forwards}
+div[style*="border-radius:4px"][style*="width:"]{transform-origin:left;animation:grow 1.1s .3s cubic-bezier(.2,.7,.2,1) both}
+a{transition:transform .18s ease}
+a[style*="border-radius:32px"]:hover,a[style*="border-radius:28px"]:hover{transform:translateY(-2px)}
+a[style*="border-radius:32px"]:active,a[style*="border-radius:28px"]:active{transform:scale(.97)}
+nav a:hover{transform:translateY(-3px)}
+}
+</style>
+</helmet>
+<div style="position:relative;width:390px;height:844px;box-sizing:border-box;background:#fff;overflow:hidden;display:flex;flex-direction:column">
+<div style="background:#F1F3F7;padding:44px 16px 10px;flex:none"><div style="height:36px;border-radius:18px;background:#fff;display:flex;align-items:center;gap:8px;padding:0 14px;font-size:13px;color:#3C4656"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1F6B45" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg><span>petlive.app/ficha/<b>[codigo]</b></span></div></div>
+ <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:0 32px;text-align:center">
+  <span style="width:96px;height:96px;border-radius:50%;background:#FFF0C9;display:flex;align-items:center;justify-content:center"><svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="#8A6414" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span>
+  <div style="font-size:26px;font-weight:500;letter-spacing:-0.03em;line-height:1.1">Este link da ficha expirou</div>
+  <div style="font-size:14px;line-height:1.55;color:#5E6878">A ficha do Rex valia até ontem às [14:32], ou o tutor cancelou o acesso. Por segurança, os dados não ficam abertos.</div>
+  <div style="background:#F3F5F8;border-radius:20px;padding:12px 16px;font-size:13px;line-height:1.5;color:#3C4656;text-align:left"><b>O que fazer:</b> peça ao tutor para enviar um <b>novo link</b> pelo PetLive. Se for uma emergência, ligue para ele ou atenda o pet normalmente.</div>
+  <span style="height:48px;padding:0 28px;border-radius:24px;background:#111;color:#fff;display:flex;align-items:center;font-size:14px;font-weight:700;margin-top:6px">Conhecer o PetLive</span>
+ </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>
