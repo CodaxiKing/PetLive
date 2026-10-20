@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import {
   KeyboardAvoidingView,
+  Modal,
   Platform,
   Pressable,
   ScrollView,
@@ -56,6 +57,7 @@ export default function CriarConta() {
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
   const [aceite, setAceite] = useState(false);
+  const [termosAbertos, setTermosAbertos] = useState(false);
   const [carregando, setCarregando] = useState(false);
   const [erro, setErro] = useState<string | null>(null);
   const [aviso, setAviso] = useState<string | null>(null);
@@ -79,16 +81,30 @@ export default function CriarConta() {
     setCarregando(true);
     try {
       if (criando) {
+        const aceiteEm = new Date().toISOString();
         const { data, error } = await supabase.auth.signUp({
           email: email.trim(),
           password: senha,
-          options: { data: { full_name: nome.trim() } },
+          options: {
+            data: {
+              full_name: nome.trim(),
+              nome: nome.trim(),
+              aceite_termos_em: aceiteEm,
+            },
+          },
         });
         if (error) throw error;
 
         // Com confirmação de e-mail ativada não há sessão ainda.
         if (!data.session) {
           setAviso('Enviamos um link de confirmação para o seu e-mail. Abra a mensagem para ativar a conta.');
+        } else {
+          // Rede de segurança: grava o aceite no perfil também no cliente
+          // (o trigger handle_new_user já faz isso no servidor).
+          await supabase.from('profiles').update({
+            aceite_termos: true,
+            aceite_termos_em: aceiteEm,
+          });
         }
       } else {
         const { error } = await supabase.auth.signInWithPassword({
@@ -215,24 +231,30 @@ export default function CriarConta() {
         />
 
         {criando ? (
-          <Pressable
-            accessibilityRole="checkbox"
-            accessibilityState={{ checked: aceite }}
-            onPress={() => setAceite((atual) => !atual)}
-            style={estilos.aceite}
-            hitSlop={6}
-          >
-            <View style={[estilos.caixaAceite, aceite && estilos.caixaAceiteAtiva]}>
-              {aceite ? (
-                <Svg width={14} height={14} viewBox="0 0 24 24" fill="none">
-                  <Path d="M5 12l5 5 9-10" stroke={colors.white} strokeWidth={3} strokeLinecap="round" strokeLinejoin="round" />
-                </Svg>
-              ) : null}
-            </View>
-            <Text style={estilos.textoAceite}>
-              Aceito os termos de uso e o tratamento dos meus dados conforme a LGPD.
-            </Text>
-          </Pressable>
+          <View>
+            <Pressable
+              accessibilityRole="checkbox"
+              accessibilityState={{ checked: aceite }}
+              onPress={() => setAceite((atual) => !atual)}
+              style={estilos.aceite}
+              hitSlop={6}
+            >
+              <View style={[estilos.caixaAceite, aceite && estilos.caixaAceiteAtiva]}>
+                {aceite ? (
+                  <Svg width={14} height={14} viewBox="0 0 24 24" fill="none">
+                    <Path d="M5 12l5 5 9-10" stroke={colors.white} strokeWidth={3} strokeLinecap="round" strokeLinejoin="round" />
+                  </Svg>
+                ) : null}
+              </View>
+              <Text style={estilos.textoAceite}>
+                Aceito os termos de uso e o tratamento dos meus dados conforme a LGPD.
+              </Text>
+            </Pressable>
+
+            <Pressable accessibilityRole="link" onPress={() => setTermosAbertos(true)} hitSlop={8}>
+              <Text style={estilos.linkTermos}>Ler os termos de uso e a política de privacidade →</Text>
+            </Pressable>
+          </View>
         ) : null}
 
         {erro ? <Text style={estilos.erro}>{erro}</Text> : null}
@@ -259,6 +281,75 @@ export default function CriarConta() {
           </Pressable>
         </View>
       </ScrollView>
+
+      <Modal
+        visible={termosAbertos}
+        animationType="slide"
+        transparent
+        onRequestClose={() => setTermosAbertos(false)}
+      >
+        <View style={estilos.fundoModal}>
+          <View style={estilos.cartaoModal}>
+            <ScrollView showsVerticalScrollIndicator={false}>
+              <Text style={estilos.tituloModal}>Termos de uso e privacidade</Text>
+
+              <Text style={estilos.subtituloModal}>1. O que é o PetLive</Text>
+              <Text style={estilos.paragrafoModal}>
+                O PetLive ajuda você a organizar vacinas, remédios, consultas e lembretes do seu pet.
+                Os dados ficam vinculados à sua conta e são usados apenas para oferecer esses recursos.
+              </Text>
+
+              <Text style={estilos.subtituloModal}>2. Dados que coletamos</Text>
+              <Text style={estilos.paragrafoModal}>
+                Nome, e-mail e as informações que você cadastra sobre seus pets (espécie, raça, peso,
+                histórico de saúde e fotos opcionais). Não vendemos nem compartilhamos seus dados com
+                terceiros para fins de publicidade.
+              </Text>
+
+              <Text style={estilos.subtituloModal}>3. Base legal (LGPD)</Text>
+              <Text style={estilos.paragrafoModal}>
+                O tratamento acontece com base no seu consentimento (art. 7º, I) e na execução do
+                serviço solicitado (art. 7º, V). Você pode revogar o consentimento a qualquer momento
+                excluindo a sua conta em Configurações → Conta.
+              </Text>
+
+              <Text style={estilos.subtituloModal}>4. Seus direitos</Text>
+              <Text style={estilos.paragrafoModal}>
+                Você pode confirmar, acessar, corrigir, portar ou excluir seus dados, além de
+                solicitar informações sobre o compartilhamento, conforme os art. 18 e 19 da LGPD.
+                Solicitações: privacidade@petlive.app.
+              </Text>
+
+              <Text style={estilos.subtituloModal}>5. Segurança e retenção</Text>
+              <Text style={estilos.paragrafoModal}>
+                Usamos criptografia em trânsito e controle de acesso por usuário (RLS). Os dados são
+                mantidos enquanto a conta existir e apagados em até 30 dias após a exclusão da conta.
+              </Text>
+
+              <Text style={estilos.subtituloModal}>6. Notificações</Text>
+              <Text style={estilos.paragrafoModal}>
+                Lembretes de vacinas, remédios e consultas são enviados por notificação local ou push.
+                Você pode desativá-las nas configurações do sistema a qualquer momento.
+              </Text>
+
+              <Text style={estilos.versaoModal}>Versão vigente: 1.0 · Outubro de 2026</Text>
+            </ScrollView>
+
+            <View style={estilos.acoesModal}>
+              <BotaoPrimario
+                titulo="Li e aceito os termos"
+                onPress={() => {
+                  setAceite(true);
+                  setTermosAbertos(false);
+                }}
+              />
+              <Pressable accessibilityRole="button" onPress={() => setTermosAbertos(false)} hitSlop={8}>
+                <Text style={estilos.fecharModal}>Fechar sem aceitar</Text>
+              </Pressable>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </KeyboardAvoidingView>
   );
 }
@@ -345,6 +436,61 @@ const estilos = StyleSheet.create({
     lineHeight: 18,
     color: colors.textMuted,
     flex: 1,
+  },
+  linkTermos: {
+    ...typography.caption,
+    fontSize: 13,
+    color: colors.primaryDeep,
+    marginTop: spacing.xs,
+    marginLeft: 34,
+    textDecorationLine: 'underline',
+  },
+  fundoModal: {
+    flex: 1,
+    backgroundColor: colors.overlay,
+    justifyContent: 'flex-end',
+  },
+  cartaoModal: {
+    backgroundColor: colors.surface,
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+    paddingHorizontal: spacing.lg,
+    paddingTop: spacing.lg,
+    paddingBottom: spacing.xl,
+    maxHeight: '86%',
+  },
+  tituloModal: {
+    ...typography.h2,
+    color: colors.text,
+    marginBottom: spacing.sm,
+  },
+  subtituloModal: {
+    ...typography.bodyMedium,
+    color: colors.text,
+    marginTop: spacing.md,
+    marginBottom: 2,
+  },
+  paragrafoModal: {
+    ...typography.caption,
+    fontSize: 14,
+    lineHeight: 21,
+    color: colors.textMuted,
+  },
+  versaoModal: {
+    ...typography.caption,
+    color: colors.textMuted,
+    marginTop: spacing.lg,
+    marginBottom: spacing.sm,
+  },
+  acoesModal: {
+    gap: spacing.sm,
+    paddingTop: spacing.md,
+  },
+  fecharModal: {
+    ...typography.caption,
+    color: colors.textMuted,
+    textAlign: 'center',
+    paddingVertical: spacing.sm,
   },
   erro: {
     ...typography.caption,
