@@ -1,4 +1,4 @@
-import { ScrollView, StyleSheet, Text, View, useWindowDimensions } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Text, View, useWindowDimensions } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 import { useRouter } from 'expo-router';
 import {
@@ -128,7 +128,14 @@ export default function Inicio() {
         </View>
 
         {/* Atalho: vacina vencendo leva às clínicas por perto (board P1). */}
-        <View style={estilos.avisoVacina}>
+        <Pressable
+          style={estilos.avisoVacina}
+          accessibilityRole="button"
+          accessibilityLabel="Ver clínicas por perto"
+          onPress={() =>
+            router.push({ pathname: '/mapa', params: { filtro: 'clinica' } })
+          }
+        >
           <View style={estilos.avisoVacinaÍcone}>
             <Svg width={18} height={18} viewBox="0 0 24 24" fill="none" stroke={colors.black} strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
               <Path d="M14 4l6 6-9 9-6-6z" />
@@ -139,7 +146,7 @@ export default function Inicio() {
           <View style={estilos.avisoVacinaBotao}>
             <Text style={estilos.avisoVacinaBotaoTexto}>Ver</Text>
           </View>
-        </View>
+        </Pressable>
       </View>
 
       {/* Espaço para o menu inferior flutuante não cobrir o conteúdo. */}
