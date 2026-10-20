@@ -1,8 +1,10 @@
 # Imagens das telas
 
-Capturas das telas do protótipo, geradas a partir de `prototipo/*.dc.html`. O protótipo navegável está no [canvas publicado](https://claude.ai/artifact/UFhxFUGwCYokbjPKCXDqKK).
+Capturas das telas do protótipo, geradas a partir de `prototipo/*.dc.html` e organizadas por fase. O protótipo navegável está no [canvas publicado](https://claude.ai/artifact/UFhxFUGwCYokbjPKCXDqKK). Só a **Fase 1** está em desenvolvimento agora.
 
-## App do tutor (42)
+# Fase 1 · MVP: pet, saúde e lugares próximos
+
+## App do tutor (18)
 
 | | | | |
 | --- | --- | --- | --- |
@@ -10,13 +12,98 @@ Capturas das telas do protótipo, geradas a partir de `prototipo/*.dc.html`. O p
 | <img src="tutor/05-meus-pets.png" width="160"><br>5 · Meus pets | <img src="tutor/06-pet-vacinas.png" width="160"><br>6 · Pet, vacinas | <img src="tutor/07-registrar-vacina.png" width="160"><br>7 · Registrar vacina | <img src="tutor/08-peso.png" width="160"><br>8 · Peso |
 | <img src="tutor/09-consultas.png" width="160"><br>9 · Consultas | <img src="tutor/10-lembretes.png" width="160"><br>10 · Lembretes | <img src="tutor/11-novo-lembrete.png" width="160"><br>11 · Novo lembrete | <img src="tutor/12-novo-remedio.png" width="160"><br>12 · Novo remédio |
 | <img src="tutor/13-medicamentos.png" width="160"><br>13 · Medicamentos | <img src="tutor/14-lembrete-personalizado.png" width="160"><br>14 · Lembrete personalizado | <img src="tutor/15-avisos.png" width="160"><br>15 · Avisos | <img src="tutor/16-mapa.png" width="160"><br>16 · Mapa |
-| <img src="tutor/17-ficha-do-lugar.png" width="160"><br>17 · Ficha do lugar | <img src="tutor/18-perfil-do-tutor.png" width="160"><br>18 · Perfil do tutor | <img src="tutor/19-premium.png" width="160"><br>19 · Premium | <img src="tutor/20-carteira-em-pdf.png" width="160"><br>20 · Carteira em PDF |
-| <img src="tutor/21-qr-da-coleira.png" width="160"><br>21 · QR da coleira | <img src="tutor/22-loja.png" width="160"><br>22 · Loja | <img src="tutor/23-produto.png" width="160"><br>23 · Produto | <img src="tutor/24-solicitacao.png" width="160"><br>24 · Solicitação |
-| <img src="tutor/25-acompanhar-solicitacao.png" width="160"><br>25 · Acompanhar solicitação | <img src="tutor/26-servicos-da-loja.png" width="160"><br>26 · Serviços da loja | <img src="tutor/27-agendar-horario.png" width="160"><br>27 · Agendar horário | <img src="tutor/28-horario-reservado.png" width="160"><br>28 · Horário reservado |
-| <img src="tutor/29-produto-com-receita-so-na-loja.png" width="160"><br>29 · Produto com receita (só na loja) | <img src="tutor/30-pagamento.png" width="160"><br>30 · Pagamento | <img src="tutor/31-pagar-com-pix.png" width="160"><br>31 · Pagar com Pix | <img src="tutor/32-pagamento-confirmado.png" width="160"><br>32 · Pagamento confirmado |
-| <img src="tutor/33-reservar-hotelzinho.png" width="160"><br>33 · Reservar hotelzinho | <img src="tutor/34-agendar-passeio.png" width="160"><br>34 · Agendar passeio | <img src="tutor/35-reservar-creche.png" width="160"><br>35 · Reservar creche | <img src="tutor/36-passeio-ao-vivo.png" width="160"><br>36 · Passeio ao vivo |
-| <img src="tutor/37-passeio-concluido.png" width="160"><br>37 · Passeio concluído | <img src="tutor/38-chat-com-a-loja.png" width="160"><br>38 · Chat com a loja | <img src="tutor/39-cupom-de-desconto.png" width="160"><br>39 · Cupom de desconto | <img src="tutor/40-avaliar-loja-e-servico.png" width="160"><br>40 · Avaliar loja e serviço |
-| <img src="tutor/41-entrega-ou-retirada.png" width="160"><br>41 · Entrega ou retirada | <img src="tutor/42-acompanhar-entrega.png" width="160"><br>42 · Acompanhar entrega | | |
+| <img src="tutor/17-ficha-do-lugar.png" width="160"><br>17 · Ficha do lugar | <img src="tutor/18-perfil-do-tutor.png" width="160"><br>18 · Perfil do tutor | | |
+
+# Fase 2 · Premium e painel admin
+
+## App do tutor (3)
+
+| | | | |
+| --- | --- | --- | --- |
+| <img src="tutor/19-premium.png" width="160"><br>19 · Premium | <img src="tutor/20-carteira-em-pdf.png" width="160"><br>20 · Carteira em PDF | <img src="tutor/21-qr-da-coleira.png" width="160"><br>21 · QR da coleira | |
+
+## Site (1)
+
+### Site PetLive · Página inicial
+
+![Site PetLive · Página inicial](site/00-pagina-inicial.png)
+
+## Página pública do QR (1)
+
+| | | | |
+| --- | --- | --- | --- |
+| <img src="publico/00-pet-encontrado-quem-escaneia.png" width="160"><br>Pet encontrado (quem escaneia) | | | |
+
+## Painel admin (computador) (14)
+
+### Painel admin · 1 · Entrar com verificação
+
+![Painel admin · 1 · Entrar com verificação](admin/01-entrar-com-verificacao.png)
+
+### Painel admin · 2 · Visão geral
+
+![Painel admin · 2 · Visão geral](admin/02-visao-geral.png)
+
+### Painel admin · 3 · Relatórios
+
+![Painel admin · 3 · Relatórios](admin/03-relatorios.png)
+
+### Painel admin · 4 · Assinaturas Premium
+
+![Painel admin · 4 · Assinaturas Premium](admin/04-assinaturas-premium.png)
+
+### Painel admin · 5 · Planos, preços e cupons
+
+![Painel admin · 5 · Planos, preços e cupons](admin/05-planos-precos-e-cupons.png)
+
+### Painel admin · 8 · Avaliações nas lojas de apps
+
+![Painel admin · 8 · Avaliações nas lojas de apps](admin/08-avaliacoes-nas-lojas-de-apps.png)
+
+### Painel admin · 9 · Usuários e pets
+
+![Painel admin · 9 · Usuários e pets](admin/09-usuarios-e-pets.png)
+
+### Painel admin · 11 · Suporte
+
+![Painel admin · 11 · Suporte](admin/11-suporte.png)
+
+### Painel admin · 13 · Campanhas e notificações
+
+![Painel admin · 13 · Campanhas e notificações](admin/13-campanhas-e-notificacoes.png)
+
+### Painel admin · 14 · Conteúdo mestre
+
+![Painel admin · 14 · Conteúdo mestre](admin/14-conteudo-mestre.png)
+
+### Painel admin · 15 · Integrações
+
+![Painel admin · 15 · Integrações](admin/15-integracoes.png)
+
+### Painel admin · 16 · Sistema
+
+![Painel admin · 16 · Sistema](admin/16-sistema.png)
+
+### Painel admin · 17 · Privacidade e LGPD
+
+![Painel admin · 17 · Privacidade e LGPD](admin/17-privacidade-e-lgpd.png)
+
+### Painel admin · 18 · Equipe e permissões
+
+![Painel admin · 18 · Equipe e permissões](admin/18-equipe-e-permissoes.png)
+
+# Fase 3 · Marketplace (futuro, não é para agora)
+
+## App do tutor (21)
+
+| | | | |
+| --- | --- | --- | --- |
+| <img src="tutor/22-loja.png" width="160"><br>22 · Loja | <img src="tutor/23-produto.png" width="160"><br>23 · Produto | <img src="tutor/24-solicitacao.png" width="160"><br>24 · Solicitação | <img src="tutor/25-acompanhar-solicitacao.png" width="160"><br>25 · Acompanhar solicitação |
+| <img src="tutor/26-servicos-da-loja.png" width="160"><br>26 · Serviços da loja | <img src="tutor/27-agendar-horario.png" width="160"><br>27 · Agendar horário | <img src="tutor/28-horario-reservado.png" width="160"><br>28 · Horário reservado | <img src="tutor/29-produto-com-receita-so-na-loja.png" width="160"><br>29 · Produto com receita (só na loja) |
+| <img src="tutor/30-pagamento.png" width="160"><br>30 · Pagamento | <img src="tutor/31-pagar-com-pix.png" width="160"><br>31 · Pagar com Pix | <img src="tutor/32-pagamento-confirmado.png" width="160"><br>32 · Pagamento confirmado | <img src="tutor/33-reservar-hotelzinho.png" width="160"><br>33 · Reservar hotelzinho |
+| <img src="tutor/34-agendar-passeio.png" width="160"><br>34 · Agendar passeio | <img src="tutor/35-reservar-creche.png" width="160"><br>35 · Reservar creche | <img src="tutor/36-passeio-ao-vivo.png" width="160"><br>36 · Passeio ao vivo | <img src="tutor/37-passeio-concluido.png" width="160"><br>37 · Passeio concluído |
+| <img src="tutor/38-chat-com-a-loja.png" width="160"><br>38 · Chat com a loja | <img src="tutor/39-cupom-de-desconto.png" width="160"><br>39 · Cupom de desconto | <img src="tutor/40-avaliar-loja-e-servico.png" width="160"><br>40 · Avaliar loja e serviço | <img src="tutor/41-entrega-ou-retirada.png" width="160"><br>41 · Entrega ou retirada |
+| <img src="tutor/42-acompanhar-entrega.png" width="160"><br>42 · Acompanhar entrega | | | |
 
 ## App do lojista (celular) (18)
 
@@ -98,43 +185,13 @@ Capturas das telas do protótipo, geradas a partir de `prototipo/*.dc.html`. O p
 
 ![Lojista computador · 17 · Entregas](lojista-computador/17-entregas.png)
 
-## Site PetLive (2)
-
-### Site PetLive · Página inicial
-
-![Site PetLive · Página inicial](site/00-pagina-inicial.png)
+## Site (1)
 
 ### Site PetLive · Para lojistas
 
 ![Site PetLive · Para lojistas](site/00-para-lojistas.png)
 
-## Página pública do QR (1)
-
-| | | | |
-| --- | --- | --- | --- |
-| <img src="publico/00-pet-encontrado-quem-escaneia.png" width="160"><br>Pet encontrado (quem escaneia) | | | |
-
-## Painel admin (computador) (18)
-
-### Painel admin · 1 · Entrar com verificação
-
-![Painel admin · 1 · Entrar com verificação](admin/01-entrar-com-verificacao.png)
-
-### Painel admin · 2 · Visão geral
-
-![Painel admin · 2 · Visão geral](admin/02-visao-geral.png)
-
-### Painel admin · 3 · Relatórios
-
-![Painel admin · 3 · Relatórios](admin/03-relatorios.png)
-
-### Painel admin · 4 · Assinaturas Premium
-
-![Painel admin · 4 · Assinaturas Premium](admin/04-assinaturas-premium.png)
-
-### Painel admin · 5 · Planos, preços e cupons
-
-![Painel admin · 5 · Planos, preços e cupons](admin/05-planos-precos-e-cupons.png)
+## Painel admin (computador) (4)
 
 ### Painel admin · 6 · Pedidos e disputas
 
@@ -144,47 +201,11 @@ Capturas das telas do protótipo, geradas a partir de `prototipo/*.dc.html`. O p
 
 ![Painel admin · 7 · Financeiro](admin/07-financeiro.png)
 
-### Painel admin · 8 · Avaliações nas lojas de apps
-
-![Painel admin · 8 · Avaliações nas lojas de apps](admin/08-avaliacoes-nas-lojas-de-apps.png)
-
-### Painel admin · 9 · Usuários e pets
-
-![Painel admin · 9 · Usuários e pets](admin/09-usuarios-e-pets.png)
-
 ### Painel admin · 10 · Lojistas e aprovação
 
 ![Painel admin · 10 · Lojistas e aprovação](admin/10-lojistas-e-aprovacao.png)
 
-### Painel admin · 11 · Suporte
-
-![Painel admin · 11 · Suporte](admin/11-suporte.png)
-
 ### Painel admin · 12 · Moderação
 
 ![Painel admin · 12 · Moderação](admin/12-moderacao.png)
-
-### Painel admin · 13 · Campanhas e notificações
-
-![Painel admin · 13 · Campanhas e notificações](admin/13-campanhas-e-notificacoes.png)
-
-### Painel admin · 14 · Conteúdo mestre
-
-![Painel admin · 14 · Conteúdo mestre](admin/14-conteudo-mestre.png)
-
-### Painel admin · 15 · Integrações
-
-![Painel admin · 15 · Integrações](admin/15-integracoes.png)
-
-### Painel admin · 16 · Sistema
-
-![Painel admin · 16 · Sistema](admin/16-sistema.png)
-
-### Painel admin · 17 · Privacidade e LGPD
-
-![Painel admin · 17 · Privacidade e LGPD](admin/17-privacidade-e-lgpd.png)
-
-### Painel admin · 18 · Equipe e permissões
-
-![Painel admin · 18 · Equipe e permissões](admin/18-equipe-e-permissoes.png)
 

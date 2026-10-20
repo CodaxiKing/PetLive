@@ -6,8 +6,8 @@ A carteira de saúde do seu pet, com lembretes e mapa, que também conecta tutor
 
 ## O que é o PetLive
 
-- **Para o tutor:** vacinas, vermífugo, peso e consultas em um só lugar, com lembretes de remédios, mapa de clínicas e lojas por perto, e reserva de banho e tosa, passeio, creche e hotelzinho.
-- **Para o lojista:** vitrine de produtos, agenda de serviços, solicitações e recebimento por Pix.
+- **Para o tutor (Fases 1 e 2):** vacinas, vermífugo, peso e consultas em um só lugar, lembretes de remédios e um mapa de clínicas, petshops, creches e hotelzinhos por perto, com telefone, fotos e rota (dados do Google Maps).
+- **Para o lojista (Fase 3, parte separada e futura):** vitrine de produtos, agenda de serviços, entrega, solicitações e recebimento por Pix.
 - **Lançamento:** Rio de Janeiro, para cães e gatos.
 
 ## Produtos do projeto
@@ -52,7 +52,7 @@ Cada tarefa do board tem uma tag no título e um valor no campo **Priority**.
 ## Stack
 
 - **App:** React Native, Expo, TypeScript, Expo Router
-- **Mapa:** MapLibre com dados do OpenStreetMap
+- **Mapa e lugares:** Google Maps e Places API
 - **Backend:** Supabase (Auth, Postgres, Storage, Edge Functions)
 - **Notificações:** expo-notifications
 - **Build:** EAS Build e EAS Update
@@ -82,18 +82,18 @@ Ainda não há código para rodar. Os primeiros passos do desenvolvimento, em or
 
 1. Criar o repositório e o projeto Expo com autenticação.
 2. Criar o projeto Supabase e o schema inicial (tarefas `[BACKEND] Base`).
-3. Implementar o MVP de saúde e mapa (prioridades P0 e P1 no board).
+3. Implementar a Fase 1: saúde do pet, lembretes e lugares por perto com o Google (prioridades P0 e P1 no board). Criar antes o projeto no Google Cloud, com chave restrita e orçamento com alerta.
 
 Quando o código existir, esta seção ganhará os comandos de instalação, variáveis de ambiente e como rodar cada app.
 
 ## Roadmap resumido
 
-| Fase | Entrega |
-| --- | --- |
-| 1 | MVP: conta, pets, saúde, lembretes, remédios, mapa |
-| 2 | Premium: carteira em PDF, QR da coleira, anexos, família |
-| 3 e 4 | Rede social e check-ins (depois de validar a retenção) |
-| 5 | Marketplace: vitrine e agenda, depois Pix, passeio ao vivo e entrega |
+| Fase | Entrega | Situação |
+| --- | --- | --- |
+| **1** | **MVP: conta, pets, saúde, lembretes, remédios e lugares pet por perto (Google)** | **Agora** |
+| 2 | Premium, carteira em PDF, QR da coleira, página do QR, site e painel admin básico | Depois |
+| 3 | Marketplace: lojas, pedidos, serviços, entrega, pagamentos e painéis do lojista | Futuro, parte separada |
+| 4 e 5 | Rede social, check-ins e pets perdidos | Futuro |
 
 ## Aviso
 
