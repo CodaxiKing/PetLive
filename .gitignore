@@ -33,6 +33,9 @@ supabase/.branches/
 supabase/.temp/
 supabase/.env
 
+# Backups locais do banco (scripts/backup-db.mjs)
+backups/
+
 # Logs
 npm-debug.log*
 yarn-debug.log*

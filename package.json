@@ -8,7 +8,9 @@
     "tutor:android": "pnpm --filter petlive-tutor android",
     "tutor:ios": "pnpm --filter petlive-tutor ios",
     "tutor:typecheck": "pnpm --filter petlive-tutor typecheck",
-    "typecheck": "pnpm -r typecheck"
+    "typecheck": "pnpm -r typecheck",
+    "backup": "node scripts/backup-db.mjs",
+    "monitor": "node scripts/monitorar.mjs"
   },
   "packageManager": "pnpm@11.5.2"
 }
