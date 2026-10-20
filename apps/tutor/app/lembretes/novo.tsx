@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import {
   Alert,
   KeyboardAvoidingView,
@@ -17,6 +17,7 @@ import { ControleSegmentado } from '../../src/components/ControleSegmentado'
 import { useLembretes } from '../../src/lembretes/LembretesProvider'
 import type { Repeticao, TipoLembrete } from '../../src/lembretes/types'
 import { LEMBRETE_FORM_VAZIO, REPETICOES, TIPOS } from '../../src/lembretes/types'
+import { preferenciasAvisos } from '../../src/notificacoes/prefs'
 import { colors } from '../../src/theme/colors'
 import { typography } from '../../src/theme/typography'
 import { radius, spacing } from '../../src/theme/tokens'
@@ -26,6 +27,20 @@ const REPETIR_ROTULOS = REPETICOES.map((r) => r.rotulo)
 export default function NovoLembrete() {
   const { criarLembrete, salvando } = useLembretes()
   const [form, setForm] = useState(LEMBRETE_FORM_VAZIO)
+  const horaEditada = useRef(false)
+
+  // Hora inicial vem da tela Avisos ("Horário dos avisos"); só aplica se o
+  // tutor ainda não digitou nada no campo.
+  useEffect(() => {
+    preferenciasAvisos().then(
+      (avisos) => {
+        if (!horaEditada.current) {
+          setForm((atual) => ({ ...atual, hora: avisos.horario }))
+        }
+      },
+      () => undefined, // sem preferência salva, mantém o padrão do formulário
+    )
+  }, [])
 
   const alterar = (campo: keyof typeof form, valor: string | TipoLembrete | Repeticao | null) =>
     setForm((atual) => ({ ...atual, [campo]: valor }))
@@ -110,7 +125,10 @@ export default function NovoLembrete() {
               placeholder="HH:MM"
               keyboardType="number-pad"
               value={form.hora}
-              onChangeText={(v) => alterar('hora', v)}
+              onChangeText={(v) => {
+                horaEditada.current = true
+                alterar('hora', v)
+              }}
             />
           </View>
         </View>

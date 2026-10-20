@@ -79,6 +79,7 @@ function RaizProtegida() {
                 <Stack.Screen name="pet/[id]/remedio/novo" options={{ presentation: 'modal', animation: 'slide_from_bottom' }} />
                 <Stack.Screen name="lembretes/index" />
                 <Stack.Screen name="lembretes/novo" options={{ presentation: 'modal', animation: 'slide_from_bottom' }} />
+                <Stack.Screen name="avisos" />
               </Stack.Protected>
               <Stack.Protected guard={!session}>
                 <Stack.Screen name="(auth)" />

@@ -91,9 +91,9 @@ export default function Perfil() {
   const opcoes: Opcao[] = [
     { rotulo: 'Meus dados', onPress: abrirEdicao },
     { rotulo: 'Termos de uso e LGPD', onPress: () => setTermosAbertos(true) },
-    // Exclusão/exportação e tela de avisos têm tasks próprias no board.
+    // Exclusão/exportação têm tasks próprias no board.
     { rotulo: 'Exportar meus dados' },
-    { rotulo: 'Avisos' },
+    { rotulo: 'Avisos', onPress: () => router.push('/avisos') },
   ];
 
   return (
