@@ -70,6 +70,12 @@
         "projectId": "fbdd71fe-7183-4d55-85e4-310e959f6b1d"
       }
     },
-    "owner": "codaxi"
+    "owner": "codaxi",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/fbdd71fe-7183-4d55-85e4-310e959f6b1d"
+    }
   }
 }
