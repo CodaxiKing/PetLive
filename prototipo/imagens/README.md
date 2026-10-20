@@ -17,14 +17,16 @@ Capturas das telas do protótipo, geradas a partir de `prototipo/*.dc.html` e or
 
 # Fase 2 · Premium, eventos, adoção e painel admin
 
-## App do tutor (14)
+## App do tutor (22)
 
 | | | | |
 | --- | --- | --- | --- |
 | <img src="tutor/19-premium.png" width="160"><br>19 · Premium | <img src="tutor/20-carteira-em-pdf.png" width="160"><br>20 · Carteira em PDF | <img src="tutor/21-qr-da-coleira.png" width="160"><br>21 · QR da coleira | <img src="tutor/43-eventos-no-mapa.png" width="160"><br>43 · Eventos no mapa |
 | <img src="tutor/44-evento.png" width="160"><br>44 · Evento | <img src="tutor/45-criar-evento.png" width="160"><br>45 · Criar evento | <img src="tutor/52-foto-do-cartao-de-vacina.png" width="160"><br>52 · Foto do cartão de vacina | <img src="tutor/53-revisar-vacinas-lidas.png" width="160"><br>53 · Revisar vacinas lidas |
 | <img src="tutor/54-adocao.png" width="160"><br>54 · Adoção | <img src="tutor/55-pet-para-adocao.png" width="160"><br>55 · Pet para adoção | <img src="tutor/56-cuidador-temporario.png" width="160"><br>56 · Cuidador temporário | <img src="tutor/57-linha-do-tempo-do-pet.png" width="160"><br>57 · Linha do tempo do pet |
-| <img src="tutor/58-checklist-de-viagem.png" width="160"><br>58 · Checklist de viagem | <img src="tutor/59-selos-de-cuidado.png" width="160"><br>59 · Selos de cuidado | | |
+| <img src="tutor/58-checklist-de-viagem.png" width="160"><br>58 · Checklist de viagem | <img src="tutor/59-selos-de-cuidado.png" width="160"><br>59 · Selos de cuidado | <img src="tutor/68-passeios-do-pet.png" width="160"><br>68 · Passeios do pet | <img src="tutor/69-passeio-em-andamento.png" width="160"><br>69 · Passeio em andamento |
+| <img src="tutor/70-resumo-do-passeio.png" width="160"><br>70 · Resumo do passeio | <img src="tutor/71-despesas-do-pet.png" width="160"><br>71 · Despesas do pet | <img src="tutor/72-nova-despesa.png" width="160"><br>72 · Nova despesa | <img src="tutor/73-fogos-e-trovao.png" width="160"><br>73 · Fogos e trovão |
+| <img src="tutor/74-widget-e-atalhos.png" width="160"><br>74 · Widget e atalhos | <img src="tutor/75-cartao-do-pet.png" width="160"><br>75 · Cartão do pet | | |
 
 ## Site (1)
 
@@ -106,7 +108,7 @@ Capturas das telas do protótipo, geradas a partir de `prototipo/*.dc.html` e or
 
 # Fase 3 · Marketplace (futuro, não é para agora)
 
-## App do tutor (21)
+## App do tutor (22)
 
 | | | | |
 | --- | --- | --- | --- |
@@ -115,7 +117,7 @@ Capturas das telas do protótipo, geradas a partir de `prototipo/*.dc.html` e or
 | <img src="tutor/30-pagamento.png" width="160"><br>30 · Pagamento | <img src="tutor/31-pagar-com-pix.png" width="160"><br>31 · Pagar com Pix | <img src="tutor/32-pagamento-confirmado.png" width="160"><br>32 · Pagamento confirmado | <img src="tutor/33-reservar-hotelzinho.png" width="160"><br>33 · Reservar hotelzinho |
 | <img src="tutor/34-agendar-passeio.png" width="160"><br>34 · Agendar passeio | <img src="tutor/35-reservar-creche.png" width="160"><br>35 · Reservar creche | <img src="tutor/36-passeio-ao-vivo.png" width="160"><br>36 · Passeio ao vivo | <img src="tutor/37-passeio-concluido.png" width="160"><br>37 · Passeio concluído |
 | <img src="tutor/38-chat-com-a-loja.png" width="160"><br>38 · Chat com a loja | <img src="tutor/39-cupom-de-desconto.png" width="160"><br>39 · Cupom de desconto | <img src="tutor/40-avaliar-loja-e-servico.png" width="160"><br>40 · Avaliar loja e serviço | <img src="tutor/41-entrega-ou-retirada.png" width="160"><br>41 · Entrega ou retirada |
-| <img src="tutor/42-acompanhar-entrega.png" width="160"><br>42 · Acompanhar entrega | | | |
+| <img src="tutor/42-acompanhar-entrega.png" width="160"><br>42 · Acompanhar entrega | <img src="tutor/76-consulta-na-clinica.png" width="160"><br>76 · Consulta na clínica | | |
 
 ## App do lojista (celular) (18)
 
