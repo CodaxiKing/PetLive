@@ -31,7 +31,10 @@ export async function sincronizarLembretes(lembretes: Lembrete[]): Promise<numbe
   }
 
   const futuros = lembretes.filter(
-    (lembrete) => lembrete.ativo && avisos?.ativos[lembrete.tipo] !== false,
+    (lembrete) =>
+      lembrete.ativo &&
+      lembrete.aviso_antes !== false &&
+      avisos?.ativos[lembrete.tipo] !== false,
   )
 
   for (const lembrete of futuros) {
@@ -102,8 +105,9 @@ export async function cancelarLembrete(lembreteId: string): Promise<void> {
 export async function agendarUmLembrete(lembrete: Lembrete): Promise<void> {
   const avisos = await preferenciasAvisos().catch(() => null)
 
-  // Desligado na tela Avisos (ou lembrete inativo): nada agendado.
-  if (!lembrete.ativo || avisos?.ativos[lembrete.tipo] === false) {
+  // Desligado na tela Avisos, sem "Avisar 1 dia antes" ou lembrete inativo:
+  // nada agendado.
+  if (!lembrete.ativo || lembrete.aviso_antes === false || avisos?.ativos[lembrete.tipo] === false) {
     await cancelarLembrete(lembrete.id)
     return
   }

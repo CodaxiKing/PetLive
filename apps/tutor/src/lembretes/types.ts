@@ -13,6 +13,8 @@ export interface Lembrete {
   repetir: Repeticao | null
   intervalo_dias: number | null
   ativo: boolean
+  /** "Avisar 1 dia antes": quando falso, não dispara notificação. */
+  aviso_antes: boolean
   criado_em: string
 }
 
@@ -25,6 +27,7 @@ export interface LembreteForm {
   hora: string
   repetir: Repeticao
   intervalo_dias: string
+  aviso_antes: boolean
 }
 
 export const LEMBRETE_FORM_VAZIO: LembreteForm = {
@@ -35,6 +38,7 @@ export const LEMBRETE_FORM_VAZIO: LembreteForm = {
   hora: '09:00',
   repetir: 'nao',
   intervalo_dias: '',
+  aviso_antes: true,
 }
 
 export const TIPOS: { valor: TipoLembrete; rotulo: string; cor: string; fundo: string }[] = [
@@ -60,6 +64,15 @@ export const ROTULO_TIPO: Record<TipoLembrete, string> = {
   consulta: 'Consulta',
   banho_tosa: 'Banho e tosa',
   outro: 'Outro',
+}
+
+/** Placeholder do título conforme o tipo (protótipo Lembrete.dc.html). */
+export const PLACEHOLDER_TITULO: Record<TipoLembrete, string> = {
+  vacina: 'Ex.: Vacina V10',
+  vermifugo: 'Ex.: Vermífugo Quantum',
+  consulta: 'Ex.: Check-up anual',
+  banho_tosa: 'Ex.: Banho e tosa',
+  outro: 'Ex.: Cortar unhas',
 }
 
 /** 'YYYY-MM-DD' -> 'DD/MM/AAAA'. */
@@ -138,6 +151,7 @@ export function formParaRegistro(form: LembreteForm, tutorId: string) {
     proxima_em: iso,
     repetir: form.repetir,
     intervalo_dias: form.repetir === 'customizado' ? Number(form.intervalo_dias) || null : null,
+    aviso_antes: form.aviso_antes,
   }
 }
 
