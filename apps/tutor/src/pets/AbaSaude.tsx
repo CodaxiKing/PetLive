@@ -15,6 +15,7 @@ import { usePets } from './PetsProvider'
 import { useRemedios } from '../remedios/RemediosProvider'
 import { diasRestantes } from '../remedios/types'
 import { useVacinas } from '../saude/VacinasProvider'
+import { carregarConsultas as carregarConsultasDoPet, type Consulta } from '../saude/consultas'
 import { dataParaExibicao, rotuloDose } from '../saude/types'
 import { colors } from '../theme/colors'
 import { typography } from '../theme/typography'
@@ -39,6 +40,7 @@ export function AbaSaude() {
   const { vacinas, carregando, salvando, removerVacina, recarregar } = useVacinas()
   const { remedios, encerrarRemedio } = useRemedios()
   const [vermifugos, setVermifugos] = useState<OutroRegistro[]>([])
+  const [consultas, setConsultas] = useState<Consulta[]>([])
   const [atualizando, setAtualizando] = useState(false)
 
   const petId = petAtivo?.id ?? null
@@ -70,11 +72,20 @@ export function AbaSaude() {
     carregarVermifugos()
   }, [carregarVermifugos])
 
+  const carregarConsultas = useCallback(() => {
+    if (!petId) return Promise.resolve()
+    return carregarConsultasDoPet(petId).then((lista) => setConsultas(lista))
+  }, [petId])
+
+  useEffect(() => {
+    carregarConsultas()
+  }, [carregarConsultas])
+
   const atualizar = useCallback(async () => {
     setAtualizando(true)
-    await Promise.all([recarregar(), carregarVermifugos()])
+    await Promise.all([recarregar(), carregarVermifugos(), carregarConsultas()])
     setAtualizando(false)
-  }, [recarregar, carregarVermifugos])
+  }, [recarregar, carregarVermifugos, carregarConsultas])
 
   const confirmarRemocao = (id: string, nome: string) => {
     Alert.alert(`Remover ${nome}?`, 'O registro de vacina será apagado.', [
@@ -103,6 +114,14 @@ export function AbaSaude() {
     if (!petAtivo) return
     router.push({
       pathname: '/pet/[id]/peso',
+      params: { id: petAtivo.id },
+    })
+  }
+
+  const abrirConsultas = () => {
+    if (!petAtivo) return
+    router.push({
+      pathname: '/pet/[id]/consultas',
       params: { id: petAtivo.id },
     })
   }
@@ -232,6 +251,49 @@ export function AbaSaude() {
         </View>
       ))}
 
+      <View style={components.card}>
+        <View style={estilos.cabecalhoSecao}>
+          <Text style={estilos.tituloSecao}>Consultas</Text>
+          <Pressable accessibilityRole="link" onPress={abrirConsultas} hitSlop={8}>
+            <Text style={estilos.linkSecao}>Ver todas ›</Text>
+          </Pressable>
+        </View>
+
+        {consultas.length === 0 ? (
+          <Pressable
+            accessibilityRole="button"
+            onPress={abrirConsultas}
+            style={({ pressed }) => [estilos.linha, pressed && { opacity: 0.6 }]}
+          >
+            <View style={estilos.flex}>
+              <Text style={estilos.nome}>Nenhuma consulta registrada</Text>
+              <Text style={estilos.subtitulo}>Toque para registrar a primeira.</Text>
+            </View>
+            <Text style={estilos.data}>›</Text>
+          </Pressable>
+        ) : (
+          consultas.slice(0, 3).map((c, i) => (
+            <Pressable
+              key={c.id}
+              onPress={abrirConsultas}
+              style={[
+                estilos.linha,
+                (i === consultas.slice(0, 3).length - 1 || i === consultas.length - 1) &&
+                  estilos.ultima,
+              ]}
+            >
+              <View style={estilos.flex}>
+                <Text style={estilos.nome}>{c.motivo}</Text>
+                <Text style={estilos.subtitulo}>
+                  {[c.local, c.veterinario].filter(Boolean).join(' · ') || null}
+                </Text>
+              </View>
+              <Text style={estilos.data}>{dataParaExibicao(c.realizada_em)}</Text>
+            </Pressable>
+          ))
+        )}
+      </View>
+
       <View style={estilos.acoes}>
         <Pressable
           accessibilityRole="button"
@@ -297,6 +359,14 @@ const estilos = StyleSheet.create({
   etiqueta: { paddingHorizontal: spacing.md, paddingVertical: spacing.xs, borderRadius: radius.pill },
   etiquetaTexto: { ...typography.small, fontWeight: '700' },
   tituloCartao: { ...typography.bodyMedium, color: colors.text, marginBottom: spacing.xs },
+  tituloSecao: { ...typography.bodyMedium, fontWeight: '700', color: colors.text },
+  cabecalhoSecao: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: spacing.xs,
+  },
+  linkSecao: { fontSize: 13, fontWeight: '600', color: colors.primaryDeep },
   linha: {
     flexDirection: 'row',
     alignItems: 'center',

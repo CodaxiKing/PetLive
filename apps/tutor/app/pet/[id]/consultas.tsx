@@ -1,0 +1,291 @@
+import { useCallback, useState } from 'react'
+import {
+  ActivityIndicator,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native'
+import { router, useFocusEffect, useLocalSearchParams } from 'expo-router'
+import Svg, { Circle, Path } from 'react-native-svg'
+import { BotaoPrimario } from '../../../src/components/BotaoPrimario'
+import { CabecalhoTela } from '../../../src/components/CabecalhoTela'
+import { usePets } from '../../../src/pets/PetsProvider'
+import {
+  carregarConsultas,
+  ehAgendada,
+  type Consulta,
+} from '../../../src/saude/consultas'
+import { dataParaExibicao } from '../../../src/saude/types'
+import { colors } from '../../../src/theme/colors'
+import { typography } from '../../../src/theme/typography'
+import { radius, spacing } from '../../../src/theme/tokens'
+
+const MESES_CURTOS = [
+  'JAN', 'FEV', 'MAR', 'ABR', 'MAI', 'JUN',
+  'JUL', 'AGO', 'SET', 'OUT', 'NOV', 'DEZ',
+]
+const FUNDO_LINHA = [colors.hero, colors.premiumSurface, colors.warningSurface]
+
+/**
+ * Consultas do pet (board: [APP-CLIENTE] "Consultas: histórico"). Segue o
+ * protótipo Consultas.dc.html: herói com o nome do pet, cartão da próxima
+ * consulta, histórico em fichas e botão para registrar.
+ */
+export default function TelaConsultas() {
+  const { id } = useLocalSearchParams<{ id: string }>()
+  const { pets } = usePets()
+  const pet = pets.find((p) => p.id === id) ?? null
+
+  const [consultas, setConsultas] = useState<Consulta[]>([])
+  const [carregando, setCarregando] = useState(true)
+  const [larguraHero, setLarguraHero] = useState(0)
+
+  // Recarrega a cada foco: volta da tela de registro já com o novo item.
+  useFocusEffect(
+    useCallback(() => {
+      if (!id) return
+      carregarConsultas(id).then(
+        (lista) => {
+          setConsultas(lista)
+          setCarregando(false)
+        },
+        () => {
+          setCarregando(false)
+        },
+      )
+    }, [id]),
+  )
+
+  const agendadas = consultas
+    .filter(ehAgendada)
+    .sort((a, b) => a.realizada_em.localeCompare(b.realizada_em))
+  const proxima = agendadas.length > 0 ? agendadas[0] : null
+  const historico = consultas.filter((c) => !ehAgendada(c))
+
+  const abrirNova = () => {
+    if (!id) return
+    router.push({ pathname: '/pet/[id]/consultas/nova', params: { id } })
+  }
+
+  return (
+    <View style={estilos.tela}>
+      <View
+        style={estilos.hero}
+        onLayout={(e) => setLarguraHero(Math.round(e.nativeEvent.layout.width))}
+      >
+        <CabecalhoTela titulo={pet?.nome ?? ''} />
+
+        <Text style={estilos.titulo}>Consultas</Text>
+
+        {/* Marca d'água de pata (decorativa, como no protótipo). */}
+        <Svg
+          style={estilos.pata}
+          width={110}
+          height={110}
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke={colors.white}
+          strokeWidth={1.1}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          aria-hidden
+        >
+          <Circle cx={6} cy={10} r={1.8} />
+          <Circle cx={10} cy={6} r={1.8} />
+          <Circle cx={14} cy={6} r={1.8} />
+          <Circle cx={18} cy={10} r={1.8} />
+          <Path d="M12 12c-3 0-5 2.5-5 4.5 0 1.5 1.2 2 2.6 2 1 0 1.6-.4 2.4-.4s1.4.4 2.4.4c1.4 0 2.6-.5 2.6-2 0-2-2-4.5-5-4.5z" />
+        </Svg>
+
+        {larguraHero > 0 ? (
+          <View style={estilos.onda}>
+            <Svg width={larguraHero} height={46} viewBox="0 0 390 46" preserveAspectRatio="none">
+              <Path
+                d="M0 46V26C28 8 56 10 80 24C104 38 132 40 154 26C180 8 214 10 238 26C262 42 300 38 322 22C346 6 372 12 390 24V46z"
+                fill={colors.surface}
+              />
+            </Svg>
+          </View>
+        ) : null}
+      </View>
+
+      <ScrollView
+        style={estilos.flex}
+        contentContainerStyle={estilos.conteudo}
+        showsVerticalScrollIndicator={false}
+      >
+        {carregando ? (
+          <View style={estilos.centro}>
+            <ActivityIndicator color={colors.primaryDeep} />
+          </View>
+        ) : (
+          <>
+            {/* Próxima consulta (ou estado vazio) */}
+            <View style={estilos.proxima}>
+              <View style={estilos.flex}>
+                <Text style={estilos.proximaTitulo}>
+                  {proxima ? proxima.motivo : 'Nenhuma consulta agendada'}
+                </Text>
+                <Text style={estilos.proximaSub}>
+                  {proxima
+                    ? [dataParaExibicao(proxima.realizada_em), proxima.local]
+                        .filter(Boolean)
+                        .join(' · ')
+                    : 'Ligue para a clínica e registre aqui.'}
+                </Text>
+              </View>
+              <Pressable
+                accessibilityRole="button"
+                onPress={abrirNova}
+                style={({ pressed }) => [estilos.botaoAgendar, pressed && { opacity: 0.7 }]}
+              >
+                <Text style={estilos.botaoAgendarTexto}>Agendar</Text>
+              </Pressable>
+            </View>
+
+            <Text style={estilos.secaoTitulo}>Histórico</Text>
+
+            {historico.length === 0 ? (
+              <Text style={estilos.vazio}>
+                Nenhuma consulta concluída ainda. Registre a primeira abaixo.
+              </Text>
+            ) : (
+              <View style={estilos.lista}>
+                {historico.map((c, i) => {
+                  const [, m, d] = c.realizada_em.split('-')
+                  return (
+                    <View key={c.id} style={estilos.ficha}>
+                      <View
+                        style={[
+                          estilos.data,
+                          { backgroundColor: FUNDO_LINHA[i % FUNDO_LINHA.length] },
+                        ]}
+                      >
+                        <Text style={estilos.dataDia}>{d}</Text>
+                        <Text style={estilos.dataMes}>{MESES_CURTOS[Number(m) - 1] ?? ''}</Text>
+                      </View>
+
+                      <View style={estilos.flex}>
+                        <Text style={estilos.fichaTitulo} numberOfLines={1}>
+                          {c.motivo}
+                        </Text>
+                        <Text style={estilos.fichaSub} numberOfLines={1}>
+                          {c.local ?? c.veterinario ?? 'Clínica veterinária'}
+                        </Text>
+                      </View>
+
+                      <View style={estilos.etiqueta}>
+                        <Text style={estilos.etiquetaTexto}>Concluída</Text>
+                      </View>
+                    </View>
+                  )
+                })}
+              </View>
+            )}
+          </>
+        )}
+      </ScrollView>
+
+      <View style={estilos.rodape}>
+        <BotaoPrimario titulo="Registrar consulta" onPress={abrirNova} />
+      </View>
+    </View>
+  )
+}
+
+const estilos = StyleSheet.create({
+  tela: { flex: 1, backgroundColor: colors.surface },
+  flex: { flex: 1 },
+  hero: {
+    backgroundColor: colors.hero,
+    paddingBottom: 44,
+    overflow: 'hidden',
+    justifyContent: 'space-between',
+  },
+  titulo: {
+    ...typography.h1,
+    fontSize: 38,
+    lineHeight: 40,
+    letterSpacing: -1.1,
+    color: colors.black,
+    paddingHorizontal: 24,
+    paddingBottom: spacing.lg,
+  },
+  pata: { position: 'absolute', right: 20, top: 60 },
+  onda: { position: 'absolute', left: 0, right: 0, bottom: -1 },
+  conteudo: {
+    paddingHorizontal: spacing.xl,
+    paddingTop: spacing.lg,
+    paddingBottom: 130,
+    gap: spacing.md,
+  },
+  centro: { paddingVertical: spacing.xxl, alignItems: 'center' },
+  proxima: {
+    backgroundColor: colors.premiumSurface,
+    borderWidth: 1.5,
+    borderColor: '#D7BDF5',
+    borderRadius: radius.lg,
+    padding: spacing.lg,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.md,
+  },
+  proximaTitulo: { ...typography.bodyMedium, fontWeight: '700', color: colors.text },
+  proximaSub: { fontSize: 12, color: colors.premiumText, marginTop: 2 },
+  botaoAgendar: {
+    height: 36,
+    paddingHorizontal: spacing.lg,
+    borderRadius: 18,
+    backgroundColor: colors.black,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  botaoAgendarTexto: { fontSize: 13, fontWeight: '600', color: colors.white },
+  secaoTitulo: {
+    ...typography.bodyMedium,
+    fontWeight: '700',
+    color: colors.text,
+    marginTop: spacing.xs,
+  },
+  vazio: { ...typography.body, color: colors.textMuted, lineHeight: 22 },
+  lista: { gap: spacing.sm },
+  ficha: {
+    backgroundColor: colors.background,
+    borderRadius: 24,
+    padding: 10,
+    paddingRight: spacing.lg,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.md,
+  },
+  data: {
+    width: 56,
+    height: 60,
+    borderRadius: 18,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  dataDia: { fontWeight: '700', fontSize: 20, lineHeight: 22, color: colors.black },
+  dataMes: { fontSize: 11, fontWeight: '600', color: colors.black },
+  fichaTitulo: { fontWeight: '600', fontSize: 15, color: colors.text },
+  fichaSub: { fontSize: 12, color: colors.textMuted, marginTop: 2 },
+  etiqueta: {
+    backgroundColor: colors.successSurface,
+    borderRadius: radius.pill,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.xs,
+  },
+  etiquetaTexto: { fontSize: 12, fontWeight: '700', color: colors.successText },
+  rodape: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 0,
+    paddingHorizontal: spacing.xl,
+    paddingTop: spacing.md,
+    paddingBottom: 32,
+    backgroundColor: colors.surface,
+  },
+})
