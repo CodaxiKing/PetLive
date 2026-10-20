@@ -10,7 +10,7 @@ import {
 import { supabase } from '../lib/supabase'
 import { usePets } from '../pets/PetsProvider'
 import type { Remedio, RemedioForm } from './types'
-import { REMEDIO_FORM_VAZIO, formParaRegistro, segundosParaHorario } from './types'
+import { REMEDIO_FORM_VAZIO, formParaRegistro, normalizarHorarios } from './types'
 
 interface RemediosContextValue {
   /** Remédios ativos do pet selecionado. */
@@ -53,15 +53,12 @@ export function RemediosProvider({ children }: { children: ReactNode }) {
         setErro(error.message)
       } else {
         setErro(null)
-        // O Postgres devolve time[] como segundos; normaliza para 'HH:MM'.
+        // O PostgREST devolve time[] como '08:00:00'; normaliza para 'HH:MM'.
         setRemedios(
-          ((data ?? []) as (Omit<Remedio, 'horarios'> & { horarios: number[] | null })[]).map(
+          ((data ?? []) as (Omit<Remedio, 'horarios'> & { horarios: (string | number)[] | null })[]).map(
             (linha) => ({
               ...linha,
-              horarios: (linha.horarios ?? [])
-                .slice()
-                .sort((a, b) => a - b)
-                .map(segundosParaHorario),
+              horarios: normalizarHorarios(linha.horarios),
             }),
           ),
         )
@@ -92,14 +89,13 @@ export function RemediosProvider({ children }: { children: ReactNode }) {
           setErro(error.message)
           return null
         }
-        // O Postgres devolve time[] como segundos; o tipo cru preserva isso.
-        const registro = data as unknown as Omit<Remedio, 'horarios'> & { horarios: number[] }
+        // O PostgREST devolve time[] como '08:00:00'; normaliza para 'HH:MM'.
+        const registro = data as unknown as Omit<Remedio, 'horarios'> & {
+          horarios: (string | number)[] | null
+        }
         const normalizado: Remedio = {
           ...registro,
-          horarios: (registro.horarios ?? [])
-            .slice()
-            .sort((a, b) => a - b)
-            .map(segundosParaHorario),
+          horarios: normalizarHorarios(registro.horarios),
         }
         setRemedios((atual) => [normalizado, ...atual])
         return normalizado

@@ -102,10 +102,16 @@ export function parseHorarios(bruto: string): string[] {
     .filter((h): h is string => h !== null)
 }
 
-/** 'HH:MM' -> segundos desde meia-noite (coluna time do Postgres). */
-export function horarioParaSegundos(hhmm: string): number {
-  const [h, m] = hhmm.split(':').map(Number)
-  return (h ?? 0) * 3600 + (m ?? 0) * 60
+/**
+ * Normaliza horários vindos do Postgres em 'HH:MM' ordenados.
+ * O PostgREST aceita '08:00' no insert e devolve '08:00:00' na leitura
+ * (segundos inteiros não servem: a coluna é time[]).
+ */
+export function normalizarHorarios(bruto: (string | number)[] | null | undefined): string[] {
+  return (bruto ?? [])
+    .map((h) => (typeof h === 'number' ? segundosParaHorario(h) : String(h).slice(0, 5)))
+    .filter((h) => /^\d{2}:\d{2}$/.test(h))
+    .sort()
 }
 
 /** Segundos desde meia-noite -> 'HH:MM'. */
@@ -122,7 +128,7 @@ export function formParaRegistro(form: RemedioForm, petId: string) {
     nome: form.nome.trim(),
     dose: form.dose.trim(),
     frequencia: form.frequencia.trim(),
-    horarios: parseHorarios(form.horarios).map(horarioParaSegundos),
+    horarios: parseHorarios(form.horarios),
     inicio: dataParaIso(form.inicio),
     fim: dataParaIso(form.fim),
     observacao: form.observacao.trim() || null,

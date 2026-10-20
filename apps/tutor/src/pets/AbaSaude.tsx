@@ -126,6 +126,14 @@ export function AbaSaude() {
     })
   }
 
+  const abrirMedicamentos = () => {
+    if (!petAtivo) return
+    router.push({
+      pathname: '/pet/[id]/medicamentos',
+      params: { id: petAtivo.id },
+    })
+  }
+
   /** Toque longo: remover vacina, ou encerrar tratamento de remédio. */
   const aoSegurar = (chave: string, item: OutroRegistro) => {
     if (chave === 'vacinas') {
@@ -237,6 +245,7 @@ export function AbaSaude() {
           {grupo.itens.map((item, i) => (
             <Pressable
               key={item.id}
+              onPress={grupo.chave === 'remedios' ? abrirMedicamentos : undefined}
               onLongPress={() => aoSegurar(grupo.chave, item)}
               delayLongPress={350}
               style={[estilos.linha, i === grupo.itens.length - 1 && estilos.ultima]}
