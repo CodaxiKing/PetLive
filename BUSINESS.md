@@ -188,7 +188,7 @@ A loja escolhe **produtos**, **serviços** ou **os dois**. Isso define o que apa
 | Etapa | Pagamento |
 | --- | --- |
 | Etapa 1 | Na loja, fora do app |
-| Etapa 2 | Pix pelo app com confirmação automática, repasse à loja e comissão `[x]%` |
+| Etapa 2 | Pix pelo app via Asaas, com confirmação automática, repasse à loja por split e comissão `[x]%` |
 | Etapa 3 | Entrega integrada e assinatura recorrente de ração |
 
 A comissão incide só sobre pagamentos feitos pelo app. Vitrine e agenda são gratuitas.
@@ -258,7 +258,8 @@ O PetLive organiza informações e não substitui o atendimento veterinário. Es
 ### 5.13 Premium e assinaturas
 
 - Teste grátis de `[7]` dias para quem nunca assinou. Cobrança avisada `[2]` dias antes.
-- Planos mensal e anual, pagos por Pix ou cartão.
+- Planos mensal e anual, pagos por Pix ou cartão pelo Asaas.
+- **A validar:** a Apple e o Google costumam exigir a compra da própria loja para recursos digitais vendidos dentro do app, e essas regras mudaram no Brasil. Confirmar a política vigente antes de lançar o Premium. A regra vale só para o Premium: pedidos de produtos e serviços físicos não são afetados.
 - Falha de cobrança: novas tentativas por `[3]` dias. Sem sucesso, o plano volta a Grátis no fim do período já pago.
 - Cancelar mantém o Premium até o fim do período pago.
 - Pets além do limite do plano grátis ficam **somente leitura**, sem serem apagados.
@@ -320,7 +321,7 @@ Acesso protegido por regras de linha (RLS) no Supabase: cada tutor só vê os da
 | Notificações | expo-notifications (FCM e APNs) |
 | Build e deploy | EAS Build e EAS Update |
 | Erros | Sentry |
-| Pagamentos (etapa 2) | Provedor de Pix `[a definir]`, com repasse |
+| Pagamentos (etapa 2) | **Asaas**: Pix, cartão, cobrança recorrente, split e subcontas das lojas |
 | Painéis e site | Web em React `[framework a definir]` |
 
 ---
@@ -369,7 +370,9 @@ Acesso protegido por regras de linha (RLS) no Supabase: cada tutor só vê os da
 | LGPD (dados do tutor, localização, fotos de exames) | Consentimento explícito, exclusão e exportação de dados, RLS no banco |
 | Responsabilidade médica | Aviso fixo de que o app não substitui o veterinário |
 | Produtos regulados | Não listar medicamentos controlados no início; produtos com receita só para consulta |
-| Pagamento, repasse e nota fiscal | Provedor com Pix e repasse; definir o responsável fiscal antes da etapa 2 |
+| Pagamento, repasse e nota fiscal | Asaas com split e subcontas; definir o responsável fiscal antes da etapa 2 |
+| Premium dentro do app e regras da Apple e do Google | Validar a política vigente antes de fechar o fluxo do Premium (seção 5.13); se exigirem compra na loja do app, usar o pagamento delas só para o Premium |
+| Dependência de um único provedor de pagamento | Backend fala com o Asaas por uma camada única (seção 23.1), para trocar de provedor mexendo em um lugar só |
 | Suporte e disputas | Histórico de status, chat com a loja, fila de suporte e política de cancelamento |
 | Entrega com problema (endereço, atraso) | Código de entrega, prazo mostrado antes de pagar e disputa pelo admin |
 | Acesso indevido ao painel admin | Verificação em duas etapas, funções com permissões mínimas e registro de ações |
@@ -425,11 +428,13 @@ Acesso protegido por regras de linha (RLS) no Supabase: cada tutor só vê os da
 | Cancelar o Premium mantém o plano até o fim do período pago | 5.13 |
 | A entrega só vira "entregue" com o código de 4 dígitos informado pelo tutor | 5.8 e 20.3 |
 | No plano grátis, pets além do primeiro ficam só em leitura, sem serem apagados | 5.13 |
+| Provedor de pagamento: Asaas (Pix, cartão, recorrência, split e subcontas) | 5.4, 8, 23 |
 
 ### Em aberto
 
 - Nome do domínio e endereço da página pública do QR.
-- Provedor de Pix e percentual de comissão `[x]%`.
+- Percentual de comissão `[x]%`, depois de conferir as taxas atuais do Asaas.
+- Como cobrar o Premium dentro do app: pagamento do Asaas ou compra pela loja do app (seção 5.13).
 - Preço do Premium `[valor]`.
 - App do lojista como PWA ou nativo.
 - Framework web dos painéis e do site.
@@ -1161,6 +1166,8 @@ Canal: **push** (P), **e-mail** (E) ou **na tela de Avisos** (A). O tutor contro
 
 ### 23.1 Edge Functions
 
+Todas as funções de pagamento (`create-pix-charge`, `pix-webhook`, `refund` e o repasse semanal) falam com o Asaas por **uma camada única** (`payments/provider`), com a mesma interface para qualquer provedor. Nenhuma tela nem outra função chama o Asaas direto.
+
 | Função | O que faz |
 | --- | --- |
 | `free-slots` | Calcula horários livres de um serviço em um dia |
@@ -1200,7 +1207,7 @@ Chat (`messages`), status da entrega (`deliveries`), trajeto do passeio (`walk_p
 
 | Integração | Uso | Observação |
 | --- | --- | --- |
-| Provedor de Pix `[a definir]` | Cobrança, webhook, repasse e estorno | Obrigatório antes da etapa 2 |
+| Asaas | Cobrança por Pix e cartão, assinatura do Premium, webhook, split e subcontas das lojas, repasse e estorno | Obrigatório antes da etapa 2. Contas e chaves de teste (sandbox) no desenvolvimento |
 | Google Play Developer API | Importar e responder avaliações | Credencial guardada em `integrations` |
 | App Store Connect API | Importar e responder avaliações | Chave tem validade: o admin avisa antes de expirar |
 | FCM e APNs | Push | Via expo-notifications |
@@ -1259,15 +1266,15 @@ Para desenvolver e testar sem dados reais:
 - Conteúdo mestre com o calendário de vacinas de cães e gatos e 20 raças.
 - Cupons de exemplo (percentual, valor fixo e Premium grátis).
 - Lojas de teste com entrega por bairro, por distância e só retirada.
-- Pix em modo de teste do provedor. Nenhuma cobrança real em desenvolvimento.
+- Asaas em modo de teste (sandbox). Nenhuma cobrança real em desenvolvimento.
 
 ---
 
 ## 27. Perguntas que a equipe de desenvolvimento deve resolver cedo
 
-1. Provedor de Pix e de e-mail (afeta os blocos 5 e 9).
+1. Provedor de e-mail (afeta os blocos 5 e 9). O de pagamento já está escolhido: Asaas.
 2. App do lojista como PWA ou nativo (afeta os blocos 7 e 11 e o passeio ao vivo, que precisa de GPS em segundo plano).
 3. Framework web dos painéis e do site (um só projeto web com áreas separadas ou projetos distintos).
 4. Como o entregador usa o sistema: acesso próprio com função `staff` ou só a equipe da loja digitando o código.
-5. Premium por cartão: o provedor precisa oferecer Pix e cartão com cobrança recorrente.
+5. Política da Apple e do Google para o Premium: pode-se cobrar pelo Asaas dentro do app ou é preciso usar a compra da loja do app? Isso muda o preço e o bloco 5.
 6. Onde ficam os arquivos de saúde e como serão criptografados.
