@@ -14,6 +14,7 @@ import { useRouter } from 'expo-router';
 import { BotaoPrimario } from '../../src/components/BotaoPrimario';
 import { Campo } from '../../src/components/Campo';
 import { ControleSegmentado } from '../../src/components/ControleSegmentado';
+import { entrarComGoogle } from '../../src/auth/google';
 import { supabase, supabaseConfigurado } from '../../src/lib/supabase';
 import { colors } from '../../src/theme/colors';
 import { spacing } from '../../src/theme/tokens';
@@ -121,7 +122,7 @@ export default function CriarConta() {
     }
   }
 
-  async function entrarComGoogle() {
+  async function entrarGoogle() {
     setErro(null);
     setAviso(null);
 
@@ -132,14 +133,11 @@ export default function CriarConta() {
 
     setCarregando(true);
     try {
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: 'google',
-        options: { redirectTo: 'petlive://criar-conta' },
-      });
-      if (error) throw error;
-      // O Supabase volta para o app com a sessão; o layout troca a rota.
+      // Com sessão criada, o layout raiz troca a rota sozinho.
+      await entrarComGoogle();
     } catch (e) {
       setErro(traduzirErro(e instanceof Error ? e.message : String(e)));
+    } finally {
       setCarregando(false);
     }
   }
@@ -266,7 +264,7 @@ export default function CriarConta() {
           <Pressable
             accessibilityRole="button"
             accessibilityLabel="Continuar com Google"
-            onPress={entrarComGoogle}
+            onPress={entrarGoogle}
             disabled={carregando}
             style={({ pressed }) => [estilos.google, pressed && { opacity: 0.7 }, carregando && { opacity: 0.5 }]}
           >
