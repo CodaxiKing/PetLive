@@ -94,7 +94,15 @@ function RaizProtegida() {
                 <Stack.Screen name="pet/[id]/remedio/novo" options={{ presentation: 'modal', animation: 'slide_from_bottom' }} />
                 <Stack.Screen name="lembretes/index" />
                 <Stack.Screen name="lembretes/novo" options={{ presentation: 'modal', animation: 'slide_from_bottom' }} />
+                <Stack.Screen name="lembretes/rotina" />
                 <Stack.Screen name="avisos" />
+                <Stack.Screen name="termos" />
+                <Stack.Screen name="permissoes" />
+                <Stack.Screen name="privacidade" />
+                <Stack.Screen name="sos/index" />
+                <Stack.Screen name="sos/primeiros-socorros" />
+                <Stack.Screen name="sos/intoxicacao" />
+                <Stack.Screen name="ferramentas/calculadoras" />
               </Stack.Protected>
               <Stack.Protected guard={!session}>
                 <Stack.Screen name="(auth)" />

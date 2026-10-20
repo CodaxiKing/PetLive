@@ -1,0 +1,31 @@
+# Fluxo 05: Mapa -> chip SOS -> clínica mais perto -> primeiros socorros
+# (abre uma situação) -> o que intoxica (busca) -> volta.
+# Pré-requisito do runner: localização do emulador no Rio (adb emu geo fix)
+# e permissões concedidas via adb pm grant.
+appId: app.petlive.tutor
+name: 05 sos
+---
+- launchApp
+- tapOn: "Mapa"
+- extendedWaitUntil:
+    visible: "SOS: emergência"
+    timeout: 60000
+- tapOn: "SOS: emergência"
+- extendedWaitUntil:
+    visible: "Funciona sem internet"
+    timeout: 10000
+- extendedWaitUntil:
+    notVisible: "Procurando a clínica mais perto…"
+    timeout: 60000
+- assertNotVisible: "Não achamos uma clínica por perto agora.*"
+- tapOn: "Primeiros socorros: Passo a passo para agir agora"
+- tapOn: "Golpe de calor"
+- assertVisible: "Leve o pet para a sombra e ao vento."
+- assertVisible: "Vá a uma clínica 24 h agora, mesmo que ele melhore."
+- back
+- tapOn: "O que intoxica o pet: Chocolate, uva, cebola e mais"
+- tapOn: "Buscar um alimento ou produto"
+- inputText: "chocolate"
+- assertVisible: "Chocolate"
+- assertNotVisible: "Abacate"
+- takeScreenshot: "05-sos-ok.png"

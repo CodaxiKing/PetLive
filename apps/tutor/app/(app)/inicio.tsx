@@ -10,6 +10,7 @@ import {
   OndaHeroi,
   Secao,
 } from '../../src/components/Layout';
+import { Icone } from '../../src/components/Icone';
 import { Mascote } from '../../src/components/Mascote';
 import { colors } from '../../src/theme/colors';
 import { spacing } from '../../src/theme/tokens';
@@ -98,6 +99,29 @@ export default function Inicio() {
               </Text>
             </View>
           ))}
+
+          {/* Atalhos da Fase 1: SOS (rosa, como no Mapa) e Calculadoras. */}
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="SOS: emergência"
+            onPress={() => router.push('/sos')}
+            style={[estilos.categoria, estilos.categoriaSos]}
+          >
+            <View style={[estilos.categoriaÍcone, { backgroundColor: colors.white }]}>
+              <Icone nome="cruz" cor="#A3324F" espessura={2.4} />
+            </View>
+            <Text style={[estilos.categoriaTexto, estilos.categoriaTextoSos]}>SOS</Text>
+          </Pressable>
+          <Pressable
+            accessibilityRole="button"
+            onPress={() => router.push('/ferramentas/calculadoras')}
+            style={[estilos.categoria, estilos.categoriaInativa]}
+          >
+            <View style={[estilos.categoriaÍcone, { backgroundColor: colors.premiumSurface }]}>
+              <Icone nome="calculadora" />
+            </View>
+            <Text style={estilos.categoriaTexto}>Calculadoras</Text>
+          </Pressable>
         </ScrollView>
 
         <Secao titulo="Próximos lembretes" acao="Ver todos ›" onAcao={() => router.push('/lembretes')} />
@@ -236,6 +260,12 @@ const estilos = StyleSheet.create({
     backgroundColor: colors.surface,
     borderWidth: 1.5,
     borderColor: '#E6EAF0',
+  },
+  categoriaSos: {
+    backgroundColor: '#FDE0E6',
+  },
+  categoriaTextoSos: {
+    color: '#A3324F',
   },
   categoriaÍcone: {
     width: 40,

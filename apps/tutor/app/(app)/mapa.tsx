@@ -218,6 +218,15 @@ export default function Mapa() {
               </Pressable>
             );
           })}
+          {/* SOS no fim dos filtros, em rosa (protótipo Mapa, BUSINESS 5.17). */}
+          <Pressable
+            onPress={() => router.push('/sos')}
+            accessibilityRole="button"
+            accessibilityLabel="SOS: emergência"
+            style={[estilos.pilula, estilos.pilulaSos]}
+          >
+            <Text style={[estilos.pilulaTexto, estilos.pilulaTextoSos]}>SOS</Text>
+          </Pressable>
         </ScrollView>
       </View>
 
@@ -437,6 +446,12 @@ const estilos = StyleSheet.create({
     borderRadius: radius.pill,
     backgroundColor: colors.surface,
     ...shadow.card,
+  },
+  pilulaSos: {
+    backgroundColor: '#FDE0E6',
+  },
+  pilulaTextoSos: {
+    color: '#A3324F',
   },
   pilulaAtiva: {
     backgroundColor: colors.black,
