@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import { ActivityIndicator, Pressable, StyleSheet, Text, View, type ViewStyle } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 import { colors } from '../theme/colors';
@@ -11,6 +12,8 @@ type Props = {
   desabilitado?: boolean;
   /** Ícone do círculo azul à esquerda. */
   variante?: 'seta' | 'pata';
+  /** Ícone próprio no círculo azul (substitui a variante). */
+  icone?: ReactNode;
   estilo?: ViewStyle;
 };
 
@@ -18,7 +21,7 @@ type Props = {
  * Botão principal do protótipo: fundo preto, círculo azul com ícone à
  * esquerda e seta discreta à direita.
  */
-export function BotaoPrimario({ titulo, onPress, carregando, desabilitado, variante = 'seta', estilo }: Props) {
+export function BotaoPrimario({ titulo, onPress, carregando, desabilitado, variante = 'seta', icone, estilo }: Props) {
   const inativo = desabilitado || carregando;
 
   return (
@@ -37,6 +40,8 @@ export function BotaoPrimario({ titulo, onPress, carregando, desabilitado, varia
       <View style={estilos.circulo}>
         {carregando ? (
           <ActivityIndicator size="small" color={colors.black} />
+        ) : icone ? (
+          icone
         ) : (
           <Svg width={24} height={24} viewBox="0 0 24 24" fill={variante === 'pata' ? colors.black : 'none'}>
             {variante === 'pata' ? (

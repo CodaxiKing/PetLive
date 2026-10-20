@@ -1,4 +1,8 @@
+import { useEffect } from 'react';
+import { router } from 'expo-router';
 import { Tabs } from 'expo-router/js-tabs';
+import { useAuth } from '../../src/auth/AuthProvider';
+import { precisaAceitarTermos } from '../../src/privacidade/consentimentos';
 import { MenuInferior } from '../../src/components/MenuInferior';
 import { colors } from '../../src/theme/colors';
 
@@ -6,7 +10,30 @@ import { colors } from '../../src/theme/colors';
  * Áreas logadas: Início, Pets, Mapa e Perfil, com o menu inferior
  * flutuante preto. A tela do grupo esconde o cabeçalho padrão.
  */
+/** Tutores já conferidos nesta execução do app (evita repetir a consulta). */
+const termosConferidos = new Set<string>();
+
+/**
+ * Primeiro acesso (BUSINESS.md 19.1): sem o aceite dos termos e da política
+ * na versão vigente, abre Termos e depois Permissões. Sem rede, não trava.
+ */
+function useConferirTermos() {
+  const { user } = useAuth();
+  useEffect(() => {
+    if (!user || termosConferidos.has(user.id)) return;
+    precisaAceitarTermos().then(
+      (precisa) => {
+        termosConferidos.add(user.id);
+        if (precisa) router.push('/termos?primeiroAcesso=1');
+      },
+      () => undefined,
+    );
+  }, [user]);
+}
+
 export default function AppLayout() {
+  useConferirTermos();
+
   return (
     <Tabs
       tabBar={(props) => <MenuInferior {...props} />}

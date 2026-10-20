@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Alert, Modal, Pressable, ScrollView, Share, StyleSheet, Text, View } from 'react-native';
+import { Alert, Modal, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useAuth } from '../../src/auth/AuthProvider';
 import { BotaoPrimario } from '../../src/components/BotaoPrimario';
@@ -29,8 +29,6 @@ export default function Perfil() {
   const [editando, setEditando] = useState(false);
   const [nomeEdicao, setNomeEdicao] = useState('');
   const [salvando, setSalvando] = useState(false);
-  const [termosAbertos, setTermosAbertos] = useState(false);
-  const [processando, setProcessando] = useState(false);
 
   useEffect(() => {
     if (!user) return;
@@ -91,77 +89,11 @@ export default function Perfil() {
     router.replace('/welcome');
   }
 
-  /**
-   * LGPD (art. 18, V): exporta tudo que pertence ao tutor em JSON e abre
-   * a folha de compartilhamento do sistema (salvar, enviar etc.).
-   */
-  async function exportarDados() {
-    if (processando) return;
-    setProcessando(true);
-    try {
-      const { data, error } = await supabase.rpc('exportar_meus_dados');
-      if (error) throw new Error(error.message);
-      const json = JSON.stringify(data, null, 2);
-      await Share.share({ title: 'Meus dados — PetLive', message: json });
-    } catch (e) {
-      Alert.alert('Não foi possível exportar', e instanceof Error ? e.message : String(e));
-    } finally {
-      setProcessando(false);
-    }
-  }
-
-  function excluirConta() {
-    if (processando) return;
-    Alert.alert(
-      'Excluir conta?',
-      'Seus dados, pets, remédios, lembretes e fotos serão apagados. Esta ação não pode ser desfeita.',
-      [
-        { text: 'Cancelar', style: 'cancel' },
-        { text: 'Continuar', style: 'destructive', onPress: confirmarExclusao },
-      ],
-    );
-  }
-
-  /**
-   * Apaga as fotos/anexos do tutor pela API do Storage (pasta = uid, a
-   * mesma convenção das policies). O DELETE direto em storage.objects é
-   * recusado pelo Storage, então não dá para fazer no banco.
-   */
-  async function apagarArquivosDaConta(tutorId: string) {
-    for (const bucket of ['pets', 'anexos']) {
-      const { data: arquivos } = await supabase.storage
-        .from(bucket)
-        .list(tutorId, { limit: 1000 });
-      const caminhos = (arquivos ?? []).filter((a) => a.name).map((a) => `${tutorId}/${a.name}`);
-      if (caminhos.length) await supabase.storage.from(bucket).remove(caminhos);
-    }
-  }
-
-  async function confirmarExclusao() {
-    if (processando) return;
-    setProcessando(true);
-    try {
-      // Primeiro os arquivos (melhor esforço: se falhar, a conta é
-      // apagada mesmo assim e o arquivo fica órfão).
-      if (user) await apagarArquivosDaConta(user.id).catch(() => undefined);
-      const { error } = await supabase.rpc('excluir_minha_conta');
-      if (error) throw new Error(error.message);
-      // Conta já apagada no servidor; só encerra a sessão local.
-      await supabase.auth.signOut();
-      router.replace('/welcome');
-    } catch (e) {
-      Alert.alert('Não foi possível excluir', e instanceof Error ? e.message : String(e));
-    } finally {
-      setProcessando(false);
-    }
-  }
-
   const opcoes: Opcao[] = [
     { rotulo: 'Meus dados', onPress: abrirEdicao },
-    { rotulo: 'Termos de uso e LGPD', onPress: () => setTermosAbertos(true) },
-    { rotulo: 'Exportar meus dados', onPress: exportarDados },
     { rotulo: 'Avisos', onPress: () => router.push('/avisos') },
-    { rotulo: 'Excluir conta', onPress: excluirConta, perigo: true },
+    { rotulo: 'Permissões', onPress: () => router.push('/permissoes') },
+    { rotulo: 'Privacidade e dados', onPress: () => router.push('/privacidade') },
   ];
 
   return (
@@ -255,62 +187,6 @@ export default function Perfil() {
         </View>
       </Modal>
 
-      {/* Termos e LGPD */}
-      <Modal
-        visible={termosAbertos}
-        animationType="slide"
-        transparent
-        onRequestClose={() => setTermosAbertos(false)}
-      >
-        <View style={estilos.fundoModal}>
-          <View style={estilos.cartaoModal}>
-            <ScrollView showsVerticalScrollIndicator={false}>
-              <Text style={estilos.tituloModal}>Termos de uso e privacidade</Text>
-
-              <Text style={estilos.subtituloModal}>1. O que é o PetLive</Text>
-              <Text style={estilos.paragrafoModal}>
-                O PetLive ajuda você a organizar vacinas, remédios, consultas e lembretes do seu pet.
-                Os dados ficam vinculados à sua conta e são usados apenas para oferecer esses
-                recursos.
-              </Text>
-
-              <Text style={estilos.subtituloModal}>2. Dados que coletamos</Text>
-              <Text style={estilos.paragrafoModal}>
-                Nome, e-mail e as informações que você cadastra sobre seus pets (espécie, raça, peso,
-                histórico de saúde e fotos opcionais). Não vendemos nem compartilhamos seus dados
-                com terceiros para fins de publicidade.
-              </Text>
-
-              <Text style={estilos.subtituloModal}>3. Base legal (LGPD)</Text>
-              <Text style={estilos.paragrafoModal}>
-                O tratamento acontece com base no seu consentimento (art. 7º, I) e na execução do
-                serviço solicitado (art. 7º, V). Você pode revogar o consentimento a qualquer
-                momento excluindo a sua conta.
-              </Text>
-
-              <Text style={estilos.subtituloModal}>4. Seus direitos</Text>
-              <Text style={estilos.paragrafoModal}>
-                Você pode confirmar, acessar, corrigir, portar ou excluir seus dados, além de
-                solicitar informações sobre o compartilhamento, conforme os art. 18 e 19 da LGPD.
-                Solicitações: privacidade@petlive.app.
-              </Text>
-
-              <Text style={estilos.subtituloModal}>5. Segurança e retenção</Text>
-              <Text style={estilos.paragrafoModal}>
-                Usamos criptografia em trânsito e controle de acesso por usuário (RLS). Os dados são
-                mantidos enquanto a conta existir e apagados em até 30 dias após a exclusão da
-                conta.
-              </Text>
-
-              <Text style={estilos.versaoModal}>Versão vigente: 1.0 · Outubro de 2026</Text>
-            </ScrollView>
-
-            <View style={estilos.acoesModal}>
-              <BotaoPrimario titulo="Entendi" onPress={() => setTermosAbertos(false)} />
-            </View>
-          </View>
-        </View>
-      </Modal>
     </View>
   );
 }
@@ -443,24 +319,6 @@ const estilos = StyleSheet.create({
     ...typography.caption,
     fontSize: 13,
     color: colors.textMuted,
-  },
-  subtituloModal: {
-    ...typography.bodyMedium,
-    color: colors.text,
-    marginTop: spacing.md,
-    marginBottom: 2,
-  },
-  paragrafoModal: {
-    ...typography.caption,
-    fontSize: 14,
-    lineHeight: 21,
-    color: colors.textMuted,
-  },
-  versaoModal: {
-    ...typography.caption,
-    color: colors.textMuted,
-    marginTop: spacing.lg,
-    marginBottom: spacing.sm,
   },
   acoesModal: {
     gap: spacing.sm,
