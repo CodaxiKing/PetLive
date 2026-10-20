@@ -2,7 +2,7 @@
 
 Capturas das telas do protótipo, geradas a partir de `prototipo/*.dc.html`. O protótipo navegável está no [canvas publicado](https://claude.ai/artifact/UFhxFUGwCYokbjPKCXDqKK).
 
-## App do tutor (40)
+## App do tutor (42)
 
 | | | | |
 | --- | --- | --- | --- |
@@ -16,8 +16,9 @@ Capturas das telas do protótipo, geradas a partir de `prototipo/*.dc.html`. O p
 | <img src="tutor/29-produto-com-receita-so-na-loja.png" width="160"><br>29 · Produto com receita (só na loja) | <img src="tutor/30-pagamento.png" width="160"><br>30 · Pagamento | <img src="tutor/31-pagar-com-pix.png" width="160"><br>31 · Pagar com Pix | <img src="tutor/32-pagamento-confirmado.png" width="160"><br>32 · Pagamento confirmado |
 | <img src="tutor/33-reservar-hotelzinho.png" width="160"><br>33 · Reservar hotelzinho | <img src="tutor/34-agendar-passeio.png" width="160"><br>34 · Agendar passeio | <img src="tutor/35-reservar-creche.png" width="160"><br>35 · Reservar creche | <img src="tutor/36-passeio-ao-vivo.png" width="160"><br>36 · Passeio ao vivo |
 | <img src="tutor/37-passeio-concluido.png" width="160"><br>37 · Passeio concluído | <img src="tutor/38-chat-com-a-loja.png" width="160"><br>38 · Chat com a loja | <img src="tutor/39-cupom-de-desconto.png" width="160"><br>39 · Cupom de desconto | <img src="tutor/40-avaliar-loja-e-servico.png" width="160"><br>40 · Avaliar loja e serviço |
+| <img src="tutor/41-entrega-ou-retirada.png" width="160"><br>41 · Entrega ou retirada | <img src="tutor/42-acompanhar-entrega.png" width="160"><br>42 · Acompanhar entrega | | |
 
-## App do lojista (celular) (17)
+## App do lojista (celular) (18)
 
 | | | | |
 | --- | --- | --- | --- |
@@ -25,9 +26,9 @@ Capturas das telas do protótipo, geradas a partir de `prototipo/*.dc.html`. O p
 | <img src="lojista-celular/04-agenda.png" width="160"><br>Lojista celular · 4 · Agenda | <img src="lojista-celular/05-horarios-de-atendimento.png" width="160"><br>Lojista celular · 5 · Horários de atendimento | <img src="lojista-celular/06-editar-servico.png" width="160"><br>Lojista celular · 6 · Editar serviço | <img src="lojista-celular/07-cadastrar-produto.png" width="160"><br>Lojista celular · 7 · Cadastrar produto |
 | <img src="lojista-celular/08-configuracoes-da-loja.png" width="160"><br>Lojista celular · 8 · Configurações da loja | <img src="lojista-celular/09-o-que-a-loja-oferece.png" width="160"><br>Lojista celular · 9 · O que a loja oferece | <img src="lojista-celular/10-escolher-servicos.png" width="160"><br>Lojista celular · 10 · Escolher serviços | <img src="lojista-celular/11-hotelzinho-pet.png" width="160"><br>Lojista celular · 11 · Hotelzinho pet |
 | <img src="lojista-celular/12-passeador.png" width="160"><br>Lojista celular · 12 · Passeador | <img src="lojista-celular/13-creche-pet.png" width="160"><br>Lojista celular · 13 · Creche pet | <img src="lojista-celular/14-cadastro-dados-da-loja.png" width="160"><br>Lojista celular · 14 · Cadastro, dados da loja | <img src="lojista-celular/15-cadastro-endereco-e-contato.png" width="160"><br>Lojista celular · 15 · Cadastro, endereço e contato |
-| <img src="lojista-celular/16-publicar-loja.png" width="160"><br>Lojista celular · 16 · Publicar loja | | | |
+| <img src="lojista-celular/16-publicar-loja.png" width="160"><br>Lojista celular · 16 · Publicar loja | <img src="lojista-celular/18-entrega-e-retirada.png" width="160"><br>Lojista celular · 18 · Entrega e retirada | | |
 
-## Painel do lojista (computador) (15)
+## Painel do lojista (computador) (17)
 
 ### Lojista computador · 1 · Solicitações e aceite
 
@@ -88,6 +89,14 @@ Capturas das telas do protótipo, geradas a partir de `prototipo/*.dc.html`. O p
 ### Lojista computador · 15 · Equipe da loja
 
 ![Lojista computador · 15 · Equipe da loja](lojista-computador/15-equipe-da-loja.png)
+
+### Lojista computador · 16 · Entrega e retirada (configuração)
+
+![Lojista computador · 16 · Entrega e retirada (configuração)](lojista-computador/16-entrega-e-retirada-configuracao.png)
+
+### Lojista computador · 17 · Entregas
+
+![Lojista computador · 17 · Entregas](lojista-computador/17-entregas.png)
 
 ## Site PetLive (2)
 

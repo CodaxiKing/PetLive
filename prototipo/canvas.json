@@ -531,7 +531,7 @@
    "is_interactive": true
   },
   "Encontrado.dc.html": {
-   "x": 12100,
+   "x": 12180,
    "y": 0,
    "w": 390,
    "h": 844,
@@ -543,7 +543,7 @@
    "h": 800,
    "is_interactive": true,
    "x": 5060,
-   "y": 6700,
+   "y": 7700,
    "title": "Painel admin · 2 · Visão geral"
   },
   "AdminAssinaturas.dc.html": {
@@ -551,7 +551,7 @@
    "h": 800,
    "is_interactive": true,
    "x": 3700,
-   "y": 7700,
+   "y": 8700,
    "title": "Painel admin · 4 · Assinaturas Premium"
   },
   "AdminAvaliacoes.dc.html": {
@@ -559,7 +559,7 @@
    "h": 800,
    "is_interactive": true,
    "x": 5060,
-   "y": 8700,
+   "y": 9700,
    "title": "Painel admin · 8 · Avaliações nas lojas de apps"
   },
   "AdminUsuarios.dc.html": {
@@ -567,7 +567,7 @@
    "h": 800,
    "is_interactive": true,
    "x": 6420,
-   "y": 8700,
+   "y": 9700,
    "title": "Painel admin · 9 · Usuários e pets"
   },
   "AdminLojistas.dc.html": {
@@ -575,7 +575,7 @@
    "h": 800,
    "is_interactive": true,
    "x": 3700,
-   "y": 9700,
+   "y": 10700,
    "title": "Painel admin · 10 · Lojistas e aprovação"
   },
   "AdminFinanceiro.dc.html": {
@@ -583,7 +583,7 @@
    "h": 800,
    "is_interactive": true,
    "x": 3700,
-   "y": 8700,
+   "y": 9700,
    "title": "Painel admin · 7 · Financeiro"
   },
   "AdminModeracao.dc.html": {
@@ -591,7 +591,7 @@
    "h": 800,
    "is_interactive": true,
    "x": 6420,
-   "y": 9700,
+   "y": 10700,
    "title": "Painel admin · 12 · Moderação"
   },
   "AdminCampanhas.dc.html": {
@@ -599,7 +599,7 @@
    "h": 800,
    "is_interactive": true,
    "x": 3700,
-   "y": 10700,
+   "y": 11700,
    "title": "Painel admin · 13 · Campanhas e notificações"
   },
   "AdminSistema.dc.html": {
@@ -607,7 +607,7 @@
    "h": 800,
    "is_interactive": true,
    "x": 3700,
-   "y": 11700,
+   "y": 12700,
    "title": "Painel admin · 16 · Sistema"
   },
   "AdminEquipe.dc.html": {
@@ -615,7 +615,7 @@
    "h": 800,
    "is_interactive": true,
    "x": 6420,
-   "y": 11700,
+   "y": 12700,
    "title": "Painel admin · 18 · Equipe e permissões"
   },
   "AdminLogin.dc.html": {
@@ -623,7 +623,7 @@
    "h": 800,
    "is_interactive": true,
    "x": 3700,
-   "y": 6700,
+   "y": 7700,
    "title": "Painel admin · 1 · Entrar com verificação"
   },
   "AdminRelatorios.dc.html": {
@@ -631,7 +631,7 @@
    "h": 800,
    "is_interactive": true,
    "x": 6420,
-   "y": 6700,
+   "y": 7700,
    "title": "Painel admin · 3 · Relatórios"
   },
   "AdminPlanos.dc.html": {
@@ -639,7 +639,7 @@
    "h": 800,
    "is_interactive": true,
    "x": 5060,
-   "y": 7700,
+   "y": 8700,
    "title": "Painel admin · 5 · Planos, preços e cupons"
   },
   "AdminPedidos.dc.html": {
@@ -647,7 +647,7 @@
    "h": 800,
    "is_interactive": true,
    "x": 6420,
-   "y": 7700,
+   "y": 8700,
    "title": "Painel admin · 6 · Pedidos e disputas"
   },
   "AdminSuporte.dc.html": {
@@ -655,7 +655,7 @@
    "h": 800,
    "is_interactive": true,
    "x": 5060,
-   "y": 9700,
+   "y": 10700,
    "title": "Painel admin · 11 · Suporte"
   },
   "AdminConteudo.dc.html": {
@@ -663,7 +663,7 @@
    "h": 800,
    "is_interactive": true,
    "x": 5060,
-   "y": 10700,
+   "y": 11700,
    "title": "Painel admin · 14 · Conteúdo mestre"
   },
   "AdminIntegracoes.dc.html": {
@@ -671,7 +671,7 @@
    "h": 800,
    "is_interactive": true,
    "x": 6420,
-   "y": 10700,
+   "y": 11700,
    "title": "Painel admin · 15 · Integrações"
   },
   "AdminLGPD.dc.html": {
@@ -679,7 +679,7 @@
    "h": 800,
    "is_interactive": true,
    "x": 5060,
-   "y": 11700,
+   "y": 12700,
    "title": "Painel admin · 17 · Privacidade e LGPD"
   },
   "WebMensagens.dc.html": {
@@ -753,6 +753,46 @@
    "x": 1410,
    "y": 5784,
    "title": "40 · Avaliar loja e serviço"
+  },
+  "WebEntrega.dc.html": {
+   "w": 1280,
+   "h": 800,
+   "is_interactive": true,
+   "x": 3700,
+   "y": 6300,
+   "title": "Lojista computador · 16 · Entrega e retirada (configuração)"
+  },
+  "WebEntregas.dc.html": {
+   "w": 1280,
+   "h": 800,
+   "is_interactive": true,
+   "x": 5060,
+   "y": 6300,
+   "title": "Lojista computador · 17 · Entregas"
+  },
+  "LojaEntrega.dc.html": {
+   "w": 390,
+   "h": 844,
+   "is_interactive": true,
+   "x": 11690,
+   "y": 0,
+   "title": "Lojista celular · 18 · Entrega e retirada"
+  },
+  "Entrega.dc.html": {
+   "w": 390,
+   "h": 844,
+   "is_interactive": true,
+   "x": 1880,
+   "y": 5784,
+   "title": "41 · Entrega ou retirada"
+  },
+  "EntregaAcompanhar.dc.html": {
+   "w": 390,
+   "h": 844,
+   "is_interactive": true,
+   "x": 2350,
+   "y": 5784,
+   "title": "42 · Acompanhar entrega"
   }
  },
  "order": [
@@ -848,7 +888,12 @@
   "WebEquipe.dc.html",
   "Chat.dc.html",
   "Cupom.dc.html",
-  "Avaliar.dc.html"
+  "Avaliar.dc.html",
+  "WebEntrega.dc.html",
+  "WebEntregas.dc.html",
+  "LojaEntrega.dc.html",
+  "Entrega.dc.html",
+  "EntregaAcompanhar.dc.html"
  ],
  "notes": {
   "t-tutor": {
@@ -873,7 +918,7 @@
    "maxW": 4000
   },
   "t-publico": {
-   "x": 12100,
+   "x": 12180,
    "y": -260,
    "text": "Página pública do QR",
    "kind": "title1",
@@ -888,7 +933,7 @@
   },
   "t-admin": {
    "x": 3700,
-   "y": 6440,
+   "y": 7440,
    "text": "Painel admin (computador)",
    "kind": "title1",
    "maxW": 4000
