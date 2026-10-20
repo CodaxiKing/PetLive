@@ -12,6 +12,8 @@ import {
 import { router } from 'expo-router'
 import { supabase } from '../lib/supabase'
 import { usePets } from './PetsProvider'
+import { useRemedios } from '../remedios/RemediosProvider'
+import { diasRestantes } from '../remedios/types'
 import { useVacinas } from '../saude/VacinasProvider'
 import { dataParaExibicao, rotuloDose } from '../saude/types'
 import { colors } from '../theme/colors'
@@ -35,68 +37,44 @@ interface GrupoOutros {
 export function AbaSaude() {
   const { petAtivo } = usePets()
   const { vacinas, carregando, salvando, removerVacina, recarregar } = useVacinas()
-  const [outros, setOutros] = useState<GrupoOutros[]>([])
+  const { remedios, encerrarRemedio } = useRemedios()
+  const [vermifugos, setVermifugos] = useState<OutroRegistro[]>([])
   const [atualizando, setAtualizando] = useState(false)
 
   const petId = petAtivo?.id ?? null
 
-  const carregarOutros = useCallback(() => {
+  const carregarVermifugos = useCallback(() => {
     const consulta = petId
-      ? Promise.all([
-          supabase
-            .from('dewormings')
-            .select('id, produto, aplicado_em, proxima_dose')
-            .eq('pet_id', petId)
-            .order('aplicado_em', { ascending: false }),
-          supabase
-            .from('medications')
-            .select('id, nome, dose, frequencia, inicio')
-            .eq('pet_id', petId)
-            .eq('ativo', true)
-            .order('inicio', { ascending: false }),
-        ])
-      : Promise.resolve(null)
+      ? supabase
+          .from('dewormings')
+          .select('id, produto, aplicado_em, proxima_dose')
+          .eq('pet_id', petId)
+          .order('aplicado_em', { ascending: false })
+      : Promise.resolve({ data: [] as Record<string, unknown>[], error: null })
 
-    return consulta.then((resultado) => {
-      if (!resultado) {
-        setOutros([])
-        return
-      }
-      const [vermifugos, remedios] = resultado
-      setOutros([
-        {
-          chave: 'vermifugos',
-          titulo: 'Vermífugos',
-          itens: (vermifugos.data ?? []).map((v) => ({
+    return Promise.resolve(consulta).then(({ data }) => {
+      setVermifugos(
+        ((data ?? []) as { id: string; produto: string | null; aplicado_em: string; proxima_dose: string | null }[]).map(
+          (v) => ({
             id: v.id,
             titulo: v.produto ?? 'Vermífugo',
             subtitulo: v.proxima_dose ? `próxima ${dataParaExibicao(v.proxima_dose)}` : null,
             quando: dataParaExibicao(v.aplicado_em),
-          })),
-        },
-        {
-          chave: 'remedios',
-          titulo: 'Remédios em uso',
-          itens: (remedios.data ?? []).map((m) => ({
-            id: m.id,
-            titulo: m.nome,
-            subtitulo: `${m.dose} · ${m.frequencia}`,
-            quando: dataParaExibicao(m.inicio),
-          })),
-        },
-      ])
+          }),
+        ),
+      )
     })
   }, [petId])
 
   useEffect(() => {
-    carregarOutros()
-  }, [carregarOutros])
+    carregarVermifugos()
+  }, [carregarVermifugos])
 
   const atualizar = useCallback(async () => {
     setAtualizando(true)
-    await Promise.all([recarregar(), carregarOutros()])
+    await Promise.all([recarregar(), carregarVermifugos()])
     setAtualizando(false)
-  }, [recarregar, carregarOutros])
+  }, [recarregar, carregarVermifugos])
 
   const confirmarRemocao = (id: string, nome: string) => {
     Alert.alert(`Remover ${nome}?`, 'O registro de vacina será apagado.', [
@@ -113,6 +91,32 @@ export function AbaSaude() {
     })
   }
 
+  const novoRemedio = () => {
+    if (!petAtivo) return
+    router.push({
+      pathname: '/pet/[id]/remedio/novo',
+      params: { id: petAtivo.id },
+    })
+  }
+
+  /** Toque longo: remover vacina, ou encerrar tratamento de remédio. */
+  const aoSegurar = (chave: string, item: OutroRegistro) => {
+    if (chave === 'vacinas') {
+      confirmarRemocao(item.id, item.titulo)
+      return
+    }
+    if (chave === 'remedios') {
+      Alert.alert(
+        `Encerrar ${item.titulo}?`,
+        'O tratamento sai da lista de ativos. O histórico continua salvo.',
+        [
+          { text: 'Cancelar', style: 'cancel' },
+          { text: 'Encerrar', style: 'destructive', onPress: () => encerrarRemedio(item.id) },
+        ],
+      )
+    }
+  }
+
   const proximas = vacinas
     .filter((v) => v.proxima_dose)
     .sort((a, b) => String(a.proxima_dose).localeCompare(String(b.proxima_dose)))
@@ -125,11 +129,30 @@ export function AbaSaude() {
       titulo: v.nome,
       subtitulo: [v.local, v.lote ? `lote ${v.lote}` : null].filter(Boolean).join(' · ') || null,
       quando: dataParaExibicao(v.aplicada_em),
-      proxima: v.proxima_dose,
     })),
   }
 
-  const grupos = [grupoVacinas, ...outros].filter((g) => g.itens.length > 0)
+  const grupoRemedios: GrupoOutros = {
+    chave: 'remedios',
+    titulo: 'Remédios em uso',
+    itens: remedios.map((m) => {
+      const restantes = diasRestantes(m.fim)
+      const partes = [m.dose, m.frequencia, m.horarios.join(', ')].filter(Boolean)
+      if (restantes != null) {
+        partes.push(restantes < 0 ? 'tratamento encerrado' : `faltam ${restantes}d`)
+      }
+      return {
+        id: m.id,
+        titulo: m.nome,
+        subtitulo: partes.join(' · ') || null,
+        quando: dataParaExibicao(m.inicio),
+      }
+    }),
+  }
+
+  const grupos = [grupoVacinas, grupoRemedios, { chave: 'vermifugos', titulo: 'Vermífugos', itens: vermifugos }].filter(
+    (g) => g.itens.length > 0,
+  )
 
   return (
     <ScrollView
@@ -187,11 +210,7 @@ export function AbaSaude() {
           {grupo.itens.map((item, i) => (
             <Pressable
               key={item.id}
-              onLongPress={
-                grupo.chave === 'vacinas'
-                  ? () => confirmarRemocao(item.id, item.titulo)
-                  : undefined
-              }
+              onLongPress={() => aoSegurar(grupo.chave, item)}
               delayLongPress={350}
               style={[estilos.linha, i === grupo.itens.length - 1 && estilos.ultima]}
             >
@@ -205,14 +224,27 @@ export function AbaSaude() {
         </View>
       ))}
 
-      <Pressable
-        accessibilityRole="button"
-        onPress={registrar}
-        disabled={!petAtivo || salvando}
-        style={({ pressed }) => [estilos.botaoRegistrar, pressed && estilos.pressionado]}
-      >
-        <Text style={estilos.botaoRegistrarTexto}>＋ Registrar vacina</Text>
-      </Pressable>
+      <View style={estilos.acoes}>
+        <Pressable
+          accessibilityRole="button"
+          onPress={registrar}
+          disabled={!petAtivo || salvando}
+          style={({ pressed }) => [estilos.botaoRegistrar, pressed && estilos.pressionado]}
+        >
+          <Text style={estilos.botaoRegistrarTexto}>＋ Vacina</Text>
+        </Pressable>
+
+        <Pressable
+          accessibilityRole="button"
+          onPress={novoRemedio}
+          disabled={!petAtivo || salvando}
+          style={({ pressed }) => [estilos.botaoRegistrar, pressed && estilos.pressionado]}
+        >
+          <Text style={estilos.botaoRegistrarTexto}>＋ Remédio</Text>
+        </Pressable>
+      </View>
+
+      <Text style={estilos.dica}>Toque e segure um registro para remover.</Text>
     </ScrollView>
   )
 }
@@ -261,6 +293,7 @@ const estilos = StyleSheet.create({
   subtitulo: { ...typography.caption, color: colors.textMuted, marginTop: 2 },
   data: { ...typography.caption, color: colors.textMuted },
   botaoRegistrar: {
+    flex: 1,
     height: 56,
     borderRadius: 28,
     backgroundColor: colors.black,
@@ -268,5 +301,7 @@ const estilos = StyleSheet.create({
     justifyContent: 'center',
   },
   botaoRegistrarTexto: { ...typography.button, color: colors.white },
+  acoes: { flexDirection: 'row', gap: spacing.md },
+  dica: { ...typography.small, color: colors.textMuted, textAlign: 'center' },
   pressionado: { opacity: 0.7 },
 })
