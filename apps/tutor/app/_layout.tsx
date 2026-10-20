@@ -1,6 +1,8 @@
-import { Stack } from 'expo-router';
+import { useEffect } from 'react';
+import { Stack, router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
+import * as Notifications from 'expo-notifications';
 import {
   useFonts,
   PlusJakartaSans_400Regular,
@@ -15,6 +17,34 @@ import { PetsProvider } from '../src/pets/PetsProvider';
 import { RemediosProvider } from '../src/remedios/RemediosProvider';
 import { VacinasProvider } from '../src/saude/VacinasProvider';
 import { colors } from '../src/theme/colors';
+
+/**
+ * Ao tocar numa notificação, abre a rota indicada em `data.url`.
+ * Segue o padrão da doc do SDK 58 (Expo Router + expo-notifications).
+ */
+function useObservadorNotificacoes() {
+  useEffect(() => {
+    function abrir(notification: Notifications.Notification) {
+      const url = notification.request.content.data?.url;
+      if (typeof url === 'string') {
+        router.push(url as never);
+        Notifications.clearLastNotificationResponse();
+      }
+    }
+
+    // App aberto a partir de uma notificação já encaminhada.
+    const respostaInicial = Notifications.getLastNotificationResponse();
+    if (respostaInicial?.notification) {
+      abrir(respostaInicial.notification);
+    }
+
+    const subscricao = Notifications.addNotificationResponseReceivedListener((resposta) => {
+      abrir(resposta.notification);
+    });
+
+    return () => subscricao.remove();
+  }, []);
+}
 
 /** Decide para onde a rota raiz aponta, conforme a sessão. */
 function RaizProtegida() {
@@ -62,6 +92,10 @@ function RaizProtegida() {
 }
 
 export default function RootLayout() {
+  // Hook incondicional (antes do early-return das fontes) para manter a
+  // ordem de hooks estável e abrir a rota certa ao tocar na notificação.
+  useObservadorNotificacoes();
+
   const [carregandoFontes] = useFonts({
     PlusJakartaSans_400Regular,
     PlusJakartaSans_500Medium,

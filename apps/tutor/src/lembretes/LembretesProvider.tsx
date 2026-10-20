@@ -9,6 +9,7 @@ import {
 } from 'react'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../auth/AuthProvider'
+import { agendarUmLembrete, cancelarLembrete } from '../notificacoes/sincronizarLembretes'
 import type { Lembrete, LembreteForm } from './types'
 import { LEMBRETE_FORM_VAZIO, formParaRegistro, proximaOcorrencia } from './types'
 
@@ -83,6 +84,8 @@ export function LembretesProvider({ children }: { children: ReactNode }) {
         setLembretes((atual) =>
           [...atual, lembrete].sort((a, b) => a.proxima_em.localeCompare(b.proxima_em)),
         )
+        // Notificação local é efeito colateral: não pode falhar o cadastro.
+        agendarUmLembrete(lembrete).catch(() => {})
         return lembrete
       })
     },
@@ -127,6 +130,12 @@ export function LembretesProvider({ children }: { children: ReactNode }) {
         }
         return restantes
       })
+      // Reagenda a próxima ocorrência (ou cancela, se não repete).
+      agendarUmLembrete({
+        ...lembrete,
+        proxima_em: proxima ?? lembrete.proxima_em,
+        ativo: Boolean(repete),
+      }).catch(() => {})
       return true
     })
   }, [])
@@ -142,6 +151,7 @@ export function LembretesProvider({ children }: { children: ReactNode }) {
         return false
       }
       setLembretes((atual) => atual.filter((l) => l.id !== id))
+      cancelarLembrete(id).catch(() => {})
       return true
     })
   }, [])

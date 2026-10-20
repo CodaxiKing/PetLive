@@ -1,7 +1,8 @@
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import {
   ActivityIndicator,
   Alert,
+  Linking,
   Pressable,
   RefreshControl,
   ScrollView,
@@ -21,6 +22,7 @@ import {
   dataParaExibicao,
   rotuloProximidade,
 } from '../../src/lembretes/types'
+import { permissaoConcedida, pedirPermissao } from '../../src/notificacoes/notificacoes'
 import { colors } from '../../src/theme/colors'
 import { typography } from '../../src/theme/typography'
 import { radius, shadow, spacing } from '../../src/theme/tokens'
@@ -44,6 +46,31 @@ export default function Lembretes() {
   const { pets } = usePets()
   const [aba, setAba] = useState<Aba>('Hoje')
   const [atualizando, setAtualizando] = useState(false)
+  // 'inicial' = ainda não perguntou; 'negada' = usuário recusou (mostra atalho p/ ajustar).
+  const [permissao, setPermissao] = useState<'inicial' | 'concedida' | 'negada' | 'indefinida'>(
+    'inicial',
+  )
+
+  useEffect(() => {
+    permissaoConcedida()
+      .then((concedida) => setPermissao(concedida ? 'concedida' : 'inicial'))
+      .catch(() => {})
+  }, [])
+
+  const ativarAvisos = useCallback(async () => {
+    const resultado = await pedirPermissao()
+    setPermissao(resultado)
+    if (resultado === 'negada') {
+      Alert.alert(
+        'Avisos desativados',
+        'Para receber os lembretes, libere as notificações do PetLive nas configurações do aparelho.',
+        [
+          { text: 'Agora não', style: 'cancel' },
+          { text: 'Abrir configurações', onPress: () => Linking.openSettings() },
+        ],
+      )
+    }
+  }, [])
 
   const nomePet = useCallback(
     (id: string | null) => (id ? (pets.find((p) => p.id === id)?.nome ?? null) : null),
@@ -96,6 +123,23 @@ export default function Lembretes() {
           )
         })}
       </View>
+
+      {permissao !== 'concedida' ? (
+        <Pressable
+          accessibilityRole="button"
+          onPress={ativarAvisos}
+          style={({ pressed }) => [estilos.banner, pressed && estilos.pressionado]}
+        >
+          <Text style={estilos.bannerTitulo}>
+            {permissao === 'negada' ? 'Avisos desativados' : 'Ative os avisos'}
+          </Text>
+          <Text style={estilos.bannerTexto}>
+            {permissao === 'negada'
+              ? 'Toque para abrir as configurações do aparelho.'
+              : 'Receba um toque antes de cada vacina, consulta ou remédio.'}
+          </Text>
+        </Pressable>
+      ) : null}
 
       {carregando ? (
         <View style={estilos.centro}>
@@ -217,6 +261,15 @@ const estilos = StyleSheet.create({
   abaAtiva: { backgroundColor: colors.black },
   abaTexto: { ...typography.captionMedium, color: colors.textMuted },
   abaTextoAtivo: { color: colors.white },
+  banner: {
+    marginHorizontal: spacing.xl,
+    marginBottom: spacing.md,
+    backgroundColor: colors.warningSurface,
+    borderRadius: radius.lg,
+    padding: spacing.lg,
+  },
+  bannerTitulo: { ...typography.bodyMedium, color: colors.warningText },
+  bannerTexto: { ...typography.caption, color: colors.warningText, marginTop: 2 },
   centro: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: spacing.xxl, gap: spacing.md },
   vazioTitulo: { ...typography.h3, color: colors.text, textAlign: 'center' },
   vazioTexto: { ...typography.body, color: colors.textMuted, textAlign: 'center', lineHeight: 22 },
