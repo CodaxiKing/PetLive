@@ -4,6 +4,7 @@ import { ControleSegmentado } from '../components/ControleSegmentado';
 import { colors } from '../theme/colors';
 import { typography } from '../theme/typography';
 import { spacing } from '../theme/tokens';
+import { CampoFoto, type AtivoFoto } from './CampoFoto';
 import type { PetForm } from './types';
 
 const ESPECIES = ['Cachorro', 'Gato'] as const;
@@ -19,10 +20,14 @@ const INDICE_SEXO: Record<string, PetForm['sexo']> = { Macho: 'macho', 'Fêmea':
 type Props = {
   form: PetForm;
   onChange: (campo: keyof PetForm, valor: string | boolean) => void;
+  /** Foto atual: URI local nova ou URL pública já salva. */
+  foto?: string | null;
+  /** Chamado quando o tutor escolhe (ou remove) a foto. */
+  onFoto?: (ativo: AtivoFoto | null) => void;
 };
 
 /** Formulário compartilhado entre "Novo pet" e "Editar pet". */
-export function FormularioPet({ form, onChange }: Props) {
+export function FormularioPet({ form, onChange, foto, onFoto }: Props) {
   return (
     <ScrollView
       style={estilos.flex}
@@ -30,6 +35,14 @@ export function FormularioPet({ form, onChange }: Props) {
       keyboardShouldPersistTaps="handled"
       showsVerticalScrollIndicator={false}
     >
+      {onFoto ? (
+        <CampoFoto
+          foto={foto ?? null}
+          onEscolher={onFoto}
+          onRemover={foto ? () => onFoto(null) : undefined}
+        />
+      ) : null}
+
       <Campo
         rotulo="Nome do pet"
         placeholder="Ex.: Nina"

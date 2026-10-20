@@ -41,6 +41,14 @@
           "imageWidth": 200,
           "resizeMode": "contain"
         }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "O PetLive acessa suas fotos para você colocar uma imagem no seu pet.",
+          "cameraPermission": "O PetLive usa a câmera para você fotografar o seu pet.",
+          "microphonePermission": false
+        }
       ]
     ],
     "experiments": {
