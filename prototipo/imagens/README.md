@@ -25,7 +25,7 @@ Capturas das telas do protótipo, geradas a partir de `prototipo/*.dc.html` e or
 
 # Fase 2 · Premium, eventos, adoção e painel admin
 
-## App do tutor (22)
+## App do tutor (28)
 
 | | | | |
 | --- | --- | --- | --- |
@@ -34,7 +34,8 @@ Capturas das telas do protótipo, geradas a partir de `prototipo/*.dc.html` e or
 | <img src="tutor/54-adocao.png" width="160"><br>54 · Adoção | <img src="tutor/55-pet-para-adocao.png" width="160"><br>55 · Pet para adoção | <img src="tutor/56-cuidador-temporario.png" width="160"><br>56 · Cuidador temporário | <img src="tutor/57-linha-do-tempo-do-pet.png" width="160"><br>57 · Linha do tempo do pet |
 | <img src="tutor/58-checklist-de-viagem.png" width="160"><br>58 · Checklist de viagem | <img src="tutor/59-selos-de-cuidado.png" width="160"><br>59 · Selos de cuidado | <img src="tutor/68-passeios-do-pet.png" width="160"><br>68 · Passeios do pet | <img src="tutor/69-passeio-em-andamento.png" width="160"><br>69 · Passeio em andamento |
 | <img src="tutor/70-resumo-do-passeio.png" width="160"><br>70 · Resumo do passeio | <img src="tutor/71-despesas-do-pet.png" width="160"><br>71 · Despesas do pet | <img src="tutor/72-nova-despesa.png" width="160"><br>72 · Nova despesa | <img src="tutor/73-fogos-e-trovao.png" width="160"><br>73 · Fogos e trovão |
-| <img src="tutor/74-widget-e-atalhos.png" width="160"><br>74 · Widget e atalhos | <img src="tutor/75-cartao-do-pet.png" width="160"><br>75 · Cartão do pet | | |
+| <img src="tutor/74-widget-e-atalhos.png" width="160"><br>74 · Widget e atalhos | <img src="tutor/75-cartao-do-pet.png" width="160"><br>75 · Cartão do pet | <img src="tutor/77-ficha-de-emergencia.png" width="160"><br>77 · Ficha de emergência | <img src="tutor/78-ficha-de-emergencia-quem-recebe.png" width="160"><br>78 · Ficha de emergência (quem recebe) |
+| <img src="tutor/82-registrar-a-partida.png" width="160"><br>82 · Registrar a partida | <img src="tutor/83-em-memoria.png" width="160"><br>83 · Em memória | <img src="tutor/84-pet-senior.png" width="160"><br>84 · Pet sênior | <img src="tutor/85-qualidade-de-vida.png" width="160"><br>85 · Qualidade de vida |
 
 ## Site (1)
 
@@ -116,7 +117,7 @@ Capturas das telas do protótipo, geradas a partir de `prototipo/*.dc.html` e or
 
 # Fase 3 · Marketplace (futuro, não é para agora)
 
-## App do tutor (22)
+## App do tutor (25)
 
 | | | | |
 | --- | --- | --- | --- |
@@ -125,7 +126,8 @@ Capturas das telas do protótipo, geradas a partir de `prototipo/*.dc.html` e or
 | <img src="tutor/30-pagamento.png" width="160"><br>30 · Pagamento | <img src="tutor/31-pagar-com-pix.png" width="160"><br>31 · Pagar com Pix | <img src="tutor/32-pagamento-confirmado.png" width="160"><br>32 · Pagamento confirmado | <img src="tutor/33-reservar-hotelzinho.png" width="160"><br>33 · Reservar hotelzinho |
 | <img src="tutor/34-agendar-passeio.png" width="160"><br>34 · Agendar passeio | <img src="tutor/35-reservar-creche.png" width="160"><br>35 · Reservar creche | <img src="tutor/36-passeio-ao-vivo.png" width="160"><br>36 · Passeio ao vivo | <img src="tutor/37-passeio-concluido.png" width="160"><br>37 · Passeio concluído |
 | <img src="tutor/38-chat-com-a-loja.png" width="160"><br>38 · Chat com a loja | <img src="tutor/39-cupom-de-desconto.png" width="160"><br>39 · Cupom de desconto | <img src="tutor/40-avaliar-loja-e-servico.png" width="160"><br>40 · Avaliar loja e serviço | <img src="tutor/41-entrega-ou-retirada.png" width="160"><br>41 · Entrega ou retirada |
-| <img src="tutor/42-acompanhar-entrega.png" width="160"><br>42 · Acompanhar entrega | <img src="tutor/76-consulta-na-clinica.png" width="160"><br>76 · Consulta na clínica | | |
+| <img src="tutor/42-acompanhar-entrega.png" width="160"><br>42 · Acompanhar entrega | <img src="tutor/76-consulta-na-clinica.png" width="160"><br>76 · Consulta na clínica | <img src="tutor/79-estou-a-caminho.png" width="160"><br>79 · Estou a caminho | <img src="tutor/86-album-do-ano.png" width="160"><br>86 · Álbum do ano |
+| <img src="tutor/87-pedido-do-album.png" width="160"><br>87 · Pedido do álbum | | | |
 
 ## App do lojista (celular) (18)
 
@@ -137,7 +139,7 @@ Capturas das telas do protótipo, geradas a partir de `prototipo/*.dc.html` e or
 | <img src="lojista-celular/12-passeador.png" width="160"><br>Lojista celular · 12 · Passeador | <img src="lojista-celular/13-creche-pet.png" width="160"><br>Lojista celular · 13 · Creche pet | <img src="lojista-celular/14-cadastro-dados-da-loja.png" width="160"><br>Lojista celular · 14 · Cadastro, dados da loja | <img src="lojista-celular/15-cadastro-endereco-e-contato.png" width="160"><br>Lojista celular · 15 · Cadastro, endereço e contato |
 | <img src="lojista-celular/16-publicar-loja.png" width="160"><br>Lojista celular · 16 · Publicar loja | <img src="lojista-celular/18-entrega-e-retirada.png" width="160"><br>Lojista celular · 18 · Entrega e retirada | | |
 
-## Painel do lojista (computador) (17)
+## Painel do lojista (computador) (18)
 
 ### Lojista computador · 1 · Solicitações e aceite
 
@@ -207,6 +209,10 @@ Capturas das telas do protótipo, geradas a partir de `prototipo/*.dc.html` e or
 
 ![Lojista computador · 17 · Entregas](lojista-computador/17-entregas.png)
 
+### Lojista computador · 18 · Emergências a caminho
+
+![Lojista computador · 18 · Emergências a caminho](lojista-computador/18-emergencias-a-caminho.png)
+
 ## Site (1)
 
 ### Site PetLive · Para lojistas
@@ -241,10 +247,10 @@ Capturas das telas do protótipo, geradas a partir de `prototipo/*.dc.html` e or
 
 # Fase 5 · Social e mapa (futuro)
 
-## App do tutor (6)
+## App do tutor (8)
 
 | | | | |
 | --- | --- | --- | --- |
 | <img src="tutor/60-pet-perdido.png" width="160"><br>60 · Pet perdido | <img src="tutor/61-plano-e-seguro-pet.png" width="160"><br>61 · Plano e seguro pet | <img src="tutor/64-notificacao-de-pet-perdido.png" width="160"><br>64 · Notificação de pet perdido | <img src="tutor/65-alerta-de-pet-perdido.png" width="160"><br>65 · Alerta de pet perdido |
-| <img src="tutor/66-vi-este-pet.png" width="160"><br>66 · Vi este pet | <img src="tutor/67-qr-com-pet-procurado.png" width="160"><br>67 · QR com pet procurado | | |
+| <img src="tutor/66-vi-este-pet.png" width="160"><br>66 · Vi este pet | <img src="tutor/67-qr-com-pet-procurado.png" width="160"><br>67 · QR com pet procurado | <img src="tutor/80-achei-um-pet-foto.png" width="160"><br>80 · Achei um pet: foto | <img src="tutor/81-possiveis-correspondencias.png" width="160"><br>81 · Possíveis correspondências |
 
