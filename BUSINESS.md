@@ -4,7 +4,7 @@ Este documento é a fonte única do escopo do PetLive. A **Parte A** (seções 1
 
 | Recurso | Link |
 | --- | --- |
-| Protótipo (151 telas e páginas, separadas por fase no canvas, com a paleta de cores) | https://claude.ai/artifact/UFhxFUGwCYokbjPKCXDqKK |
+| Protótipo (160 telas e páginas, separadas por fase no canvas, com a paleta de cores) | https://claude.ai/artifact/UFhxFUGwCYokbjPKCXDqKK |
 | Imagens das telas | [prototipo/imagens](prototipo/imagens/README.md) |
 | Plano de criação | https://claude.ai/code/artifact/871f3a23-4e21-4456-861f-b630c089235f |
 | Board de tarefas (194 tasks) | https://github.com/users/CodaxiKing/projects/5 |
@@ -299,6 +299,8 @@ A comissão incide só sobre pagamentos feitos pelo app. Vitrine e agenda são g
 
 ### 5.7 Aviso de saúde
 
+> **Termos, permissões e privacidade (telas 97 a 99, Fase 1):** no primeiro acesso o tutor aceita os **termos** e a **política de privacidade** (obrigatórios) e escolhe, separado, localização e dicas (opcionais). Depois o app pede **avisos** e **localização ao usar**; câmera e fotos só na hora de usar. Em **Privacidade e dados** o tutor muda os consentimentos, vê quem acessa os dados do pet (cuidadores, fichas ativas), **exporta os dados** (até 15 dias) e **exclui a conta** (dados removidos em `[30]` dias).
+
 O PetLive organiza informações e não substitui o atendimento veterinário. Esse aviso aparece no app e no site.
 
 ### 5.8 Entrega e retirada (Fase 3)
@@ -350,6 +352,8 @@ O PetLive organiza informações e não substitui o atendimento veterinário. Es
 
 ### 5.13 Premium e assinaturas (Fase 2)
 
+> **Minha assinatura (tela 100):** mostra o plano, a renovação, a forma de pagamento, **mudar para mensal**, **atualizar pagamento** e **cancelar**. Ao cancelar, o app diz que o Premium vale até o fim do período pago e o que muda depois.
+
 - Teste grátis de `[7]` dias para quem nunca assinou. Cobrança avisada `[2]` dias antes.
 - Planos mensal e anual, pagos por Pix ou cartão pelo Asaas.
 - **A validar:** a Apple e o Google costumam exigir a compra da própria loja para recursos digitais vendidos dentro do app, e essas regras mudaram no Brasil. Confirmar a política vigente antes de lançar o Premium. A regra vale só para o Premium: pedidos de produtos e serviços físicos não são afetados.
@@ -378,6 +382,8 @@ O PetLive organiza informações e não substitui o atendimento veterinário. Es
 - **Fase 3:** a loja que se cadastrar pode "assumir" o lugar pelo `place_id`, com verificação do dono.
 
 ### 5.16 Eventos pet (Fase 2)
+
+> **Meus eventos (tela 96):** o organizador vê seus eventos com o estado (em análise, publicado com a contagem de confirmados, recusado com o motivo, encerrado), pode **editar** ou **cancelar**. Mudar data, horário ou local de um evento publicado volta à análise.
 
 - **O que é:** um encontro ou ação com data, horário e local, mostrado no mapa. Exemplos: feira de adoção, vacinação ou castração gratuita, passeio coletivo, encontro de raça e palestra.
 - **Tipos:** adoção, vacinação ou castração, passeio, encontro, palestra e outros.
@@ -444,6 +450,8 @@ O PetLive organiza informações e não substitui o atendimento veterinário. Es
 
 ### 5.23 Adoção (Fase 2)
 
+> **Modo ONG (telas 93 a 95):** a ONG se cadastra com CNPJ, responsável e documentos (`OngCadastro`), publica pets (`OngNovoPet`, até `[6]` fotos) e acompanha **pets e interessados** (`OngInteresses`), podendo responder e **marcar como adotado**. A análise leva até `[3]` dias úteis.
+
 - **Quem cadastra:** só **ONGs e abrigos verificados**: o admin aprova os documentos (estatuto, comprovante e responsável). Pessoas físicas não cadastram pets nesta fase.
 - **Ficha do pet:** nome, espécie, idade, porte, sexo, castrado, vacinado, vermifugado, descrição, até `[6]` fotos, ONG e bairro.
 - **Tutor:** navega com filtros (cão, gato, filhote), favorita e toca em **Tenho interesse**. O contato vai para a ONG, que conversa e decide fora do app, ou por conversa simples dentro dele `[a definir]`.
@@ -452,6 +460,8 @@ O PetLive organiza informações e não substitui o atendimento veterinário. Es
 - Liga com **eventos**: um evento do tipo adoção pode listar os pets que estarão lá.
 
 ### 5.24 Cuidador temporário (Fase 2)
+
+> **Telas:** a visão do cuidador abre por link (`CuidadorVisao`): mostra os remédios do dia com o botão **Dei**, vacinas, alergias e os contatos de emergência, com o prazo no topo e aviso de que cada acesso é registrado.
 
 - O tutor cria um **acesso com prazo** para um ou mais pets, escolhendo o período e **o que o cuidador pode ver**: vacinas e vermífugo, remédios e horários, e alergias e contatos de emergência.
 - O cuidador entra por **link ou código**, sem precisar do plano do tutor. Pode **marcar dose dada**, mas não edita o cadastro nem vê dados de pagamento, outros pets ou o histórico completo.
@@ -1010,7 +1020,7 @@ A coluna **Fase** diz quando a tela entra. No canvas do protótipo, as telas tam
 
 Cada linha liga a tela do protótipo (arquivo `prototipo/<nome>.dc.html` e imagem em `prototipo/imagens`) à rota sugerida e aos dados que ela usa. As rotas seguem o Expo Router no app e a estrutura de pastas equivalente na web.
 
-### 18.1 App do tutor (telas 1 a 18 e 46 a 51 na Fase 1; 19 a 21, 43 a 45, 52 a 59, 68 a 75, 77, 78, 82 a 85 e 88 a 91 (mais a versão para computador do link) na Fase 2; 22 a 42, 76, 79, 86 e 87 na Fase 3; 62 e 63 na Fase 4; 60, 61, 64 a 67, 80 e 81 na Fase 5)
+### 18.1 App do tutor (telas 1 a 18, 46 a 51 e 97 a 99 na Fase 1; 92 a 96 e 100 também na Fase 2; 19 a 21, 43 a 45, 52 a 59, 68 a 75, 77, 78, 82 a 85 e 88 a 91 (mais a versão para computador do link) na Fase 2; 22 a 42, 76, 79, 86 e 87 na Fase 3; 62 e 63 na Fase 4; 60, 61, 64 a 67, 80 e 81 na Fase 5)
 
 Navegação por abas: **Início**, **Pets**, **Mapa**, **Lembretes** e **Perfil**. A loja abre a partir do Mapa, do Início e da ficha do lugar.
 
@@ -1063,6 +1073,15 @@ Navegação por abas: **Início**, **Pets**, **Mapa**, **Lembretes** e **Perfil*
 | Widget e atalhos | `WidgetAtalhos` | `/ajustes/widget` | Configuração do aparelho | 2 |
 | Cartão do pet | `CartaoPet` | `/pets/[id]/cartao` | `pets`, `pet_badges` (imagem gerada no aparelho) | 2 |
 | Ficha de emergência | `FichaEmergencia` | `/pets/[id]/ficha-emergencia` | `emergency_cards` | 2 |
+| Termos e consentimento | `TermosConsentimento` | `/(auth)/termos` | `profiles.terms_version`, `consents` | 1 |
+| Permissões do app | `PermissoesApp` | `/(auth)/permissoes` | Permissões do aparelho | 1 |
+| Privacidade e dados | `PrivacidadeDados` | `/ajustes/privacidade` | `consents`, `lgpd_requests`, `caregiver_access`, `emergency_cards` | 1 |
+| Minha assinatura | `MinhaAssinatura` | `/premium/assinatura` | `subscriptions`, `payments` | 2 |
+| Cadastro da ONG | `OngCadastro` | `/ong/cadastro` | `ngos`, documentos | 2 |
+| Novo pet para adoção (modo ONG) | `OngNovoPet` | `/ong/pets/novo` | `adoption_pets` | 2 |
+| Pets e interessados (modo ONG) | `OngInteresses` | `/ong` | `adoption_pets`, `adoption_contacts` | 2 |
+| Meus eventos | `MeusEventos` | `/eventos/meus` | `events`, `event_rsvps` | 2 |
+| Visão do cuidador (link) | `CuidadorVisao` | `/cuidador/[token]` (público, sem login) | `caregiver_access` via função pública | 2 |
 | Link da ficha, no celular (quem recebe) | `FichaVista` | `/ficha/[token]` (público, sem login) | `emergency_cards` via função pública | 2 |
 | Link da ficha, no computador da clínica | `FichaVistaPC` | `/ficha/[token]` (mesma rota, layout largo) | `emergency_cards` via função pública | 2 |
 | Link da ficha expirado ou cancelado | `FichaExpirada` | `/ficha/[token]` (quando vencida ou cancelada) | Nenhum dado do pet | 2 |
@@ -1976,6 +1995,7 @@ Convenções: `id uuid` em todas as tabelas, `created_at` e `updated_at`, soft d
 | `medications` | `pet_id`, `name`, `dose`, `every_hours`, `times[]`, `starts_at`, `ends_at`, `active` |
 | `medication_doses` | `medication_id`, `scheduled_at`, `status` (`pendente`/`dada`/`perdida`), `confirmed_at` |
 | `reminders` | `pet_id`, `type`, `title`, `due_at`, `repeat_rule`, `status`, `source` (`manual`/`vacina`/`remedio`/`reserva`) |
+| `consents` | `user_id`, `type` (`termos`/`privacidade`/`localizacao`/`dicas`), `version`, `granted`, `at` |
 | `push_tokens` | `user_id`, `token`, `platform`, `last_seen_at` |
 | `notification_prefs` | `user_id`, `type`, `enabled`, `quiet_from`, `quiet_to` |
 | `pet_qr_settings` | `pet_id`, `code` (único, curto), `show_photo`, `show_phone`, `show_allergies`, `active` |
@@ -2398,7 +2418,7 @@ Uma tabela para consultar de uma vez: cada funcionalidade com a fase, a regra, a
 
 | Funcionalidade | Regra | Telas | Dados | Funções e jobs |
 | --- | --- | --- | --- | --- |
-| Conta, termos e perfil | 5.7, 12 | 1, 2, 18 | `profiles` | Autenticação |
+| Conta, termos, permissões e privacidade | 5.7, 12 | 1, 2, 18, 97 a 99 | `profiles`, `consents`, `lgpd_requests` | Autenticação, `lgpd-export`, `lgpd-delete` |
 | Pets e saúde (vacinas, peso, consultas) | 4.1 | 3, 5 a 9 | `pets`, `vaccinations`, `weights`, `visits` | Calendário sugerido |
 | Lembretes e remédios | 5.21 | 10 a 15 | `reminders`, `medications`, `medication_doses` | `send-reminders`, `mark-missed-doses` |
 | Início | 4.1 | 4 | Próximas vacinas e doses | Consultas agregadas |
@@ -2414,13 +2434,13 @@ Uma tabela para consultar de uma vez: cada funcionalidade com a fase, a regra, a
 
 | Funcionalidade | Regra | Telas | Dados | Funções e jobs |
 | --- | --- | --- | --- | --- |
-| Premium e assinatura | 5.13, 10 | 19 | `subscriptions`, `plans` | `create-pix-charge`, `pix-webhook`, `subscription-billing` |
+| Premium e assinatura | 5.13, 10 | 19, 100 | `subscriptions`, `plans` | `create-pix-charge`, `pix-webhook`, `subscription-billing` |
 | Carteira em PDF | 4.1 | 20 | Dados do pet | `export-pet-card` |
 | QR da coleira e página do QR | 5.6 | 21, página do QR | `pet_qr_settings`, `qr_scans` | `public-qr`, `qr-location` |
-| Eventos pet | 5.16 | 43 a 45, admin Eventos | `events`, `event_rsvps`, `event_reports` | `events-nearby`, `create-event`, `rsvp-event`, `event-reminders`, `close-events` |
+| Eventos pet | 5.16 | 43 a 45, 96, admin Eventos | `events`, `event_rsvps`, `event_reports` | `events-nearby`, `create-event`, `rsvp-event`, `event-reminders`, `close-events` |
 | Cartão de vacina por foto | 5.22 | 52, 53 | `vaccine_card_scans` | `scan-vaccine-card` |
-| Adoção | 5.23 | 54, 55, admin Adoção | `ngos`, `adoption_pets`, `adoption_favorites`, `adoption_contacts` | `adoption-search`, `adoption-contact`, `adoption-stale` |
-| Cuidador temporário | 5.24 | 56 | `caregiver_access`, `caregiver_access_log` | `create-caregiver-access`, `caregiver-view`, `caregiver-expire` |
+| Adoção e modo ONG | 5.23 | 54, 55, 93 a 95, admin Adoção | `ngos`, `adoption_pets`, `adoption_favorites`, `adoption_contacts` | `adoption-search`, `adoption-contact`, `adoption-stale` |
+| Cuidador temporário | 5.24 | 56, 92 | `caregiver_access`, `caregiver_access_log` | `create-caregiver-access`, `caregiver-view`, `caregiver-expire` |
 | Linha do tempo | 5.25 | 57 | `timeline_entries` | Marcos automáticos |
 | Checklist de viagem | 5.26 | 58 | `travel_checklists` | Conteúdo mestre |
 | Selos de cuidado | 5.27 | 59 | `badges`, `pet_badges` | `badges-recalc` |

@@ -12,7 +12,7 @@ Capturas das telas do protótipo, geradas a partir de `prototipo/*.dc.html` e or
 
 # Fase 1 · MVP: pet, saúde, lugares e emergência
 
-## App do tutor (24)
+## App do tutor (27)
 
 | | | | |
 | --- | --- | --- | --- |
@@ -22,21 +22,24 @@ Capturas das telas do protótipo, geradas a partir de `prototipo/*.dc.html` e or
 | <img src="tutor/13-medicamentos.png" width="160"><br>13 · Medicamentos | <img src="tutor/14-lembrete-personalizado.png" width="160"><br>14 · Lembrete personalizado | <img src="tutor/15-avisos.png" width="160"><br>15 · Avisos | <img src="tutor/16-mapa.png" width="160"><br>16 · Mapa |
 | <img src="tutor/17-ficha-do-lugar.png" width="160"><br>17 · Ficha do lugar | <img src="tutor/18-perfil-do-tutor.png" width="160"><br>18 · Perfil do tutor | <img src="tutor/46-sos-e-emergencia.png" width="160"><br>46 · SOS e emergência | <img src="tutor/47-primeiros-socorros.png" width="160"><br>47 · Primeiros socorros |
 | <img src="tutor/48-o-que-intoxica-o-pet.png" width="160"><br>48 · O que intoxica o pet | <img src="tutor/49-pet-friendly-no-mapa.png" width="160"><br>49 · Pet friendly no mapa | <img src="tutor/50-calculadoras.png" width="160"><br>50 · Calculadoras | <img src="tutor/51-rotina-de-cuidados.png" width="160"><br>51 · Rotina de cuidados |
+| <img src="tutor/97-termos-e-consentimento.png" width="160"><br>97 · Termos e consentimento | <img src="tutor/98-permissoes-do-app.png" width="160"><br>98 · Permissões do app | <img src="tutor/99-privacidade-e-dados.png" width="160"><br>99 · Privacidade e dados | |
 
 # Fase 2 · Premium, eventos, adoção e painel admin
 
-## App do tutor (32)
+## App do tutor (38)
 
 | | | | |
 | --- | --- | --- | --- |
-| <img src="tutor/00-link-da-ficha-no-computador-da-clinica.png" width="160"><br>Link da ficha · No computador da clínica | <img src="tutor/19-premium.png" width="160"><br>19 · Premium | <img src="tutor/20-carteira-em-pdf.png" width="160"><br>20 · Carteira em PDF | <img src="tutor/21-qr-da-coleira.png" width="160"><br>21 · QR da coleira |
-| <img src="tutor/43-eventos-no-mapa.png" width="160"><br>43 · Eventos no mapa | <img src="tutor/44-evento.png" width="160"><br>44 · Evento | <img src="tutor/45-criar-evento.png" width="160"><br>45 · Criar evento | <img src="tutor/52-foto-do-cartao-de-vacina.png" width="160"><br>52 · Foto do cartão de vacina |
-| <img src="tutor/53-revisar-vacinas-lidas.png" width="160"><br>53 · Revisar vacinas lidas | <img src="tutor/54-adocao.png" width="160"><br>54 · Adoção | <img src="tutor/55-pet-para-adocao.png" width="160"><br>55 · Pet para adoção | <img src="tutor/56-cuidador-temporario.png" width="160"><br>56 · Cuidador temporário |
-| <img src="tutor/57-linha-do-tempo-do-pet.png" width="160"><br>57 · Linha do tempo do pet | <img src="tutor/58-checklist-de-viagem.png" width="160"><br>58 · Checklist de viagem | <img src="tutor/59-selos-de-cuidado.png" width="160"><br>59 · Selos de cuidado | <img src="tutor/68-passeios-do-pet.png" width="160"><br>68 · Passeios do pet |
-| <img src="tutor/69-passeio-em-andamento.png" width="160"><br>69 · Passeio em andamento | <img src="tutor/70-resumo-do-passeio.png" width="160"><br>70 · Resumo do passeio | <img src="tutor/71-despesas-do-pet.png" width="160"><br>71 · Despesas do pet | <img src="tutor/72-nova-despesa.png" width="160"><br>72 · Nova despesa |
-| <img src="tutor/73-fogos-e-trovao.png" width="160"><br>73 · Fogos e trovão | <img src="tutor/74-widget-e-atalhos.png" width="160"><br>74 · Widget e atalhos | <img src="tutor/75-cartao-do-pet.png" width="160"><br>75 · Cartão do pet | <img src="tutor/77-ficha-de-emergencia.png" width="160"><br>77 · Ficha de emergência |
-| <img src="tutor/78-ficha-de-emergencia-quem-recebe.png" width="160"><br>78 · Ficha de emergência (quem recebe) | <img src="tutor/82-registrar-a-partida.png" width="160"><br>82 · Registrar a partida | <img src="tutor/83-em-memoria.png" width="160"><br>83 · Em memória | <img src="tutor/84-pet-senior.png" width="160"><br>84 · Pet sênior |
-| <img src="tutor/85-qualidade-de-vida.png" width="160"><br>85 · Qualidade de vida | <img src="tutor/88-ficha-da-clinica-com-enviar-ficha.png" width="160"><br>88 · Ficha da clínica com enviar ficha | <img src="tutor/89-enviar-ficha-a-clinica.png" width="160"><br>89 · Enviar ficha à clínica | <img src="tutor/91-link-da-ficha-expirado.png" width="160"><br>91 · Link da ficha expirado |
+| <img src="tutor/00-link-da-ficha-no-computador-da-clinica.png" width="160"><br>Link da ficha · No computador da clínica | <img src="tutor/100-minha-assinatura.png" width="160"><br>100 · Minha assinatura | <img src="tutor/19-premium.png" width="160"><br>19 · Premium | <img src="tutor/20-carteira-em-pdf.png" width="160"><br>20 · Carteira em PDF |
+| <img src="tutor/21-qr-da-coleira.png" width="160"><br>21 · QR da coleira | <img src="tutor/43-eventos-no-mapa.png" width="160"><br>43 · Eventos no mapa | <img src="tutor/44-evento.png" width="160"><br>44 · Evento | <img src="tutor/45-criar-evento.png" width="160"><br>45 · Criar evento |
+| <img src="tutor/52-foto-do-cartao-de-vacina.png" width="160"><br>52 · Foto do cartão de vacina | <img src="tutor/53-revisar-vacinas-lidas.png" width="160"><br>53 · Revisar vacinas lidas | <img src="tutor/54-adocao.png" width="160"><br>54 · Adoção | <img src="tutor/55-pet-para-adocao.png" width="160"><br>55 · Pet para adoção |
+| <img src="tutor/56-cuidador-temporario.png" width="160"><br>56 · Cuidador temporário | <img src="tutor/57-linha-do-tempo-do-pet.png" width="160"><br>57 · Linha do tempo do pet | <img src="tutor/58-checklist-de-viagem.png" width="160"><br>58 · Checklist de viagem | <img src="tutor/59-selos-de-cuidado.png" width="160"><br>59 · Selos de cuidado |
+| <img src="tutor/68-passeios-do-pet.png" width="160"><br>68 · Passeios do pet | <img src="tutor/69-passeio-em-andamento.png" width="160"><br>69 · Passeio em andamento | <img src="tutor/70-resumo-do-passeio.png" width="160"><br>70 · Resumo do passeio | <img src="tutor/71-despesas-do-pet.png" width="160"><br>71 · Despesas do pet |
+| <img src="tutor/72-nova-despesa.png" width="160"><br>72 · Nova despesa | <img src="tutor/73-fogos-e-trovao.png" width="160"><br>73 · Fogos e trovão | <img src="tutor/74-widget-e-atalhos.png" width="160"><br>74 · Widget e atalhos | <img src="tutor/75-cartao-do-pet.png" width="160"><br>75 · Cartão do pet |
+| <img src="tutor/77-ficha-de-emergencia.png" width="160"><br>77 · Ficha de emergência | <img src="tutor/78-ficha-de-emergencia-quem-recebe.png" width="160"><br>78 · Ficha de emergência (quem recebe) | <img src="tutor/82-registrar-a-partida.png" width="160"><br>82 · Registrar a partida | <img src="tutor/83-em-memoria.png" width="160"><br>83 · Em memória |
+| <img src="tutor/84-pet-senior.png" width="160"><br>84 · Pet sênior | <img src="tutor/85-qualidade-de-vida.png" width="160"><br>85 · Qualidade de vida | <img src="tutor/88-ficha-da-clinica-com-enviar-ficha.png" width="160"><br>88 · Ficha da clínica com enviar ficha | <img src="tutor/89-enviar-ficha-a-clinica.png" width="160"><br>89 · Enviar ficha à clínica |
+| <img src="tutor/91-link-da-ficha-expirado.png" width="160"><br>91 · Link da ficha expirado | <img src="tutor/92-visao-do-cuidador-link.png" width="160"><br>92 · Visão do cuidador (link) | <img src="tutor/93-cadastro-da-ong.png" width="160"><br>93 · Cadastro da ONG | <img src="tutor/94-novo-pet-para-adocao-modo-ong.png" width="160"><br>94 · Novo pet para adoção (modo ONG) |
+| <img src="tutor/95-pets-e-interessados-modo-ong.png" width="160"><br>95 · Pets e interessados (modo ONG) | <img src="tutor/96-meus-eventos.png" width="160"><br>96 · Meus eventos | | |
 
 ## Site (1)
 
