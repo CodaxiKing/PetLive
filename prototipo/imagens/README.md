@@ -2,9 +2,9 @@
 
 Capturas das telas do protótipo, geradas a partir de `prototipo/*.dc.html` e organizadas por fase. O protótipo navegável está no [canvas publicado](https://claude.ai/artifact/UFhxFUGwCYokbjPKCXDqKK). Só a **Fase 1** está em desenvolvimento agora.
 
-# Fase 1 · MVP: pet, saúde e lugares próximos
+# Fase 1 · MVP: pet, saúde, lugares e emergência
 
-## App do tutor (18)
+## App do tutor (24)
 
 | | | | |
 | --- | --- | --- | --- |
@@ -12,16 +12,19 @@ Capturas das telas do protótipo, geradas a partir de `prototipo/*.dc.html` e or
 | <img src="tutor/05-meus-pets.png" width="160"><br>5 · Meus pets | <img src="tutor/06-pet-vacinas.png" width="160"><br>6 · Pet, vacinas | <img src="tutor/07-registrar-vacina.png" width="160"><br>7 · Registrar vacina | <img src="tutor/08-peso.png" width="160"><br>8 · Peso |
 | <img src="tutor/09-consultas.png" width="160"><br>9 · Consultas | <img src="tutor/10-lembretes.png" width="160"><br>10 · Lembretes | <img src="tutor/11-novo-lembrete.png" width="160"><br>11 · Novo lembrete | <img src="tutor/12-novo-remedio.png" width="160"><br>12 · Novo remédio |
 | <img src="tutor/13-medicamentos.png" width="160"><br>13 · Medicamentos | <img src="tutor/14-lembrete-personalizado.png" width="160"><br>14 · Lembrete personalizado | <img src="tutor/15-avisos.png" width="160"><br>15 · Avisos | <img src="tutor/16-mapa.png" width="160"><br>16 · Mapa |
-| <img src="tutor/17-ficha-do-lugar.png" width="160"><br>17 · Ficha do lugar | <img src="tutor/18-perfil-do-tutor.png" width="160"><br>18 · Perfil do tutor | | |
+| <img src="tutor/17-ficha-do-lugar.png" width="160"><br>17 · Ficha do lugar | <img src="tutor/18-perfil-do-tutor.png" width="160"><br>18 · Perfil do tutor | <img src="tutor/46-sos-e-emergencia.png" width="160"><br>46 · SOS e emergência | <img src="tutor/47-primeiros-socorros.png" width="160"><br>47 · Primeiros socorros |
+| <img src="tutor/48-o-que-intoxica-o-pet.png" width="160"><br>48 · O que intoxica o pet | <img src="tutor/49-pet-friendly-no-mapa.png" width="160"><br>49 · Pet friendly no mapa | <img src="tutor/50-calculadoras.png" width="160"><br>50 · Calculadoras | <img src="tutor/51-rotina-de-cuidados.png" width="160"><br>51 · Rotina de cuidados |
 
-# Fase 2 · Premium e painel admin
+# Fase 2 · Premium, eventos, adoção e painel admin
 
-## App do tutor (6)
+## App do tutor (14)
 
 | | | | |
 | --- | --- | --- | --- |
 | <img src="tutor/19-premium.png" width="160"><br>19 · Premium | <img src="tutor/20-carteira-em-pdf.png" width="160"><br>20 · Carteira em PDF | <img src="tutor/21-qr-da-coleira.png" width="160"><br>21 · QR da coleira | <img src="tutor/43-eventos-no-mapa.png" width="160"><br>43 · Eventos no mapa |
-| <img src="tutor/44-evento.png" width="160"><br>44 · Evento | <img src="tutor/45-criar-evento.png" width="160"><br>45 · Criar evento | | |
+| <img src="tutor/44-evento.png" width="160"><br>44 · Evento | <img src="tutor/45-criar-evento.png" width="160"><br>45 · Criar evento | <img src="tutor/52-foto-do-cartao-de-vacina.png" width="160"><br>52 · Foto do cartão de vacina | <img src="tutor/53-revisar-vacinas-lidas.png" width="160"><br>53 · Revisar vacinas lidas |
+| <img src="tutor/54-adocao.png" width="160"><br>54 · Adoção | <img src="tutor/55-pet-para-adocao.png" width="160"><br>55 · Pet para adoção | <img src="tutor/56-cuidador-temporario.png" width="160"><br>56 · Cuidador temporário | <img src="tutor/57-linha-do-tempo-do-pet.png" width="160"><br>57 · Linha do tempo do pet |
+| <img src="tutor/58-checklist-de-viagem.png" width="160"><br>58 · Checklist de viagem | <img src="tutor/59-selos-de-cuidado.png" width="160"><br>59 · Selos de cuidado | | |
 
 ## Site (1)
 
@@ -35,7 +38,7 @@ Capturas das telas do protótipo, geradas a partir de `prototipo/*.dc.html` e or
 | --- | --- | --- | --- |
 | <img src="publico/00-pet-encontrado-quem-escaneia.png" width="160"><br>Pet encontrado (quem escaneia) | | | |
 
-## Painel admin (computador) (15)
+## Painel admin (computador) (16)
 
 ### Painel admin · 1 · Entrar com verificação
 
@@ -96,6 +99,10 @@ Capturas das telas do protótipo, geradas a partir de `prototipo/*.dc.html` e or
 ### Painel admin · 19 · Eventos
 
 ![Painel admin · 19 · Eventos](admin/19-eventos.png)
+
+### Painel admin · 20 · Adoção e ONGs
+
+![Painel admin · 20 · Adoção e ONGs](admin/20-adocao-e-ongs.png)
 
 # Fase 3 · Marketplace (futuro, não é para agora)
 
@@ -213,4 +220,20 @@ Capturas das telas do protótipo, geradas a partir de `prototipo/*.dc.html` e or
 ### Painel admin · 12 · Moderação
 
 ![Painel admin · 12 · Moderação](admin/12-moderacao.png)
+
+# Fase 4 · Rede social (futuro)
+
+## App do tutor (2)
+
+| | | | |
+| --- | --- | --- | --- |
+| <img src="tutor/62-comunidade.png" width="160"><br>62 · Comunidade | <img src="tutor/63-perfil-publico-do-pet.png" width="160"><br>63 · Perfil público do pet | | |
+
+# Fase 5 · Social e mapa (futuro)
+
+## App do tutor (2)
+
+| | | | |
+| --- | --- | --- | --- |
+| <img src="tutor/60-pet-perdido.png" width="160"><br>60 · Pet perdido | <img src="tutor/61-plano-e-seguro-pet.png" width="160"><br>61 · Plano e seguro pet | | |
 

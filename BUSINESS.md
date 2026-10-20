@@ -4,7 +4,7 @@ Este documento é a fonte única do escopo do PetLive. A **Parte A** (seções 1
 
 | Recurso | Link |
 | --- | --- |
-| Protótipo (102 telas e páginas, separadas por fase no canvas) | https://claude.ai/artifact/UFhxFUGwCYokbjPKCXDqKK |
+| Protótipo (121 telas e páginas, separadas por fase no canvas) | https://claude.ai/artifact/UFhxFUGwCYokbjPKCXDqKK |
 | Imagens das telas | [prototipo/imagens](prototipo/imagens/README.md) |
 | Plano de criação | https://claude.ai/code/artifact/871f3a23-4e21-4456-861f-b630c089235f |
 | Board de tarefas (194 tasks) | https://github.com/users/CodaxiKing/projects/5 |
@@ -17,11 +17,11 @@ O produto é entregue em fases. **Só a Fase 1 está em desenvolvimento agora.**
 
 | Fase | Foco | O que entra | Situação |
 | --- | --- | --- | --- |
-| **1** | **Pet e lugares próximos** | Conta, pets, saúde, lembretes, remédios e mapa de clínicas, petshops, creches e hotelzinhos já cadastrados no Google Maps, com telefone, fotos e rota | **Agora** |
-| 2 | Premium e operação | Premium, carteira em PDF, QR da coleira, página pública do QR, **eventos pet no mapa**, site e painel admin básico | Depois da Fase 1 |
+| **1** | **Pet, lugares e emergência** | Conta, pets, saúde, lembretes, remédios e rotina de cuidados; mapa de clínicas, petshops, creches, hotelzinhos e lugares pet friendly do Google Maps, com telefone, fotos e rota; **SOS com clínica 24 h e primeiros socorros sem internet**; calculadoras | **Agora** |
+| 2 | Premium e operação | Premium, carteira em PDF, QR da coleira, página pública do QR, **eventos pet no mapa**, **ler cartão de vacina por foto**, **adoção**, **cuidador temporário**, **linha do tempo**, **checklist de viagem**, **selos de cuidado**, site e painel admin básico | Depois da Fase 1 |
 | 3 | Marketplace (parte separada) | Lojas no PetLive, produtos, serviços com agenda, pedidos, entrega, pagamentos, chat, cupons, avaliações, painel do lojista e admin das lojas | Futuro, não é para agora |
-| 4 | Rede social | Perfil público, posts e feed | Futuro |
-| 5 | Social e mapa | Check-ins, selo de vacina, pets perdidos | Futuro |
+| 4 | Rede social | Comunidade, perfil público do pet, posts, seguir e feed | Futuro |
+| 5 | Social e mapa | **Pet perdido com alerta por perto**, **plano e seguro pet com parceiros**, check-ins | Futuro |
 
 Cada seção deste documento indica a fase a que se aplica. Onde não houver indicação, vale desde a Fase 1. Os nomes de rota, tabela e função da Parte B são **propostas de partida**: podem mudar na implementação, mas o comportamento descrito deve ser mantido.
 
@@ -103,12 +103,36 @@ Em uma frase: a carteira de saúde do pet, com lembretes e um mapa de lugares pe
 - Notificações push e tela de Avisos (por tipo, horário e Não perturbe).
 
 **Lugares por perto (Fase 1)**
-- Mapa do Google com **clínicas veterinárias, petshops, creches, hotelzinhos, banho e tosa e clínicas 24h** já cadastrados no Google Maps.
+- Mapa do Google com **clínicas veterinárias, petshops, creches, hotelzinhos, banho e tosa, clínicas 24h e lugares pet friendly** já cadastrados no Google Maps.
 - Filtros por tipo e busca. Pins por tipo e lugar selecionado.
 - Ao tocar em um lugar: **fotos do Google, telefone, endereço, horário, site e nota**, com os botões **Ligar**, **WhatsApp** (quando o número aceitar) e **Traçar rota**.
 - Salvar lugares favoritos.
 - Atalho: vacina vencendo leva às clínicas próximas.
 - Fonte e regras na seção 5.15.
+
+**Emergência (Fase 1)**
+- Botão **SOS** no Início e no Mapa: mostra a **clínica 24 h mais perto**, aberta agora, com ligar e rota.
+- **Primeiros socorros:** passo a passo para engasgo, golpe de calor, convulsão, sangramento, picada ou mordida e atropelamento ou queda. **Funciona sem internet.**
+- **O que intoxica o pet:** lista de alimentos e produtos perigosos (chocolate, uva e passas, cebola e alho, xilitol, abacate, lírio para gatos), com o nível de risco e o que fazer. **Funciona sem internet.**
+- Atalho para ligar para o veterinário do pet.
+
+**Ferramentas e rotina (Fase 1)**
+- **Calculadoras:** idade do pet em anos humanos, porção diária de ração e peso ideal.
+- **Rotina de cuidados:** lembretes de antipulgas mensal, vermífugo, banho, escovar os dentes e aniversário do pet.
+- **Pet friendly no mapa:** parques, praias, restaurantes e hotéis que aceitam pets (dados do Google, seção 5.19).
+
+**Cuidados e memórias (Fase 2)**
+- **Ler o cartão de vacina por foto** (Premium): o app lê as vacinas da imagem, o tutor revisa e só então salva.
+- **Cuidador temporário:** acesso com prazo para uma babá ou hotelzinho ver vacinas, remédios e contatos.
+- **Linha do tempo do pet:** marcos e fotos, como primeira vacina e aniversário.
+- **Checklist de viagem:** documentos, atestado e regras das companhias aéreas.
+- **Selos de cuidado:** "vacinas em dia" e outros, sem ranking nem pontos.
+
+**Adoção (Fase 2)**
+- ONGs verificadas cadastram pets para adoção. O tutor navega, favorita e toca em "Tenho interesse". Liga com as feiras de adoção dos eventos.
+
+**Mais adiante**
+- **Comunidade** e perfil público do pet (Fase 4). **Pet perdido** com alerta por perto e **plano e seguro pet** com parceiros (Fase 5).
 
 **Eventos pet (Fase 2)**
 - Aba **Eventos** no mapa, ao lado de **Lugares**: pins de eventos com filtros Hoje e Esta semana e por tipo (adoção, vacinação, passeio, encontro).
@@ -173,8 +197,9 @@ Uso interno da equipe PetLive, com login e verificação em duas etapas. A colun
 | Suporte | Fila de chamados, prioridade e respostas prontas | 2 |
 | Moderação | Denúncias, anúncios e pets encontrados | 3 |
 | Eventos | Aprovar eventos enviados, cadastrar eventos do PetLive e tratar denúncias | 2 |
+| Adoção e ONGs | Aprovar ONGs, analisar documentos e moderar pets para adoção | 2 |
 | Campanhas | Push e e-mail por público, com agendamento | 2 |
-| Conteúdo mestre | Calendário de vacinas, raças e categorias | 2 |
+| Conteúdo mestre | Calendário de vacinas, raças e categorias, **conteúdo de primeiros socorros e intoxicação, tabelas das calculadoras, selos e regras de viagem** | 2 |
 | Integrações | Estado do Play Console, App Store Connect, Pix, Supabase, Sentry e push | 2 |
 | Sistema | Versões do app, erros e recursos ligados | 2 |
 | Privacidade e LGPD | Pedidos de exportar ou apagar dados e regras de retenção | 2 |
@@ -189,7 +214,7 @@ Uso interno da equipe PetLive, com login e verificação em duas etapas. A colun
 
 ## 5. Regras de negócio
 
-Vigência por fase: **5.7 e 5.15 valem desde a Fase 1**. **5.6, 5.13 e 5.16 valem na Fase 2.** **5.1 a 5.5, 5.8 a 5.12 e 5.14 valem só na Fase 3** (marketplace) e ficam registradas aqui para não se perderem.
+Vigência por fase: **5.7, 5.15 e 5.17 a 5.21 valem desde a Fase 1**. **5.6, 5.13, 5.16 e 5.22 a 5.27 valem na Fase 2.** **5.28 vale na Fase 4 e 5.29 e 5.30, na Fase 5.** **5.1 a 5.5, 5.8 a 5.12 e 5.14 valem só na Fase 3** (marketplace) e ficam registradas aqui para não se perderem.
 
 ### 5.1 O que a loja oferece
 
@@ -326,6 +351,107 @@ O PetLive organiza informações e não substitui o atendimento veterinário. Es
 - **Segurança:** o texto da tela lembra de que o evento é de responsabilidade do organizador, e o app não divulga telefone nem endereço de casa de pessoas. Eventos devem ser em local público ou em estabelecimento.
 - **Notificações:** "evento perto de você" só para quem permitiu e dentro do raio escolhido em Avisos.
 
+### 5.17 SOS e clínica 24 h (Fase 1)
+
+- O botão **SOS** fica no Início e no Mapa e leva a uma tela só com o essencial: a clínica 24 h mais perto, o guia de primeiros socorros, a lista do que intoxica e o telefone do veterinário do pet.
+- **Clínica 24 h mais perto:** a função `nearest-emergency` usa a busca de lugares (seção 5.15), filtra clínicas veterinárias **abertas agora** e que indicam atendimento 24 horas, e ordena pela distância. Se nenhuma estiver confirmada como 24 h, mostra as clínicas abertas mais perto, com o aviso "confirme por telefone".
+- **Sem internet ou sem sinal:** o app mostra a **última clínica 24 h consultada**, o guia de primeiros socorros, a lista de tóxicos e o telefone do veterinário do pet, tudo guardado no aparelho.
+- **Sem permissão de localização:** o app pede a localização na hora e, se negada, deixa digitar o bairro.
+- O app **não faz diagnóstico nem dá dose de remédio**. Toda tela de emergência lembra de ir à clínica.
+- Acessível com uma mão e em poucos toques: ligar fica sempre à vista.
+
+### 5.18 Primeiros socorros e intoxicação, offline (Fase 1)
+
+- O conteúdo vem do **conteúdo mestre** (admin) e é baixado para o aparelho como um **pacote versionado**, atualizado em segundo plano quando houver internet.
+- **Revisão veterinária obrigatória** antes de publicar ou alterar. Cada item guarda quem revisou e quando, e a data aparece na tela.
+- **Primeiros socorros:** situações (engasgo, golpe de calor, convulsão, sangramento, picada ou mordida, atropelamento ou queda). Cada uma tem de 3 a 6 passos curtos, em ordem, e termina com "vá à clínica".
+- **Intoxicação:** lista pesquisável de alimentos e produtos, com nível de risco (**Perigoso** ou **Cuidado**), sintomas comuns e o que fazer. Mostra também que a gravidade depende da quantidade e do peso do pet.
+- Cada item tem o botão de ligar para a clínica 24 h mais perto.
+- O conteúdo não cita doses, marcas nem remédios caseiros.
+
+### 5.19 Pet friendly no mapa (Fase 1)
+
+- Novas categorias do mapa: **parques, praias, restaurantes e hotéis** que aceitam pets, mais um filtro "Pet friendly".
+- Usa a mesma busca do Google dos lugares (seção 5.15), com as mesmas regras de custo e de guarda de dados. Parques e praias saem de tipos de lugar do Google; restaurantes e hotéis usam o campo que indica se aceitam cães, quando o Google informar `[conferir se existe]`, e busca por texto como "pet friendly" quando não informar.
+- O selo **"Aceita cães"** só aparece quando o Google informa isso. Nos demais casos aparece "Pode aceitar, confirme com o local".
+- A ficha do lugar é a mesma, com fotos, telefone e rota. Aviso: "Informação do Google. Confirme com o local antes de ir."
+
+### 5.20 Calculadoras (Fase 1)
+
+- **Idade em anos humanos:** pela espécie, porte e idade, com uma tabela do conteúdo mestre.
+- **Porção diária de ração:** pelo peso, fase (filhote, adulto, idoso), nível de atividade e castração, com o resultado em gramas por dia e por refeição. É uma **estimativa**: o texto manda seguir a embalagem e o veterinário.
+- **Peso ideal:** faixa por espécie, raça e porte, também do conteúdo mestre. Mostra o peso atual do pet e a diferença.
+- Os cálculos rodam **no aparelho**, sem internet. As tabelas vêm do conteúdo mestre, com versão.
+- Não é diagnóstico. Peso fora da faixa só sugere conversar com o veterinário.
+
+### 5.21 Rotina de cuidados (Fase 1)
+
+- Lembretes recorrentes por pet: **antipulgas e carrapatos** (todo mês, no dia escolhido), **vermífugo** (a cada `[3]` meses), **banho** (a cada `[15]` dias), **escovar os dentes** (`[3]` vezes por semana) e **aniversário do pet** (aviso 1 dia antes).
+- Cada item pode ser ligado ou desligado. Horário padrão dos avisos: `9:00`, ajustável. Respeita o Não perturbe.
+- Tocar em "feito" registra o cuidado e recalcula o próximo. Se não confirmar, o app repete no dia seguinte uma vez.
+- Aparecem na tela de Lembretes junto dos demais, com origem `rotina`.
+
+### 5.22 Ler cartão de vacina por foto (Fase 2, Premium)
+
+- O tutor tira uma foto (ou escolhe da galeria) do cartão de vacina. A imagem vai para o backend, que a envia a um **serviço de leitura de imagem** `[a definir]` e recebe uma lista de vacinas com data aplicada e próxima dose.
+- **Nunca salva sozinho.** O app mostra a lista para **revisão**. Linhas com baixa confiança vêm marcadas "Confira a data". O tutor edita ou remove e só então toca em **Salvar no histórico**.
+- O app avisa que a leitura pode errar. O histórico salvo é igual ao registrado à mão.
+- A imagem é guardada no armazenamento privado do pet **só se o tutor permitir** (como anexo). A cópia no serviço de leitura é apagada logo após o processamento e **não é usada para treinar modelos**.
+- Limite de `[x]` leituras por mês no Premium. Sem Premium, a tela mostra o convite para assinar. Falha na leitura leva ao registro manual.
+
+### 5.23 Adoção (Fase 2)
+
+- **Quem cadastra:** só **ONGs e abrigos verificados**: o admin aprova os documentos (estatuto, comprovante e responsável). Pessoas físicas não cadastram pets nesta fase.
+- **Ficha do pet:** nome, espécie, idade, porte, sexo, castrado, vacinado, vermifugado, descrição, até `[6]` fotos, ONG e bairro.
+- **Tutor:** navega com filtros (cão, gato, filhote), favorita e toca em **Tenho interesse**. O contato vai para a ONG, que conversa e decide fora do app, ou por conversa simples dentro dele `[a definir]`.
+- **Sem pagamento.** O PetLive **não vende animais, não intermedia a adoção e não garante** o resultado. Anúncios de venda são proibidos e a denúncia leva à moderação.
+- A ONG marca o pet como **adotado** e ele sai da lista. Pets sem atualização por `[60]` dias ficam ocultos até a ONG confirmar.
+- Liga com **eventos**: um evento do tipo adoção pode listar os pets que estarão lá.
+
+### 5.24 Cuidador temporário (Fase 2)
+
+- O tutor cria um **acesso com prazo** para um ou mais pets, escolhendo o período e **o que o cuidador pode ver**: vacinas e vermífugo, remédios e horários, e alergias e contatos de emergência.
+- O cuidador entra por **link ou código**, sem precisar do plano do tutor. Pode **marcar dose dada**, mas não edita o cadastro nem vê dados de pagamento, outros pets ou o histórico completo.
+- O acesso **expira sozinho** no fim do período e pode ser **revogado** a qualquer momento. Cada acesso do cuidador fica registrado.
+- O tutor recebe aviso 1 dia antes de o acesso expirar e quando o cuidador marca uma dose.
+
+### 5.25 Linha do tempo do pet (Fase 2)
+
+- Mostra em ordem cronológica os **marcos automáticos** (chegada, vacinas, consultas, pesagens, aniversários) e **marcos manuais** com texto e foto.
+- Fotos ficam no armazenamento privado do pet. No plano grátis há limite de `[x]` fotos; no Premium, `[a definir]`.
+- A linha do tempo é **privada**. Compartilhar é por PDF (Premium). Na Fase 4, o tutor poderá publicar marcos no perfil público do pet.
+
+### 5.26 Checklist de viagem (Fase 2)
+
+- Modo **carro** ou **avião** e destino. A lista vem do conteúdo mestre: carteira de vacinação, **antirrábica em dia**, atestado de saúde do veterinário, caixa de transporte, regras da companhia, comida, água e remédios.
+- Itens ligados a dados do app (como a antirrábica) se marcam sozinhos quando estão em dia.
+- **Regras de companhias aéreas** são texto de referência com a **data da última revisão** e o link oficial. O app **sempre** manda confirmar com a companhia e com o destino, porque as regras mudam.
+- Dá para salvar a lista e gerar um PDF.
+
+### 5.27 Selos de cuidado (Fase 2)
+
+- Selos mostram o cuidado do dia a dia, **sem ranking, sem pontos e sem cobrança por notificação**.
+- Regras fixas: **Vacinas em dia** (nenhuma vacina vencida), **Rotina em dia** (cuidados da rotina feitos nos últimos 3 meses), **Peso em dia** (pesagem nos últimos 3 meses), **1 ano no app**, **Primeira consulta** e **Cartão completo**.
+- Calculados no servidor, uma vez por dia. Perder a condição tira o selo, sem aviso negativo.
+- Ficam no perfil do pet. Na Fase 4, poderão aparecer no perfil público.
+
+### 5.28 Comunidade e perfil público do pet (Fase 4)
+
+- Perfil público **opcional** do pet, com foto, raça, idade e cidade. **Tudo privado por padrão.**
+- Posts com foto, curtir, comentar, seguir e feed. Moderação com denúncia e remoção. Menores de idade não são o público.
+- Só começa depois do gate de retenção da Fase 1.
+
+### 5.29 Pet perdido (Fase 5)
+
+- O tutor dispara um **alerta** com o pet, o último local visto, o horário e um raio (`[2]` km). Usuários **dentro do raio que permitiram** recebem push com a foto e o contato por botão. O telefone só aparece se o tutor liberar.
+- O alerta se une ao **QR da coleira**: quem escaneia o QR de um pet com alerta ativo vê a mensagem de "pet procurado".
+- Só o tutor encerra o alerta. Limite de alertas por conta e denúncia de abuso. Alertas expiram em `[7]` dias se não forem renovados.
+
+### 5.30 Plano e seguro pet com parceiros (Fase 5)
+
+- Lista de **parceiros** cadastrados pelo admin, com benefícios e preço de referência. **Cotar** leva ao parceiro.
+- O PetLive **não vende, não garante nem corrige** o plano; a contratação é feita pelo parceiro. A tela diz isso. Comissão por indicação `[a definir]`.
+
 ---
 
 ## 6. Modelos de reserva por serviço (Fase 3)
@@ -389,11 +515,11 @@ Acesso protegido por regras de linha (RLS) no Supabase: cada tutor só vê os da
 | Fase | Entrega | Prioridade no board |
 | --- | --- | --- |
 | 0 | Descoberta: wireframes, stack, cidade | Concluída |
-| **1** | **MVP: conta, pets, saúde, lembretes, remédios e lugares pet por perto (Google), Início** | **P0 e P1** |
+| **1** | **MVP: conta, pets, saúde, lembretes, remédios, rotina, lugares pet por perto (Google), SOS e primeiros socorros, calculadoras, Início** | **P0 e P1** |
 | 2 | Premium (PDF, QR da coleira, anexos, família), página pública do QR, eventos pet no mapa, site, painel admin básico | P2 |
 | 3 | **Marketplace**, parte separada e futura: etapa 1 (lojas, vitrine, solicitação, agenda, entrega e retirada, chat, estoque, cupons, avaliações), etapa 2 (Pix, passeio ao vivo, repasse, disputas), etapa 3 (entrega integrada, assinatura de ração) | P3 |
-| 4 | Rede social: perfil público, posts, feed (depois de validar a retenção) | Fora do board por enquanto |
-| 5 | Social e mapa: check-ins, selo de vacina, pets perdidos | Fora do board por enquanto |
+| 4 | Rede social: comunidade, perfil público do pet, posts, seguir e feed (depois de validar a retenção) | Fora do board por enquanto |
+| 5 | Social e mapa: pet perdido com alerta por perto, plano e seguro pet com parceiros, check-ins | Fora do board por enquanto |
 
 **Gate 1:** a Fase 3 (marketplace) só começa depois que a Fase 1 estiver no ar e provar retenção com tutores reais.
 **Gate 2:** a rede social (Fase 4) só começa depois que o beta provar retenção.
@@ -440,6 +566,11 @@ O board tem também o campo **Fase** (1, 2 ou 3), para filtrar e agrupar.
 | Dependência de um único provedor de pagamento | Backend fala com o Asaas por uma camada única (seção 23.1), para trocar de provedor mexendo em um lugar só |
 | Suporte e disputas | Histórico de status, chat com a loja, fila de suporte e política de cancelamento |
 | Entrega com problema (endereço, atraso) | Código de entrega, prazo mostrado antes de pagar e disputa pelo admin |
+| Conteúdo de saúde errado ou desatualizado (primeiros socorros, tóxicos, regras de viagem) | Revisão veterinária obrigatória, data de revisão visível, sem doses e aviso fixo de ir à clínica |
+| Leitura errada do cartão de vacina (Fase 2) | Revisão obrigatória antes de salvar, confiança por linha e registro manual como alternativa |
+| Venda de animais ou golpe disfarçado de adoção (Fase 2) | Só ONGs verificadas, sem pagamento no app, denúncia e moderação |
+| Acesso do cuidador além do prazo ou do combinado (Fase 2) | Prazo automático, campos liberados por escolha, revogação e registro de acessos |
+| Alerta de pet perdido usado como spam (Fase 5) | Limite por conta, só para quem permitiu, expiração e denúncia |
 | Evento falso, golpe ou encontro inseguro (Fase 2) | Análise antes de publicar, organizador verificado, limite por pessoa, denúncia com ocultação automática e sem cobrança dentro do app |
 | Acesso indevido ao painel admin | Verificação em duas etapas, funções com permissões mínimas e registro de ações |
 | Escopo crescer demais | Entregar por fases e validar antes de avançar |
@@ -476,6 +607,8 @@ O board tem também o campo **Fase** (1, 2 ou 3), para filtrar e agrupar.
 - Retenção do tutor no beta (gate da rede social).
 - Tutores ativos por semana e lembretes confirmados.
 - Conversão de grátis para Premium e churn mensal.
+- Usos do SOS e tempo até ligar para a clínica; acessos ao guia offline (Fase 1).
+- Cartões de vacina lidos e salvos sem correção; adoções marcadas pelas ONGs; acessos de cuidador criados (Fase 2).
 - Eventos publicados por semana, confirmações de presença por evento e tempo de análise (Fase 2).
 - Nota média nas lojas de apps e tempo de resposta às avaliações.
 - Lojas ativas e tempo médio de resposta a solicitações.
@@ -510,6 +643,10 @@ O board tem também o campo **Fase** (1, 2 ou 3), para filtrar e agrupar.
 - Quem é o responsável fiscal nas vendas pelo app.
 - Prazo para abrir disputa e prazo de resposta da loja (Fase 3).
 - **Fase 1:** teto mensal de gasto com o Google Maps Platform e limite diário de chamadas por usuário.
+- **Fase 1:** quem é o veterinário revisor do conteúdo de emergência e com que frequência revisa.
+- **Fase 2:** serviço de leitura de imagem do cartão de vacina, limite mensal de leituras no Premium e limite de fotos na linha do tempo.
+- **Fase 2:** como a ONG conversa com o tutor (contato por fora ou conversa dentro do app).
+- **Fase 5:** raio, limite e duração dos alertas de pet perdido; modelo de comissão dos parceiros de seguro.
 - **Fase 2:** limite de eventos por pessoa por mês (hoje `[3]`), regra de lista de espera e quem pode ser "organizador verificado".
 - **Fase 1:** quantas fotos por lugar (hoje `[5]`) e se a busca de creches e hotelzinhos usa texto livre ou lista de termos fixa.
 
@@ -550,6 +687,8 @@ O board tem também o campo **Fase** (1, 2 ou 3), para filtrar e agrupar.
 | `admin_moderation` | Painel admin | Moderação, lojistas, avaliações |
 | `admin_marketing` | Painel admin | Campanhas e respostas às avaliações |
 | `admin_readonly` | Painel admin | Só leitura |
+| `ngo` | App (modo ONG) | ONG verificada que cadastra pets para adoção (Fase 2) |
+| `caregiver` | Acesso por link ou código | Cuidador temporário, vê só o que o tutor liberou, até o prazo (Fase 2) |
 
 Na **Fase 1** só existe o papel `tutor` (plano `free`). Os papéis `admin_*` entram na **Fase 2** e os papéis de loja, na **Fase 3**.
 
@@ -594,7 +733,7 @@ A coluna **Fase** diz quando a tela entra. No canvas do protótipo, as telas tam
 
 Cada linha liga a tela do protótipo (arquivo `prototipo/<nome>.dc.html` e imagem em `prototipo/imagens`) à rota sugerida e aos dados que ela usa. As rotas seguem o Expo Router no app e a estrutura de pastas equivalente na web.
 
-### 18.1 App do tutor (telas 1 a 18 na Fase 1; 19 a 21 e 43 a 45 na Fase 2; 22 a 42 na Fase 3)
+### 18.1 App do tutor (telas 1 a 18 e 46 a 51 na Fase 1; 19 a 21, 43 a 45 e 52 a 59 na Fase 2; 22 a 42 na Fase 3; 62 e 63 na Fase 4; 60 e 61 na Fase 5)
 
 Navegação por abas: **Início**, **Pets**, **Mapa**, **Lembretes** e **Perfil**. A loja abre a partir do Mapa, do Início e da ficha do lugar.
 
@@ -616,6 +755,24 @@ Navegação por abas: **Início**, **Pets**, **Mapa**, **Lembretes** e **Perfil*
 | Lembrete personalizado | `Lembrete` | `/lembretes/[id]` | `reminders` | 1 |
 | Avisos | `Notificacoes` | `/avisos` | Preferências de notificação | 1 |
 | Mapa | `Mapa` | `/(tabs)/mapa` | Google Places via `places-nearby`, `saved_places` | 1 |
+| SOS e emergência | `SOS` | `/sos` | `nearest-emergency`, pacote offline | 1 |
+| Primeiros socorros | `PrimeirosSocorros` | `/sos/primeiros-socorros` | `emergency_content` (offline) | 1 |
+| O que intoxica o pet | `Intoxicacao` | `/sos/intoxicacao` | `emergency_content` (offline) | 1 |
+| Pet friendly | `PetFriendly` | `/mapa/pet-friendly` | Google Places via `places-nearby` | 1 |
+| Calculadoras | `Calculadoras` | `/ferramentas/calculadoras` | `calc_tables` (offline), `pets` | 1 |
+| Rotina de cuidados | `Rotina` | `/lembretes/rotina` | `routine_settings`, `reminders` | 1 |
+| Foto do cartão de vacina | `CartaoFoto` | `/pets/[id]/cartao/foto` | `scan-vaccine-card` | 2 |
+| Revisar vacinas lidas | `CartaoRevisar` | `/pets/[id]/cartao/revisar` | `vaccine_card_scans`, `vaccinations` | 2 |
+| Adoção | `Adocao` | `/adocao` | `adoption_pets`, `adoption_favorites` | 2 |
+| Pet para adoção | `AdocaoPet` | `/adocao/[id]` | `adoption_pets`, `adoption_contacts` | 2 |
+| Cuidador temporário | `Cuidador` | `/pets/[id]/cuidador` | `caregiver_access` | 2 |
+| Linha do tempo | `LinhaDoTempo` | `/pets/[id]/linha-do-tempo` | `timeline_entries` | 2 |
+| Checklist de viagem | `Viagem` | `/pets/[id]/viagem` | `travel_checklists` | 2 |
+| Selos de cuidado | `Selos` | `/pets/[id]/selos` | `pet_badges` | 2 |
+| Comunidade | `Comunidade` | `/comunidade` | `posts`, `follows` | 4 |
+| Perfil público do pet | `PerfilPet` | `/pets/[id]/publico` | `pet_public_profiles`, `posts` | 4 |
+| Pet perdido | `PetPerdido` | `/pet-perdido` | `lost_alerts` | 5 |
+| Plano e seguro pet | `Seguro` | `/parceiros/seguro` | `insurance_partners` | 5 |
 | Eventos no mapa | `EventosMapa` | `/(tabs)/mapa?aba=eventos` | `events`, `event_rsvps` | 2 |
 | Evento | `Evento` | `/eventos/[id]` | `events`, `event_rsvps` | 2 |
 | Criar evento | `EventoNovo` | `/eventos/novo` | `events` | 2 |
@@ -714,6 +871,7 @@ Menu lateral agrupa as 17 áreas. O login é a única tela sem menu.
 | Suporte | `AdminSuporte` | `/admin/suporte` | `support_tickets` | 2 |
 | Moderação | `AdminModeracao` | `/admin/moderacao` | `reports` | 3 |
 | Eventos | `AdminEventos` | `/admin/eventos` | `events`, `event_reports` | 2 |
+| Adoção e ONGs | `AdminAdocao` | `/admin/adocao` | `ngos`, `adoption_pets` | 2 |
 | Campanhas | `AdminCampanhas` | `/admin/campanhas` | `campaigns` | 2 |
 | Conteúdo mestre | `AdminConteudo` | `/admin/conteudo` | `content_*` | 2 |
 | Integrações | `AdminIntegracoes` | `/admin/integracoes` | `integrations` | 2 |
@@ -1061,6 +1219,86 @@ flowchart TD
   N --> R[Aparece no mapa e avisa quem está perto]
 ```
 
+### 19.18 SOS e emergência (Fase 1)
+
+```mermaid
+flowchart TD
+  A[Toca em SOS no Início ou no Mapa] --> B{Tem internet e localização?}
+  B -- sim --> C[Busca a clínica 24 h aberta mais perto]
+  B -- não --> D[Mostra a última clínica 24 h consultada]
+  C --> E[Tela SOS com a clínica, ligar e rota]
+  D --> E
+  E --> F[Ligar para a clínica]
+  E --> G[Primeiros socorros]
+  E --> H[O que intoxica o pet]
+  E --> I[Ligar para o meu veterinário]
+  G --> J[Passo a passo offline, termina em vá à clínica]
+  H --> K[Risco, sintomas e o que fazer, offline]
+```
+
+### 19.19 Ler cartão de vacina por foto (Fase 2)
+
+```mermaid
+sequenceDiagram
+  participant Tutor
+  participant App
+  participant Backend
+  participant Leitura as Serviço de leitura
+  Tutor->>App: Foto do cartão de vacina
+  App->>Backend: scan-vaccine-card (imagem)
+  Backend->>Leitura: Lê a imagem
+  Leitura-->>Backend: Vacinas, datas e confiança
+  Backend-->>App: Lista para revisão
+  Tutor->>App: Confere, edita e confirma
+  App->>Backend: Salva no histórico
+  Backend->>Backend: Cria vacinas e lembretes das próximas doses
+```
+
+### 19.20 Adoção (Fase 2)
+
+```mermaid
+flowchart TD
+  O[ONG se cadastra] --> V{Admin verifica documentos}
+  V -- aprova --> P[ONG cadastra pets]
+  V -- pede documentos --> O
+  P --> L[Pets aparecem em Adoção]
+  T[Tutor navega e filtra] --> F[Favorita]
+  T --> D[Ficha do pet]
+  D --> I[Tenho interesse]
+  I --> C[ONG recebe o contato]
+  C --> M[Conversa e decisão fora do app]
+  M --> A[ONG marca como adotado]
+  A --> S[Pet sai da lista]
+```
+
+### 19.21 Cuidador temporário (Fase 2)
+
+```mermaid
+flowchart TD
+  A[Tutor cria acesso] --> B[Escolhe pets, período e o que pode ver]
+  B --> C[Gera link ou código]
+  C --> D[Cuidador abre e vê só o liberado]
+  D --> E[Marca dose dada]
+  E --> F[Tutor recebe aviso]
+  D --> G{Passou do prazo ou foi revogado?}
+  G -- sim --> H[Acesso encerrado]
+  G -- não --> D
+```
+
+### 19.22 Pet perdido (Fase 5)
+
+```mermaid
+flowchart TD
+  A[Tutor toca em Meu pet sumiu] --> B[Último local, horário e raio]
+  B --> C[Envia o alerta]
+  C --> D[Push para quem está no raio e permitiu]
+  D --> E[Quem viu abre o alerta]
+  E --> F[Contato liberado pelo tutor]
+  C --> G[QR da coleira mostra pet procurado]
+  F --> H[Tutor encerra o alerta]
+  G --> H
+```
+
 ---
 
 ## 20. Máquinas de estado
@@ -1219,6 +1457,37 @@ Convenções: `id uuid` em todas as tabelas, `created_at` e `updated_at`, soft d
 
 Regras do banco: um usuário só confirma presença uma vez; não passa do limite de eventos enviados por mês; evento com `status` diferente de `publicado` só é visível ao organizador e à moderação; a contagem de confirmados é pública e a lista, não.
 
+### 21.2c Emergência, ferramentas e rotina (Fase 1)
+
+| Tabela | Campos principais |
+| --- | --- |
+| `emergency_content` | `kind` (`primeiros_socorros`/`toxico`), `slug`, `title`, `severity` (`perigoso`/`cuidado`), `species`, `steps[]`, `symptoms`, `what_to_do`, `reviewed_by`, `reviewed_at`, `version`. Entregue ao app como pacote offline |
+| `calc_tables` | `kind` (`idade_humana`/`porcao`/`peso_ideal`), `species`, `breed_id` ou `size`, `data` (jsonb), `version` |
+| `routine_settings` | `pet_id`, `kind` (`antipulgas`/`vermifugo`/`banho`/`dentes`/`aniversario`), `enabled`, `every`, `day_of_month`, `time` |
+| `last_emergency_clinic` | `user_id`, `google_place_id`, `name_cache` curto, `checked_at`. Só no aparelho, sem copiar dados do Google para o banco |
+
+### 21.2d Cuidados, adoção e selos (Fase 2)
+
+| Tabela | Campos principais |
+| --- | --- |
+| `vaccine_card_scans` | `pet_id`, `image_url` (opcional), `status`, `result` (jsonb com confiança), `reviewed_at`, `saved_count` |
+| `ngos` | `user_id`, `name`, `cnpj`, `status` (`em_analise`/`aprovada`/`recusada`), `verified_at`, `city` |
+| `adoption_pets` | `ngo_id`, `name`, `species`, `age_text`, `size`, `sex`, `neutered`, `vaccinated`, `dewormed`, `description`, `photos[]`, `status` (`disponivel`/`em_conversa`/`adotado`/`oculto`), `geom`, `updated_at` |
+| `adoption_favorites` | `user_id`, `adoption_pet_id` |
+| `adoption_contacts` | `user_id`, `adoption_pet_id`, `ngo_id`, `message`, `status` |
+| `caregiver_access` | `pet_id`, `owner_id`, `caregiver_user_id` (opcional), `code`, `can_vaccines`, `can_medications`, `can_contacts`, `starts_at`, `ends_at`, `revoked_at` |
+| `caregiver_access_log` | `access_id`, `action` (`viu`/`marcou_dose`), `at` |
+| `timeline_entries` | `pet_id`, `type`, `title`, `note`, `happened_on`, `photo_url`, `auto` |
+| `travel_checklists` | `pet_id`, `mode` (`carro`/`aviao`), `destination`, `travel_date`, `items` (jsonb) |
+| `badges` e `pet_badges` | `badges`: `code`, `name`, `rule`. `pet_badges`: `pet_id`, `badge_code`, `earned_at` |
+
+Regras do banco: o cuidador só lê o que `can_*` permite e só até `ends_at`; `vaccine_card_scans` nunca grava em `vaccinations` sem a confirmação do tutor; só ONG `aprovada` cadastra `adoption_pets`.
+
+### 21.2e Fases 4 e 5
+
+- **Fase 4:** `pet_public_profiles`, `posts`, `comments`, `likes`, `follows`.
+- **Fase 5:** `lost_alerts` (`pet_id`, `owner_id`, `last_seen_geom`, `radius_km`, `status`, `created_at`, `closed_at`), `lost_alert_sightings`, `insurance_partners` (`name`, `benefits`, `price_text`, `url`, `active`) e `insurance_clicks`.
+
 ### 21.3 Lojas e catálogo (Fase 3)
 
 | Tabela | Campos principais |
@@ -1327,6 +1596,12 @@ Canal: **push** (P), **e-mail** (E) ou **na tela de Avisos** (A). O tutor contro
 | Nota baixa de app sem resposta | Equipe admin | A no painel |
 | Pedido de exportar ou apagar dados | Equipe admin | A no painel |
 | Campanha | Público escolhido | P, E |
+| Antipulgas, vermífugo, banho, dentes e aniversário (Fase 1) | Tutor | P, A |
+| Cartão de vacina lido, pronto para revisar (Fase 2) | Tutor | P |
+| Acesso do cuidador expira em 1 dia, e dose marcada pelo cuidador (Fase 2) | Tutor | P |
+| ONG aprovada ou com documentos pendentes (Fase 2) | ONG | P, E |
+| Interesse em um pet para adoção (Fase 2) | ONG | P |
+| Pet perdido por perto (Fase 5) | Quem está no raio e permitiu | P |
 | Evento aprovado, recusado ou com ajuste pedido (Fase 2) | Organizador | P, A |
 | Evento perto de você (Fase 2) | Quem permitiu, dentro do raio | P |
 | Lembrete de evento (1 dia e 2 horas) (Fase 2) | Quem confirmou presença | P |
@@ -1348,6 +1623,12 @@ Todas as funções de pagamento (`create-pix-charge`, `pix-webhook`, `refund` e 
 | `places-nearby` | Busca lugares pet por proximidade no Google, só campos básicos, com limite por usuário |
 | `place-details` | Devolve telefone, endereço, horário, site, nota e referências de fotos de um `place_id` |
 | `place-photo` | Entrega uma foto do Google ao app, sob demanda |
+| `nearest-emergency` | Devolve a clínica 24 h aberta mais perto, usando a busca de lugares (Fase 1) |
+| `content-pack` | Entrega o pacote offline de primeiros socorros, tóxicos e tabelas das calculadoras, com versão (Fase 1) |
+| `scan-vaccine-card` | Lê a foto do cartão de vacina e devolve a lista para revisão (Fase 2, Premium) |
+| `adoption-search` e `adoption-contact` | Lista pets para adoção e envia o interesse à ONG (Fase 2) |
+| `create-caregiver-access` e `caregiver-view` | Cria o acesso com prazo e entrega só o que foi liberado (Fase 2) |
+| `send-lost-alert` | Envia o alerta de pet perdido para quem está no raio (Fase 5) |
 | `events-nearby` | Lista eventos publicados por proximidade, data e tipo (Fase 2) |
 | `create-event` | Valida o limite mensal e decide se vai para análise ou publica direto (Fase 2) |
 | `rsvp-event` | Confirma ou cancela presença e atualiza a contagem (Fase 2) |
@@ -1374,6 +1655,10 @@ Todas as funções de pagamento (`create-pix-charge`, `pix-webhook`, `refund` e 
 | `expire-requests` | A cada 5 min | Expira solicitações sem resposta e estorna se pago |
 | `expire-pix` | A cada 5 min | Expira Pix vencido |
 | `close-chats` | Diário | Fecha conversas 7 dias após a conclusão (Fase 3) |
+| `birthday-reminders` | Diário | Avisa o aniversário do pet 1 dia antes (Fase 1) |
+| `badges-recalc` | Diário | Recalcula os selos de cuidado (Fase 2) |
+| `caregiver-expire` | A cada hora | Encerra acessos de cuidador vencidos e avisa o tutor (Fase 2) |
+| `adoption-stale` | Diário | Oculta pets sem atualização da ONG por 60 dias (Fase 2) |
 | `event-reminders` | A cada 15 min | Envia lembretes de 1 dia e 2 horas antes do evento (Fase 2) |
 | `close-events` | A cada hora | Marca como encerrado o evento que passou do fim e tira do mapa (Fase 2) |
 | `subscription-billing` | Diário | Avisa renovação, cobra e faz novas tentativas |
@@ -1395,6 +1680,7 @@ Chat (`messages`), status da entrega (`deliveries`), trajeto do passeio (`walk_p
 | FCM e APNs | Push | Via expo-notifications |
 | Google Maps Platform | Mapa, busca de lugares, detalhe e fotos (Places API New) | Fase 1. Chave restrita, chamadas só pelo backend, orçamento com alerta, termos e preços a conferir |
 | Sentry | Erros dos apps e painéis | |
+| Serviço de leitura de imagem `[a definir]` | Ler o cartão de vacina por foto (Fase 2) | Apagar a imagem após o processamento e não usar para treinar modelos |
 | Provedor de e-mail `[a definir]` | Recibos, recuperação de senha, campanhas | |
 
 ---
@@ -1425,10 +1711,15 @@ Cada bloco depende dos anteriores. **Só a Fase 1 está em desenvolvimento agora
 | 1. Pets e saúde | Cadastro do pet, vacinas, peso, consultas, calendário sugerido | 0 | 1 | P0 e P1 |
 | 2. Lembretes e remédios | Lembretes, doses, push, tela de Avisos | 1 | 1 | P0 e P1 |
 | 3. Lugares por perto | Projeto Google Cloud e chave, funções de lugares, mapa do Google, filtros, ficha com telefone e fotos, ligar, WhatsApp, rota, favoritos, controle de custo | 0 | 1 | P1 |
+| 3b. SOS e primeiros socorros | Botão SOS, clínica 24 h mais perto, pacote offline de primeiros socorros e tóxicos | 3 | 1 | P1 |
+| 3c. Pet friendly | Categorias e filtro pet friendly no mapa | 3 | 1 | P1 |
 | 4. Início e perfil | Início com próximas vacinas e lugares, perfil, termos, excluir conta | 1, 2, 3 | 1 | P0 e P1 |
+| 4b. Calculadoras e rotina | Calculadoras offline e lembretes de rotina | 1, 2 | 1 | P1 |
 | **Gate 1** | Fase 1 no ar para teste com tutores reais e retenção medida | 4 | | |
 | 5. Premium | Assinatura, PDF, anexos, família, QR da coleira | 1, pagamento | 2 | P2 |
 | 6. Página do QR e site | Página pública `/p/[codigo]` e site | 5 | 2 | P2 |
+| 6c. Cuidados e memórias | Cartão por foto, cuidador temporário, linha do tempo, checklist de viagem e selos | Gate 1, 5 | 2 | P2 |
+| 6d. Adoção | ONGs, pets, favoritos, interesse e aprovação no admin | 6b, 7 | 2 | P2 |
 | 6b. Eventos no mapa | Aba Eventos, ficha, criar evento, Eu vou, lembretes, denúncia e análise no admin | 3, 7 | 2 | P2 |
 | 7. Admin básico | Login com 2FA, visão geral, usuários, assinaturas, planos, conteúdo mestre, avaliações dos apps, suporte, campanhas, integrações, sistema, LGPD, equipe | 0, 5 | 2 | P2 |
 | 8. Marketplace, etapa 1 | Cadastro e aprovação de lojas, catálogo, vitrine, solicitação, agenda, retirada, entrega, chat, estoque, cupons, avaliações | Gate 1, 7 | 3 | P3 |
@@ -1436,7 +1727,8 @@ Cada bloco depende dos anteriores. **Só a Fase 1 está em desenvolvimento agora
 | 10. Serviços avançados | Creche e hotelzinho com reserva | 8, 9 | 3 | P3 |
 | 11. Painel do lojista | Todas as telas do computador | 8 | 3 | P3 |
 | 12. Operação das lojas no admin | Lojistas, moderação das lojas | 7, 8 | 3 | P3 |
-| 13. Rede social | Perfil público, posts, feed | Retenção provada | 4 | Fora do board |
+| 13. Rede social | Comunidade, perfil público do pet, posts, seguir e feed | Retenção provada | 4 | Fora do board |
+| 14. Pet perdido e parceiros | Alerta por perto, QR integrado, plano e seguro pet | 13 | 5 | Fora do board |
 
 Regra prática: **nenhum bloco da Fase 3 começa antes de o Gate 1 passar.** O marketplace é uma parte separada e só entra depois de validar retenção com tutores reais.
 
