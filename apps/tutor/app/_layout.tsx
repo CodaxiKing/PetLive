@@ -10,6 +10,7 @@ import {
   PlusJakartaSans_800ExtraBold,
 } from '@expo-google-fonts/plus-jakarta-sans';
 import { AuthProvider, useAuth } from '../src/auth/AuthProvider';
+import { PetsProvider } from '../src/pets/PetsProvider';
 import { colors } from '../src/theme/colors';
 
 /** Decide para onde a rota raiz aponta, conforme a sessão. */
@@ -25,20 +26,25 @@ function RaizProtegida() {
   }
 
   return (
-    <Stack
-      screenOptions={{
-        headerShown: false,
-        contentStyle: { backgroundColor: colors.surface },
-        animation: 'slide_from_right',
-      }}
-    >
-      <Stack.Protected guard={Boolean(session)}>
-        <Stack.Screen name="(app)" />
-      </Stack.Protected>
-      <Stack.Protected guard={!session}>
-        <Stack.Screen name="(auth)" />
-      </Stack.Protected>
-    </Stack>
+    <PetsProvider>
+      <Stack
+        screenOptions={{
+          headerShown: false,
+          contentStyle: { backgroundColor: colors.background },
+          animation: 'slide_from_right',
+        }}
+      >
+        <Stack.Protected guard={Boolean(session)}>
+          <Stack.Screen name="(app)" />
+          <Stack.Screen name="pet/novo" options={{ presentation: 'modal', animation: 'slide_from_bottom' }} />
+          <Stack.Screen name="pet/[id]/index" />
+          <Stack.Screen name="pet/[id]/editar" options={{ presentation: 'modal', animation: 'slide_from_bottom' }} />
+        </Stack.Protected>
+        <Stack.Protected guard={!session}>
+          <Stack.Screen name="(auth)" />
+        </Stack.Protected>
+      </Stack>
+    </PetsProvider>
   );
 }
 
