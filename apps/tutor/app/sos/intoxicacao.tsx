@@ -4,7 +4,8 @@ import { router } from 'expo-router';
 import { BotaoPrimario } from '../../src/components/BotaoPrimario';
 import { HeroiOnda } from '../../src/components/HeroiOnda';
 import { Icone } from '../../src/components/Icone';
-import { buscarToxicos, PACOTE_EMBUTIDO, textoRevisao, type ItemToxico } from '../../src/sos/conteudo';
+import { buscarToxicos, textoRevisao, type ItemToxico } from '../../src/sos/conteudo';
+import { usePacoteEmergencia } from '../../src/sos/pacote';
 import { colors } from '../../src/theme/colors';
 import { spacing } from '../../src/theme/tokens';
 import { typography } from '../../src/theme/typography';
@@ -27,7 +28,7 @@ function paraQuem(item: ItemToxico): string | null {
  * pesquisável, perigosos primeiro; tocar abre sintomas e o que fazer.
  */
 export default function Intoxicacao() {
-  const pacote = PACOTE_EMBUTIDO;
+  const pacote = usePacoteEmergencia();
   const [busca, setBusca] = useState('');
   const [aberto, setAberto] = useState<string | null>(null);
 

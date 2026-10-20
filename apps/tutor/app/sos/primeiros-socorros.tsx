@@ -4,7 +4,8 @@ import { router } from 'expo-router';
 import { BotaoPrimario } from '../../src/components/BotaoPrimario';
 import { HeroiOnda } from '../../src/components/HeroiOnda';
 import { Icone } from '../../src/components/Icone';
-import { PACOTE_EMBUTIDO, textoRevisao } from '../../src/sos/conteudo';
+import { textoRevisao } from '../../src/sos/conteudo';
+import { usePacoteEmergencia } from '../../src/sos/pacote';
 import { colors } from '../../src/theme/colors';
 import { spacing } from '../../src/theme/tokens';
 import { typography } from '../../src/theme/typography';
@@ -17,7 +18,7 @@ const ROSA = '#FDE0E6';
  * situação aberta por vez, passos numerados e o atalho para a clínica.
  */
 export default function PrimeirosSocorros() {
-  const pacote = PACOTE_EMBUTIDO;
+  const pacote = usePacoteEmergencia();
   const [aberta, setAberta] = useState<string | null>(null);
 
   function alternar(id: string) {

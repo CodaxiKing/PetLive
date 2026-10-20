@@ -1,7 +1,7 @@
 /**
  * Conteúdo de emergência que vai junto com o app (BUSINESS.md 5.18):
- * funciona sem internet desde a instalação. Quando a função `content-pack`
- * existir, um pacote mais novo baixado substitui este (mesmo formato).
+ * funciona sem internet desde a instalação. Uma versão mais nova publicada
+ * em `content_packs` é baixada em segundo plano e substitui esta (ver pacote.ts).
  *
  * Regras do conteúdo: de 3 a 6 passos curtos, sempre terminando em "vá à
  * clínica"; nada de doses, marcas ou remédios caseiros.

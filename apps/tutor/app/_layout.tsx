@@ -19,6 +19,7 @@ import { RemediosProvider } from '../src/remedios/RemediosProvider';
 import { VacinasProvider } from '../src/saude/VacinasProvider';
 import { registrarCategoriaDose, tratarRespostaDose } from '../src/notificacoes/doses';
 import { registrarTarefaDose } from '../src/notificacoes/tarefaDose';
+import { atualizarPacoteEmergencia } from '../src/sos/pacote';
 import { colors } from '../src/theme/colors';
 
 /**
@@ -45,6 +46,8 @@ function useObservadorNotificacoes() {
     // trata é a tarefa de segundo plano em src/notificacoes/tarefaDose.ts).
     registrarCategoriaDose().catch(() => undefined);
     registrarTarefaDose().catch(() => undefined);
+    // Conteúdo de emergência: baixa versão nova em segundo plano, se houver.
+    atualizarPacoteEmergencia().catch(() => undefined);
 
     async function tratar(resposta: Notifications.NotificationResponse) {
       Notifications.clearLastNotificationResponse();
