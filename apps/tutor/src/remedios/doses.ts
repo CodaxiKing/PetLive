@@ -108,7 +108,7 @@ export async function carregarDosesHoje(medicationIds: string[]): Promise<DoseHo
 export async function confirmarDose(doseId: string): Promise<void> {
   const { error } = await supabase
     .from('medication_doses')
-    .update({ confirmada_em: new Date().toISOString() })
+    .update({ confirmada_em: new Date().toISOString(), origem: 'app' })
     .eq('id', doseId)
 
   if (error) throw new Error(error.message)

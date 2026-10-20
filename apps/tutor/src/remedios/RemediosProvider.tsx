@@ -8,6 +8,7 @@ import {
   type ReactNode,
 } from 'react'
 import { supabase } from '../lib/supabase'
+import { sincronizarDoses } from '../notificacoes/doses'
 import { usePets } from '../pets/PetsProvider'
 import type { Remedio, RemedioForm } from './types'
 import { REMEDIO_FORM_VAZIO, formParaRegistro, normalizarHorarios } from './types'
@@ -70,6 +71,12 @@ export function RemediosProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     recarregar()
   }, [recarregar])
+
+  // Notificações das doses (com Dei e Adiar) acompanham os remédios.
+  useEffect(() => {
+    if (carregando) return
+    sincronizarDoses().catch(() => undefined)
+  }, [remedios, carregando])
 
   const criarRemedio = useCallback(
     (form: RemedioForm) => {

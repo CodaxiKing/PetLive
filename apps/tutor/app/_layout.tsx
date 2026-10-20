@@ -17,6 +17,8 @@ import { LembretesProvider } from '../src/lembretes/LembretesProvider';
 import { PetsProvider } from '../src/pets/PetsProvider';
 import { RemediosProvider } from '../src/remedios/RemediosProvider';
 import { VacinasProvider } from '../src/saude/VacinasProvider';
+import { registrarCategoriaDose, tratarRespostaDose } from '../src/notificacoes/doses';
+import { registrarTarefaDose } from '../src/notificacoes/tarefaDose';
 import { colors } from '../src/theme/colors';
 
 /**
@@ -39,23 +41,24 @@ if (dsnSentry) {
  */
 function useObservadorNotificacoes() {
   useEffect(() => {
-    function abrir(notification: Notifications.Notification) {
-      const url = notification.request.content.data?.url;
-      if (typeof url === 'string') {
-        router.push(url as never);
-        Notifications.clearLastNotificationResponse();
-      }
+    // Botões Dei e Adiar da notificação da dose (com o app fechado, quem
+    // trata é a tarefa de segundo plano em src/notificacoes/tarefaDose.ts).
+    registrarCategoriaDose().catch(() => undefined);
+    registrarTarefaDose().catch(() => undefined);
+
+    async function tratar(resposta: Notifications.NotificationResponse) {
+      Notifications.clearLastNotificationResponse();
+      const eraBotaoDose = await tratarRespostaDose(resposta).catch(() => true);
+      if (eraBotaoDose) return;
+      const url = resposta.notification.request.content.data?.url;
+      if (typeof url === 'string') router.push(url as never);
     }
 
     // App aberto a partir de uma notificação já encaminhada.
     const respostaInicial = Notifications.getLastNotificationResponse();
-    if (respostaInicial?.notification) {
-      abrir(respostaInicial.notification);
-    }
+    if (respostaInicial?.notification) tratar(respostaInicial);
 
-    const subscricao = Notifications.addNotificationResponseReceivedListener((resposta) => {
-      abrir(resposta.notification);
-    });
+    const subscricao = Notifications.addNotificationResponseReceivedListener(tratar);
 
     return () => subscricao.remove();
   }, []);

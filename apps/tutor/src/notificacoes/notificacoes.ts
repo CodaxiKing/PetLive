@@ -10,7 +10,7 @@ import { Platform } from 'react-native'
  */
 
 /** Canal padrão no Android. Sem canal, o pedido de permissão não aparece. */
-const CANAL_PADRAO = 'lembretes'
+export const CANAL_PADRAO = 'lembretes'
 
 /**
  * Como o app se comporta quando uma notificação chega em primeiro plano.

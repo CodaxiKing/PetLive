@@ -27,6 +27,7 @@ import {
 } from '../../../src/remedios/doses'
 import type { Remedio } from '../../../src/remedios/types'
 import { dataParaExibicao, normalizarHorarios } from '../../../src/remedios/types'
+import { sincronizarDoses } from '../../../src/notificacoes/doses'
 import { colors } from '../../../src/theme/colors'
 import { typography } from '../../../src/theme/typography'
 import { radius, spacing } from '../../../src/theme/tokens'
@@ -104,6 +105,8 @@ export default function TelaMedicamentos() {
     setSalvandoDose(dose.id)
     try {
       await confirmarDose(dose.id)
+      // Dose dada antes da hora: a notificação dela não toca mais.
+      sincronizarDoses().catch(() => undefined)
       setDoses((atual) =>
         atual.map((d) =>
           d.id === dose.id ? { ...d, confirmada_em: new Date().toISOString() } : d,
