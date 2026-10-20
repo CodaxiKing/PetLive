@@ -15,6 +15,9 @@ export interface Lembrete {
   ativo: boolean
   /** "Avisar 1 dia antes": quando falso, não dispara notificação. */
   aviso_antes: boolean
+  /** 'rotina' quando veio da tela Rotina de cuidados. */
+  origem?: 'manual' | 'rotina'
+  rotina_item?: 'antipulgas' | 'vermifugo' | 'banho' | 'dentes' | 'aniversario' | null
   criado_em: string
 }
 

@@ -11,6 +11,8 @@ import {
   View,
 } from 'react-native'
 import { router } from 'expo-router'
+import { Icone } from '../../src/components/Icone'
+import { LinhaIcone } from '../../src/components/LinhaIcone'
 import { Mascote } from '../../src/components/Mascote'
 import { usePets } from '../../src/pets/PetsProvider'
 import { useLembretes } from '../../src/lembretes/LembretesProvider'
@@ -122,6 +124,16 @@ export default function Lembretes() {
             </Pressable>
           )
         })}
+      </View>
+
+      <View style={estilos.atalhoRotina}>
+        <LinhaIcone
+          icone={<Icone nome="relogio" />}
+          rotulo="Rotina de cuidados"
+          valor="Antipulgas, vermífugo, banho e mais"
+          onPress={() => router.push('/lembretes/rotina')}
+          direita={<Icone nome="seta" size={16} cor={colors.textMuted} />}
+        />
       </View>
 
       {permissao !== 'concedida' ? (
@@ -257,6 +269,7 @@ const estilos = StyleSheet.create({
     borderRadius: 26,
     padding: 4,
   },
+  atalhoRotina: { marginHorizontal: spacing.xl, marginBottom: spacing.md },
   aba: { flex: 1, height: 40, borderRadius: 20, alignItems: 'center', justifyContent: 'center' },
   abaAtiva: { backgroundColor: colors.black },
   abaTexto: { ...typography.captionMedium, color: colors.textMuted },
