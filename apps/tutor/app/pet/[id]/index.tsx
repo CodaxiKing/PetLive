@@ -3,6 +3,7 @@ import { Alert, Pressable, StyleSheet, Text, View } from 'react-native'
 import { router, useLocalSearchParams } from 'expo-router'
 import { CabecalhoTela } from '../../../src/components/CabecalhoTela'
 import { Mascote } from '../../../src/components/Mascote'
+import { AbaCalendario } from '../../../src/pets/AbaCalendario'
 import { AbaGeral } from '../../../src/pets/AbaGeral'
 import { AbaSaude } from '../../../src/pets/AbaSaude'
 import { usePets } from '../../../src/pets/PetsProvider'
@@ -82,13 +83,7 @@ export default function PetDetalhe() {
       <View style={estilos.flex}>
         {aba === 'Geral' && <AbaGeral />}
         {aba === 'Saúde' && <AbaSaude />}
-        {aba === 'Calendário' && (
-          <View style={estilos.centro}>
-            <Text style={estilos.aviso}>
-              O calendário de vacinas entra na próxima etapa.
-            </Text>
-          </View>
-        )}
+        {aba === 'Calendário' && <AbaCalendario />}
       </View>
 
       <View style={estilos.rodape}>
