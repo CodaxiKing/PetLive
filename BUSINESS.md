@@ -4,7 +4,7 @@ Este documento é a fonte única do escopo do PetLive. A **Parte A** (seções 1
 
 | Recurso | Link |
 | --- | --- |
-| Protótipo (147 telas e páginas, separadas por fase no canvas, com a paleta de cores) | https://claude.ai/artifact/UFhxFUGwCYokbjPKCXDqKK |
+| Protótipo (149 telas e páginas, separadas por fase no canvas, com a paleta de cores) | https://claude.ai/artifact/UFhxFUGwCYokbjPKCXDqKK |
 | Imagens das telas | [prototipo/imagens](prototipo/imagens/README.md) |
 | Plano de criação | https://claude.ai/code/artifact/871f3a23-4e21-4456-861f-b630c089235f |
 | Board de tarefas (194 tasks) | https://github.com/users/CodaxiKing/projects/5 |
@@ -162,7 +162,7 @@ Em uma frase: a carteira de saúde do pet, com lembretes e um mapa de lugares pe
 - **Fogos e trovão:** aviso antes de datas com fogos, dicas para acalmar o pet e lembrete de manter o pet em casa (seção 5.33).
 - **Widget e atalhos:** próxima vacina ou remédio na tela inicial e atalhos no ícone do app (seção 5.34).
 - **Cartão do pet:** imagem com foto, nome e selos para compartilhar nas redes (seção 5.35).
-- **Ficha de emergência por link:** alergias, remédios, vacinas e peso em um link ou QR temporário para mandar à clínica (seção 5.37).
+- **Ficha de emergência por link:** alergias, remédios, vacinas e peso em um link ou QR temporário para mandar à clínica (seção 5.37). Dá para enviar direto da ficha da clínica no mapa, pelo WhatsApp.
 - **Modo memorial:** quando o pet parte, os lembretes param e a linha do tempo vira uma lembrança (seção 5.39).
 - **Pet sênior:** rotina adaptada à idade e escala de qualidade de vida para conversar com o veterinário (seção 5.40).
 
@@ -560,6 +560,17 @@ O PetLive organiza informações e não substitui o atendimento veterinário. Es
 - Quem recebe vê uma página só de leitura (`FichaVista`) com a data e a hora em que foi gerada e o aviso de que **as informações são do tutor e devem ser confirmadas**. A página não mostra pagamentos, endereço de casa nem histórico completo.
 - Cada abertura do link fica registrada, e o tutor é avisado quando a clínica abriu a ficha.
 
+**Fase 2: enviar a ficha para a clínica pelo mapa (WhatsApp)**
+- Na **ficha de qualquer lugar do tipo clínica ou hospital veterinário** (e no cartão da clínica na tela SOS), aparece **Enviar a ficha do [pet] para esta clínica**.
+- O app usa o **telefone que o Google informa** para o lugar. Se for um número de celular, abre o **WhatsApp da clínica** com a mensagem pronta e o link da ficha (link `wa.me`, aberto no aparelho do tutor). O PetLive **não envia a mensagem por API**: quem envia é o tutor, no próprio WhatsApp.
+- Se o número for fixo ou não existir, o app oferece **copiar o link**, **mostrar o QR** ou **ligar**.
+- **Antes de abrir o WhatsApp** a tela mostra o número, o pet, **a mensagem que será enviada** (com o texto padrão "Estou a caminho com o [pet] ...") e **o que a ficha inclui**, e o tutor pode mudar os campos e a validade. Se já houver uma ficha ativa, ela é reutilizada; se não, é criada na hora.
+- A tela avisa: **"Confira o número. Ele vem do Google e pode estar desatualizado."** e **"Você está enviando essas informações para esta clínica."** O WhatsApp da clínica pode não estar sendo lido, então o app sugere ligar também.
+- O app **não sabe se a mensagem foi lida** no WhatsApp. O que mostra é o registro de que o **link foi aberto** (seção acima).
+- **O que o PetLive guarda:** só o `place_id` da clínica, o canal usado (WhatsApp, copiar ou QR) e a data, para métricas e limites. **O número do Google não é guardado.**
+- Limite de envios por dia por conta. Não há envio em massa.
+- Na **Fase 3**, se a clínica estiver no PetLive, o mesmo botão vira o **"Estou a caminho"** e a clínica recebe no painel, sem depender do WhatsApp.
+
 **Fase 3: "Estou a caminho" (SOS com pré-chegada)**
 - No SOS, o tutor escolhe uma **clínica 24 h que esteja no PetLive** e toca em **Estou a caminho**, depois de **consentir** com o envio. O app manda a ficha, o **tempo estimado de chegada** (pela posição e pela rota) e o telefone do tutor.
 - A clínica vê o pet no painel **Emergências a caminho**, com aviso sonoro. Ela pode **marcar equipe pronta**, **pedir mais informação** ou **dizer que não pode atender**; nesse caso o app sugere a próxima clínica.
@@ -761,6 +772,7 @@ A divisão abaixo é uma **proposta para validar**. Regra geral: tudo que proteg
 | Leitura errada do cartão de vacina (Fase 2) | Revisão obrigatória antes de salvar, confiança por linha e registro manual como alternativa |
 | Venda de animais ou golpe disfarçado de adoção (Fase 2) | Só ONGs verificadas, sem pagamento no app, denúncia e moderação |
 | Acesso do cuidador além do prazo ou do combinado (Fase 2) | Prazo automático, campos liberados por escolha, revogação e registro de acessos |
+| Ficha enviada para um número errado ou desatualizado do Google (Fase 2) | Mostrar o número e a mensagem antes de abrir o WhatsApp, avisar para conferir, campos mínimos escolhidos pelo tutor, validade curta e cancelamento |
 | Ficha de emergência vazar por um link (Fase 2) | Validade curta, escolha dos campos, cancelamento e registro de acessos |
 | Clínica receber um aviso e não conseguir atender (Fase 3) | Resposta "não posso atender" e sugestão da próxima clínica; o app nunca substitui ligar |
 | Reconhecimento por foto errar ou ser usado para tentar achar pets de outros (Fase 5) | Só alertas ativos, só candidatos, nunca afirmar, contato só se o tutor liberar e limite de buscas |
@@ -798,6 +810,7 @@ A divisão abaixo é uma **proposta para validar**. Regra geral: tudo que proteg
 | Localização do QR | Pet encontrado | Só o que o tutor liberou aparece na página pública |
 | Ficha de emergência | Link ou QR temporário (Fase 2) | Só os campos que o tutor escolheu, validade curta, cancelamento a qualquer hora e registro de cada abertura. A clínica (Fase 3) só vê durante o evento e por `[48]` h |
 | Fotos para reconhecer pets | Achei um pet e alertas (Fase 5) | O tutor aceita o uso das fotos do alerta. A foto de quem busca é apagada em 24 h. Sem comparar com pets que não estão em alerta |
+| Número da clínica no WhatsApp | Enviar a ficha pelo mapa (Fase 2) | O número vem do Google e não é guardado: só o `place_id`, o canal e a data. O tutor vê o número e a mensagem antes de enviar |
 | Memorial | Registrar a partida (Fase 2) | Nada é apagado, o tutor pode reativar e exportar tudo |
 | Fotos do álbum | Pedido na gráfica (Fase 3) | Arquivo por link com validade, apagado da gráfica em 30 dias |
 
@@ -988,7 +1001,7 @@ A coluna **Fase** diz quando a tela entra. No canvas do protótipo, as telas tam
 
 Cada linha liga a tela do protótipo (arquivo `prototipo/<nome>.dc.html` e imagem em `prototipo/imagens`) à rota sugerida e aos dados que ela usa. As rotas seguem o Expo Router no app e a estrutura de pastas equivalente na web.
 
-### 18.1 App do tutor (telas 1 a 18 e 46 a 51 na Fase 1; 19 a 21, 43 a 45, 52 a 59, 68 a 75, 77, 78 e 82 a 85 na Fase 2; 22 a 42, 76, 79, 86 e 87 na Fase 3; 62 e 63 na Fase 4; 60, 61, 64 a 67, 80 e 81 na Fase 5)
+### 18.1 App do tutor (telas 1 a 18 e 46 a 51 na Fase 1; 19 a 21, 43 a 45, 52 a 59, 68 a 75, 77, 78, 82 a 85, 88 e 89 na Fase 2; 22 a 42, 76, 79, 86 e 87 na Fase 3; 62 e 63 na Fase 4; 60, 61, 64 a 67, 80 e 81 na Fase 5)
 
 Navegação por abas: **Início**, **Pets**, **Mapa**, **Lembretes** e **Perfil**. A loja abre a partir do Mapa, do Início e da ficha do lugar.
 
@@ -1042,6 +1055,8 @@ Navegação por abas: **Início**, **Pets**, **Mapa**, **Lembretes** e **Perfil*
 | Cartão do pet | `CartaoPet` | `/pets/[id]/cartao` | `pets`, `pet_badges` (imagem gerada no aparelho) | 2 |
 | Ficha de emergência | `FichaEmergencia` | `/pets/[id]/ficha-emergencia` | `emergency_cards` | 2 |
 | Ficha de emergência (quem recebe) | `FichaVista` | `/ficha/[token]` (público, sem login) | `emergency_cards` via função pública | 2 |
+| Ficha da clínica com enviar ficha | `LugarClinica` | `/lugares/[id]` (variante de clínica) | Google Places via `place-details`, `emergency_cards` | 2 |
+| Enviar ficha à clínica | `EnviarFichaClinica` | `/lugares/[id]/enviar-ficha` | `emergency_cards`, `emergency_card_shares` | 2 |
 | Estou a caminho | `EstouACaminho` | `/sos/a-caminho` | `emergency_arrivals` (Realtime) | 3 |
 | Achei um pet: foto | `AcheiFoto` | `/achei-um-pet` | `find_searches` | 5 |
 | Possíveis correspondências | `AcheiResultado` | `/achei-um-pet/resultado` | `pet_photo_embeddings`, `lost_alerts` | 5 |
@@ -1733,6 +1748,22 @@ flowchart TD
   I --> J[Entregue]
 ```
 
+### 19.33 Enviar a ficha para a clínica pelo mapa (Fase 2)
+
+```mermaid
+flowchart TD
+  A[Mapa: toca em uma clínica] --> B[Ficha da clínica]
+  B --> C[Enviar a ficha do pet para esta clínica]
+  C --> D[Mostra o número do Google, a mensagem e o que a ficha inclui]
+  D --> E{Número é de celular?}
+  E -- sim --> F[Abre o WhatsApp da clínica com a mensagem e o link]
+  E -- não --> G[Copiar link, mostrar QR ou ligar]
+  F --> H[Tutor toca em enviar no WhatsApp]
+  G --> H
+  H --> I[Clínica abre o link da ficha]
+  I --> J[Tutor é avisado de que a ficha foi aberta]
+```
+
 ---
 
 ## 20. Máquinas de estado
@@ -2007,6 +2038,7 @@ Regras do banco: `pet_walks` e `expenses` só são lidos pelo dono (e pela famí
 | --- | --- |
 | `emergency_cards` (F2) | `pet_id`, `owner_id`, `token`, `includes` (jsonb com o que enviar), `created_at`, `expires_at`, `revoked_at`, `views` |
 | `emergency_card_views` (F2) | `card_id`, `at`, `ip_hash` |
+| `emergency_card_shares` (F2) | `card_id`, `google_place_id`, `channel` (`whatsapp`/`link`/`qr`), `sent_at`. Não guarda o número da clínica |
 | `pets.status` e `pets.passed_on` (F2) | `ativo` ou `em_memoria`, e a data da partida |
 | `memorial_settings` (F2) | `pet_id`, `message`, `created_at`, `reactivated_at` |
 | `quality_of_life_logs` (F2) | `pet_id`, `date`, `scores` (jsonb com os 7 itens), `total`, `note` |
@@ -2386,7 +2418,7 @@ Uma tabela para consultar de uma vez: cada funcionalidade com a fase, a regra, a
 | Fogos e trovão | 5.33 | 73 | `content_fireworks`, `calm_mode` | `fireworks-alerts` |
 | Widget e atalhos | 5.34 | 74 | Configuração do aparelho | Atualização do widget |
 | Cartão do pet | 5.35 | 75 | `pets`, `pet_badges` | Imagem gerada no aparelho |
-| Ficha de emergência por link | 5.37 | 77, 78 | `emergency_cards`, `emergency_card_views` | `create-emergency-card`, `emergency-card-view`, `expire-emergency-cards` |
+| Ficha de emergência por link e envio à clínica pelo mapa | 5.37 | 77, 78, 88, 89 | `emergency_cards`, `emergency_card_views` | `create-emergency-card`, `emergency-card-view`, `expire-emergency-cards` |
 | Modo memorial | 5.39 | 82, 83 | `pets.status`, `memorial_settings` | `memorial-start` |
 | Pet sênior e qualidade de vida | 5.40 | 84, 85 | `quality_of_life_logs`, `calc_tables` | `senior-check` |
 | Painel admin básico | 4.4, 17.3 | 19 telas do admin | `admin_members`, `audit_log`, `content_*` | Vários |

@@ -25,7 +25,7 @@ Capturas das telas do protótipo, geradas a partir de `prototipo/*.dc.html` e or
 
 # Fase 2 · Premium, eventos, adoção e painel admin
 
-## App do tutor (28)
+## App do tutor (30)
 
 | | | | |
 | --- | --- | --- | --- |
@@ -36,6 +36,7 @@ Capturas das telas do protótipo, geradas a partir de `prototipo/*.dc.html` e or
 | <img src="tutor/70-resumo-do-passeio.png" width="160"><br>70 · Resumo do passeio | <img src="tutor/71-despesas-do-pet.png" width="160"><br>71 · Despesas do pet | <img src="tutor/72-nova-despesa.png" width="160"><br>72 · Nova despesa | <img src="tutor/73-fogos-e-trovao.png" width="160"><br>73 · Fogos e trovão |
 | <img src="tutor/74-widget-e-atalhos.png" width="160"><br>74 · Widget e atalhos | <img src="tutor/75-cartao-do-pet.png" width="160"><br>75 · Cartão do pet | <img src="tutor/77-ficha-de-emergencia.png" width="160"><br>77 · Ficha de emergência | <img src="tutor/78-ficha-de-emergencia-quem-recebe.png" width="160"><br>78 · Ficha de emergência (quem recebe) |
 | <img src="tutor/82-registrar-a-partida.png" width="160"><br>82 · Registrar a partida | <img src="tutor/83-em-memoria.png" width="160"><br>83 · Em memória | <img src="tutor/84-pet-senior.png" width="160"><br>84 · Pet sênior | <img src="tutor/85-qualidade-de-vida.png" width="160"><br>85 · Qualidade de vida |
+| <img src="tutor/88-ficha-da-clinica-com-enviar-ficha.png" width="160"><br>88 · Ficha da clínica com enviar ficha | <img src="tutor/89-enviar-ficha-a-clinica.png" width="160"><br>89 · Enviar ficha à clínica | | |
 
 ## Site (1)
 
