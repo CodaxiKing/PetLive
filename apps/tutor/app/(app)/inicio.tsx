@@ -12,37 +12,48 @@ import {
 } from '../../src/components/Layout';
 import { Icone } from '../../src/components/Icone';
 import { Mascote } from '../../src/components/Mascote';
+import { useLembretes } from '../../src/lembretes/LembretesProvider';
+import { rotuloProximidade } from '../../src/lembretes/types';
+import { usePets } from '../../src/pets/PetsProvider';
+import { useVacinas } from '../../src/saude/VacinasProvider';
+import { diasAte } from '../../src/saude/types';
 import { colors } from '../../src/theme/colors';
 import { spacing } from '../../src/theme/tokens';
 import { typography } from '../../src/theme/typography';
 
-type Lembrete = {
-  tipo: string;
-  pet: string;
-  quando: string;
-  especie: 'cao' | 'gato';
-  fundo: string;
-  borda: string;
-  texto: string;
-};
-
-const LEMBRETES_EXEMPLO: Lembrete[] = [
-  { tipo: 'Vacina V10', pet: 'Rex', quando: 'em 5 dias', especie: 'cao', fundo: '#EBDDFB', borda: '#D7BDF5', texto: '#5B3C8F' },
-  { tipo: 'Vermífugo', pet: 'Mia', quando: 'em 12 dias', especie: 'gato', fundo: '#FCE1EF', borda: '#F5BFD9', texto: '#8A2E5C' },
+/** Cores dos cartões de lembrete, alternadas (protótipo Início). */
+const PALETA_LEMBRETES = [
+  { fundo: '#EBDDFB', borda: '#D7BDF5', texto: '#5B3C8F' },
+  { fundo: '#FCE1EF', borda: '#F5BFD9', texto: '#8A2E5C' },
 ];
 
-type Categoria = { nome: string; fundo: string; ativa?: boolean };
+type Categoria = { nome: string; fundo: string; filtro: string; ativa?: boolean };
 
 const CATEGORIAS: Categoria[] = [
-  { nome: 'Clínicas', fundo: colors.primary, ativa: true },
-  { nome: 'Banho', fundo: colors.primarySurface },
-  { nome: 'Petshop', fundo: colors.successSurface },
-  { nome: '24h', fundo: colors.warningSurface },
+  { nome: 'Clínicas', fundo: colors.primary, filtro: 'clinica', ativa: true },
+  { nome: 'Banho', fundo: colors.primarySurface, filtro: 'banho_tosa' },
+  { nome: 'Petshop', fundo: colors.successSurface, filtro: 'petshop' },
+  { nome: '24h', fundo: colors.warningSurface, filtro: '24h' },
 ];
 
+/**
+ * Início (board P0 "Tela Início: busca, categorias, lembretes e aviso de
+ * vacina"): o pet ativo no título, os dois próximos lembretes e o aviso das
+ * vacinas que vencem em até 7 dias, que leva às clínicas por perto.
+ */
 export default function Inicio() {
   const router = useRouter();
   const { width } = useWindowDimensions();
+  const { pets, petAtivo } = usePets();
+  const { lembretes } = useLembretes();
+  const { vacinas } = useVacinas();
+
+  const proximos = lembretes.slice(0, 2);
+  const vacinasVencendo = vacinas.filter((v) => {
+    const dias = diasAte(v.proxima_dose);
+    return dias !== null && dias <= 7;
+  }).length;
+  const nomePet = petAtivo?.nome ?? 'Seu pet';
 
   return (
     <ScrollView
@@ -52,40 +63,53 @@ export default function Inicio() {
     >
       <View style={[estilos.heroi, { height: 290 }]}>
         <View style={estilos.cabecalho}>
-          <BotaoRedondo acessibilidade="Escolher local">
+          <BotaoRedondo acessibilidade="Local">
             <IconeLocal />
           </BotaoRedondo>
 
           <View style={estilos.local}>
             <Text style={estilos.localRotulo}>Local</Text>
-            <Text style={estilos.localNome}>Rio de Janeiro ⌄</Text>
+            <Text style={estilos.localNome}>Rio de Janeiro</Text>
           </View>
 
-          <BotaoRedondo acessibilidade="Avisos">
-            <IconeSino />
-          </BotaoRedondo>
+          <Pressable onPress={() => router.push('/avisos')} hitSlop={4}>
+            <BotaoRedondo acessibilidade="Avisos">
+              <IconeSino />
+            </BotaoRedondo>
+          </Pressable>
 
-          <BotaoRedondo acessibilidade="Perfil">
-            <IconePerfil />
-          </BotaoRedondo>
+          <Pressable onPress={() => router.push('/perfil')} hitSlop={4}>
+            <BotaoRedondo acessibilidade="Perfil">
+              <IconePerfil />
+            </BotaoRedondo>
+          </Pressable>
         </View>
 
-        <Text style={estilos.titulo}>Para o Rex</Text>
+        <Text style={estilos.titulo} numberOfLines={1}>
+          {petAtivo ? `Para ${petAtivo.sexo === 'femea' ? 'a' : 'o'} ${petAtivo.nome}` : 'Olá!'}
+        </Text>
 
-        <View style={estilos.busca}>
+        <Pressable
+          style={estilos.busca}
+          accessibilityRole="search"
+          accessibilityLabel="Buscar clínica, banho e tosa"
+          onPress={() => router.push('/mapa')}
+        >
           <IconeBusca cor={colors.textMuted} />
           <Text style={estilos.buscaTexto}>Buscar clínica, banho e tosa…</Text>
-        </View>
+        </Pressable>
 
         <OndaHeroi largura={width} />
       </View>
 
       <View style={estilos.secoes}>
-        <Secao titulo="Categorias" acao="Ver todos ›" />
+        <Secao titulo="Categorias" acao="Ver todas ›" onAcao={() => router.push('/mapa')} />
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={estilos.categorias}>
           {CATEGORIAS.map((categoria) => (
-            <View
+            <Pressable
               key={categoria.nome}
+              accessibilityRole="button"
+              onPress={() => router.push({ pathname: '/mapa', params: { filtro: categoria.filtro } })}
               style={[
                 estilos.categoria,
                 categoria.ativa ? estilos.categoriaAtiva : estilos.categoriaInativa,
@@ -97,7 +121,7 @@ export default function Inicio() {
               <Text style={[estilos.categoriaTexto, categoria.ativa && estilos.categoriaTextoAtivo]}>
                 {categoria.nome}
               </Text>
-            </View>
+            </Pressable>
           ))}
 
           {/* Atalhos da Fase 1: SOS (rosa, como no Mapa) e Calculadoras. */}
@@ -127,50 +151,80 @@ export default function Inicio() {
         <Secao titulo="Próximos lembretes" acao="Ver todos ›" onAcao={() => router.push('/lembretes')} />
 
         <View style={estilos.lembretes}>
-          {LEMBRETES_EXEMPLO.map((lembrete) => (
-            <View
-              key={lembrete.tipo}
-              style={[estilos.lembrete, { backgroundColor: lembrete.fundo, borderColor: lembrete.borda }]}
+          {proximos.map((lembrete, indice) => {
+            const cores = PALETA_LEMBRETES[indice % PALETA_LEMBRETES.length];
+            const pet = pets.find((p) => p.id === lembrete.pet_id);
+            const quando = rotuloProximidade(lembrete.proxima_em).texto;
+            return (
+              <Pressable
+                key={lembrete.id}
+                accessibilityRole="button"
+                accessibilityLabel={`${lembrete.titulo}, ${quando}`}
+                onPress={() => router.push('/lembretes')}
+                style={[estilos.lembrete, { backgroundColor: cores.fundo, borderColor: cores.borda }]}
+              >
+                <View style={estilos.lembreteTopo}>
+                  <View style={estilos.lembreteTexto}>
+                    <Text style={estilos.lembreteTitulo} numberOfLines={1}>
+                      {lembrete.titulo}
+                    </Text>
+                    <Text style={[estilos.lembreteSub, { color: cores.texto }]} numberOfLines={1}>
+                      {pet ? `${pet.nome} · ${quando}` : quando}
+                    </Text>
+                  </View>
+                </View>
+
+                <View style={estilos.lembreteAvatar}>
+                  <Mascote especie={pet?.especie ?? 'cao'} size={84} recorte />
+                </View>
+              </Pressable>
+            );
+          })}
+
+          {proximos.length < 2 ? (
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel="Novo lembrete"
+              onPress={() => router.push('/lembretes/novo')}
+              style={[estilos.lembrete, estilos.lembreteNovo]}
             >
               <View style={estilos.lembreteTopo}>
                 <View style={estilos.lembreteTexto}>
-                  <Text style={estilos.lembreteTitulo}>{lembrete.tipo}</Text>
-                  <Text style={[estilos.lembreteSub, { color: lembrete.texto }]}>
-                    {lembrete.pet} · {lembrete.quando}
-                  </Text>
+                  <Text style={estilos.lembreteTitulo}>Novo lembrete</Text>
+                  <Text style={[estilos.lembreteSub, { color: colors.textMuted }]}>Vacina, banho, consulta…</Text>
                 </View>
                 <View style={estilos.lembreteAdicionar}>
                   <Text style={estilos.lembreteAdicionarSinal}>+</Text>
                 </View>
               </View>
-
-              <View style={estilos.lembreteAvatar}>
-                <Mascote especie={lembrete.especie} size={84} recorte />
-              </View>
-            </View>
-          ))}
+            </Pressable>
+          ) : null}
         </View>
 
         {/* Atalho: vacina vencendo leva às clínicas por perto (board P1). */}
-        <Pressable
-          style={estilos.avisoVacina}
-          accessibilityRole="button"
-          accessibilityLabel="Ver clínicas por perto"
-          onPress={() =>
-            router.push({ pathname: '/mapa', params: { filtro: 'clinica' } })
-          }
-        >
-          <View style={estilos.avisoVacinaÍcone}>
-            <Svg width={18} height={18} viewBox="0 0 24 24" fill="none" stroke={colors.black} strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
-              <Path d="M14 4l6 6-9 9-6-6z" />
-              <Path d="M5 13l6 6" />
-            </Svg>
-          </View>
-          <Text style={estilos.avisoVacinaTexto}>Você tem 1 vacina vencendo esta semana.</Text>
-          <View style={estilos.avisoVacinaBotao}>
-            <Text style={estilos.avisoVacinaBotaoTexto}>Ver</Text>
-          </View>
-        </Pressable>
+        {vacinasVencendo > 0 ? (
+          <Pressable
+            style={estilos.avisoVacina}
+            accessibilityRole="button"
+            accessibilityLabel="Ver clínicas por perto"
+            onPress={() => router.push({ pathname: '/mapa', params: { filtro: 'clinica' } })}
+          >
+            <View style={estilos.avisoVacinaÍcone}>
+              <Svg width={18} height={18} viewBox="0 0 24 24" fill="none" stroke={colors.black} strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
+                <Path d="M14 4l6 6-9 9-6-6z" />
+                <Path d="M5 13l6 6" />
+              </Svg>
+            </View>
+            <Text style={estilos.avisoVacinaTexto}>
+              {vacinasVencendo === 1
+                ? `${nomePet} tem 1 vacina vencendo esta semana.`
+                : `${nomePet} tem ${vacinasVencendo} vacinas vencendo esta semana.`}
+            </Text>
+            <View style={estilos.avisoVacinaBotao}>
+              <Text style={estilos.avisoVacinaBotaoTexto}>Ver</Text>
+            </View>
+          </Pressable>
+        ) : null}
       </View>
 
       {/* Espaço para o menu inferior flutuante não cobrir o conteúdo. */}
@@ -297,6 +351,11 @@ const estilos = StyleSheet.create({
     borderWidth: 1.5,
     padding: 12,
     gap: 8,
+  },
+  lembreteNovo: {
+    backgroundColor: colors.background,
+    borderColor: colors.border,
+    borderStyle: 'dashed',
   },
   lembreteTopo: {
     flexDirection: 'row',

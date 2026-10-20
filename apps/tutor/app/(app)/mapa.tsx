@@ -50,11 +50,12 @@ const FILTROS: { valor: Filtro; rotulo: string }[] = [
  * card do lugar selecionado com ligar, rota e atalho para a ficha.
  */
 export default function Mapa() {
-  // Atalho "vacina vence" chega como ?filtro=clinica; a escolha manual
+  // Atalhos do Início chegam como ?filtro=clinica|banho_tosa|petshop|24h; a escolha manual
   // dos chips passa a valer assim que o toque um.
   const { filtro } = useLocalSearchParams<{ filtro?: string }>();
   const [categoriaManual, setCategoriaManual] = useState<Filtro | null>(null);
-  const categoria: Filtro = categoriaManual ?? (filtro === 'clinica' ? 'clinica' : 'todos');
+  const filtroDoAtalho = FILTROS.find((opcao) => opcao.valor === filtro)?.valor ?? 'todos';
+  const categoria: Filtro = categoriaManual ?? filtroDoAtalho;
 
   const { permissao, posicao, localizar } = useLocalizacao();
 
