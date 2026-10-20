@@ -242,7 +242,12 @@ export default function Mapa() {
       )}
 
       {carregando && (
-        <ActivityIndicator style={estilos.indicador} size="large" color={colors.primaryDeep} />
+        <ActivityIndicator
+          style={estilos.indicador}
+          size="large"
+          color={colors.primaryDeep}
+          accessibilityLabel="Carregando lugares"
+        />
       )}
 
       {!carregando && lugares.length === 0 && (

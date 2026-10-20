@@ -1,0 +1,51 @@
+# Fluxo 02: cadastrar pet -> abrir ficha -> aba Saúde -> registrar vacina.
+# Depende do 01 (sessão criada); nome do pet é único por execução.
+appId: app.petlive.tutor
+name: 02 pet e vacina
+---
+- runScript: scripts/gerar-pet.js
+- launchApp
+- tapOn: "Pets"
+- extendedWaitUntil:
+    visible: "Meus pets"
+    timeout: 30000
+- tapOn:
+    id: "Cadastrar novo pet"
+    optional: true
+- tapOn:
+    text: "Cadastrar pet"
+    optional: true
+- extendedWaitUntil:
+    visible: "Novo pet"
+    timeout: 15000
+- tapOn: "Ex.: Nina"
+- inputText: "${PET_E2E}"
+- hideKeyboard
+- tapOn: "Salvar pet"
+- extendedWaitUntil:
+    visible: "${PET_E2E}"
+    timeout: 30000
+- tapOn:
+    id: "Abrir ${PET_E2E}"
+- extendedWaitUntil:
+    visible: "Calendário"
+    timeout: 15000
+- tapOn: "Saúde"
+- extendedWaitUntil:
+    visible: "＋ Vacina"
+    timeout: 15000
+- tapOn: "＋ Vacina"
+- extendedWaitUntil:
+    visible: "Registrar vacina"
+    timeout: 15000
+- tapOn: "＋ Outra"
+- tapOn: "Ex.: V10"
+- inputText: "Antirrábica E2E"
+- hideKeyboard
+- tapOn:
+    text: "/^Salvar vacina$/"
+- extendedWaitUntil:
+    visible: "Histórico de vacinas"
+    timeout: 30000
+- assertVisible: "Antirrábica E2E"
+- takeScreenshot: "02-vacina-ok.png"

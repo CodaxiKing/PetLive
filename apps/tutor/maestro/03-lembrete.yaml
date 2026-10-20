@@ -1,0 +1,32 @@
+# Fluxo 03: Início -> Próximos lembretes -> lista -> novo lembrete -> criação.
+# Depende do 01 (sessão criada); título é único por execução.
+appId: app.petlive.tutor
+name: 03 lembrete
+---
+- runScript: scripts/gerar-lembrete.js
+- launchApp
+- tapOn: "Início"
+- extendedWaitUntil:
+    visible: "Próximos lembretes"
+    timeout: 30000
+- tapOn: "Ver todos"
+- extendedWaitUntil:
+    visible: "Lembretes"
+    timeout: 15000
+- tapOn:
+    id: "Novo lembrete"
+- extendedWaitUntil:
+    visible: "Novo lembrete"
+    timeout: 15000
+- tapOn: "Ex.: Vacina V10"
+- inputText: "${TITULO_LEMBRETE}"
+- hideKeyboard
+- tapOn: "DD/MM/AAAA"
+- inputText: "25/12/2026"
+- hideKeyboard
+- tapOn:
+    text: "/^Criar lembrete$/"
+- extendedWaitUntil:
+    visible: "${TITULO_LEMBRETE}"
+    timeout: 30000
+- takeScreenshot: "03-lembrete-ok.png"

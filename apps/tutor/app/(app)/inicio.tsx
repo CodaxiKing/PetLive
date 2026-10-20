@@ -100,7 +100,7 @@ export default function Inicio() {
           ))}
         </ScrollView>
 
-        <Secao titulo="Próximos lembretes" acao="Ver todos ›" onAcao={() => router.push('/pets')} />
+        <Secao titulo="Próximos lembretes" acao="Ver todos ›" onAcao={() => router.push('/lembretes')} />
 
         <View style={estilos.lembretes}>
           {LEMBRETES_EXEMPLO.map((lembrete) => (

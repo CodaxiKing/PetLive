@@ -4,6 +4,7 @@ packages:
 # Builds de dependências com script de instalação.
 # unrs-resolver é o resolver nativo do ESLint (eslint-config-expo).
 allowBuilds:
+  '@sentry/cli': true
   unrs-resolver: true
 minimumReleaseAgeExclude:
   - '@expo/cli@58.1.13'

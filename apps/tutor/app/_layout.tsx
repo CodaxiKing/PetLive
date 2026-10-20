@@ -3,6 +3,7 @@ import { Stack, router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import * as Notifications from 'expo-notifications';
+import * as Sentry from '@sentry/react-native';
 import {
   useFonts,
   PlusJakartaSans_400Regular,
@@ -17,6 +18,20 @@ import { PetsProvider } from '../src/pets/PetsProvider';
 import { RemediosProvider } from '../src/remedios/RemediosProvider';
 import { VacinasProvider } from '../src/saude/VacinasProvider';
 import { colors } from '../src/theme/colors';
+
+/**
+ * Sentry: só liga quando há DSN (sem conta/DSN o app segue normal,
+ * apenas sem enviar erros). `sendDefaultPii` desligado por causa da LGPD:
+ * nenhum dado pessoal automático junto com o erro.
+ */
+const dsnSentry = process.env.EXPO_PUBLIC_SENTRY_DSN;
+if (dsnSentry) {
+  Sentry.init({
+    dsn: dsnSentry,
+    sendDefaultPii: false,
+    tracesSampleRate: 0.2,
+  });
+}
 
 /**
  * Ao tocar numa notificação, abre a rota indicada em `data.url`.
@@ -92,7 +107,7 @@ function RaizProtegida() {
   );
 }
 
-export default function RootLayout() {
+function RootLayout() {
   // Hook incondicional (antes do early-return das fontes) para manter a
   // ordem de hooks estável e abrir a rota certa ao tocar na notificação.
   useObservadorNotificacoes();
@@ -121,6 +136,9 @@ export default function RootLayout() {
     </AuthProvider>
   );
 }
+
+/** Erros não capturados vão para o Sentry quando há DSN configurado. */
+export default Sentry.wrap(RootLayout);
 
 const estilos = StyleSheet.create({
   carregando: {
