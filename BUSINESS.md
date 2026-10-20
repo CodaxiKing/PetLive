@@ -4,7 +4,7 @@ Este documento é a fonte única do escopo do PetLive. A **Parte A** (seções 1
 
 | Recurso | Link |
 | --- | --- |
-| Protótipo (121 telas e páginas, separadas por fase no canvas) | https://claude.ai/artifact/UFhxFUGwCYokbjPKCXDqKK |
+| Protótipo (125 telas e páginas, separadas por fase no canvas) | https://claude.ai/artifact/UFhxFUGwCYokbjPKCXDqKK |
 | Imagens das telas | [prototipo/imagens](prototipo/imagens/README.md) |
 | Plano de criação | https://claude.ai/code/artifact/871f3a23-4e21-4456-861f-b630c089235f |
 | Board de tarefas (194 tasks) | https://github.com/users/CodaxiKing/projects/5 |
@@ -447,6 +447,13 @@ O PetLive organiza informações e não substitui o atendimento veterinário. Es
 - O alerta se une ao **QR da coleira**: quem escaneia o QR de um pet com alerta ativo vê a mensagem de "pet procurado".
 - Só o tutor encerra o alerta. Limite de alertas por conta e denúncia de abuso. Alertas expiram em `[7]` dias se não forem renovados.
 
+**Como o alerta aparece para as pessoas (telas 64 a 67)**
+- **Notificação:** "Pet perdido perto de você", com o nome, a raça e a cor do pet, há quanto tempo sumiu e a distância. Chega só a quem está dentro do raio, permitiu avisos de pet perdido e tem localização ligada. Tocar abre o alerta.
+- **Tela do alerta:** foto grande, selo **PROCURA-SE**, nome, raça, cor, porte e coleira, último lugar visto e há quanto tempo, distância até a pessoa e o recado do tutor. Botões: **Vi este pet**, **Ligar para o tutor** (só se o tutor liberou) e **Compartilhar**. O aviso lembra de não perseguir o pet.
+- **Vi este pet:** a pessoa confirma onde viu (a localização atual, só enviada ao tocar em Enviar), quando, uma mensagem, uma foto opcional e se o pet está com ela. O tutor recebe um push com o ponto no mapa. **O tutor não vê o telefone de quem avisou.**
+- **QR da coleira:** quem escaneia o QR de um pet com alerta ativo vê a página **"Pet procurado"**, com a foto, o nome, onde sumiu, **Enviar minha localização** e **Ligar para o tutor** (se liberado). Não precisa instalar o app.
+- Quem não tem o app recebe o alerta só pela página do QR. Cada pessoa vê o mesmo alerta uma vez e pode silenciar alertas de pet perdido em Avisos.
+
 ### 5.30 Plano e seguro pet com parceiros (Fase 5)
 
 - Lista de **parceiros** cadastrados pelo admin, com benefícios e preço de referência. **Cotar** leva ao parceiro.
@@ -733,7 +740,7 @@ A coluna **Fase** diz quando a tela entra. No canvas do protótipo, as telas tam
 
 Cada linha liga a tela do protótipo (arquivo `prototipo/<nome>.dc.html` e imagem em `prototipo/imagens`) à rota sugerida e aos dados que ela usa. As rotas seguem o Expo Router no app e a estrutura de pastas equivalente na web.
 
-### 18.1 App do tutor (telas 1 a 18 e 46 a 51 na Fase 1; 19 a 21, 43 a 45 e 52 a 59 na Fase 2; 22 a 42 na Fase 3; 62 e 63 na Fase 4; 60 e 61 na Fase 5)
+### 18.1 App do tutor (telas 1 a 18 e 46 a 51 na Fase 1; 19 a 21, 43 a 45 e 52 a 59 na Fase 2; 22 a 42 na Fase 3; 62 e 63 na Fase 4; 60, 61 e 64 a 67 na Fase 5)
 
 Navegação por abas: **Início**, **Pets**, **Mapa**, **Lembretes** e **Perfil**. A loja abre a partir do Mapa, do Início e da ficha do lugar.
 
@@ -771,7 +778,11 @@ Navegação por abas: **Início**, **Pets**, **Mapa**, **Lembretes** e **Perfil*
 | Selos de cuidado | `Selos` | `/pets/[id]/selos` | `pet_badges` | 2 |
 | Comunidade | `Comunidade` | `/comunidade` | `posts`, `follows` | 4 |
 | Perfil público do pet | `PerfilPet` | `/pets/[id]/publico` | `pet_public_profiles`, `posts` | 4 |
-| Pet perdido | `PetPerdido` | `/pet-perdido` | `lost_alerts` | 5 |
+| Pet perdido (tutor) | `PetPerdido` | `/pet-perdido` | `lost_alerts` | 5 |
+| Notificação de pet perdido | `PerdidoNotificacao` | push (abre `/alerta/[id]`) | `lost_alerts` | 5 |
+| Alerta de pet perdido | `PerdidoAlerta` | `/alerta/[id]` | `lost_alerts` | 5 |
+| Vi este pet | `PerdidoVisto` | `/alerta/[id]/visto` | `lost_alert_sightings` | 5 |
+| QR com pet procurado | `EncontradoProcurado` | `/p/[codigo]` (variante com alerta ativo) | `lost_alerts`, `pet_qr_settings` | 5 |
 | Plano e seguro pet | `Seguro` | `/parceiros/seguro` | `insurance_partners` | 5 |
 | Eventos no mapa | `EventosMapa` | `/(tabs)/mapa?aba=eventos` | `events`, `event_rsvps` | 2 |
 | Evento | `Evento` | `/eventos/[id]` | `events`, `event_rsvps` | 2 |
@@ -1285,7 +1296,7 @@ flowchart TD
   G -- não --> D
 ```
 
-### 19.22 Pet perdido (Fase 5)
+### 19.22 Pet perdido (Fase 5), do alerta ao reencontro
 
 ```mermaid
 flowchart TD
@@ -1295,8 +1306,11 @@ flowchart TD
   D --> E[Quem viu abre o alerta]
   E --> F[Contato liberado pelo tutor]
   C --> G[QR da coleira mostra pet procurado]
+  E --> V[Toca em Vi este pet e envia a localização]
+  G --> V
+  V --> W[Tutor recebe o ponto no mapa, sem o telefone de quem viu]
   F --> H[Tutor encerra o alerta]
-  G --> H
+  W --> H
 ```
 
 ---
@@ -1486,7 +1500,7 @@ Regras do banco: o cuidador só lê o que `can_*` permite e só até `ends_at`; 
 ### 21.2e Fases 4 e 5
 
 - **Fase 4:** `pet_public_profiles`, `posts`, `comments`, `likes`, `follows`.
-- **Fase 5:** `lost_alerts` (`pet_id`, `owner_id`, `last_seen_geom`, `radius_km`, `status`, `created_at`, `closed_at`), `lost_alert_sightings`, `insurance_partners` (`name`, `benefits`, `price_text`, `url`, `active`) e `insurance_clicks`.
+- **Fase 5:** `lost_alerts` (`pet_id`, `owner_id`, `last_seen_geom`, `radius_km`, `status`, `message`, `show_phone`, `created_at`, `closed_at`), `lost_alert_sightings` (`alert_id`, `user_id`, `geom`, `seen_at`, `message`, `photo_url`, `has_pet`), `lost_alert_receipts` (quem recebeu, para não repetir), `insurance_partners` (`name`, `benefits`, `price_text`, `url`, `active`) e `insurance_clicks`.
 
 ### 21.3 Lojas e catálogo (Fase 3)
 
@@ -1602,6 +1616,7 @@ Canal: **push** (P), **e-mail** (E) ou **na tela de Avisos** (A). O tutor contro
 | ONG aprovada ou com documentos pendentes (Fase 2) | ONG | P, E |
 | Interesse em um pet para adoção (Fase 2) | ONG | P |
 | Pet perdido por perto (Fase 5) | Quem está no raio e permitiu | P |
+| Alguém viu o pet perdido (Fase 5) | Tutor | P |
 | Evento aprovado, recusado ou com ajuste pedido (Fase 2) | Organizador | P, A |
 | Evento perto de você (Fase 2) | Quem permitiu, dentro do raio | P |
 | Lembrete de evento (1 dia e 2 horas) (Fase 2) | Quem confirmou presença | P |
@@ -1629,6 +1644,7 @@ Todas as funções de pagamento (`create-pix-charge`, `pix-webhook`, `refund` e 
 | `adoption-search` e `adoption-contact` | Lista pets para adoção e envia o interesse à ONG (Fase 2) |
 | `create-caregiver-access` e `caregiver-view` | Cria o acesso com prazo e entrega só o que foi liberado (Fase 2) |
 | `send-lost-alert` | Envia o alerta de pet perdido para quem está no raio (Fase 5) |
+| `report-sighting` | Recebe o "Vi este pet" e avisa o tutor, sem expor o telefone de quem viu (Fase 5) |
 | `events-nearby` | Lista eventos publicados por proximidade, data e tipo (Fase 2) |
 | `create-event` | Valida o limite mensal e decide se vai para análise ou publica direto (Fase 2) |
 | `rsvp-event` | Confirma ou cancela presença e atualiza a contagem (Fase 2) |

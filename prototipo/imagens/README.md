@@ -231,9 +231,10 @@ Capturas das telas do protótipo, geradas a partir de `prototipo/*.dc.html` e or
 
 # Fase 5 · Social e mapa (futuro)
 
-## App do tutor (2)
+## App do tutor (6)
 
 | | | | |
 | --- | --- | --- | --- |
-| <img src="tutor/60-pet-perdido.png" width="160"><br>60 · Pet perdido | <img src="tutor/61-plano-e-seguro-pet.png" width="160"><br>61 · Plano e seguro pet | | |
+| <img src="tutor/60-pet-perdido.png" width="160"><br>60 · Pet perdido | <img src="tutor/61-plano-e-seguro-pet.png" width="160"><br>61 · Plano e seguro pet | <img src="tutor/64-notificacao-de-pet-perdido.png" width="160"><br>64 · Notificação de pet perdido | <img src="tutor/65-alerta-de-pet-perdido.png" width="160"><br>65 · Alerta de pet perdido |
+| <img src="tutor/66-vi-este-pet.png" width="160"><br>66 · Vi este pet | <img src="tutor/67-qr-com-pet-procurado.png" width="160"><br>67 · QR com pet procurado | | |
 

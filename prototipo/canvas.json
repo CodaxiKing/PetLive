@@ -977,6 +977,38 @@
    "x": 1360,
    "y": 15562,
    "title": "Painel admin · 20 · Adoção e ONGs"
+  },
+  "PerdidoNotificacao.dc.html": {
+   "w": 390,
+   "h": 844,
+   "is_interactive": true,
+   "x": 940,
+   "y": 41774,
+   "title": "64 · Notificação de pet perdido"
+  },
+  "PerdidoAlerta.dc.html": {
+   "w": 390,
+   "h": 844,
+   "is_interactive": true,
+   "x": 1410,
+   "y": 41774,
+   "title": "65 · Alerta de pet perdido"
+  },
+  "PerdidoVisto.dc.html": {
+   "w": 390,
+   "h": 844,
+   "is_interactive": true,
+   "x": 1880,
+   "y": 41774,
+   "title": "66 · Vi este pet"
+  },
+  "EncontradoProcurado.dc.html": {
+   "w": 390,
+   "h": 844,
+   "is_interactive": true,
+   "x": 2350,
+   "y": 41774,
+   "title": "67 · QR com pet procurado"
   }
  },
  "order": [
@@ -1100,7 +1132,11 @@
   "Seguro.dc.html",
   "Comunidade.dc.html",
   "PerfilPet.dc.html",
-  "AdminAdocao.dc.html"
+  "AdminAdocao.dc.html",
+  "PerdidoNotificacao.dc.html",
+  "PerdidoAlerta.dc.html",
+  "PerdidoVisto.dc.html",
+  "EncontradoProcurado.dc.html"
  ],
  "notes": {
   "f1": {
@@ -1230,9 +1266,9 @@
   "s18": {
    "x": 0,
    "y": 41474,
-   "text": "App do tutor: pet perdido e parceiros de plano e seguro",
+   "text": "App do tutor: pet perdido (com a tela que as pessoas recebem) e parceiros de plano e seguro",
    "kind": "title1",
-   "maxW": 860
+   "maxW": 2740
   }
  },
  "designSystems": []
