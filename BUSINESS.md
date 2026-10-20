@@ -224,7 +224,7 @@ O PetLive organiza informações e não substitui o atendimento veterinário. Es
 - Endereço fora do raio, ou em bairro desligado, só permite retirada. O app mostra o motivo.
 - O tutor vê a taxa e o prazo **antes** de pagar. O valor da taxa fica gravado no pedido e não muda depois.
 - A entrega gera um **código de 4 dígitos** que o tutor passa ao entregador. Só com o código a entrega vira "entregue".
-- Taxa de entrega não entra na base da comissão do app `[a definir]`.
+- A taxa de entrega **não entra na base da comissão**: ela fica inteira com a loja.
 - Entrega integrada com logística própria fica na etapa 3.
 
 ### 5.9 Cupons
@@ -232,7 +232,7 @@ O PetLive organiza informações e não substitui o atendimento veterinário. Es
 - Cupom da **loja** (criado no painel do lojista) vale só naquela loja. Cupom do **PetLive** (criado no admin) vale em qualquer loja ou no Premium.
 - Tipos: percentual, valor fixo e dias de Premium grátis.
 - Campos: código, valor, vale para (produtos, serviços ou ambos), limite de usos, validade e valor mínimo.
-- Um cupom por pedido. Cupom não reduz a taxa de entrega, a menos que o tipo seja "frete grátis" `[a definir]`.
+- Um cupom por pedido. O cupom **nunca reduz a taxa de entrega**, e não existe cupom de frete grátis. O frete grátis só vem da regra "frete grátis acima de" da loja.
 - Quem paga o desconto: cupom da loja sai da loja e cupom do PetLive sai do PetLive. O repasse considera isso.
 
 ### 5.10 Estoque
@@ -412,7 +412,21 @@ Acesso protegido por regras de linha (RLS) no Supabase: cada tutor só vê os da
 
 ---
 
-## 15. Decisões em aberto
+## 15. Decisões
+
+### Confirmadas
+
+| Decisão | Onde vale |
+| --- | --- |
+| Um cupom por pedido, e o cupom nunca reduz a taxa de entrega | 5.9 |
+| A taxa de entrega não entra na base da comissão | 5.8 |
+| Só avalia quem teve o pedido ou reserva concluído, uma vez por pedido | 5.11 |
+| O chat fecha 7 dias depois do pedido concluído | 5.12 |
+| Cancelar o Premium mantém o plano até o fim do período pago | 5.13 |
+| A entrega só vira "entregue" com o código de 4 dígitos informado pelo tutor | 5.8 e 20.3 |
+| No plano grátis, pets além do primeiro ficam só em leitura, sem serem apagados | 5.13 |
+
+### Em aberto
 
 - Nome do domínio e endereço da página pública do QR.
 - Provedor de Pix e percentual de comissão `[x]%`.
@@ -420,8 +434,6 @@ Acesso protegido por regras de linha (RLS) no Supabase: cada tutor só vê os da
 - App do lojista como PWA ou nativo.
 - Framework web dos painéis e do site.
 - Quem é o responsável fiscal nas vendas pelo app.
-- Taxa de entrega entra ou não na base da comissão.
-- Cupom de frete grátis: existe ou não.
 - Prazo para abrir disputa e prazo de resposta da loja.
 
 ---
