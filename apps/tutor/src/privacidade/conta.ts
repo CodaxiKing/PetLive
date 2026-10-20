@@ -3,35 +3,41 @@ import { supabase } from '../lib/supabase';
 
 /**
  * LGPD (art. 18, V): exporta tudo que pertence ao tutor em JSON e abre
- * a folha de compartilhamento do sistema (salvar, enviar etc.).
+ * a folha de compartilhamento do sistema (salvar, enviar etc.). Cada
+ * exportação fica registrada em lgpd_requests.
  */
 export async function exportarMeusDados(): Promise<void> {
   const { data, error } = await supabase.rpc('exportar_meus_dados');
   if (error) throw new Error(error.message);
   const json = JSON.stringify(data, null, 2);
   await Share.share({ title: 'Meus dados — PetLive', message: json });
+  await supabase.rpc('registrar_exportacao');
 }
 
 /**
- * Apaga as fotos/anexos do tutor pela API do Storage (pasta = uid, a
- * mesma convenção das policies). O DELETE direto em storage.objects é
- * recusado pelo Storage, então não dá para fazer no banco.
+ * Agenda a exclusão da conta (BUSINESS.md 12): os dados são apagados em
+ * 30 dias pela função lgpd-delete, e até lá o tutor pode cancelar.
+ * Devolve a data da exclusão.
  */
-async function apagarArquivosDaConta(tutorId: string): Promise<void> {
-  for (const bucket of ['pets', 'anexos']) {
-    const { data: arquivos } = await supabase.storage
-      .from(bucket)
-      .list(tutorId, { limit: 1000 });
-    const caminhos = (arquivos ?? []).filter((a) => a.name).map((a) => `${tutorId}/${a.name}`);
-    if (caminhos.length) await supabase.storage.from(bucket).remove(caminhos);
-  }
+export async function solicitarExclusaoConta(): Promise<Date> {
+  const { data, error } = await supabase.rpc('solicitar_exclusao_conta');
+  if (error) throw new Error(error.message);
+  return new Date(data as string);
 }
 
-/** Exclui a conta no servidor (RPC) e encerra a sessão local. */
-export async function excluirMinhaConta(tutorId: string): Promise<void> {
-  // Melhor esforço: se falhar, a conta é apagada mesmo assim e o arquivo fica órfão.
-  await apagarArquivosDaConta(tutorId).catch(() => undefined);
-  const { error } = await supabase.rpc('excluir_minha_conta');
+export async function cancelarExclusaoConta(): Promise<void> {
+  const { error } = await supabase.rpc('cancelar_exclusao_conta');
   if (error) throw new Error(error.message);
-  await supabase.auth.signOut();
+}
+
+/** Data da exclusão agendada, ou null quando não há pedido em aberto. */
+export async function exclusaoAgendada(): Promise<Date | null> {
+  const { data, error } = await supabase
+    .from('lgpd_requests')
+    .select('executar_em')
+    .eq('tipo', 'apagar')
+    .eq('status', 'novo')
+    .maybeSingle();
+  if (error) throw new Error(error.message);
+  return data?.executar_em ? new Date(data.executar_em) : null;
 }

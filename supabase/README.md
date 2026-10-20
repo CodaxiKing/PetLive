@@ -36,3 +36,26 @@ anon). Exit code 1 em falha — apt para cron/CI.
 
 O app envia erros de runtime ao Sentry quando `EXPO_PUBLIC_SENTRY_DSN`
 está definido (ver `apps/tutor/.env.example`).
+
+## Exclusão de conta com prazo (LGPD)
+
+Pedir a exclusão no app agenda a remoção para 30 dias (`lgpd_requests`). Todo
+dia às 03:00 (Brasília) o `pg_cron` chama a Edge Function `lgpd-delete`, que
+apaga os arquivos do Storage e a conta (o resto cai em cascata).
+
+Uma vez por ambiente remoto:
+
+```powershell
+npx supabase functions deploy lgpd-delete --no-verify-jwt
+```
+
+E, no SQL Editor, os dois secrets que o cron usa:
+
+```sql
+select vault.create_secret('https://<ref>.supabase.co', 'project_url');
+select vault.create_secret('<service_role key>', 'service_role_key');
+```
+
+Sem os secrets o cron roda e não faz nada. Para testar localmente:
+`npx supabase functions serve --no-verify-jwt` e um `POST` em
+`/functions/v1/lgpd-delete` com `Authorization: Bearer <service_role>`.

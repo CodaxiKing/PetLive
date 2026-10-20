@@ -5,14 +5,18 @@ import { HeroiOnda } from '../src/components/HeroiOnda';
 import { Icone } from '../src/components/Icone';
 import { Interruptor } from '../src/components/Interruptor';
 import { LinhaIcone } from '../src/components/LinhaIcone';
-import { useAuth } from '../src/auth/AuthProvider';
 import {
   carregarConsentimentos,
   registrarConsentimento,
   type EstadoConsentimento,
   type TipoConsentimento,
 } from '../src/privacidade/consentimentos';
-import { excluirMinhaConta, exportarMeusDados } from '../src/privacidade/conta';
+import {
+  cancelarExclusaoConta,
+  exclusaoAgendada,
+  exportarMeusDados,
+  solicitarExclusaoConta,
+} from '../src/privacidade/conta';
 import { colors } from '../src/theme/colors';
 import { typography } from '../src/theme/typography';
 
@@ -31,7 +35,7 @@ const ALTERNAVEIS: Alternavel[] = [
  * até lá a seção mostra que só o tutor vê os dados.
  */
 export default function Privacidade() {
-  const { user } = useAuth();
+  const [exclusao, setExclusao] = useState<Date | null>(null);
   const [estados, setEstados] = useState<Record<string, EstadoConsentimento>>({});
   const [processando, setProcessando] = useState(false);
 
@@ -44,6 +48,7 @@ export default function Privacidade() {
       },
       () => undefined,
     );
+    exclusaoAgendada().then(setExclusao, () => undefined);
   }, []);
 
   useFocusEffect(recarregar);
@@ -71,10 +76,10 @@ export default function Privacidade() {
   }
 
   function excluirConta() {
-    if (processando || !user) return;
+    if (processando) return;
     Alert.alert(
       'Excluir conta?',
-      'Seus dados, pets, remédios, lembretes e fotos serão apagados. Esta ação não pode ser desfeita.',
+      'Sua conta, pets, remédios, lembretes e fotos serão apagados em 30 dias. Até lá você pode cancelar aqui.',
       [
         { text: 'Cancelar', style: 'cancel' },
         {
@@ -82,16 +87,25 @@ export default function Privacidade() {
           style: 'destructive',
           onPress: () => {
             setProcessando(true);
-            excluirMinhaConta(user.id)
-              .then(() => router.replace('/welcome'))
+            solicitarExclusaoConta()
+              .then(setExclusao)
               .catch((e) =>
-                Alert.alert('Não foi possível excluir', e instanceof Error ? e.message : String(e)),
+                Alert.alert('Não foi possível pedir', e instanceof Error ? e.message : String(e)),
               )
               .finally(() => setProcessando(false));
           },
         },
       ],
     );
+  }
+
+  function cancelarExclusao() {
+    if (processando) return;
+    setProcessando(true);
+    cancelarExclusaoConta()
+      .then(() => setExclusao(null))
+      .catch((e) => Alert.alert('Não foi possível cancelar', e instanceof Error ? e.message : String(e)))
+      .finally(() => setProcessando(false));
   }
 
   const seta = <Icone nome="seta" size={16} cor={colors.textMuted} />;
@@ -141,15 +155,27 @@ export default function Privacidade() {
           desabilitado={processando}
           direita={seta}
         />
-        <LinhaIcone
-          icone={<Icone nome="bandeira" />}
-          rotulo="Excluir minha conta"
-          valor="Apaga a conta e os dados"
-          fundo="#FDE0E6"
-          onPress={excluirConta}
-          desabilitado={processando}
-          direita={seta}
-        />
+        {exclusao ? (
+          <LinhaIcone
+            icone={<Icone nome="bandeira" />}
+            rotulo={`Exclusão agendada para ${exclusao.toLocaleDateString('pt-BR')}`}
+            valor="Tocar para cancelar a exclusão"
+            fundo="#FDE0E6"
+            onPress={cancelarExclusao}
+            desabilitado={processando}
+            direita={seta}
+          />
+        ) : (
+          <LinhaIcone
+            icone={<Icone nome="bandeira" />}
+            rotulo="Excluir minha conta"
+            valor="Apaga a conta e os dados em 30 dias"
+            fundo="#FDE0E6"
+            onPress={excluirConta}
+            desabilitado={processando}
+            direita={seta}
+          />
+        )}
       </ScrollView>
     </View>
   );
