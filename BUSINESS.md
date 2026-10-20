@@ -4,7 +4,7 @@ Este documento é a fonte única do escopo do PetLive. A **Parte A** (seções 1
 
 | Recurso | Link |
 | --- | --- |
-| Protótipo (98 telas e páginas, separadas por fase no canvas) | https://claude.ai/artifact/UFhxFUGwCYokbjPKCXDqKK |
+| Protótipo (102 telas e páginas, separadas por fase no canvas) | https://claude.ai/artifact/UFhxFUGwCYokbjPKCXDqKK |
 | Imagens das telas | [prototipo/imagens](prototipo/imagens/README.md) |
 | Plano de criação | https://claude.ai/code/artifact/871f3a23-4e21-4456-861f-b630c089235f |
 | Board de tarefas (194 tasks) | https://github.com/users/CodaxiKing/projects/5 |
@@ -18,7 +18,7 @@ O produto é entregue em fases. **Só a Fase 1 está em desenvolvimento agora.**
 | Fase | Foco | O que entra | Situação |
 | --- | --- | --- | --- |
 | **1** | **Pet e lugares próximos** | Conta, pets, saúde, lembretes, remédios e mapa de clínicas, petshops, creches e hotelzinhos já cadastrados no Google Maps, com telefone, fotos e rota | **Agora** |
-| 2 | Premium e operação | Premium, carteira em PDF, QR da coleira, página pública do QR, site e painel admin básico | Depois da Fase 1 |
+| 2 | Premium e operação | Premium, carteira em PDF, QR da coleira, página pública do QR, **eventos pet no mapa**, site e painel admin básico | Depois da Fase 1 |
 | 3 | Marketplace (parte separada) | Lojas no PetLive, produtos, serviços com agenda, pedidos, entrega, pagamentos, chat, cupons, avaliações, painel do lojista e admin das lojas | Futuro, não é para agora |
 | 4 | Rede social | Perfil público, posts e feed | Futuro |
 | 5 | Social e mapa | Check-ins, selo de vacina, pets perdidos | Futuro |
@@ -110,6 +110,11 @@ Em uma frase: a carteira de saúde do pet, com lembretes e um mapa de lugares pe
 - Atalho: vacina vencendo leva às clínicas próximas.
 - Fonte e regras na seção 5.15.
 
+**Eventos pet (Fase 2)**
+- Aba **Eventos** no mapa, ao lado de **Lugares**: pins de eventos com filtros Hoje e Esta semana e por tipo (adoção, vacinação, passeio, encontro).
+- Ficha do evento com data e horário, local, organizador, vagas, preço e descrição. Botão **Eu vou** com lembrete.
+- Qualquer pessoa pode **criar evento**, que passa por análise antes de aparecer (seção 5.16).
+
 **Compartilhar e segurança (Fase 2, Premium)**
 - Carteira em PDF para o veterinário, QR Code da coleira, acesso compartilhado com a família.
 
@@ -167,6 +172,7 @@ Uso interno da equipe PetLive, com login e verificação em duas etapas. A colun
 | Lojistas | Aprovação de cadastro e análise de documentos | 3 |
 | Suporte | Fila de chamados, prioridade e respostas prontas | 2 |
 | Moderação | Denúncias, anúncios e pets encontrados | 3 |
+| Eventos | Aprovar eventos enviados, cadastrar eventos do PetLive e tratar denúncias | 2 |
 | Campanhas | Push e e-mail por público, com agendamento | 2 |
 | Conteúdo mestre | Calendário de vacinas, raças e categorias | 2 |
 | Integrações | Estado do Play Console, App Store Connect, Pix, Supabase, Sentry e push | 2 |
@@ -183,7 +189,7 @@ Uso interno da equipe PetLive, com login e verificação em duas etapas. A colun
 
 ## 5. Regras de negócio
 
-Vigência por fase: **5.7 e 5.15 valem desde a Fase 1**. **5.6 e 5.13 valem na Fase 2.** **5.1 a 5.5, 5.8 a 5.12 e 5.14 valem só na Fase 3** (marketplace) e ficam registradas aqui para não se perderem.
+Vigência por fase: **5.7 e 5.15 valem desde a Fase 1**. **5.6, 5.13 e 5.16 valem na Fase 2.** **5.1 a 5.5, 5.8 a 5.12 e 5.14 valem só na Fase 3** (marketplace) e ficam registradas aqui para não se perderem.
 
 ### 5.1 O que a loja oferece
 
@@ -303,6 +309,23 @@ O PetLive organiza informações e não substitui o atendimento veterinário. Es
 - **Termos e preços do Google mudam.** Conferir os valores e as regras de uso na hora de implementar, antes de lançar.
 - **Fase 3:** a loja que se cadastrar pode "assumir" o lugar pelo `place_id`, com verificação do dono.
 
+### 5.16 Eventos pet (Fase 2)
+
+- **O que é:** um encontro ou ação com data, horário e local, mostrado no mapa. Exemplos: feira de adoção, vacinação ou castração gratuita, passeio coletivo, encontro de raça e palestra.
+- **Tipos:** adoção, vacinação ou castração, passeio, encontro, palestra e outros.
+- **Quem cria:** o PetLive, pelo painel admin, e qualquer usuário logado pelo app.
+- **Análise antes de publicar:** todo evento enviado por usuário fica **em análise** e só aparece depois de aprovado pela moderação, em até 1 dia útil. Eventos do PetLive e de organizadores **verificados** publicam direto.
+- **Limite:** até `[3]` eventos enviados por pessoa por mês. Quem tiver eventos recusados com frequência perde a publicação sem análise.
+- **Dados do evento:** título, tipo, data, horário de início e fim, local, descrição, foto, entrada (gratuita ou paga) e vagas opcionais.
+- **Local:** um lugar do Google (guarda só o `place_id`, como na seção 5.15) ou um ponto marcado no mapa (latitude e longitude, que são dados do PetLive). Os pins de evento são nossos, sem a restrição de exibição dos dados do Google.
+- **Entrada paga:** o app mostra o valor e um link externo do organizador. **O PetLive não vende ingresso nem cobra dentro do app.**
+- **Eu vou:** o usuário confirma presença e pode receber lembrete (1 dia antes e 2 horas antes). O app mostra só a **quantidade** de confirmados, nunca a lista de pessoas. Com vagas esgotadas, o botão vira "Lista de espera" ou fica desativado `[a definir]`.
+- **Mudança ou cancelamento:** o organizador pode editar ou cancelar. Quem confirmou presença recebe aviso. Mudar data, horário ou local de um evento publicado volta a análise.
+- **Fim do evento:** depois do horário de fim, o evento sai do mapa e fica no histórico do organizador.
+- **Denúncia:** qualquer usuário pode denunciar um evento. Com `[3]` denúncias o evento é ocultado até a moderação decidir.
+- **Segurança:** o texto da tela lembra de que o evento é de responsabilidade do organizador, e o app não divulga telefone nem endereço de casa de pessoas. Eventos devem ser em local público ou em estabelecimento.
+- **Notificações:** "evento perto de você" só para quem permitiu e dentro do raio escolhido em Avisos.
+
 ---
 
 ## 6. Modelos de reserva por serviço (Fase 3)
@@ -329,6 +352,8 @@ Resumo. O modelo completo, com campos, está na seção 21.
 **Lugares (Fase 1):** `saved_places` (favoritos, só com o `place_id` do Google) e `places_usage` (controle de chamadas por usuário).
 
 **Marketplace (Fase 3):** `stores`, `store_members`, `products`, `services`, `store_hours`, `time_off`, `requests`, `request_items`, `request_events`, `payments`, `deliveries`, `delivery_zones`, `coupons`, `reviews`, `conversations`, `messages`, `lodging_rates`, `daycare_plans`, `walk_rules`.
+
+**Eventos (Fase 2):** `events`, `event_rsvps`, `event_reports`.
 
 **Plataforma (Fase 2):** `subscriptions`, `plans`, `disputes`, `support_tickets`, `campaigns`, `lgpd_requests`, `admin_members`, `audit_log`, `app_reviews`, `content_*`.
 
@@ -365,7 +390,7 @@ Acesso protegido por regras de linha (RLS) no Supabase: cada tutor só vê os da
 | --- | --- | --- |
 | 0 | Descoberta: wireframes, stack, cidade | Concluída |
 | **1** | **MVP: conta, pets, saúde, lembretes, remédios e lugares pet por perto (Google), Início** | **P0 e P1** |
-| 2 | Premium (PDF, QR da coleira, anexos, família), página pública do QR, site, painel admin básico | P2 |
+| 2 | Premium (PDF, QR da coleira, anexos, família), página pública do QR, eventos pet no mapa, site, painel admin básico | P2 |
 | 3 | **Marketplace**, parte separada e futura: etapa 1 (lojas, vitrine, solicitação, agenda, entrega e retirada, chat, estoque, cupons, avaliações), etapa 2 (Pix, passeio ao vivo, repasse, disputas), etapa 3 (entrega integrada, assinatura de ração) | P3 |
 | 4 | Rede social: perfil público, posts, feed (depois de validar a retenção) | Fora do board por enquanto |
 | 5 | Social e mapa: check-ins, selo de vacina, pets perdidos | Fora do board por enquanto |
@@ -415,6 +440,7 @@ O board tem também o campo **Fase** (1, 2 ou 3), para filtrar e agrupar.
 | Dependência de um único provedor de pagamento | Backend fala com o Asaas por uma camada única (seção 23.1), para trocar de provedor mexendo em um lugar só |
 | Suporte e disputas | Histórico de status, chat com a loja, fila de suporte e política de cancelamento |
 | Entrega com problema (endereço, atraso) | Código de entrega, prazo mostrado antes de pagar e disputa pelo admin |
+| Evento falso, golpe ou encontro inseguro (Fase 2) | Análise antes de publicar, organizador verificado, limite por pessoa, denúncia com ocultação automática e sem cobrança dentro do app |
 | Acesso indevido ao painel admin | Verificação em duas etapas, funções com permissões mínimas e registro de ações |
 | Escopo crescer demais | Entregar por fases e validar antes de avançar |
 
@@ -450,6 +476,7 @@ O board tem também o campo **Fase** (1, 2 ou 3), para filtrar e agrupar.
 - Retenção do tutor no beta (gate da rede social).
 - Tutores ativos por semana e lembretes confirmados.
 - Conversão de grátis para Premium e churn mensal.
+- Eventos publicados por semana, confirmações de presença por evento e tempo de análise (Fase 2).
 - Nota média nas lojas de apps e tempo de resposta às avaliações.
 - Lojas ativas e tempo médio de resposta a solicitações.
 - Reservas e solicitações por loja, e participação das entregas.
@@ -483,6 +510,7 @@ O board tem também o campo **Fase** (1, 2 ou 3), para filtrar e agrupar.
 - Quem é o responsável fiscal nas vendas pelo app.
 - Prazo para abrir disputa e prazo de resposta da loja (Fase 3).
 - **Fase 1:** teto mensal de gasto com o Google Maps Platform e limite diário de chamadas por usuário.
+- **Fase 2:** limite de eventos por pessoa por mês (hoje `[3]`), regra de lista de espera e quem pode ser "organizador verificado".
 - **Fase 1:** quantas fotos por lugar (hoje `[5]`) e se a busca de creches e hotelzinhos usa texto livre ou lista de termos fixa.
 
 ---
@@ -550,6 +578,7 @@ Um usuário pode ser tutor e também membro de uma loja *(Fase 3)*. A conta é u
 | Estornar e decidir disputa | Sim | Sim | Não | Não | Não | Não |
 | Aprovar loja | Sim | Não | Não | Sim | Não | Não |
 | Enviar campanha | Sim | Não | Não | Não | Sim | Não |
+| Aprovar e publicar eventos | Sim | Não | Não | Sim | Sim | Não |
 | Responder avaliações dos apps | Sim | Não | Sim | Não | Sim | Não |
 | Editar conteúdo mestre e planos | Sim | Sim | Não | Não | Não | Não |
 | Ver dados de saúde de um pet | Sim | Não | Sim, com autorização do tutor | Não | Não | Não |
@@ -565,7 +594,7 @@ A coluna **Fase** diz quando a tela entra. No canvas do protótipo, as telas tam
 
 Cada linha liga a tela do protótipo (arquivo `prototipo/<nome>.dc.html` e imagem em `prototipo/imagens`) à rota sugerida e aos dados que ela usa. As rotas seguem o Expo Router no app e a estrutura de pastas equivalente na web.
 
-### 18.1 App do tutor (telas 1 a 18 na Fase 1, 19 a 21 na Fase 2, 22 a 42 na Fase 3)
+### 18.1 App do tutor (telas 1 a 18 na Fase 1; 19 a 21 e 43 a 45 na Fase 2; 22 a 42 na Fase 3)
 
 Navegação por abas: **Início**, **Pets**, **Mapa**, **Lembretes** e **Perfil**. A loja abre a partir do Mapa, do Início e da ficha do lugar.
 
@@ -587,6 +616,9 @@ Navegação por abas: **Início**, **Pets**, **Mapa**, **Lembretes** e **Perfil*
 | Lembrete personalizado | `Lembrete` | `/lembretes/[id]` | `reminders` | 1 |
 | Avisos | `Notificacoes` | `/avisos` | Preferências de notificação | 1 |
 | Mapa | `Mapa` | `/(tabs)/mapa` | Google Places via `places-nearby`, `saved_places` | 1 |
+| Eventos no mapa | `EventosMapa` | `/(tabs)/mapa?aba=eventos` | `events`, `event_rsvps` | 2 |
+| Evento | `Evento` | `/eventos/[id]` | `events`, `event_rsvps` | 2 |
+| Criar evento | `EventoNovo` | `/eventos/novo` | `events` | 2 |
 | Ficha do lugar | `Lugar` | `/lugares/[id]` (id = `place_id`) | Google Places via `place-details` e `place-photo`, `saved_places` | 1 |
 | Perfil do tutor | `Perfil` | `/(tabs)/perfil` | `profiles`, `subscriptions` | 1 |
 | Premium | `Premium` | `/premium` | `plans`, `subscriptions`, cupom | 2 |
@@ -681,6 +713,7 @@ Menu lateral agrupa as 17 áreas. O login é a única tela sem menu.
 | Lojistas | `AdminLojistas` | `/admin/lojistas` | `stores`, documentos | 3 |
 | Suporte | `AdminSuporte` | `/admin/suporte` | `support_tickets` | 2 |
 | Moderação | `AdminModeracao` | `/admin/moderacao` | `reports` | 3 |
+| Eventos | `AdminEventos` | `/admin/eventos` | `events`, `event_reports` | 2 |
 | Campanhas | `AdminCampanhas` | `/admin/campanhas` | `campaigns` | 2 |
 | Conteúdo mestre | `AdminConteudo` | `/admin/conteudo` | `content_*` | 2 |
 | Integrações | `AdminIntegracoes` | `/admin/integracoes` | `integrations` | 2 |
@@ -1003,6 +1036,31 @@ sequenceDiagram
   Tutor->>App: Liga, abre o WhatsApp, traça a rota ou salva o lugar
 ```
 
+### 19.17 Eventos pet (Fase 2)
+
+```mermaid
+flowchart TD
+  A[Tutor abre o Mapa e toca em Eventos] --> B[Filtra por Hoje, Esta semana ou tipo]
+  B --> C[Toca em um pin e vê o resumo]
+  C --> D[Ficha do evento]
+  D --> E{Vai ao evento?}
+  E -- sim --> F[Eu vou: confirma presença]
+  F --> G[Lembretes 1 dia e 2 horas antes]
+  G --> H[Evento acontece]
+  D --> I[Denunciar]
+  I --> J[Moderação]
+  A --> K[Criar evento]
+  K --> L[Preenche tipo, data, horário, local e descrição]
+  L --> M{Organizador verificado ou evento do PetLive?}
+  M -- sim --> N[Publicado]
+  M -- não --> O[Em análise]
+  O --> P{Moderação decide}
+  P -- aprova --> N
+  P -- pede ajuste --> L
+  P -- recusa --> Q[Recusado, com o motivo]
+  N --> R[Aparece no mapa e avisa quem está perto]
+```
+
 ---
 
 ## 20. Máquinas de estado
@@ -1092,6 +1150,28 @@ stateDiagram-v2
 
 `novo` → `aguardando_confirmacao` (apagar conta exige confirmar por e-mail) → `em_andamento` → `concluido`. O campo `due_at` guarda o prazo de 15 dias.
 
+### 20.11 Evento (`events`), Fase 2
+
+```mermaid
+stateDiagram-v2
+  [*] --> rascunho
+  rascunho --> em_analise: usuário envia
+  rascunho --> publicado: evento do PetLive ou organizador verificado
+  em_analise --> publicado: moderação aprova
+  em_analise --> ajuste_pedido: moderação pede ajuste
+  ajuste_pedido --> em_analise: organizador reenvia
+  em_analise --> recusado: moderação recusa
+  publicado --> em_analise: mudou data, horário ou local
+  publicado --> oculto: denúncias acima do limite
+  oculto --> publicado: moderação mantém
+  oculto --> recusado: moderação remove
+  publicado --> cancelado: organizador cancela
+  publicado --> encerrado: passou o horário de fim
+  encerrado --> [*]
+  cancelado --> [*]
+  recusado --> [*]
+```
+
 ---
 
 ## 21. Modelo de dados completo
@@ -1127,6 +1207,17 @@ Convenções: `id uuid` em todas as tabelas, `created_at` e `updated_at`, soft d
 | `content_breeds` | `species`, `name` |
 | `content_categories` | `name`, `parent_id`, `sort` |
 | `content_versions` | `version`, `published_at`, `published_by` |
+
+### 21.2b Eventos (Fase 2)
+
+| Tabela | Campos principais |
+| --- | --- |
+| `events` | `organizer_id`, `official` (do PetLive), `type` (`adocao`/`vacinacao`/`passeio`/`encontro`/`palestra`/`outro`), `title`, `description`, `photo_url`, `starts_at`, `ends_at`, `google_place_id` ou `geom` (ponto no mapa), `address_text`, `price_type` (`gratis`/`pago`), `price_text`, `external_url`, `capacity`, `status`, `reject_reason`, `reports_count`, `published_at` |
+| `event_rsvps` | `event_id`, `user_id`, `remind`, `created_at`. Um por usuário por evento |
+| `event_reports` | `event_id`, `reporter_id`, `reason`, `status`, `handled_by` |
+| `organizers` | `user_id`, `verified`, `verified_by`, `events_approved`, `events_refused` |
+
+Regras do banco: um usuário só confirma presença uma vez; não passa do limite de eventos enviados por mês; evento com `status` diferente de `publicado` só é visível ao organizador e à moderação; a contagem de confirmados é pública e a lista, não.
 
 ### 21.3 Lojas e catálogo (Fase 3)
 
@@ -1236,6 +1327,11 @@ Canal: **push** (P), **e-mail** (E) ou **na tela de Avisos** (A). O tutor contro
 | Nota baixa de app sem resposta | Equipe admin | A no painel |
 | Pedido de exportar ou apagar dados | Equipe admin | A no painel |
 | Campanha | Público escolhido | P, E |
+| Evento aprovado, recusado ou com ajuste pedido (Fase 2) | Organizador | P, A |
+| Evento perto de você (Fase 2) | Quem permitiu, dentro do raio | P |
+| Lembrete de evento (1 dia e 2 horas) (Fase 2) | Quem confirmou presença | P |
+| Evento mudou ou foi cancelado (Fase 2) | Quem confirmou presença | P |
+| Evento denunciado ou novo em análise (Fase 2) | Equipe de moderação | A no painel |
 
 ---
 
@@ -1252,6 +1348,9 @@ Todas as funções de pagamento (`create-pix-charge`, `pix-webhook`, `refund` e 
 | `places-nearby` | Busca lugares pet por proximidade no Google, só campos básicos, com limite por usuário |
 | `place-details` | Devolve telefone, endereço, horário, site, nota e referências de fotos de um `place_id` |
 | `place-photo` | Entrega uma foto do Google ao app, sob demanda |
+| `events-nearby` | Lista eventos publicados por proximidade, data e tipo (Fase 2) |
+| `create-event` | Valida o limite mensal e decide se vai para análise ou publica direto (Fase 2) |
+| `rsvp-event` | Confirma ou cancela presença e atualiza a contagem (Fase 2) |
 | `free-slots` | Calcula horários livres de um serviço em um dia |
 | `quote-delivery` | Valida endereço no raio e devolve taxa, prazo e motivo de bloqueio |
 | `create-request` | Cria a solicitação checando estoque, mínimo, horário e cupom em uma transação |
@@ -1274,7 +1373,9 @@ Todas as funções de pagamento (`create-pix-charge`, `pix-webhook`, `refund` e 
 | `mark-missed-doses` | Hora em hora | Marca doses perdidas |
 | `expire-requests` | A cada 5 min | Expira solicitações sem resposta e estorna se pago |
 | `expire-pix` | A cada 5 min | Expira Pix vencido |
-| `close-chats` | Diário | Fecha conversas 7 dias após a conclusão |
+| `close-chats` | Diário | Fecha conversas 7 dias após a conclusão (Fase 3) |
+| `event-reminders` | A cada 15 min | Envia lembretes de 1 dia e 2 horas antes do evento (Fase 2) |
+| `close-events` | A cada hora | Marca como encerrado o evento que passou do fim e tira do mapa (Fase 2) |
 | `subscription-billing` | Diário | Avisa renovação, cobra e faz novas tentativas |
 | `weekly-payout` | Semanal | Calcula e envia o repasse por Pix |
 | `sync-app-reviews` | A cada hora | Importa avaliações do Play e da App Store |
@@ -1328,6 +1429,7 @@ Cada bloco depende dos anteriores. **Só a Fase 1 está em desenvolvimento agora
 | **Gate 1** | Fase 1 no ar para teste com tutores reais e retenção medida | 4 | | |
 | 5. Premium | Assinatura, PDF, anexos, família, QR da coleira | 1, pagamento | 2 | P2 |
 | 6. Página do QR e site | Página pública `/p/[codigo]` e site | 5 | 2 | P2 |
+| 6b. Eventos no mapa | Aba Eventos, ficha, criar evento, Eu vou, lembretes, denúncia e análise no admin | 3, 7 | 2 | P2 |
 | 7. Admin básico | Login com 2FA, visão geral, usuários, assinaturas, planos, conteúdo mestre, avaliações dos apps, suporte, campanhas, integrações, sistema, LGPD, equipe | 0, 5 | 2 | P2 |
 | 8. Marketplace, etapa 1 | Cadastro e aprovação de lojas, catálogo, vitrine, solicitação, agenda, retirada, entrega, chat, estoque, cupons, avaliações | Gate 1, 7 | 3 | P3 |
 | 9. Marketplace, etapa 2 | Pix no app, repasse, estorno, disputas, financeiro e pedidos no admin, passeio ao vivo | 8 | 3 | P3 |

@@ -16,11 +16,12 @@ Capturas das telas do protótipo, geradas a partir de `prototipo/*.dc.html` e or
 
 # Fase 2 · Premium e painel admin
 
-## App do tutor (3)
+## App do tutor (6)
 
 | | | | |
 | --- | --- | --- | --- |
-| <img src="tutor/19-premium.png" width="160"><br>19 · Premium | <img src="tutor/20-carteira-em-pdf.png" width="160"><br>20 · Carteira em PDF | <img src="tutor/21-qr-da-coleira.png" width="160"><br>21 · QR da coleira | |
+| <img src="tutor/19-premium.png" width="160"><br>19 · Premium | <img src="tutor/20-carteira-em-pdf.png" width="160"><br>20 · Carteira em PDF | <img src="tutor/21-qr-da-coleira.png" width="160"><br>21 · QR da coleira | <img src="tutor/43-eventos-no-mapa.png" width="160"><br>43 · Eventos no mapa |
+| <img src="tutor/44-evento.png" width="160"><br>44 · Evento | <img src="tutor/45-criar-evento.png" width="160"><br>45 · Criar evento | | |
 
 ## Site (1)
 
@@ -34,7 +35,7 @@ Capturas das telas do protótipo, geradas a partir de `prototipo/*.dc.html` e or
 | --- | --- | --- | --- |
 | <img src="publico/00-pet-encontrado-quem-escaneia.png" width="160"><br>Pet encontrado (quem escaneia) | | | |
 
-## Painel admin (computador) (14)
+## Painel admin (computador) (15)
 
 ### Painel admin · 1 · Entrar com verificação
 
@@ -91,6 +92,10 @@ Capturas das telas do protótipo, geradas a partir de `prototipo/*.dc.html` e or
 ### Painel admin · 18 · Equipe e permissões
 
 ![Painel admin · 18 · Equipe e permissões](admin/18-equipe-e-permissoes.png)
+
+### Painel admin · 19 · Eventos
+
+![Painel admin · 19 · Eventos](admin/19-eventos.png)
 
 # Fase 3 · Marketplace (futuro, não é para agora)
 
