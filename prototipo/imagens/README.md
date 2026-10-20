@@ -2,6 +2,14 @@
 
 Capturas das telas do protótipo, geradas a partir de `prototipo/*.dc.html` e organizadas por fase. O protótipo navegável está no [canvas publicado](https://claude.ai/artifact/UFhxFUGwCYokbjPKCXDqKK). Só a **Fase 1** está em desenvolvimento agora.
 
+# Identidade visual
+
+## Paleta de cores, tipografia e formas (1)
+
+| | | | |
+| --- | --- | --- | --- |
+| <img src="identidade/00-paleta-de-cores-tipografia-e-formas.png" width="160"><br>Paleta de cores, tipografia e formas | | | |
+
 # Fase 1 · MVP: pet, saúde, lugares e emergência
 
 ## App do tutor (24)

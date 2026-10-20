@@ -25,7 +25,7 @@ A carteira de saúde do seu pet, com lembretes e mapa, que também conecta tutor
 | Documento | Para quê |
 | --- | --- |
 | [BUSINESS.md](BUSINESS.md) | Escopo, regras, papéis, mapa de telas e rotas, fluxos, estados, dados, notificações, backend e ordem de construção |
-| [Protótipo](https://claude.ai/artifact/UFhxFUGwCYokbjPKCXDqKK) | 134 telas e páginas navegáveis: app do tutor, app e painel do lojista, painel admin, site |
+| [Protótipo](https://claude.ai/artifact/UFhxFUGwCYokbjPKCXDqKK) | 135 telas e páginas navegáveis: app do tutor, app e painel do lojista, painel admin, site |
 | [prototipo/](prototipo/README.md) | Código-fonte das telas do protótipo, como referência de layout |
 | [docs/backlog/](docs/backlog) | As 149 tasks em arquivo, e o script que cria os itens no GitHub Project |
 | [Plano de criação](https://claude.ai/code/artifact/871f3a23-4e21-4456-861f-b630c089235f) | Arquitetura, modelo de dados, roadmap e backlog |
