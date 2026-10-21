@@ -14,6 +14,7 @@ import Svg, { Path } from 'react-native-svg'
 import { BotaoPrimario } from '../../../src/components/BotaoPrimario'
 import { CabecalhoTela } from '../../../src/components/CabecalhoTela'
 import { Campo } from '../../../src/components/Campo'
+import { MarcaPata } from '../../../src/components/MarcaPata'
 import { usePets } from '../../../src/pets/PetsProvider'
 import { GraficoPeso } from '../../../src/saude/GraficoPeso'
 import {
@@ -91,7 +92,8 @@ export default function TelaPeso() {
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
       <View style={estilos.hero} onLayout={(e) => setLarguraHero(Math.round(e.nativeEvent.layout.width))}>
-        <CabecalhoTela titulo={`Peso do ${pet?.nome ?? 'pet'}`} />
+        <CabecalhoTela titulo={`Peso do ${pet?.nome ?? 'pet'}`} aEsquerda />
+        <MarcaPata size={110} style={estilos.pata} />
 
         <View style={estilos.heroConteudo}>
           <Text style={estilos.kg}>
@@ -163,6 +165,7 @@ export default function TelaPeso() {
       <View style={estilos.rodape}>
         <BotaoPrimario
           titulo="Registrar peso"
+          icone={<Text style={estilos.maisCta}>+</Text>}
           onPress={salvar}
           carregando={salvando}
           desabilitado={carregando}
@@ -180,6 +183,8 @@ const estilos = StyleSheet.create({
     paddingBottom: 44,
     overflow: 'hidden',
   },
+  pata: { position: 'absolute', right: 30, top: 60 },
+  maisCta: { fontSize: 28, lineHeight: 32, color: colors.black },
   heroConteudo: {
     paddingHorizontal: 24,
     paddingTop: spacing.lg,
@@ -187,6 +192,7 @@ const estilos = StyleSheet.create({
   },
   kg: {
     ...typography.h1,
+    fontFamily: fontFamily.medium,
     fontSize: 68,
     lineHeight: 72,
     letterSpacing: -2.5,

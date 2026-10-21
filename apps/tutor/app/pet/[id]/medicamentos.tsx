@@ -11,7 +11,7 @@ import {
 import { router, useFocusEffect, useLocalSearchParams } from 'expo-router'
 import Svg, { Path } from 'react-native-svg'
 import { BotaoPrimario } from '../../../src/components/BotaoPrimario'
-import { CabecalhoTela } from '../../../src/components/CabecalhoTela'
+import { HeroiOnda } from '../../../src/components/HeroiOnda'
 import { supabase } from '../../../src/lib/supabase'
 import { usePets } from '../../../src/pets/PetsProvider'
 import {
@@ -78,7 +78,6 @@ export default function TelaMedicamentos() {
   const [doses, setDoses] = useState<DoseHoje[]>([])
   const [carregando, setCarregando] = useState(true)
   const [salvandoDose, setSalvandoDose] = useState<string | null>(null)
-  const [larguraHero, setLarguraHero] = useState(0)
 
   useFocusEffect(
     useCallback(() => {
@@ -132,29 +131,17 @@ export default function TelaMedicamentos() {
 
   return (
     <View style={estilos.tela}>
-      <View
-        style={estilos.hero}
-        onLayout={(e) => setLarguraHero(Math.round(e.nativeEvent.layout.width))}
-      >
-        <CabecalhoTela
-          titulo={pet?.nome ?? ''}
-          acao="＋"
-          onAcao={abrirNovo}
-        />
-
-        <Text style={estilos.titulo}>Medicamentos</Text>
-
-        {larguraHero > 0 ? (
-          <View style={estilos.onda}>
-            <Svg width={larguraHero} height={46} viewBox="0 0 390 46" preserveAspectRatio="none">
-              <Path
-                d="M0 46V26C28 8 56 10 80 24C104 38 132 40 154 26C180 8 214 10 238 26C262 42 300 38 322 22C346 6 372 12 390 24V46z"
-                fill={colors.surface}
-              />
-            </Svg>
-          </View>
-        ) : null}
-      </View>
+      <HeroiOnda subtitulo={pet?.nome ?? ''} titulo="Medicamentos" altura={220}>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel="Adicionar remédio"
+          hitSlop={8}
+          onPress={abrirNovo}
+          style={({ pressed }) => [estilos.mais, pressed && { opacity: 0.8 }]}
+        >
+          <Text style={estilos.maisSinal}>+</Text>
+        </Pressable>
+      </HeroiOnda>
 
       <ScrollView
         style={estilos.flex}
@@ -328,7 +315,7 @@ export default function TelaMedicamentos() {
       </ScrollView>
 
       <View style={estilos.rodape}>
-        <BotaoPrimario titulo="Adicionar remédio" onPress={abrirNovo} />
+        <BotaoPrimario titulo="Adicionar remédio" icone={<Text style={estilos.maisCta}>+</Text>} onPress={abrirNovo} />
       </View>
     </View>
   )
@@ -337,22 +324,19 @@ export default function TelaMedicamentos() {
 const estilos = StyleSheet.create({
   tela: { flex: 1, backgroundColor: colors.surface },
   flex: { flex: 1 },
-  hero: {
-    backgroundColor: colors.hero,
-    paddingBottom: 44,
-    overflow: 'hidden',
-    justifyContent: 'space-between',
+  mais: {
+    position: 'absolute',
+    right: 24,
+    top: 56,
+    width: 46,
+    height: 46,
+    borderRadius: 23,
+    backgroundColor: colors.black,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  titulo: {
-    ...typography.h1,
-    fontSize: 38,
-    lineHeight: 40,
-    letterSpacing: -1.1,
-    color: colors.black,
-    paddingHorizontal: 24,
-    paddingBottom: spacing.lg,
-  },
-  onda: { position: 'absolute', left: 0, right: 0, bottom: -1 },
+  maisSinal: { fontSize: 26, lineHeight: 30, color: colors.white },
+  maisCta: { fontSize: 28, lineHeight: 32, color: colors.black },
   conteudo: {
     paddingHorizontal: spacing.xl,
     paddingTop: spacing.lg,

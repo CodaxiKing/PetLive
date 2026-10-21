@@ -11,6 +11,8 @@ type Props = {
   /** Ação opcional exibida à direita (ex.: um texto-botão). */
   acao?: string;
   onAcao?: () => void;
+  /** Título ao lado do voltar, como em Peso do protótipo. */
+  aEsquerda?: boolean;
   children?: ReactNode;
 };
 
@@ -18,7 +20,7 @@ type Props = {
  * Cabeçalho das telas empilhadas (Pets, detalhe do pet, formulários):
  * volta à tela anterior, título centralizado e ação opcional.
  */
-export function CabecalhoTela({ titulo, acao, onAcao, children }: Props) {
+export function CabecalhoTela({ titulo, acao, onAcao, aEsquerda, children }: Props) {
   return (
     <View style={estilos.cabecalho}>
       <Pressable
@@ -39,7 +41,7 @@ export function CabecalhoTela({ titulo, acao, onAcao, children }: Props) {
         </Svg>
       </Pressable>
 
-      <Text style={estilos.titulo} numberOfLines={1}>
+      <Text style={[estilos.titulo, aEsquerda && estilos.tituloEsquerda]} numberOfLines={1}>
         {titulo}
       </Text>
 
@@ -81,6 +83,10 @@ const estilos = StyleSheet.create({
     textAlign: 'center',
     ...typography.h3,
     color: colors.black,
+  },
+  tituloEsquerda: {
+    textAlign: 'left',
+    marginLeft: spacing.sm,
   },
   acao: {
     minWidth: 44,
