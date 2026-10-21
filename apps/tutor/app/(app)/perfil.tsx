@@ -9,6 +9,7 @@ import { HeroiOnda } from '../../src/components/HeroiOnda';
 import { Icone, type NomeIcone } from '../../src/components/Icone';
 import { MarcaPata } from '../../src/components/MarcaPata';
 import { Mascote } from '../../src/components/Mascote';
+import { limparCacheOffline } from '../../src/lib/cacheOffline';
 import { supabase } from '../../src/lib/supabase';
 import { useLembretes } from '../../src/lembretes/LembretesProvider';
 import { useCidade } from '../../src/mapa/useCidade';
@@ -102,6 +103,8 @@ export default function Perfil() {
   }
 
   async function sair() {
+    // Dados de saúde guardados para uso sem internet saem junto com a conta.
+    await limparCacheOffline();
     const { error } = await supabase.auth.signOut();
     if (error) {
       Alert.alert('Não foi possível sair', error.message);

@@ -7,6 +7,7 @@ import {
   useState,
   type ReactNode,
 } from 'react'
+import { mensagemDeErro } from '../lib/cacheOffline'
 import { supabase } from '../lib/supabase'
 import { usePets } from '../pets/PetsProvider'
 import type { Pet } from '../pets/types'
@@ -103,7 +104,7 @@ export function VacinasProvider({ children }: { children: ReactNode }) {
       ).then(({ data, error }) => {
         setSalvando(false)
         if (error) {
-          setErro(error.message)
+          setErro(mensagemDeErro(error.message))
           return null
         }
         const vacina = data as Vacina
@@ -122,7 +123,7 @@ export function VacinasProvider({ children }: { children: ReactNode }) {
       ({ error }) => {
         setSalvando(false)
         if (error) {
-          setErro(error.message)
+          setErro(mensagemDeErro(error.message))
           return false
         }
         setVacinas((atual) => atual.filter((v) => v.id !== id))

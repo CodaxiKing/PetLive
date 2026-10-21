@@ -18,6 +18,7 @@ import { Icone } from '../../src/components/Icone'
 import { LinhaIcone } from '../../src/components/LinhaIcone'
 import { Mascote } from '../../src/components/Mascote'
 import { supabase } from '../../src/lib/supabase'
+import { AVISO_SEM_SALVAR } from '../../src/lib/cacheOffline'
 import { useLembretes } from '../../src/lembretes/LembretesProvider'
 import type { Lembrete } from '../../src/lembretes/types'
 import { permissaoConcedida, pedirPermissao } from '../../src/notificacoes/notificacoes'
@@ -322,7 +323,9 @@ export default function Lembretes() {
                         hitSlop={6}
                         onPress={() => {
                           animarLista()
-                          concluirLembrete(lembrete)
+                          concluirLembrete(lembrete).then((ok) => {
+                            if (!ok) Alert.alert('Não deu para salvar', AVISO_SEM_SALVAR)
+                          })
                         }}
                         style={estilos.feito}
                       >

@@ -13,6 +13,7 @@ import {
 import Svg, { Path } from 'react-native-svg'
 import { router, useFocusEffect, useLocalSearchParams } from 'expo-router'
 import { Surgir, Tocavel } from '../../../src/components/Animacoes'
+import { AvisoOffline } from '../../../src/components/AvisoOffline'
 import { BotaoPrimario } from '../../../src/components/BotaoPrimario'
 import { Icone } from '../../../src/components/Icone'
 import { MarcaPata } from '../../../src/components/MarcaPata'
@@ -190,6 +191,7 @@ export default function PetDetalhe() {
         </View>
 
         <View style={estilos.corpo}>
+          <AvisoOffline />
           <View style={estilos.linhaNome}>
             <Text style={estilos.nome} numberOfLines={1} accessibilityRole="header">
               {petAtual.nome}

@@ -1,4 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react'
+import { mensagemDeErro } from '../lib/cacheOffline'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../auth/AuthProvider'
 import { enviarFotoPet } from './foto'
@@ -44,7 +45,7 @@ export function PetsProvider({ children }: { children: ReactNode }) {
 
     return Promise.resolve(consulta).then(({ data, error }) => {
       if (error) {
-        setErro(error.message)
+        setErro(mensagemDeErro(error.message))
       } else {
         setErro(null)
         setPets((data ?? []) as Pet[])
@@ -69,7 +70,7 @@ export function PetsProvider({ children }: { children: ReactNode }) {
         .single()
       setSalvando(false)
       if (error) {
-        setErro(error.message)
+        setErro(mensagemDeErro(error.message))
         return null
       }
       const pet = data as Pet
@@ -92,7 +93,7 @@ export function PetsProvider({ children }: { children: ReactNode }) {
       .single()
     setSalvando(false)
     if (error) {
-      setErro(error.message)
+      setErro(mensagemDeErro(error.message))
       return null
     }
     const pet = data as Pet
@@ -124,7 +125,7 @@ export function PetsProvider({ children }: { children: ReactNode }) {
         .single()
       setSalvando(false)
       if (error) {
-        setErro(error.message)
+        setErro(mensagemDeErro(error.message))
         return null
       }
       const pet = data as Pet
@@ -146,7 +147,7 @@ export function PetsProvider({ children }: { children: ReactNode }) {
         .single()
       setSalvando(false)
       if (error) {
-        setErro(error.message)
+        setErro(mensagemDeErro(error.message))
         return false
       }
       const pet = data as Pet
@@ -163,7 +164,7 @@ export function PetsProvider({ children }: { children: ReactNode }) {
       const { error } = await supabase.from('pets').delete().eq('id', id)
       setSalvando(false)
       if (error) {
-        setErro(error.message)
+        setErro(mensagemDeErro(error.message))
         return false
       }
       setPets((atual) => atual.filter((p) => p.id !== id))

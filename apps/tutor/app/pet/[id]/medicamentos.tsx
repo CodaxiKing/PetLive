@@ -59,7 +59,8 @@ async function carregarTudo(petId: string): Promise<Dados> {
   }))
 
   const emCurso = lista.filter((r) => r.ativo && emTratamentoHoje(r))
-  await garantirDosesHoje(emCurso)
+  // Gerar as doses de hoje é escrita: sem internet segue com o que já existe.
+  await garantirDosesHoje(emCurso).catch(() => undefined)
   const doses = await carregarDosesHoje(emCurso.map((r) => r.id))
   return { lista, doses }
 }

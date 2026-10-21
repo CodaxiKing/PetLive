@@ -7,6 +7,7 @@ import {
   useState,
   type ReactNode,
 } from 'react'
+import { mensagemDeErro } from '../lib/cacheOffline'
 import { supabase } from '../lib/supabase'
 import { sincronizarDoses } from '../notificacoes/doses'
 import { usePets } from '../pets/PetsProvider'
@@ -51,7 +52,7 @@ export function RemediosProvider({ children }: { children: ReactNode }) {
 
     return Promise.resolve(consulta).then(({ data, error }) => {
       if (error) {
-        setErro(error.message)
+        setErro(mensagemDeErro(error.message))
       } else {
         setErro(null)
         // O PostgREST devolve time[] como '08:00:00'; normaliza para 'HH:MM'.
@@ -93,7 +94,7 @@ export function RemediosProvider({ children }: { children: ReactNode }) {
       ).then(({ data, error }) => {
         setSalvando(false)
         if (error) {
-          setErro(error.message)
+          setErro(mensagemDeErro(error.message))
           return null
         }
         // O PostgREST devolve time[] como '08:00:00'; normaliza para 'HH:MM'.
@@ -120,7 +121,7 @@ export function RemediosProvider({ children }: { children: ReactNode }) {
     ).then(({ error }) => {
       setSalvando(false)
       if (error) {
-        setErro(error.message)
+        setErro(mensagemDeErro(error.message))
         return false
       }
       setRemedios((atual) => atual.filter((r) => r.id !== id))
@@ -135,7 +136,7 @@ export function RemediosProvider({ children }: { children: ReactNode }) {
     return Promise.resolve(supabase.from('medications').delete().eq('id', id)).then(({ error }) => {
       setSalvando(false)
       if (error) {
-        setErro(error.message)
+        setErro(mensagemDeErro(error.message))
         return false
       }
       setRemedios((atual) => atual.filter((r) => r.id !== id))

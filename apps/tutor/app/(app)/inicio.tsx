@@ -1,10 +1,12 @@
 import { useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, View, useWindowDimensions } from 'react-native';
+import { Alert, Pressable, ScrollView, StyleSheet, Text, View, useWindowDimensions } from 'react-native';
 import { useRouter, type Href } from 'expo-router';
 import { IconeLocal, IconePerfil, IconeSino, OndaHeroi } from '../../src/components/Layout';
 import { Gradiente } from '../../src/components/Gradiente';
 import { Icone, type NomeIcone } from '../../src/components/Icone';
 import { BarraProgresso, Surgir, Tocavel } from '../../src/components/Animacoes';
+import { AvisoOffline } from '../../src/components/AvisoOffline';
+import { AVISO_SEM_SALVAR } from '../../src/lib/cacheOffline';
 import { useLembretes } from '../../src/lembretes/LembretesProvider';
 import type { Lembrete, TipoLembrete } from '../../src/lembretes/types';
 import { useCidade } from '../../src/mapa/useCidade';
@@ -91,7 +93,11 @@ export default function Inicio() {
   function feito(lembrete: Lembrete) {
     if (concluindo) return;
     setConcluindo(lembrete.id);
-    concluirLembrete(lembrete).finally(() => setConcluindo(null));
+    concluirLembrete(lembrete)
+      .then((ok) => {
+        if (!ok) Alert.alert('Não deu para salvar', AVISO_SEM_SALVAR);
+      })
+      .finally(() => setConcluindo(null));
   }
 
   return (
@@ -168,6 +174,7 @@ export default function Inicio() {
       </View>
 
       <View style={estilos.corpo}>
+        <AvisoOffline />
         {petAtivo ? (
           <Surgir indice={0}>
             <Tocavel
