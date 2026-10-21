@@ -2,6 +2,7 @@ import { useRouter } from 'expo-router';
 import { StyleSheet, Text, View, useWindowDimensions } from 'react-native';
 import Svg, { Circle, Ellipse, Path } from 'react-native-svg';
 import { BotaoPrimario } from '../../src/components/BotaoPrimario';
+import { Flutuar } from '../../src/components/Animacoes';
 import { colors } from '../../src/theme/colors';
 import { typography } from '../../src/theme/typography';
 
@@ -80,7 +81,7 @@ export default function Welcome() {
           <Patinha size={110} />
         </View>
         <View style={[estilos.mascote, { width: alturaHeroi * 0.72, height: alturaHeroi * 0.72 }]}>
-          <Mascote size={alturaHeroi * 0.72} />
+          <Flutuar><Mascote size={alturaHeroi * 0.72} /></Flutuar>
         </View>
         <Onda largura={width} altura={46} />
       </View>
