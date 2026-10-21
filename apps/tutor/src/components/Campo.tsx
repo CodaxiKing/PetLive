@@ -4,7 +4,7 @@ import { colors } from '../theme/colors';
 import { fontFamily, typography } from '../theme/typography';
 import { spacing } from '../theme/tokens';
 
-type Variante = 'roxo' | 'azul' | 'verde' | 'neutro';
+type Variante = 'roxo' | 'azul' | 'verde' | 'amarelo' | 'neutro';
 
 type Props = TextInputProps & {
   rotulo: string;
@@ -16,6 +16,7 @@ const temaPorVariante: Record<Variante, { fundo: string; texto: string }> = {
   roxo: { fundo: colors.premiumSurface, texto: colors.premiumText },
   azul: { fundo: colors.primarySurface, texto: colors.primaryDeep },
   verde: { fundo: colors.successSurface, texto: colors.successText },
+  amarelo: { fundo: colors.warningSurface, texto: colors.warningText },
   neutro: { fundo: colors.disabled, texto: colors.textMuted },
 };
 
