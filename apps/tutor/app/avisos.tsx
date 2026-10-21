@@ -317,7 +317,7 @@ const estilos = StyleSheet.create({
   },
   marcadagua: { position: 'absolute', right: 16, top: 44 },
   blocoTitulo: { paddingHorizontal: 24, paddingBottom: spacing.lg },
-  subtitulo: { fontSize: 14, fontFamily: fontFamily.medium, color: '#2F6F93' },
+  subtitulo: { fontSize: 14, fontFamily: fontFamily.medium, color: colors.primaryDark },
   titulo: {
     ...typography.h1,
     fontSize: 38,

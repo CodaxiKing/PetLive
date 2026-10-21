@@ -34,6 +34,8 @@ export function Campo({ rotulo, variante = 'neutro', icone, ...props }: Props) {
       <View style={estilos.conteudo}>
         <Text style={[estilos.rotulo, { color: tema.texto }]}>{rotulo}</Text>
         <TextInput
+          // O leitor de tela anuncia o rótulo (sem isso, só o placeholder).
+          accessibilityLabel={rotulo}
           placeholderTextColor={colors.textMuted}
           style={[estilos.texto, { color: colors.text }]}
           {...props}

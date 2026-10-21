@@ -13,7 +13,7 @@ export const colors = {
 
   // Azul PetLive (marca)
   primary: '#9AD6F8', // azul principal: destaques, botões de marca
-  primaryDark: '#2F6F93', // azul escuro: texto sobre azul claro
+  primaryDark: '#28607F', // azul escuro: texto sobre azul claro (#2F6F93 do protótipo, escurecido para contraste AA sobre o herói)
   primaryDeep: '#1D5F86', // azul mais forte: links e ações
   primarySurface: '#E3F3FC', // fundo azul claro de card
   hero: '#A9DCF6', // fundo do herói (boas-vindas)
