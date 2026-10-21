@@ -102,3 +102,20 @@ Auth › URL Configuration › Redirect URLs; localmente já está em `config.to
 pelo campo isca, 3 por e-mail por dia e 500 por dia no total); a API não lê a
 tabela. A equipe consulta no painel do Supabase e apaga em até 12 meses
 (política de privacidade).
+
+## Indicações de lugares pet friendly (moderação)
+
+Tutores indicam restaurantes, hotéis, praias e parques que aceitam pets
+(tabela `sugestoes_lugar`, até 5 por dia). Tudo entra **em análise** e só vai
+para o mapa depois de aprovado — mesma regra dos eventos (BUSINESS.md 5.16),
+em até 1 dia útil. Até o painel admin (Fase 2), a equipe modera no SQL Editor
+do Supabase:
+
+```sql
+-- fila
+select id, nome, categoria, aceita, endereco, observacao, criado_em
+from sugestoes_lugar where status = 'em_analise' order by criado_em;
+
+select aprovar_sugestao_lugar('<id>');                 -- publica em places (fonte 'tutor')
+select recusar_sugestao_lugar('<id>', 'Motivo curto'); -- o tutor vê o motivo no app
+```

@@ -313,9 +313,11 @@ export default function Lugar() {
             </View>
           ) : (
             <Text style={estilos.fonte}>
-              {lugar.fonte === 'overture'
-                ? 'Informações do Overture Maps (dados abertos). Confirme com o local antes de ir.'
-                : 'Informações do OpenStreetMap. Confirme com o local antes de ir.'}
+              {lugar.fonte === 'tutor'
+                ? 'Indicado por tutores do PetLive e conferido pela equipe. Confirme com o local antes de ir.'
+                : lugar.fonte === 'overture'
+                  ? 'Informações do Overture Maps (dados abertos). Confirme com o local antes de ir.'
+                  : 'Informações do OpenStreetMap. Confirme com o local antes de ir.'}
             </Text>
           )}
 

@@ -46,7 +46,7 @@ const NOME_PLURAL: Record<Filtro, string> = {
  */
 function textoVazio(filtro: Filtro, google: boolean): string {
   if (!google && (filtro === 'restaurante' || filtro === 'hotel' || filtro === 'praia')) {
-    return `Ainda não temos ${NOME_PLURAL[filtro]} nesta região: os mapas abertos quase não marcam quem aceita pets.`;
+    return `Ainda não temos ${NOME_PLURAL[filtro]} nesta região: os mapas abertos quase não marcam quem aceita pets. Conhece algum? Indique abaixo.`;
   }
   return `Nenhum dos ${NOME_PLURAL[filtro]} por perto. Tente outro bairro.`;
 }
@@ -199,6 +199,22 @@ export default function TelaPetFriendly() {
             )}
             <Text style={estilos.nota}>Confirme com o local antes de ir.</Text>
           </View>
+
+          <Tocavel
+            accessibilityRole="button"
+            onPress={() => router.push('/mapa/indicar')}
+            escala={0.98}
+            style={estilos.indicar}
+          >
+            <View style={estilos.indicarIcone}>
+              <Icone nome="pata" size={20} />
+            </View>
+            <View style={estilos.flex}>
+              <Text style={estilos.indicarTitulo}>Conhece um lugar que aceita pets?</Text>
+              <Text style={estilos.indicarSub}>Indique e ajude outros tutores</Text>
+            </View>
+            <Icone nome="seta" size={18} espessura={2} />
+          </Tocavel>
         </ScrollView>
       </View>
 
@@ -297,6 +313,19 @@ const estilos = StyleSheet.create({
   detalhe: { fontFamily: fontFamily.regular, fontSize: 12, color: colors.textMuted, marginTop: 1 },
   selo: { alignSelf: 'flex-start', marginTop: 4, backgroundColor: '#D8F2E3', borderRadius: 999, paddingHorizontal: 10, paddingVertical: 4 },
   seloTexto: { fontFamily: fontFamily.bold, fontSize: 11, color: '#1F6B45' },
+  indicar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    backgroundColor: '#FFE3CC',
+    borderRadius: 22,
+    padding: 10,
+    paddingRight: 16,
+    marginTop: 8,
+  },
+  indicarIcone: { width: 44, height: 44, borderRadius: 22, backgroundColor: colors.white, alignItems: 'center', justifyContent: 'center' },
+  indicarTitulo: { fontFamily: fontFamily.bold, fontSize: 14, color: colors.black },
+  indicarSub: { fontFamily: fontFamily.regular, fontSize: 12, color: colors.textMuted },
   rodapeLista: { alignItems: 'center', gap: 2, marginTop: 4 },
   nota: { fontFamily: fontFamily.regular, fontSize: 11, lineHeight: 16, color: '#6A7484', textAlign: 'center', paddingHorizontal: 6, marginTop: 4 },
   rodape: { paddingHorizontal: 24, paddingTop: 12, paddingBottom: 28 },

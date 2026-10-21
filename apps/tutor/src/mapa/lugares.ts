@@ -48,10 +48,12 @@ export type Lugar = {
   fotos?: FotoLugar[];
   /** Link do lugar no Google Maps (o Google exige oferecer). */
   google_maps?: string | null;
-  /** De onde veio: Google, OpenStreetMap ou Overture Maps (dados abertos). */
-  fonte?: 'google' | 'osm' | 'overture';
+  /** De onde veio: Google, OpenStreetMap, Overture Maps ou indicação de tutor. */
+  fonte?: 'google' | 'osm' | 'overture' | 'tutor';
   /** Pet friendly: o Google diz que aceita cães; parque com área para cães. */
   aceita_caes?: boolean | null;
+  /** Indicação de tutor: o lugar também aceita gatos. */
+  aceita_gatos?: boolean | null;
   area_caes?: boolean;
 };
 
@@ -218,7 +220,9 @@ export async function buscarPetFriendly(posicao: { lat: number; lng: number }): 
 /** Selo verde do pet friendly: o que a fonte informa sobre aceitar pets. */
 export function seloPetFriendly(lugar: Lugar): string | null {
   if (lugar.area_caes) return 'Área para cães';
+  if (lugar.aceita_caes && lugar.aceita_gatos) return 'Aceita cães e gatos';
   if (lugar.aceita_caes) return 'Aceita cães';
+  if (lugar.aceita_gatos) return 'Aceita gatos';
   // Restaurantes e hotéis vêm da busca "pet friendly" mesmo sem o campo.
   if (lugar.categoria === 'restaurante' || lugar.categoria === 'hotel') return 'Pet friendly';
   return null;
@@ -270,7 +274,7 @@ export async function lugarPorId(id: string, categoria?: CategoriaLugar): Promis
 
   const { data, error } = await supabase
     .from('places')
-    .select('id, nome, categoria, endereco, telefone, horario, website, lat, lng, aberto_24h, aceita_caes, area_caes, fonte')
+    .select('id, nome, categoria, endereco, telefone, horario, website, lat, lng, aberto_24h, aceita_caes, aceita_gatos, area_caes, fonte')
     .eq('id', id)
     .maybeSingle();
   if (error) throw new Error(error.message);
