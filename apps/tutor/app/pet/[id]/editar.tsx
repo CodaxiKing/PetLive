@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { Alert, KeyboardAvoidingView, Platform, StyleSheet, View } from 'react-native'
 import { router, useLocalSearchParams } from 'expo-router'
 import { BotaoPrimario } from '../../../src/components/BotaoPrimario'
-import { CabecalhoTela } from '../../../src/components/CabecalhoTela'
 import { FormularioPet } from '../../../src/pets/FormularioPet'
 import type { AtivoFoto } from '../../../src/pets/CampoFoto'
 import { usePets } from '../../../src/pets/PetsProvider'
@@ -21,7 +20,6 @@ export default function EditarPet() {
       style={estilos.tela}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
-      <CabecalhoTela titulo="Editar pet" />
 
       <View style={estilos.flex}>
         {/* `key` remonta o form quando o pet chega do banco, já preenchido. */}
@@ -69,6 +67,7 @@ function Editor({ pet }: { pet: Pet }) {
       <FormularioPet
         form={form}
         onChange={alterar}
+        titulo={`Editar ${pet.nome}`}
         foto={fotoExibida}
         onFoto={(ativo) => setFoto(ativo)}
       />
@@ -85,16 +84,16 @@ function Editor({ pet }: { pet: Pet }) {
 }
 
 const estilos = StyleSheet.create({
-  tela: { flex: 1, backgroundColor: colors.background },
+  tela: { flex: 1, backgroundColor: colors.surface },
   flex: { flex: 1 },
   rodape: {
     position: 'absolute',
     left: 0,
     right: 0,
     bottom: 0,
-    paddingHorizontal: 20,
+    paddingHorizontal: 24,
     paddingTop: 12,
     paddingBottom: 32,
-    backgroundColor: colors.background,
+    backgroundColor: colors.surface,
   },
 })

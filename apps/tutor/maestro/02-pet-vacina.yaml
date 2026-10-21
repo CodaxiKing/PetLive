@@ -16,11 +16,12 @@ name: 02 pet e vacina
     text: "Cadastrar pet"
     optional: true
 - extendedWaitUntil:
-    visible: "Novo pet"
+    visible: "Conheça seu pet"
     timeout: 15000
-- tapOn: "Ex.: Nina"
+- tapOn: "Ex.: Rex"
 - inputText: "${PET_E2E}"
 - hideKeyboard
+- tapOn: "Continuar"
 - tapOn: "Salvar pet"
 - extendedWaitUntil:
     visible: "${PET_E2E}"
@@ -28,24 +29,19 @@ name: 02 pet e vacina
 - tapOn:
     id: "Abrir ${PET_E2E}"
 - extendedWaitUntil:
-    visible: "Calendário"
+    visible: "Vacinas"
     timeout: 15000
-- tapOn: "Saúde"
+- tapOn: "Registrar vacina"
 - extendedWaitUntil:
-    visible: "＋ Vacina"
+    visible: "Qual vacina?"
     timeout: 15000
-- tapOn: "＋ Vacina"
-- extendedWaitUntil:
-    visible: "Registrar vacina"
-    timeout: 15000
-- tapOn: "＋ Outra"
-- tapOn: "Ex.: V10"
+- tapOn: "+ Outra"
+- tapOn: "Ex.: Leishmaniose"
 - inputText: "Antirrábica E2E"
 - hideKeyboard
 - tapOn:
     text: "/^Salvar vacina$/"
 - extendedWaitUntil:
-    visible: "Histórico de vacinas"
+    visible: "Antirrábica E2E"
     timeout: 30000
-- assertVisible: "Antirrábica E2E"
 - takeScreenshot: "02-vacina-ok.png"
