@@ -1,0 +1,17 @@
+# Fluxo 07: Mapa -> filtro Salvos mostra os lugares salvos do tutor.
+# Pré-requisito: logado com demo@petlive.dev (supabase/seeds/tutor-demo.sql
+# salva duas clínicas).
+appId: app.petlive.tutor
+name: 07 favoritos
+---
+- launchApp
+- tapOn: "Mapa"
+- extendedWaitUntil:
+    notVisible: "Carregando lugares"
+    timeout: 60000
+- tapOn: "Salvos"
+- extendedWaitUntil:
+    notVisible: "Carregando lugares"
+    timeout: 30000
+- assertNotVisible: "Nenhum lugar salvo"
+- takeScreenshot: "07-favoritos-ok.png"

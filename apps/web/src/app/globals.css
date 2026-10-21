@@ -1,0 +1,35 @@
+@import "tailwindcss";
+
+/* Tokens visuais do PetLive (mesmas cores do app e do protótipo do site). */
+@theme {
+  --font-sans: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
+
+  --color-tinta: #111111;
+  --color-fundo: #ffffff;
+  --color-suave: #f3f5f8;
+  --color-cinza: #5e6878;
+  --color-borda: #e1e6ee;
+
+  --color-azul: #9ad6f8;
+  --color-azul-hero: #a9dcf6;
+  --color-azul-fundo: #e3f3fc;
+  --color-azul-escuro: #2f6f93;
+  --color-azul-texto: #1e4a63;
+
+  --color-roxo-fundo: #ebddfb;
+  --color-roxo-texto: #5b3c8f;
+  --color-verde-fundo: #ddf3e6;
+  --color-verde-texto: #25683f;
+  --color-amarelo-fundo: #fff1c9;
+  --color-amarelo-texto: #7a5f0a;
+  --color-rosa-fundo: #fce1ef;
+  --color-rosa-texto: #8a2e5c;
+  --color-perigo-fundo: #fdecec;
+  --color-perigo: #c62828;
+}
+
+body {
+  background: var(--color-fundo);
+  color: var(--color-tinta);
+  font-family: var(--font-sans);
+}

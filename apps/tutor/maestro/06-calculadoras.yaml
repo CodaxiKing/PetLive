@@ -1,0 +1,30 @@
+# Fluxo 06: Início -> Calculadoras -> outro pet, 12 kg e 3 anos -> Calcular
+# -> porção diária -> aba Peso mostra a faixa do porte médio.
+appId: app.petlive.tutor
+name: 06 calculadoras
+---
+- launchApp
+- extendedWaitUntil:
+    visible: "Calculadoras"
+    timeout: 60000
+- scrollUntilVisible:
+    element: "Calculadoras"
+    direction: RIGHT
+- tapOn: "Calculadoras"
+- tapOn: "Outro pet"
+- tapOn: "Cão"
+- tapOn: "Peso em quilos"
+- eraseText
+- inputText: "12"
+- tapOn: "Idade em anos"
+- eraseText
+- inputText: "3"
+- tapOn: "Normal"
+- tapOn: "Sim"
+- hideKeyboard
+- tapOn: "Calcular"
+- assertVisible: "Porção diária estimada"
+- assertVisible: "195 g"
+- tapOn: "Peso"
+- assertVisible: "10 a 25 kg"
+- takeScreenshot: "06-calculadoras-ok.png"

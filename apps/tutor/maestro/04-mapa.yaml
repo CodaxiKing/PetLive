@@ -1,0 +1,30 @@
+# Fluxo 04: aba Mapa -> lugares por perto carregam -> filtros Clínicas/24h.
+# Pré-requiso do runner: localização do emulador no Rio (adb emu geo fix)
+# e permissões concedidas via adb pm grant.
+appId: app.petlive.tutor
+name: 04 mapa
+---
+- launchApp
+- tapOn: "Mapa"
+- extendedWaitUntil:
+    visible: "Buscar lugares pet"
+    timeout: 60000
+- extendedWaitUntil:
+    visible: "Carregando lugares"
+    timeout: 10000
+- extendedWaitUntil:
+    notVisible: "Carregando lugares"
+    timeout: 60000
+- assertNotVisible: "Sua localização está desligada"
+- assertNotVisible: "Nenhum lugar por perto"
+- tapOn: "Clínicas"
+- extendedWaitUntil:
+    notVisible: "Carregando lugares"
+    timeout: 30000
+- assertNotVisible: "Nenhum lugar por perto"
+- tapOn: "24h"
+- extendedWaitUntil:
+    notVisible: "Carregando lugares"
+    timeout: 30000
+- assertNotVisible: "Nenhum lugar por perto"
+- takeScreenshot: "04-mapa-ok.png"

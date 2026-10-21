@@ -1,0 +1,31 @@
+# Fluxo 01: boas-vindas -> criar conta -> app autenticado.
+# Roda com estado limpo; gera e-mail único por execução (scripts/gerar-email.js).
+appId: app.petlive.tutor
+name: 01 cadastro
+clearState: true
+---
+- runScript: scripts/gerar-email.js
+- extendedWaitUntil:
+    visible: "Começar"
+    timeout: 60000
+- tapOn: "Começar"
+- extendedWaitUntil:
+    visible: "Criar conta"
+    timeout: 15000
+- tapOn: "Seu nome"
+- inputText: "Tutor E2E"
+- hideKeyboard
+- tapOn: "voce@email.com"
+- inputText: "${EMAIL_E2E}"
+- tapOn: "Mínimo 8 caracteres"
+- inputText: "senha12345"
+- hideKeyboard
+- tapOn: "Aceito os termos"
+- tapOn:
+    text: "/^Continuar$/"
+- extendedWaitUntil:
+    visible: "Início"
+    timeout: 60000
+- assertVisible: "Pets"
+- assertVisible: "Mapa"
+- takeScreenshot: "01-cadastro-ok.png"
