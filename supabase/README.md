@@ -87,3 +87,18 @@ node supabase/tests/google-falso.mjs   # porta 8787
 npx supabase functions serve --env-file <esse .env>
 node supabase/tests/testar-lugares.mjs <ANON_KEY>
 ```
+
+## Auth: redirecionamentos do app
+
+O app usa `petlive://auth/callback` (login com Google) e `petlive://auth/nova-senha`
+("Esqueci minha senha"). Em produção, cadastre `petlive://**` em
+Auth › URL Configuration › Redirect URLs; localmente já está em `config.toml`
+(depois de mudar, `npx supabase stop && npx supabase start` para o Auth recarregar).
+
+## Mensagens do site
+
+`site_contacts` guarda o formulário de contato e o interesse de lojistas do site
+(`apps/web`). Só grava pela função `registrar_contato_site` (valida, descarta robôs
+pelo campo isca, 3 por e-mail por dia e 500 por dia no total); a API não lê a
+tabela. A equipe consulta no painel do Supabase e apaga em até 12 meses
+(política de privacidade).
