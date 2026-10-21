@@ -374,7 +374,7 @@ O PetLive organiza informações e não substitui o atendimento veterinário. Es
 - **Categorias:** clínicas veterinárias e petshops (têm tipo próprio no Google), e creches, hotelzinhos, banho e tosa e clínicas 24 h (encontrados por busca de texto, porque o Google não tem um tipo próprio para eles). Por isso essas categorias podem ter resultados menos precisos, e a ficha avisa "informação do Google, pode estar desatualizada".
 - **Lista e mapa:** o mapa é o do Google (conteúdo do Google deve aparecer em mapa do Google). A busca por proximidade pede só os campos básicos: nome, posição, tipo, nota e se está aberto.
 - **Ficha do lugar:** só ao tocar no lugar o app pede o detalhe: telefone, endereço, horário, site, nota, avaliações e **fotos**. Mostrar até `[5]` fotos, carregadas sob demanda, com a atribuição exigida pelo Google.
-- **Ligar** abre o discador do celular. **WhatsApp** só aparece para número de celular. **Traçar rota** abre o app de mapas do aparelho.
+- **Ligar** abre o discador do celular. **WhatsApp** só aparece para número de celular. **Traçar rota** abre a folha **Traçar rota com** (telas `RotaApps` e `RotaSemApps`), que lista **só os apps de mapa instalados** no aparelho: **Google Maps** e **Waze** no Android e no iPhone, e **Apple Maps** também no iPhone. O app confere quais estão instalados antes de mostrar a lista (no Android, pela declaração de pacotes consultáveis; no iPhone, pelos esquemas `comgooglemaps://`, `waze://` e `maps://`). O tutor escolhe um app e o destino já vai preenchido (coordenadas e `place_id` do Google). Se só houver um app instalado, a folha ainda aparece, para o tutor confirmar. **Se não houver nenhum**, a folha mostra só **Abrir no navegador**, que abre a rota do Google Maps no site. A rota nunca é desenhada dentro do PetLive, então não há custo da Directions API.
 - **O que o PetLive guarda:** só o `place_id` do Google (favoritos e, na Fase 3, o vínculo de uma loja com o lugar). Nome, telefone, fotos e horários são buscados na hora e não são copiados para o banco. Cache curto no aparelho só dentro do que os termos do Google permitem `[conferir na implementação]`.
 - **Chamadas ao Google passam pelo backend** (funções `places-nearby`, `place-details` e `place-photo`), nunca direto do app. Assim a chave fica protegida, há limite de chamadas por usuário por dia e é possível controlar o custo.
 - **Custo:** o Google cobra por chamada e por tipo de dado (telefone e fotos custam mais que o básico). Regras para segurar o custo: pedir só os campos necessários, detalhe só ao tocar, limite diário por usuário, alerta de orçamento no Google Cloud e chave com restrições.
@@ -443,7 +443,9 @@ O PetLive organiza informações e não substitui o atendimento veterinário. Es
 ### 5.22 Ler cartão de vacina por foto (Fase 2, Premium)
 
 - O tutor tira uma foto (ou escolhe da galeria) do cartão de vacina. A imagem vai para o backend, que a envia a um **serviço de leitura de imagem** `[a definir]` e recebe uma lista de vacinas com data aplicada e próxima dose.
-- **Nunca salva sozinho.** O app mostra a lista para **revisão**. Linhas com baixa confiança vêm marcadas "Confira a data". O tutor edita ou remove e só então toca em **Salvar no histórico**.
+- **Nunca salva sozinho.** O app mostra a lista para **revisão**. Linhas com baixa confiança vêm marcadas "Confira a data". O tutor edita ou remove e só então toca em **Salvar [n] novas**.
+- **Sem repetir o que já existe.** Antes de mostrar a revisão, o app compara cada vacina lida com o histórico do pet. É considerada **já cadastrada** a vacina de **mesmo tipo e mesma data de aplicação** (o nome é comparado depois de normalizado, por exemplo "V10" e "V10 (múltipla)" são o mesmo tipo). Essas linhas vão para o grupo **Já cadastradas**, ficam sem caixa de seleção e sem edição, e **nunca são salvas de novo**. As demais vão para **Novas para adicionar**, já marcadas. O topo diz quantas são novas e quantas o pet já tem, e o botão mostra o total a salvar.
+- **Mesma vacina com outra data é dose nova**, por exemplo o reforço do ano seguinte, e entra como nova. Se todas as vacinas lidas já estiverem cadastradas, a tela avisa "O Rex já tem todas estas vacinas" e não há nada a salvar. Se o tutor desmarcar uma nova, ela também não é salva.
 - O app avisa que a leitura pode errar. O histórico salvo é igual ao registrado à mão.
 - A imagem é guardada no armazenamento privado do pet **só se o tutor permitir** (como anexo). A cópia no serviço de leitura é apagada logo após o processamento e **não é usada para treinar modelos**.
 - Limite de `[x]` leituras por mês no Premium. Sem Premium, a tela mostra o convite para assinar. Falha na leitura leva ao registro manual.
@@ -609,6 +611,10 @@ O PetLive organiza informações e não substitui o atendimento veterinário. Es
 ### 5.39 Modo memorial (Fase 2)
 
 - No menu do pet, **Registrar a partida** pede a data e uma mensagem opcional, explica o que muda e confirma com carinho. **Nada é apagado.** Dá para **reativar** se foi engano.
+- **Proteção contra toque sem querer.** Depois de preencher a data e a mensagem, o botão **Continuar** abre uma **folha de confirmação** (`ConfirmarPartida`) que repete o que muda e diz que dá para desfazer. Só o toque em **Registrar com carinho** grava a partida.
+- **Desfazer.** Logo após registrar, a tela **Em memória** mostra por **24 horas** uma faixa "Registrado agora. Foi sem querer?" com o botão **Desfazer**. Passado esse prazo, fica só o link discreto **Registrei por engano: reativar** no rodapé, que continua valendo sem limite de tempo.
+- **Reativar** (`ReativarPet`) abre uma confirmação que diz o que volta (o pet na lista ativa, os lembretes e avisos a partir de agora, o QR da coleira, fotos, linha do tempo e selos que já estavam) e o que **não** volta (alertas de pet perdido encerrados e lembretes que passaram durante a pausa). O pet volta ao estado `ativo` e `memorial_settings.reactivated_at` é preenchido.
+- Se o plano for grátis e o pet reativado **não for o primeiro**, ele volta apenas para consulta, como qualquer pet além do limite (seção 10). A tela avisa isso antes de reativar.
 - Efeitos: **todos os lembretes e avisos daquele pet são pausados**; o pet sai da lista ativa e das contagens, mas **os selos e a linha do tempo ficam**; o QR do pet é desativado e qualquer alerta de pet perdido é encerrado; o cartão do pet passa a dizer **Em memória**.
 - A tela **Em memória** mostra a foto, as datas, a mensagem, um resumo da linha do tempo, **baixar o álbum de lembranças** (PDF) e **recursos de apoio ao luto** (textos e contatos curados `[a definir]`).
 - **Tom:** sem emojis alegres, sem metas e sem pedidos de avaliação. O app **não envia campanhas comerciais nem sugere adoção** por `[60]` dias; depois só se o tutor pedir.
@@ -618,6 +624,8 @@ O PetLive organiza informações e não substitui o atendimento veterinário. Es
 ### 5.40 Pet sênior e escala de qualidade de vida (Fase 2)
 
 - Quando o pet passa da **idade sênior** (tabela do conteúdo mestre, por espécie e porte, por exemplo cães pequenos a partir de `[10]` anos e grandes a partir de `[7]`), o app avisa "o Rex agora é sênior" e **adapta a rotina**: consulta a cada `[6]` meses, pesagem mensal, lembrete de exames de rotina (com o texto "pergunte ao veterinário quais") e lista de sinais para observar (apetite, sede, mobilidade e sono). Lembretes de remédios contínuos continuam normalmente.
+- **Como o tutor chega à tela Pet sênior** (`PetIdoso`), por três caminhos: (1) **tocando no aviso** "O Rex agora é sênior" (tela `SeniorNotificacao`); (2) pela **faixa "O Rex é sênior · rotina adaptada"** que aparece na tela do pet, acima das abas, só enquanto o pet é sênior (variante sênior da tela do pet, `PetMia`); (3) pela etiqueta **Sênior** ao lado do nome do pet no seletor da Início e na lista **Meus pets**, que leva à tela do pet. A **escala de qualidade de vida** fica só dentro da tela Pet sênior, sem atalho fora dela, para o tutor chegar já lendo o aviso de que deve conversar com o veterinário.
+- A faixa e a etiqueta somem se o pet entrar em **Em memória**. O tutor não pode desligar a condição sênior, mas pode **desligar cada lembrete** da rotina adaptada.
 - A **escala de qualidade de vida** tem 7 itens (dor, apetite, higiene, hidratação, mobilidade, dias bons e ruins, felicidade), cada um de 0 a 10, com a **pontuação total**. O tutor responde quando quiser e vê o histórico ao longo do tempo. A escala segue um instrumento conhecido `[confirmar licença de uso e adaptação]`.
 - O resultado vem sempre com o texto: **"converse com o veterinário sobre o resultado; a escala não faz diagnóstico e não decide por você"**. O app **nunca recomenda** uma decisão sobre a vida do pet.
 - Há o **resumo em PDF** para levar ao veterinário (Premium).
@@ -631,6 +639,21 @@ O PetLive organiza informações e não substitui o atendimento veterinário. Es
 - Defeito de impressão: reimpressão sem custo. Cancelamento só antes de entrar em produção.
 - O tutor declara que as **fotos são dele**. O arquivo vai à gráfica por um link com validade e é apagado de lá em `[30]` dias. Nota fiscal e responsável fiscal `[a definir]`.
 - Depende dos pagamentos da Fase 3, por isso fica nesta fase.
+
+### 5.42 Hóspedes do hotelzinho e cuidador temporário automático (Fase 3)
+
+> **Telas:** painel do lojista no computador, aba **Hóspedes** (`WebHospedes`) e ficha do hóspede com a carteirinha e o acesso (`WebHospede`). A aba só aparece para lojas que têm o serviço **Hotelzinho** ativo (a creche pode usar a mesma tela no futuro).
+
+- **Quem aparece.** Só os cães e gatos de **reservas de hotelzinho confirmadas e feitas pelo PetLive** (seção 6). Quem reservou fora do app não aparece. A lista tem as abas **Hospedados agora**, **Chegam hoje**, **Saem hoje** e **Histórico**, o filtro **Cães / Gatos**, a busca por pet ou tutor, e um resumo com os totais e as **doses do dia**. Cada cartão mostra o pet, o tutor, as datas, o quarto, o dia da estadia e avisos curtos (acesso, remédio, alergia, sênior).
+- **Compartilhamento com consentimento do tutor.** Ao confirmar a reserva, o app pergunta ao tutor: **"Compartilhar a carteirinha do pet com o hotel durante a estadia?"** (marcado por padrão, mas o tutor pode **desmarcar** ou **ajustar** o que libera, na mesma tela do cuidador temporário, seção 5.24). Sem o consentimento, o hotel vê só os dados da reserva.
+- **Funciona como um cuidador temporário.** O app cria um `caregiver_access` para a loja, com o tipo `hotel`, válido do **check-in ao check-out** (com `[2]` h de folga para atrasos). O acesso **começa** no horário do check-in, **termina sozinho** depois do check-out e pode ser **encerrado antes** pelo hotel ou pelo tutor. Se a reserva for **cancelada** ou **alterada**, o prazo acompanha.
+- **O que o hotel vê.** A **carteirinha** (nome, espécie, raça, idade, sexo, peso, tutor), **vacinas e vermífugo** com a situação, **alergias e condições**, **remédios e horários**, **observações do tutor**, contatos do tutor, do veterinário e da clínica 24 h mais perto. O hotel pode **marcar a dose como dada** (o tutor é avisado e o registro fica no histórico do pet, com o nome de quem marcou).
+- **O que o hotel não vê.** Pagamentos e despesas do tutor, **outros pets** dele, localização e endereço de casa, e qualquer dado que o tutor tenha desligado.
+- **Vacinas em dia.** A exigência de vacinas já vale para reservar (seção 6). Se uma vacina vencer durante a estadia, a ficha mostra o aviso para a equipe.
+- **Quem abriu.** Cada abertura da ficha e cada dose marcada ficam em um **registro de acessos**, com o **nome do membro da equipe**, a data e a hora. O tutor também vê esse registro.
+- **Depois da estadia.** O hotel **perde o acesso aos dados de saúde** e fica só com o **registro da hospedagem** (datas, quarto, valor e quem atendeu), como em qualquer pedido. As doses marcadas continuam no histórico do **tutor**.
+- **Equipe.** Só membros da equipe da loja com a permissão **Ver hóspedes** abrem a ficha. O dono da loja define isso em Equipe.
+- **Privacidade.** O hotel não pode exportar nem baixar a carteirinha. Capturas de tela não são bloqueadas, por isso o aviso na ficha: "Dados do tutor, para uso durante a estadia".
 
 ---
 
@@ -1091,7 +1114,9 @@ Navegação por abas: **Início**, **Pets**, **Mapa**, **Lembretes** e **Perfil*
 | Achei um pet: foto | `AcheiFoto` | `/achei-um-pet` | `find_searches` | 5 |
 | Possíveis correspondências | `AcheiResultado` | `/achei-um-pet/resultado` | `pet_photo_embeddings`, `lost_alerts` | 5 |
 | Registrar a partida | `RegistrarPartida` | `/pets/[id]/partida` | `pets.status`, `memorial_settings` | 2 |
+| Confirmar a partida (folha) | `ConfirmarPartida` | `/pets/[id]/partida/confirmar` | `pets.status`, `memorial_settings` | 2 |
 | Em memória | `Memorial` | `/pets/[id]/memorial` | `memorial_settings`, `timeline_entries` | 2 |
+| Reativar o pet | `ReativarPet` | `/pets/[id]/reativar` | `pets.status`, `memorial_settings.reactivated_at` | 2 |
 | Pet sênior | `PetIdoso` | `/pets/[id]/senior` | `calc_tables`, `reminders` | 2 |
 | Qualidade de vida | `QualidadeVida` | `/pets/[id]/qualidade-de-vida` | `quality_of_life_logs` | 2 |
 | Álbum do ano | `AlbumPet` | `/pets/[id]/album` | `timeline_entries`, `album_orders` | 3 |
@@ -1167,6 +1192,8 @@ Menu lateral: **Solicitações**, **Entregas**, **Mensagens**, **Catálogo**, **
 | Cadastrar produto | `WebNovoProduto` | `/painel/catalogo/novo` | `products` | 3 |
 | Estoque | `WebEstoque` | `/painel/estoque` | `products.stock` | 3 |
 | Agenda | `WebAgenda` | `/painel/agenda` | `requests` | 3 |
+| Hóspedes do hotelzinho | `WebHospedes` | `/painel/hospedes` | `requests`, `caregiver_access`, `pets` (só durante a estadia) | 3 |
+| Hóspede: carteirinha e acesso | `WebHospede` | `/painel/hospedes/[id]` | `caregiver_access`, `caregiver_access_log`, `medication_logs`, `vaccines`, `pets` | 3 |
 | Serviços da loja | `WebServicos` | `/painel/servicos` | `services` | 3 |
 | Promoções e cupons | `WebPromocoes` | `/painel/promocoes` | `coupons` | 3 |
 | Avaliações da loja | `WebAvaliacoes` | `/painel/avaliacoes` | `reviews` | 3 |
@@ -2041,7 +2068,7 @@ Regras do banco: um usuário só confirma presença uma vez; não passa do limit
 | `adoption_pets` | `ngo_id`, `name`, `species`, `age_text`, `size`, `sex`, `neutered`, `vaccinated`, `dewormed`, `description`, `photos[]`, `status` (`disponivel`/`em_conversa`/`adotado`/`oculto`), `geom`, `updated_at` |
 | `adoption_favorites` | `user_id`, `adoption_pet_id` |
 | `adoption_contacts` | `user_id`, `adoption_pet_id`, `ngo_id`, `message`, `status` |
-| `caregiver_access` | `pet_id`, `owner_id`, `caregiver_user_id` (opcional), `code`, `can_vaccines`, `can_medications`, `can_contacts`, `starts_at`, `ends_at`, `revoked_at` |
+| `caregiver_access` | `pet_id`, `owner_id`, `caregiver_user_id` (opcional), `store_id` e `request_id` (quando o acesso é do hotel, tipo `hotel`), `code`, `can_vaccines`, `can_medications`, `can_contacts`, `starts_at`, `ends_at`, `revoked_at` |
 | `caregiver_access_log` | `access_id`, `action` (`viu`/`marcou_dose`), `at` |
 | `timeline_entries` | `pet_id`, `type`, `title`, `note`, `happened_on`, `photo_url`, `auto` |
 | `travel_checklists` | `pet_id`, `mode` (`carro`/`aviao`), `destination`, `travel_date`, `items` (jsonb) |
@@ -2242,6 +2269,7 @@ Todas as funções de pagamento (`create-pix-charge`, `pix-webhook`, `refund` e 
 | `create-emergency-card` e `emergency-card-view` | Cria o link temporário e entrega só os campos escolhidos, sem login e com limite de acessos (Fase 2) |
 | `send-arrival`, `update-eta` e `respond-arrival` | SOS com pré-chegada: envia a ficha à clínica, atualiza o tempo e recebe a resposta (Fase 3) |
 | `memorial-start` | Registra a partida, pausa lembretes, desativa o QR e encerra alertas (Fase 2) |
+| `memorial-reactivate` | Volta o pet para `ativo`, religa lembretes e QR e preenche `reactivated_at`; aplica o limite do plano grátis (Fase 2) |
 | `album-build`, `album-order` e `album-webhook` | Monta o álbum, cria o pedido e recebe o status da gráfica (Fase 3) |
 | `match-found-pet` | Compara a foto com os alertas ativos por perto e devolve candidatos (Fase 5) |
 | `report-sighting` | Recebe o "Vi este pet" e avisa o tutor, sem expor o telefone de quem viu (Fase 5) |

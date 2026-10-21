@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Confirmar a partida</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<style>
+body{margin:0;font-family:'Plus Jakarta Sans',system-ui,sans-serif;color:#111}
+a{text-decoration:none;color:inherit}
+@media (prefers-reduced-motion:no-preference){
+@keyframes rise{from{opacity:0;translate:0 18px}to{opacity:1;translate:0 0}}
+@keyframes up{from{translate:0 40px;opacity:0}to{translate:0 0;opacity:1}}
+.rise{animation:rise .6s cubic-bezier(.2,.7,.2,1) both}
+.sheet{animation:up .45s cubic-bezier(.2,.7,.2,1) both}
+a{transition:transform .18s ease}
+.tap:hover{transform:translateY(-2px)}
+.tap:active{transform:scale(.98)}
+}
+</style>
+</helmet>
+<div style="position:relative;width:390px;height:844px;box-sizing:border-box;background:#EADCFB;overflow:hidden">
+  <div style="position:absolute;left:24px;top:56px;width:46px;height:46px;border-radius:50%;background:#fff"></div>
+  <div style="position:absolute;left:24px;top:132px;font-weight:500;font-size:32px;letter-spacing:-0.03em">Registrar a partida</div>
+  <div style="position:absolute;inset:0;background:rgba(17,17,17,0.45)"></div>
+  <div class="sheet" style="position:absolute;left:0;right:0;bottom:0;background:#fff;border-radius:32px 32px 0 0;padding:12px 24px 32px;display:flex;flex-direction:column;gap:12px;box-shadow:0 -12px 40px rgba(17,17,17,0.18)">
+    <div style="align-self:center;width:44px;height:5px;border-radius:3px;background:#D5DBE3"></div>
+    <div style="font-weight:700;font-size:22px;letter-spacing:-0.02em;padding-top:6px">Registrar a partida do Rex?</div>
+    <div style="font-size:14px;line-height:1.6;color:#3C4656">Os lembretes e avisos do Rex serão pausados e o QR da coleira será desativado. Nada é apagado.</div>
+    <div style="background:#F3F5F8;border-radius:18px;padding:10px 14px;font-size:13px;line-height:1.45;color:#3C4656">Foi sem querer? Você pode <b style="color:#111">desfazer a qualquer momento</b> na tela Em memória.</div>
+    <a href="Memorial.dc.html" class="tap" style="height:64px;border-radius:32px;background:#111;color:#fff;display:flex;align-items:center;padding:0 8px;font-weight:700;font-size:16px"><span style="width:48px;height:48px;border-radius:50%;background:#9AD6F8;display:flex;align-items:center;justify-content:center;flex:none"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4l2.4 5 5.4.7-4 3.8 1 5.4-4.8-2.6-4.8 2.6 1-5.4-4-3.8 5.4-.7z"/></svg></span><span style="flex:1;text-align:center;margin-right:48px;white-space:nowrap">Registrar com carinho</span></a>
+    <a href="RegistrarPartida.dc.html" style="height:52px;border-radius:26px;border:1.5px solid #E1E6EE;box-sizing:border-box;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px">Voltar</a>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>
