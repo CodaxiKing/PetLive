@@ -14,6 +14,7 @@ import { router } from 'expo-router'
 import { Icone } from '../../src/components/Icone'
 import { LinhaIcone } from '../../src/components/LinhaIcone'
 import { Mascote } from '../../src/components/Mascote'
+import { Flutuar } from '../../src/components/Animacoes'
 import { usePets } from '../../src/pets/PetsProvider'
 import { useLembretes } from '../../src/lembretes/LembretesProvider'
 import type { Lembrete } from '../../src/lembretes/types'
@@ -159,7 +160,7 @@ export default function Lembretes() {
         </View>
       ) : filtrados.length === 0 ? (
         <View style={estilos.centro}>
-          <Mascote especie="gato" size={130} />
+          <Flutuar><Mascote especie="gato" size={130} /></Flutuar>
           <Text style={estilos.vazioTitulo}>Nenhum lembrete {aba.toLowerCase()}</Text>
           <Text style={estilos.vazioTexto}>
             Crie lembretes de vacina, consulta ou banho para não esquecer.

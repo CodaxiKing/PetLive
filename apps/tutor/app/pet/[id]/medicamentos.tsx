@@ -28,6 +28,7 @@ import {
 import type { Remedio } from '../../../src/remedios/types'
 import { dataParaExibicao, normalizarHorarios } from '../../../src/remedios/types'
 import { sincronizarDoses } from '../../../src/notificacoes/doses'
+import { BarraProgresso } from '../../../src/components/Animacoes'
 import { colors } from '../../../src/theme/colors'
 import { typography } from '../../../src/theme/typography'
 import { radius, spacing } from '../../../src/theme/tokens'
@@ -230,9 +231,7 @@ export default function TelaMedicamentos() {
                   </View>
 
                   {fracao != null ? (
-                    <View style={estilos.barra}>
-                      <View style={[estilos.barraPreenchida, { width: `${Math.round(fracao * 100)}%` }]} />
-                    </View>
+                    <BarraProgresso fracao={fracao} cor={colors.black} fundo={colors.white} />
                   ) : null}
 
                   {doDia.length > 0 ? (

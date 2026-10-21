@@ -11,6 +11,7 @@ import {
 import { router } from 'expo-router'
 import { IconeBusca } from '../../src/components/Layout'
 import { Mascote } from '../../src/components/Mascote'
+import { Flutuar } from '../../src/components/Animacoes'
 import { AvatarPet } from '../../src/pets/AvatarPet'
 import { usePets } from '../../src/pets/PetsProvider'
 import { idadeEmAnos } from '../../src/pets/types'
@@ -77,7 +78,7 @@ export default function Pets() {
 
       {pets.length === 0 ? (
         <View style={estilos.centro}>
-          <Mascote especie="cao" size={140} />
+          <Flutuar><Mascote especie="cao" size={140} /></Flutuar>
           <Text style={estilos.vazioTitulo}>Nenhum pet ainda</Text>
           <Text style={estilos.vazioTexto}>
             Cadastre seu primeiro pet para acompanhar saúde, rotina e locais por perto.

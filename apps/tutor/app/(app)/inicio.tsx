@@ -11,6 +11,7 @@ import {
   Secao,
 } from '../../src/components/Layout';
 import { Icone } from '../../src/components/Icone';
+import { Surgir } from '../../src/components/Animacoes';
 import { Mascote } from '../../src/components/Mascote';
 import { useLembretes } from '../../src/lembretes/LembretesProvider';
 import { rotuloProximidade } from '../../src/lembretes/types';
@@ -152,8 +153,8 @@ export default function Inicio() {
             const pet = pets.find((p) => p.id === lembrete.pet_id);
             const quando = rotuloProximidade(lembrete.proxima_em).texto;
             return (
+              <Surgir key={lembrete.id} indice={indice} style={estilos.lembreteSurgir}>
               <Pressable
-                key={lembrete.id}
                 accessibilityRole="button"
                 accessibilityLabel={`${lembrete.titulo}, ${quando}`}
                 onPress={() => router.push('/lembretes')}
@@ -174,6 +175,7 @@ export default function Inicio() {
                   <Mascote especie={pet?.especie ?? 'cao'} size={84} recorte />
                 </View>
               </Pressable>
+              </Surgir>
             );
           })}
 
@@ -347,6 +349,9 @@ const estilos = StyleSheet.create({
     borderWidth: 1.5,
     padding: 12,
     gap: 8,
+  },
+  lembreteSurgir: {
+    flex: 1,
   },
   lembreteNovo: {
     backgroundColor: colors.background,

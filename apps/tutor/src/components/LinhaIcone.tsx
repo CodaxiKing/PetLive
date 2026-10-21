@@ -1,6 +1,7 @@
 import { ReactNode } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { colors } from '../theme/colors';
+import { Surgir } from './Animacoes';
 import { typography } from '../theme/typography';
 
 type Props = {
@@ -15,13 +16,23 @@ type Props = {
   desabilitado?: boolean;
   /** Elemento à direita (interruptor, seta, selo). */
   direita?: ReactNode;
+  /** Posição na lista, para escalonar a entrada (animação "rise"). */
+  indice?: number;
 };
 
 /**
  * Linha do protótipo com círculo branco de ícone, rótulo pequeno e
  * valor em negrito (Privacidade e dados, SOS, Calculadoras).
  */
-export function LinhaIcone({ icone, rotulo, valor, fundo = colors.background, onPress, desabilitado, direita }: Props) {
+export function LinhaIcone({ indice = 0, ...props }: Props) {
+  return (
+    <Surgir indice={indice}>
+      <Linha {...props} />
+    </Surgir>
+  );
+}
+
+function Linha({ icone, rotulo, valor, fundo = colors.background, onPress, desabilitado, direita }: Props) {
   const conteudo = (
     <>
       <View style={estilos.circulo}>{icone}</View>
