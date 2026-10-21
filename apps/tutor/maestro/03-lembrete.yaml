@@ -18,10 +18,12 @@ name: 03 lembrete
 - extendedWaitUntil:
     visible: "Novo lembrete"
     timeout: 15000
-- tapOn: "Ex.: Vacina V10"
+- tapOn: "Banho e tosa"
+- tapOn: "Continuar com banho e tosa"
+- tapOn: "Ex.: Banho e tosa"
 - inputText: "${TITULO_LEMBRETE}"
 - hideKeyboard
-- tapOn: "DD/MM/AAAA"
+- tapOn: "dd/mm/aaaa"
 - inputText: "25/12/2026"
 - hideKeyboard
 - tapOn:

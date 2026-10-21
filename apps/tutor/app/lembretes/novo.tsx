@@ -11,52 +11,115 @@ import {
   View,
 } from 'react-native'
 import { router } from 'expo-router'
-import Svg, { Circle, Path } from 'react-native-svg'
 import { BotaoPrimario } from '../../src/components/BotaoPrimario'
-import { CabecalhoTela } from '../../src/components/CabecalhoTela'
 import { Campo } from '../../src/components/Campo'
-import { ControleSegmentado } from '../../src/components/ControleSegmentado'
+import { HeroiOnda } from '../../src/components/HeroiOnda'
+import { Icone, type NomeIcone } from '../../src/components/Icone'
 import { Interruptor } from '../../src/components/Interruptor'
+import { MarcaPata } from '../../src/components/MarcaPata'
+import { Mascote } from '../../src/components/Mascote'
 import { useLembretes } from '../../src/lembretes/LembretesProvider'
 import type { Repeticao, TipoLembrete } from '../../src/lembretes/types'
-import { LEMBRETE_FORM_VAZIO, PLACEHOLDER_TITULO, REPETICOES, TIPOS } from '../../src/lembretes/types'
-import { AvatarPet } from '../../src/pets/AvatarPet'
-import { usePets } from '../../src/pets/PetsProvider'
+import { LEMBRETE_FORM_VAZIO, PLACEHOLDER_TITULO, TIPOS } from '../../src/lembretes/types'
 import { preferenciasAvisos } from '../../src/notificacoes/prefs'
+import { usePets } from '../../src/pets/PetsProvider'
+import type { Pet } from '../../src/pets/types'
 import { colors } from '../../src/theme/colors'
-import { fontFamily, typography } from '../../src/theme/typography'
-import { radius, spacing } from '../../src/theme/tokens'
+import { fontFamily } from '../../src/theme/typography'
 
-const REPETIR_ROTULOS = REPETICOES.map((r) => r.rotulo)
+/** Cartões da primeira etapa (protótipo NovoLembrete). */
+type Escolha = {
+  chave: string
+  rotulo: string
+  icone: NomeIcone
+  fundo: string
+  /** Tipo do lembrete; sem tipo, abre o formulário próprio (vacina, remédio, peso). */
+  tipo?: TipoLembrete
+}
 
+const ESCOLHAS: Escolha[] = [
+  { chave: 'vacina', rotulo: 'Vacina', icone: 'vacina', fundo: '#EBDDFB' },
+  { chave: 'remedio', rotulo: 'Remédio', icone: 'capsula', fundo: '#FFF1C9' },
+  { chave: 'vermifugo', rotulo: 'Vermífugo e antipulgas', icone: 'relogio', fundo: '#DDF3E6', tipo: 'vermifugo' },
+  { chave: 'consulta', rotulo: 'Consulta', icone: 'cruz', fundo: '#E0F1FA', tipo: 'consulta' },
+  { chave: 'banho', rotulo: 'Banho e tosa', icone: 'gota', fundo: '#FCE1EF', tipo: 'banho_tosa' },
+  { chave: 'peso', rotulo: 'Pesar o pet', icone: 'balanca', fundo: '#F3F5F8' },
+]
+
+const REPETIR: { valor: Repeticao; rotulo: string; intervalo?: string }[] = [
+  { valor: 'nao', rotulo: 'Não repetir' },
+  { valor: 'mensal', rotulo: 'Todo mês' },
+  { valor: 'customizado', rotulo: 'A cada 15 dias', intervalo: '15' },
+  { valor: 'semanal', rotulo: 'Toda semana' },
+  { valor: 'anual', rotulo: 'Todo ano' },
+  { valor: 'diario', rotulo: 'Todo dia' },
+]
+
+function PetChip({ pet, onPress }: { pet: Pet | null; onPress: () => void }) {
+  return (
+    <Pressable accessibilityRole="button" accessibilityLabel="Escolher o pet" onPress={onPress} style={estilos.petChip}>
+      <View style={estilos.petAvatar}>
+        {pet ? <Mascote especie={pet.especie} size={30} recorte /> : <Icone nome="cruz" size={14} />}
+      </View>
+      <Text style={estilos.petChipTexto}>{pet ? `Para ${pet.sexo === 'femea' ? 'a' : 'o'} ${pet.nome}` : 'Todos os pets'} ⌄</Text>
+    </Pressable>
+  )
+}
+
+/**
+ * Novo lembrete (protótipos NovoLembrete e Lembrete; board P0 "Novo
+ * lembrete: escolha do tipo" e P1 "Lembrete personalizado"): primeiro o
+ * tipo em cartões; vacina, remédio e peso vão para os formulários próprios;
+ * os demais seguem para título, pet, data, hora, repetição e aviso.
+ */
 export default function NovoLembrete() {
   const { criarLembrete, salvando } = useLembretes()
-  const { pets } = usePets()
-  const [form, setForm] = useState(LEMBRETE_FORM_VAZIO)
+  const { pets, petAtivo } = usePets()
+  const [etapa, setEtapa] = useState<'tipo' | 'detalhes'>('tipo')
+  const [escolha, setEscolha] = useState<Escolha | null>(null)
+  const [form, setForm] = useState({ ...LEMBRETE_FORM_VAZIO, pet_id: petAtivo?.id ?? null })
   const [escolhendoPet, setEscolhendoPet] = useState(false)
   const horaEditada = useRef(false)
 
-  // Hora inicial vem da tela Avisos ("Horário dos avisos"); só aplica se o
-  // tutor ainda não digitou nada no campo.
+  // Hora inicial vem da tela Avisos ("Horário dos avisos"), se o tutor não mexeu.
   useEffect(() => {
     preferenciasAvisos().then(
       (avisos) => {
-        if (!horaEditada.current) {
-          setForm((atual) => ({ ...atual, hora: avisos.horario }))
-        }
+        if (!horaEditada.current) setForm((atual) => ({ ...atual, hora: avisos.horario }))
       },
-      () => undefined, // sem preferência salva, mantém o padrão do formulário
+      () => undefined,
     )
   }, [])
 
-  const alterar = (campo: keyof typeof form, valor: string | TipoLembrete | Repeticao | boolean | null) =>
+  const alterar = <K extends keyof typeof form>(campo: K, valor: (typeof form)[K]) =>
     setForm((atual) => ({ ...atual, [campo]: valor }))
 
-  const petEscolhido = form.pet_id ? pets.find((p) => p.id === form.pet_id) ?? null : null
+  const pet = form.pet_id ? (pets.find((p) => p.id === form.pet_id) ?? null) : null
+
+  function continuar(alvo: Escolha | 'outro') {
+    if (alvo === 'outro') {
+      alterar('tipo', 'outro')
+      setEtapa('detalhes')
+      return
+    }
+    if (!alvo.tipo) {
+      const petId = pet?.id ?? pets[0]?.id
+      if (!petId) {
+        Alert.alert('Cadastre um pet', 'Vacina, remédio e peso ficam no cadastro do pet.')
+        return
+      }
+      const destino =
+        alvo.chave === 'vacina' ? '/pet/[id]/vacina/nova' : alvo.chave === 'remedio' ? '/pet/[id]/remedio/novo' : '/pet/[id]/peso'
+      router.replace({ pathname: destino, params: { id: petId } })
+      return
+    }
+    alterar('tipo', alvo.tipo)
+    setEtapa('detalhes')
+  }
 
   const salvar = async () => {
     if (!form.titulo.trim()) {
-      Alert.alert('Falta o título', 'Dê um nome ao lembrete (ex.: Vacina V10).')
+      Alert.alert('Falta o título', 'Dê um nome ao lembrete (ex.: Banho e tosa).')
       return
     }
     if (!form.data.trim()) {
@@ -71,317 +134,336 @@ export default function NovoLembrete() {
     if (lembrete) router.back()
   }
 
-  return (
-    <KeyboardAvoidingView
-      style={estilos.tela}
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-    >
-      <CabecalhoTela titulo="Novo lembrete" />
+  const seletorPet = (
+    <Modal visible={escolhendoPet} transparent animationType="fade" onRequestClose={() => setEscolhendoPet(false)}>
+      <Pressable style={estilos.fundoModal} onPress={() => setEscolhendoPet(false)} accessibilityLabel="Fechar">
+        <View style={estilos.folha}>
+          <Text style={estilos.folhaTitulo}>Para qual pet?</Text>
+          {[null, ...pets].map((p) => (
+            <Pressable
+              key={p?.id ?? 'todos'}
+              accessibilityRole="button"
+              onPress={() => {
+                alterar('pet_id', p?.id ?? null)
+                setEscolhendoPet(false)
+              }}
+              style={[estilos.opcaoPet, form.pet_id === (p?.id ?? null) && estilos.opcaoPetAtiva]}
+            >
+              <Text style={estilos.opcaoPetTexto}>{p?.nome ?? 'Todos os pets'}</Text>
+            </Pressable>
+          ))}
+        </View>
+      </Pressable>
+    </Modal>
+  )
 
+  if (etapa === 'tipo') {
+    return (
+      <View style={estilos.tela}>
+        <ScrollView contentContainerStyle={estilos.conteudo} showsVerticalScrollIndicator={false}>
+          <HeroiOnda titulo="Novo lembrete" altura={230}>
+            <MarcaPata size={110} style={estilos.pata} />
+            <View style={estilos.petChipLugar}>
+              <PetChip pet={pet} onPress={() => setEscolhendoPet(true)} />
+            </View>
+          </HeroiOnda>
+
+          <View style={estilos.corpo}>
+            <Text style={estilos.pergunta}>O que você quer lembrar?</Text>
+            <View style={estilos.grade}>
+              {ESCOLHAS.map((item) => {
+                const ativo = escolha?.chave === item.chave
+                return (
+                  <Pressable
+                    key={item.chave}
+                    accessibilityRole="radio"
+                    accessibilityState={{ checked: ativo }}
+                    onPress={() => setEscolha(item)}
+                    style={[estilos.cartaoTipo, { backgroundColor: item.fundo }, ativo && estilos.cartaoTipoAtivo]}
+                  >
+                    <View style={estilos.cartaoIcone}>
+                      <Icone nome={item.icone} size={20} />
+                    </View>
+                    <Text style={estilos.cartaoTexto}>{item.rotulo}</Text>
+                  </Pressable>
+                )
+              })}
+            </View>
+            <Pressable accessibilityRole="button" onPress={() => continuar('outro')} style={estilos.outro}>
+              <Text style={estilos.outroTexto}>+ Outro lembrete (ração, escova, passeio)</Text>
+            </Pressable>
+          </View>
+        </ScrollView>
+
+        <View style={estilos.rodape}>
+          <BotaoPrimario
+            titulo={escolha ? `Continuar com ${escolha.rotulo.toLowerCase()}` : 'Escolha um tipo'}
+            desabilitado={!escolha}
+            onPress={() => escolha && continuar(escolha)}
+          />
+        </View>
+        {seletorPet}
+      </View>
+    )
+  }
+
+  return (
+    <KeyboardAvoidingView style={estilos.tela} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
       <ScrollView
-        style={estilos.flex}
         contentContainerStyle={estilos.conteudo}
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
       >
-        <View style={estilos.bloco}>
-          <Text style={estilos.rotulo}>Tipo</Text>
-          <View style={estilos.pills}>
+        <HeroiOnda titulo="Novo lembrete" altura={210}>
+          <View style={estilos.sino}>
+            <Icone nome="sino" size={120} cor={colors.white} espessura={1.1} />
+          </View>
+        </HeroiOnda>
+
+        <View style={estilos.corpo}>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={estilos.pills}>
             {TIPOS.map((tipo) => {
               const ativa = form.tipo === tipo.valor
               return (
                 <Pressable
                   key={tipo.valor}
-                  accessibilityRole="button"
-                  accessibilityState={{ selected: ativa }}
+                  accessibilityRole="radio"
+                  accessibilityState={{ checked: ativa }}
                   onPress={() => alterar('tipo', tipo.valor)}
-                  style={[
-                    estilos.pill,
-                    { backgroundColor: ativa ? tipo.fundo : colors.surface },
-                    !ativa && estilos.pillBorda,
-                  ]}
+                  style={[estilos.pill, ativa && estilos.pillAtiva]}
                 >
-                  <Text style={[estilos.pillTexto, { color: ativa ? tipo.cor : colors.textMuted }]}>
-                    {tipo.rotulo}
-                  </Text>
+                  <Text style={[estilos.pillTexto, ativa && estilos.pillTextoAtivo]}>{tipo.rotulo}</Text>
+                </Pressable>
+              )
+            })}
+          </ScrollView>
+
+          <Campo
+            rotulo="Título"
+            variante="roxo"
+            placeholder={PLACEHOLDER_TITULO[form.tipo]}
+            value={form.titulo}
+            onChangeText={(v) => alterar('titulo', v)}
+          />
+
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={`Lembrete para ${pet?.nome ?? 'todos os pets'}`}
+            onPress={() => setEscolhendoPet(true)}
+            style={({ pressed }) => [estilos.cartaoPet, pressed && { opacity: 0.7 }]}
+          >
+            <View style={estilos.petAvatarGrande}>
+              {pet ? <Mascote especie={pet.especie} size={46} recorte /> : <MarcaPata size={26} cor={colors.black} />}
+            </View>
+            <View style={estilos.flex}>
+              <Text style={estilos.paraRotulo}>Para</Text>
+              <Text style={estilos.paraNome}>{pet?.nome ?? 'Todos os pets'}</Text>
+            </View>
+            <Icone nome="seta" size={18} />
+          </Pressable>
+
+          <View style={estilos.linha}>
+            <View style={estilos.flex}>
+              <Campo
+                rotulo="Data"
+                variante="amarelo"
+                placeholder="dd/mm/aaaa"
+                keyboardType="number-pad"
+                value={form.data}
+                onChangeText={(v) => alterar('data', v)}
+              />
+            </View>
+            <View style={estilos.flex}>
+              <Campo
+                rotulo="Hora"
+                variante="azul"
+                placeholder="09:00"
+                keyboardType="number-pad"
+                value={form.hora}
+                onChangeText={(v) => {
+                  horaEditada.current = true
+                  alterar('hora', v)
+                }}
+              />
+            </View>
+          </View>
+
+          <Text style={estilos.pergunta}>Repetir</Text>
+          <View style={estilos.pillsQuebra}>
+            {REPETIR.map((opcao) => {
+              const ativa =
+                form.repetir === opcao.valor && (opcao.valor !== 'customizado' || form.intervalo_dias === opcao.intervalo)
+              return (
+                <Pressable
+                  key={opcao.rotulo}
+                  accessibilityRole="radio"
+                  accessibilityState={{ checked: ativa }}
+                  onPress={() => {
+                    alterar('repetir', opcao.valor)
+                    alterar('intervalo_dias', opcao.intervalo ?? '')
+                  }}
+                  style={[estilos.pill, ativa && estilos.pillAtiva]}
+                >
+                  <Text style={[estilos.pillTexto, ativa && estilos.pillTextoAtivo]}>{opcao.rotulo}</Text>
                 </Pressable>
               )
             })}
           </View>
-        </View>
 
-        <Campo
-          rotulo="Título"
-          variante="roxo"
-          placeholder={PLACEHOLDER_TITULO[form.tipo]}
-          value={form.titulo}
-          onChangeText={(v) => alterar('titulo', v)}
-        />
-
-        {/* Para qual pet (protótipo Lembrete.dc.html: card "Para / Rex"). */}
-        <Pressable
-          accessibilityRole="button"
-          accessibilityLabel={`Lembrete para ${petEscolhido?.nome ?? 'todos os pets'}`}
-          onPress={() => setEscolhendoPet(true)}
-          style={({ pressed }) => [estilos.cartaoPet, pressed && { opacity: 0.7 }]}
-        >
-          {petEscolhido ? (
-            <AvatarPet especie={petEscolhido.especie} foto={petEscolhido.foto_url} size={44} />
-          ) : (
-            <View style={estilos.petGenerico}>
-              <Svg
-                width={24}
-                height={24}
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke={colors.black}
-                strokeWidth={1.6}
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                aria-hidden
-              >
-                <Circle cx={6} cy={10} r={1.8} />
-                <Circle cx={10} cy={6} r={1.8} />
-                <Circle cx={14} cy={6} r={1.8} />
-                <Circle cx={18} cy={10} r={1.8} />
-                <Path d="M12 12c-3 0-5 2.5-5 4.5 0 1.5 1.2 2 2.6 2 1 0 1.6-.4 2.4-.4s1.4.4 2.4.4c1.4 0 2.6-.5 2.6-2 0-2-2-4.5-5-4.5z" />
-              </Svg>
+          <View style={estilos.aviso}>
+            <View style={estilos.flex}>
+              <Text style={estilos.avisoTitulo}>Avisar 1 dia antes</Text>
+              <Text style={estilos.avisoTexto}>Você recebe uma notificação.</Text>
             </View>
-          )}
-          <View style={estilos.flex}>
-            <Text style={estilos.petRotulo}>Para</Text>
-            <Text style={estilos.petNome} numberOfLines={1}>
-              {petEscolhido?.nome ?? 'Todos os pets'}
-            </Text>
-          </View>
-          <Svg width={16} height={16} viewBox="0 0 24 24" fill="none" aria-hidden>
-            <Path
-              d="M6 9l6 6 6-6"
-              stroke={colors.black}
-              strokeWidth={2.2}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </Svg>
-        </Pressable>
-
-        <View style={estilos.linhaDupla}>
-          <View style={estilos.metade}>
-            <Campo
-              rotulo="Data"
-              placeholder="DD/MM/AAAA"
-              keyboardType="number-pad"
-              value={form.data}
-              onChangeText={(v) => alterar('data', v)}
+            <Interruptor
+              ligado={form.aviso_antes}
+              onToggle={() => alterar('aviso_antes', !form.aviso_antes)}
+              rotulo="Avisar 1 dia antes"
             />
           </View>
-          <View style={estilos.metade}>
-            <Campo
-              rotulo="Hora"
-              variante="azul"
-              placeholder="HH:MM"
-              keyboardType="number-pad"
-              value={form.hora}
-              onChangeText={(v) => {
-                horaEditada.current = true
-                alterar('hora', v)
-              }}
-            />
-          </View>
-        </View>
-
-        <View style={estilos.bloco}>
-          <Text style={estilos.rotulo}>Repetir</Text>
-          <ControleSegmentado
-            opcoes={REPETIR_ROTULOS}
-            ativo={REPETICOES.findIndex((r) => r.valor === form.repetir)}
-            onSelecionar={(i) => alterar('repetir', REPETICOES[i].valor)}
-          />
-        </View>
-
-        {form.repetir === 'customizado' ? (
-          <Campo
-            rotulo="A cada quantos dias"
-            variante="verde"
-            placeholder="Ex.: 15"
-            keyboardType="number-pad"
-            value={form.intervalo_dias}
-            onChangeText={(v) => alterar('intervalo_dias', v)}
-          />
-        ) : null}
-
-        {/* "Avisar 1 dia antes" (protótipo Lembrete.dc.html). */}
-        <View style={estilos.cartaoAviso}>
-          <View style={estilos.flex}>
-            <Text style={estilos.avisoTitulo}>Avisar 1 dia antes</Text>
-            <Text style={estilos.avisoSub}>Você recebe uma notificação.</Text>
-          </View>
-          <Interruptor
-            ligado={form.aviso_antes}
-            rotulo="Avisar 1 dia antes"
-            desabilitado={salvando}
-            onToggle={() => alterar('aviso_antes', !form.aviso_antes)}
-          />
         </View>
       </ScrollView>
 
       <View style={estilos.rodape}>
-        <BotaoPrimario titulo="Criar lembrete" onPress={salvar} carregando={salvando} />
+        <BotaoPrimario
+          titulo="Criar lembrete"
+          icone={<Text style={estilos.check}>✓</Text>}
+          onPress={salvar}
+          carregando={salvando}
+        />
       </View>
-
-      {/* Escolher o pet do lembrete */}
-      <Modal
-        visible={escolhendoPet}
-        animationType="slide"
-        transparent
-        onRequestClose={() => setEscolhendoPet(false)}
-      >
-        <View style={estilos.fundoModal}>
-          <View style={estilos.cartaoModal}>
-            <Text style={estilos.tituloModal}>Para qual pet?</Text>
-
-            <ScrollView style={estilos.listaPets} showsVerticalScrollIndicator={false}>
-              <Pressable
-                accessibilityRole="button"
-                accessibilityState={{ selected: form.pet_id === null }}
-                onPress={() => {
-                  alterar('pet_id', null)
-                  setEscolhendoPet(false)
-                }}
-                style={({ pressed }) => [estilos.linhaPet, pressed && { opacity: 0.7 }]}
-              >
-                <View style={estilos.petGenerico}>
-                  <Svg
-                    width={24}
-                    height={24}
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke={colors.black}
-                    strokeWidth={1.6}
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    aria-hidden
-                  >
-                    <Circle cx={6} cy={10} r={1.8} />
-                    <Circle cx={10} cy={6} r={1.8} />
-                    <Circle cx={14} cy={6} r={1.8} />
-                    <Circle cx={18} cy={10} r={1.8} />
-                    <Path d="M12 12c-3 0-5 2.5-5 4.5 0 1.5 1.2 2 2.6 2 1 0 1.6-.4 2.4-.4s1.4.4 2.4.4c1.4 0 2.6-.5 2.6-2 0-2-2-4.5-5-4.5z" />
-                  </Svg>
-                </View>
-                <Text style={estilos.linhaPetTexto}>Todos os pets</Text>
-                {form.pet_id === null ? <Text style={estilos.check}>✓</Text> : null}
-              </Pressable>
-
-              {pets.map((pet) => (
-                <Pressable
-                  key={pet.id}
-                  accessibilityRole="button"
-                  accessibilityState={{ selected: form.pet_id === pet.id }}
-                  onPress={() => {
-                    alterar('pet_id', pet.id)
-                    setEscolhendoPet(false)
-                  }}
-                  style={({ pressed }) => [estilos.linhaPet, pressed && { opacity: 0.7 }]}
-                >
-                  <AvatarPet especie={pet.especie} foto={pet.foto_url} size={40} />
-                  <Text style={estilos.linhaPetTexto} numberOfLines={1}>
-                    {pet.nome}
-                  </Text>
-                  {form.pet_id === pet.id ? <Text style={estilos.check}>✓</Text> : null}
-                </Pressable>
-              ))}
-            </ScrollView>
-
-            <View style={estilos.acoesModal}>
-              <BotaoPrimario titulo="Fechar" onPress={() => setEscolhendoPet(false)} />
-            </View>
-          </View>
-        </View>
-      </Modal>
+      {seletorPet}
     </KeyboardAvoidingView>
   )
 }
 
 const estilos = StyleSheet.create({
-  tela: { flex: 1, backgroundColor: colors.background },
-  flex: { flex: 1 },
-  conteudo: { padding: spacing.xl, paddingBottom: 130, gap: spacing.lg },
-  bloco: { gap: spacing.sm },
-  rotulo: { ...typography.label, color: colors.text },
-  pills: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
-  pill: {
-    paddingHorizontal: spacing.lg,
-    paddingVertical: spacing.sm,
-    borderRadius: radius.pill,
+  tela: { flex: 1, backgroundColor: colors.surface },
+  flex: { flex: 1, minWidth: 0 },
+  conteudo: { paddingBottom: 130 },
+  pata: { position: 'absolute', right: 24, top: 56 },
+  sino: { position: 'absolute', right: 30, top: 44 },
+  petChipLugar: { position: 'absolute', left: 24, top: 160 },
+  petChip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    backgroundColor: colors.white,
+    borderRadius: 999,
+    paddingLeft: 4,
+    paddingRight: 14,
+    paddingVertical: 4,
   },
-  pillBorda: { borderWidth: 1, borderColor: colors.borderStrong },
-  pillTexto: { ...typography.captionMedium },
+  petAvatar: {
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    overflow: 'hidden',
+    backgroundColor: colors.primarySurface,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  petChipTexto: { fontSize: 14, fontFamily: fontFamily.semiBold, color: colors.black },
+  corpo: { paddingHorizontal: 24, gap: 12 },
+  pergunta: { fontSize: 16, fontFamily: fontFamily.bold, color: colors.black },
+  grade: { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
+  cartaoTipo: {
+    width: '48%',
+    flexGrow: 1,
+    height: 92,
+    borderRadius: 26,
+    padding: 14,
+    justifyContent: 'space-between',
+    borderWidth: 2,
+    borderColor: 'transparent',
+  },
+  cartaoTipoAtivo: { borderColor: colors.black },
+  cartaoIcone: {
+    width: 38,
+    height: 38,
+    borderRadius: 19,
+    backgroundColor: colors.white,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  cartaoTexto: { fontSize: 15, lineHeight: 19, fontFamily: fontFamily.bold, color: colors.black },
+  outro: {
+    height: 52,
+    borderRadius: 26,
+    borderWidth: 1.5,
+    borderStyle: 'dashed',
+    borderColor: colors.borderStrong,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  outroTexto: { fontSize: 14, fontFamily: fontFamily.medium, color: colors.textMuted },
+  pills: { gap: 8 },
+  pillsQuebra: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
+  pill: {
+    borderRadius: 999,
+    borderWidth: 1.5,
+    borderColor: colors.border,
+    paddingHorizontal: 16,
+    paddingVertical: 9,
+    backgroundColor: colors.white,
+  },
+  pillAtiva: { backgroundColor: colors.black, borderColor: colors.black },
+  pillTexto: { fontSize: 14, fontFamily: fontFamily.semiBold, color: colors.black },
+  pillTextoAtivo: { color: colors.white },
   cartaoPet: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: spacing.md,
+    gap: 12,
     backgroundColor: colors.background,
-    borderRadius: 24,
-    padding: 8,
-    paddingRight: 14,
+    borderRadius: 26,
+    padding: 10,
+    paddingRight: 18,
   },
-  petGenerico: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    backgroundColor: '#CFE8FB',
+  petAvatarGrande: {
+    width: 46,
+    height: 46,
+    borderRadius: 23,
+    overflow: 'hidden',
+    backgroundColor: colors.primarySurface,
     alignItems: 'center',
     justifyContent: 'center',
-    overflow: 'hidden',
-    flexShrink: 0,
   },
-  petRotulo: { fontFamily: fontFamily.regular, fontSize: 11, color: colors.textMuted },
-  petNome: { fontSize: 15, fontFamily: fontFamily.semiBold, color: colors.black },
-  cartaoAviso: {
+  paraRotulo: { fontSize: 12, fontFamily: fontFamily.regular, color: colors.textMuted },
+  paraNome: { fontSize: 17, fontFamily: fontFamily.bold, color: colors.black },
+  linha: { flexDirection: 'row', gap: 10 },
+  aviso: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    gap: spacing.md,
+    gap: 12,
     backgroundColor: colors.background,
-    borderRadius: 22,
-    paddingHorizontal: spacing.lg,
-    paddingVertical: spacing.md,
+    borderRadius: 24,
+    paddingVertical: 14,
+    paddingHorizontal: 18,
   },
-  avisoTitulo: { fontFamily: fontFamily.semiBold, fontSize: 14, color: colors.black },
-  avisoSub: { fontFamily: fontFamily.regular, fontSize: 12, color: colors.textMuted, marginTop: 2 },
-  fundoModal: { flex: 1, backgroundColor: colors.overlay, justifyContent: 'flex-end' },
-  cartaoModal: {
-    backgroundColor: colors.white,
-    borderTopLeftRadius: 28,
-    borderTopRightRadius: 28,
-    padding: spacing.xl,
-    paddingBottom: 40,
-    gap: spacing.sm,
-  },
-  tituloModal: { ...typography.h3, color: colors.text },
-  listaPets: { maxHeight: 360 },
-  linhaPet: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.md,
-    borderRadius: radius.md,
-    paddingHorizontal: spacing.sm,
-    paddingVertical: spacing.sm,
-  },
-  linhaPetTexto: { flex: 1, fontSize: 16, fontFamily: fontFamily.semiBold, color: colors.text },
-  check: { fontSize: 16, fontFamily: fontFamily.bold, color: colors.primaryDeep },
-  acoesModal: { marginTop: spacing.sm },
-  linhaDupla: { flexDirection: 'row', gap: spacing.md },
-  metade: { flex: 1 },
+  avisoTitulo: { fontSize: 16, fontFamily: fontFamily.semiBold, color: colors.black },
+  avisoTexto: { fontSize: 13, fontFamily: fontFamily.regular, color: colors.textMuted },
+  check: { fontSize: 20, fontFamily: fontFamily.bold, color: colors.black },
   rodape: {
     position: 'absolute',
     left: 0,
     right: 0,
     bottom: 0,
-    paddingHorizontal: spacing.xl,
-    paddingTop: spacing.md,
+    paddingHorizontal: 24,
+    paddingTop: 12,
     paddingBottom: 32,
-    backgroundColor: colors.background,
+    backgroundColor: colors.surface,
   },
+  fundoModal: { flex: 1, backgroundColor: colors.overlay, justifyContent: 'flex-end' },
+  folha: {
+    backgroundColor: colors.surface,
+    borderTopLeftRadius: 28,
+    borderTopRightRadius: 28,
+    padding: 20,
+    paddingBottom: 36,
+    gap: 8,
+  },
+  folhaTitulo: { fontSize: 18, fontFamily: fontFamily.bold, color: colors.black, marginBottom: 4 },
+  opcaoPet: { backgroundColor: colors.background, borderRadius: 20, paddingVertical: 14, paddingHorizontal: 18 },
+  opcaoPetAtiva: { backgroundColor: colors.primarySurface },
+  opcaoPetTexto: { fontSize: 15, fontFamily: fontFamily.semiBold, color: colors.black },
 })
