@@ -26,18 +26,20 @@ Capturas das telas do protótipo, geradas a partir de `prototipo/*.dc.html` e or
 
 # Fase 2 · Premium, eventos, adoção e painel admin
 
-## App do tutor (38)
+## App do tutor (46)
 
 | | | | |
 | --- | --- | --- | --- |
 | <img src="tutor/00-link-da-ficha-no-computador-da-clinica.png" width="160"><br>Link da ficha · No computador da clínica | <img src="tutor/100-minha-assinatura.png" width="160"><br>100 · Minha assinatura | <img src="tutor/19-premium.png" width="160"><br>19 · Premium | <img src="tutor/20-carteira-em-pdf.png" width="160"><br>20 · Carteira em PDF |
+| <img src="tutor/20-carteirinha-de-saude.png" width="160"><br>20 · Carteirinha de saúde | <img src="tutor/20-opcoes-de-compartilhar.png" width="160"><br>20 · Opções de compartilhar | <img src="tutor/20-tracar-rota-sem-app-de-mapa.png" width="160"><br>20 · Traçar rota, sem app de mapa | <img src="tutor/20-tracar-rota.png" width="160"><br>20 · Traçar rota |
 | <img src="tutor/21-qr-da-coleira.png" width="160"><br>21 · QR da coleira | <img src="tutor/43-eventos-no-mapa.png" width="160"><br>43 · Eventos no mapa | <img src="tutor/44-evento.png" width="160"><br>44 · Evento | <img src="tutor/45-criar-evento.png" width="160"><br>45 · Criar evento |
 | <img src="tutor/52-foto-do-cartao-de-vacina.png" width="160"><br>52 · Foto do cartão de vacina | <img src="tutor/53-revisar-vacinas-lidas.png" width="160"><br>53 · Revisar vacinas lidas | <img src="tutor/54-adocao.png" width="160"><br>54 · Adoção | <img src="tutor/55-pet-para-adocao.png" width="160"><br>55 · Pet para adoção |
 | <img src="tutor/56-cuidador-temporario.png" width="160"><br>56 · Cuidador temporário | <img src="tutor/57-linha-do-tempo-do-pet.png" width="160"><br>57 · Linha do tempo do pet | <img src="tutor/58-checklist-de-viagem.png" width="160"><br>58 · Checklist de viagem | <img src="tutor/59-selos-de-cuidado.png" width="160"><br>59 · Selos de cuidado |
 | <img src="tutor/68-passeios-do-pet.png" width="160"><br>68 · Passeios do pet | <img src="tutor/69-passeio-em-andamento.png" width="160"><br>69 · Passeio em andamento | <img src="tutor/70-resumo-do-passeio.png" width="160"><br>70 · Resumo do passeio | <img src="tutor/71-despesas-do-pet.png" width="160"><br>71 · Despesas do pet |
 | <img src="tutor/72-nova-despesa.png" width="160"><br>72 · Nova despesa | <img src="tutor/73-fogos-e-trovao.png" width="160"><br>73 · Fogos e trovão | <img src="tutor/74-widget-e-atalhos.png" width="160"><br>74 · Widget e atalhos | <img src="tutor/75-cartao-do-pet.png" width="160"><br>75 · Cartão do pet |
-| <img src="tutor/77-ficha-de-emergencia.png" width="160"><br>77 · Ficha de emergência | <img src="tutor/78-ficha-de-emergencia-quem-recebe.png" width="160"><br>78 · Ficha de emergência (quem recebe) | <img src="tutor/82-registrar-a-partida.png" width="160"><br>82 · Registrar a partida | <img src="tutor/83-em-memoria.png" width="160"><br>83 · Em memória |
-| <img src="tutor/84-pet-senior.png" width="160"><br>84 · Pet sênior | <img src="tutor/85-qualidade-de-vida.png" width="160"><br>85 · Qualidade de vida | <img src="tutor/88-ficha-da-clinica-com-enviar-ficha.png" width="160"><br>88 · Ficha da clínica com enviar ficha | <img src="tutor/89-enviar-ficha-a-clinica.png" width="160"><br>89 · Enviar ficha à clínica |
+| <img src="tutor/77-ficha-de-emergencia.png" width="160"><br>77 · Ficha de emergência | <img src="tutor/78-ficha-de-emergencia-quem-recebe.png" width="160"><br>78 · Ficha de emergência (quem recebe) | <img src="tutor/82-registrar-a-partida.png" width="160"><br>82 · Registrar a partida | <img src="tutor/83-confirmar-a-partida.png" width="160"><br>83 · Confirmar a partida |
+| <img src="tutor/83-em-memoria.png" width="160"><br>83 · Em memória | <img src="tutor/83-reativar-o-pet.png" width="160"><br>83 · Reativar o pet | <img src="tutor/84-pet-senior.png" width="160"><br>84 · Pet sênior | <img src="tutor/85-aviso-pet-senior.png" width="160"><br>85 · Aviso: pet sênior |
+| <img src="tutor/85-pet-senior-tela-do-pet.png" width="160"><br>85 · Pet sênior, tela do pet | <img src="tutor/85-qualidade-de-vida.png" width="160"><br>85 · Qualidade de vida | <img src="tutor/88-ficha-da-clinica-com-enviar-ficha.png" width="160"><br>88 · Ficha da clínica com enviar ficha | <img src="tutor/89-enviar-ficha-a-clinica.png" width="160"><br>89 · Enviar ficha à clínica |
 | <img src="tutor/91-link-da-ficha-expirado.png" width="160"><br>91 · Link da ficha expirado | <img src="tutor/92-visao-do-cuidador-link.png" width="160"><br>92 · Visão do cuidador (link) | <img src="tutor/93-cadastro-da-ong.png" width="160"><br>93 · Cadastro da ONG | <img src="tutor/94-novo-pet-para-adocao-modo-ong.png" width="160"><br>94 · Novo pet para adoção (modo ONG) |
 | <img src="tutor/95-pets-e-interessados-modo-ong.png" width="160"><br>95 · Pets e interessados (modo ONG) | <img src="tutor/96-meus-eventos.png" width="160"><br>96 · Meus eventos | | |
 
@@ -143,7 +145,15 @@ Capturas das telas do protótipo, geradas a partir de `prototipo/*.dc.html` e or
 | <img src="lojista-celular/12-passeador.png" width="160"><br>Lojista celular · 12 · Passeador | <img src="lojista-celular/13-creche-pet.png" width="160"><br>Lojista celular · 13 · Creche pet | <img src="lojista-celular/14-cadastro-dados-da-loja.png" width="160"><br>Lojista celular · 14 · Cadastro, dados da loja | <img src="lojista-celular/15-cadastro-endereco-e-contato.png" width="160"><br>Lojista celular · 15 · Cadastro, endereço e contato |
 | <img src="lojista-celular/16-publicar-loja.png" width="160"><br>Lojista celular · 16 · Publicar loja | <img src="lojista-celular/18-entrega-e-retirada.png" width="160"><br>Lojista celular · 18 · Entrega e retirada | | |
 
-## Painel do lojista (computador) (18)
+## Painel do lojista (computador) (20)
+
+### Lojista computador · Hóspede, carteirinha e cuidador
+
+![Lojista computador · Hóspede, carteirinha e cuidador](lojista-computador/00-hospede-carteirinha-e-cuidador.png)
+
+### Lojista computador · Hóspedes do hotelzinho
+
+![Lojista computador · Hóspedes do hotelzinho](lojista-computador/00-hospedes-do-hotelzinho.png)
 
 ### Lojista computador · 1 · Solicitações e aceite
 
