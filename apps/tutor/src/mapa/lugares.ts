@@ -45,6 +45,8 @@ export type Lugar = {
   avaliacoes?: number | null;
   aberto_agora?: boolean | null;
   fotos?: FotoLugar[];
+  /** Link do lugar no Google Maps (o Google exige oferecer). */
+  google_maps?: string | null;
   fonte?: 'google' | 'osm';
   /** Pet friendly: o Google diz que aceita cães; parque com área para cães. */
   aceita_caes?: boolean | null;
@@ -226,6 +228,7 @@ type DetalheGoogle = {
   website: string | null;
   nota: number | null;
   avaliacoes: number | null;
+  google_maps: string | null;
   fotos: FotoLugar[];
 };
 
@@ -249,6 +252,7 @@ export async function lugarPorId(id: string, categoria?: CategoriaLugar): Promis
       avaliacoes: lugar.avaliacoes,
       aberto_agora: lugar.aberto_agora,
       fotos: lugar.fotos,
+      google_maps: lugar.google_maps,
       fonte: 'google',
     };
   }

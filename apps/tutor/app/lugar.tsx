@@ -1,6 +1,7 @@
 import { useEffect, useState, type ReactNode } from 'react';
 import {
   ActivityIndicator,
+  Linking,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -13,6 +14,7 @@ import Svg, { Path } from 'react-native-svg';
 import { abrirWhatsApp, ligarPara } from '../src/mapa/acoes';
 import { FolhaRota } from '../src/mapa/FolhaRota';
 import { alternarSalvo, estaSalvo } from '../src/mapa/favoritos';
+import { AtribuicaoGoogle } from '../src/mapa/AtribuicaoGoogle';
 import { GaleriaFotos } from '../src/mapa/GaleriaFotos';
 import { GlifoLugar } from '../src/mapa/GlifoLugar';
 import {
@@ -295,11 +297,23 @@ export default function Lugar() {
             />
           )}
 
-          <Text style={estilos.fonte}>
-            {lugar.fonte === 'google'
-              ? 'Informações e fotos do Google. Podem estar desatualizadas: confirme com o local.'
-              : 'Informações do OpenStreetMap. Confirme com o local antes de ir.'}
-          </Text>
+          {lugar.fonte === 'google' ? (
+            <View style={estilos.fonteGoogle}>
+              <AtribuicaoGoogle />
+              <Text style={estilos.fonte}>Informações podem estar desatualizadas: confirme com o local.</Text>
+              {lugar.google_maps ? (
+                <Pressable
+                  accessibilityRole="link"
+                  onPress={() => Linking.openURL(lugar.google_maps as string).catch(() => undefined)}
+                  hitSlop={8}
+                >
+                  <Text style={estilos.verNoGoogle}>Ver no Google Maps ›</Text>
+                </Pressable>
+              ) : null}
+            </View>
+          ) : (
+            <Text style={estilos.fonte}>Informações do OpenStreetMap. Confirme com o local antes de ir.</Text>
+          )}
 
           {!lugar.endereco && !telefone && !lugar.horario && !lugar.website && (
             <Text style={estilos.poucasInfo}>
@@ -422,6 +436,8 @@ const estilos = StyleSheet.create({
     color: colors.textMuted,
     marginTop: -spacing.sm,
   },
+  fonteGoogle: { alignItems: 'center', gap: 4 },
+  verNoGoogle: { fontFamily: fontFamily.semiBold, fontSize: 13, color: colors.primaryDeep },
   fonte: {
     ...typography.small,
     color: '#6A7484',

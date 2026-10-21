@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 import { colors } from '../theme/colors';
 import { fontFamily } from '../theme/typography';
+import { AtribuicaoGoogle } from './AtribuicaoGoogle';
 import { enderecoDaFoto, type FotoLugar } from './lugares';
 
 /**
@@ -65,9 +66,12 @@ export function GaleriaFotos({ fotos, altura }: { fotos: FotoLugar[]; altura: nu
       </ScrollView>
 
       <View style={estilos.rodape} pointerEvents="box-none">
-        <Text style={estilos.selo}>
-          Fotos do Google · {atual + 1} de {fotos.length}
-        </Text>
+        <View style={estilos.esquerda}>
+          <Text style={estilos.selo}>
+            {atual + 1} de {fotos.length}
+          </Text>
+          <AtribuicaoGoogle sobreFoto />
+        </View>
         {autor?.nome ? (
           <Text
             style={estilos.autor}
@@ -94,6 +98,7 @@ const estilos = StyleSheet.create({
     justifyContent: 'space-between',
     gap: 8,
   },
+  esquerda: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   selo: {
     fontSize: 11,
     fontFamily: fontFamily.bold,

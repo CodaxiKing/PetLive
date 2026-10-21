@@ -7,6 +7,7 @@ import { BotaoPrimario } from '../../src/components/BotaoPrimario';
 import { HeroiOnda } from '../../src/components/HeroiOnda';
 import { Icone } from '../../src/components/Icone';
 import { MarcaPata } from '../../src/components/MarcaPata';
+import { AtribuicaoGoogle } from '../../src/mapa/AtribuicaoGoogle';
 import { IlustracaoLugar } from '../../src/mapa/IlustracaoLugar';
 import {
   CENTRO_PADRAO,
@@ -176,7 +177,10 @@ export default function TelaPetFriendly() {
           )}
 
           {lugares !== null ? (
-            <Text style={estilos.nota}>Informação do Google. Confirme com o local antes de ir.</Text>
+            <View style={estilos.rodapeLista}>
+              <AtribuicaoGoogle />
+              <Text style={estilos.nota}>Confirme com o local antes de ir.</Text>
+            </View>
           ) : null}
         </ScrollView>
       </View>
@@ -276,6 +280,7 @@ const estilos = StyleSheet.create({
   detalhe: { fontFamily: fontFamily.regular, fontSize: 12, color: colors.textMuted, marginTop: 1 },
   selo: { alignSelf: 'flex-start', marginTop: 4, backgroundColor: '#D8F2E3', borderRadius: 999, paddingHorizontal: 10, paddingVertical: 4 },
   seloTexto: { fontFamily: fontFamily.bold, fontSize: 11, color: '#1F6B45' },
+  rodapeLista: { alignItems: 'center', gap: 2, marginTop: 4 },
   nota: { fontFamily: fontFamily.regular, fontSize: 11, lineHeight: 16, color: '#6A7484', textAlign: 'center', paddingHorizontal: 6, marginTop: 4 },
   rodape: { paddingHorizontal: 24, paddingTop: 12, paddingBottom: 28 },
 });
