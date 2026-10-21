@@ -33,6 +33,7 @@ const DESENHOS = {
   seta: ['M9 6l6 6-6 6'],
   busca: [{ cx: 11, cy: 11, r: 7 }, 'M20 20l-4-4'],
   vacina: ['M14 4l6 6-9 9-6-6z', 'M5 13l6 6'],
+  capsula: ['M5 9h14a3 3 0 0 1 0 6H5a3 3 0 0 1 0-6z', 'M12 9v6'],
   gota: ['M12 3c4 5 6 8 6 11a6 6 0 0 1-12 0c0-3 2-6 6-11z'],
   sacola: ['M6 8h12l-1 12H7z', 'M9 8V7a3 3 0 0 1 6 0v1'],
 } as const;

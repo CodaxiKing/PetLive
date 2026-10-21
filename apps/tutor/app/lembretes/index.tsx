@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import {
   ActivityIndicator,
   Alert,
@@ -8,57 +8,99 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  useWindowDimensions,
   View,
 } from 'react-native'
-import { router } from 'expo-router'
+import Svg, { Path } from 'react-native-svg'
+import { router, useFocusEffect } from 'expo-router'
+import { Flutuar, Surgir } from '../../src/components/Animacoes'
 import { Icone } from '../../src/components/Icone'
 import { LinhaIcone } from '../../src/components/LinhaIcone'
 import { Mascote } from '../../src/components/Mascote'
-import { Flutuar } from '../../src/components/Animacoes'
-import { usePets } from '../../src/pets/PetsProvider'
+import { supabase } from '../../src/lib/supabase'
 import { useLembretes } from '../../src/lembretes/LembretesProvider'
 import type { Lembrete } from '../../src/lembretes/types'
-import {
-  REPETICOES,
-  TIPOS,
-  corUrgencia,
-  dataParaExibicao,
-  rotuloProximidade,
-} from '../../src/lembretes/types'
 import { permissaoConcedida, pedirPermissao } from '../../src/notificacoes/notificacoes'
+import { coresDoPet, type CoresPet } from '../../src/pets/coresPet'
+import { usePets } from '../../src/pets/PetsProvider'
+import type { Especie } from '../../src/pets/types'
+import { progressoDias } from '../../src/remedios/doses'
+import { normalizarHorarios, type Remedio } from '../../src/remedios/types'
 import { colors } from '../../src/theme/colors'
 import { fontFamily, typography } from '../../src/theme/typography'
-import { radius, shadow, spacing } from '../../src/theme/tokens'
 
-type Aba = 'Hoje' | 'Semana' | 'Mês'
+const DIAS_SEMANA = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom']
+const MESES = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro']
+const AMARELO: CoresPet = { fundo: '#FFF1C9', borda: '#F5DE9A', texto: '#7A5F0A' }
 
-const ABAS: Aba[] = ['Hoje', 'Semana', 'Mês']
+type RemedioDoTutor = Remedio & { pets: { nome: string; especie: Especie } | null }
 
-function diasAte(iso: string): number {
-  const [data] = iso.split('T')
-  const [a, m, d] = data.split('-').map(Number)
-  const alvo = new Date(a, m - 1, d)
-  const hoje = new Date()
-  hoje.setHours(0, 0, 0, 0)
-  alvo.setHours(0, 0, 0, 0)
-  return Math.round((alvo.getTime() - hoje.getTime()) / 86_400_000)
+const p2 = (n: number) => String(n).padStart(2, '0')
+const diaIso = (d: Date) => `${d.getFullYear()}-${p2(d.getMonth() + 1)}-${p2(d.getDate())}`
+
+/** Segunda-feira da semana de `d`. */
+function inicioDaSemana(d: Date): Date {
+  const s = new Date(d.getFullYear(), d.getMonth(), d.getDate())
+  s.setDate(s.getDate() - ((s.getDay() + 6) % 7))
+  return s
 }
 
+const DIAS_CURTOS = ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sáb']
+const MESES_CURTOS = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez']
+
+/** "sáb, 24 de out." (montado à mão: o Intl do Hermes varia por aparelho). */
+function dataPorExtenso(iso: string): string {
+  const [a, m, d] = iso.split('T')[0].split('-').map(Number)
+  const data = new Date(a, m - 1, d)
+  return `${DIAS_CURTOS[data.getDay()]}, ${d} de ${MESES_CURTOS[m - 1]}.`
+}
+
+/**
+ * Lembretes (protótipo Lembretes; board P0 "Tela Lembretes (semana, hoje e
+ * mês)"): faixa da semana com os dias que têm lembrete, e os lembretes e
+ * remédios em seções (atrasados, esta semana, este mês, depois). O ✓
+ * conclui e recalcula a próxima; segurar apaga.
+ */
 export default function Lembretes() {
+  const { width } = useWindowDimensions()
   const { lembretes, carregando, concluirLembrete, removerLembrete, recarregar } = useLembretes()
   const { pets } = usePets()
-  const [aba, setAba] = useState<Aba>('Hoje')
+  const [remedios, setRemedios] = useState<RemedioDoTutor[]>([])
+  const [diaEscolhido, setDiaEscolhido] = useState<string | null>(null)
   const [atualizando, setAtualizando] = useState(false)
-  // 'inicial' = ainda não perguntou; 'negada' = usuário recusou (mostra atalho p/ ajustar).
-  const [permissao, setPermissao] = useState<'inicial' | 'concedida' | 'negada' | 'indefinida'>(
-    'inicial',
-  )
+  const [permissao, setPermissao] = useState<'inicial' | 'concedida' | 'negada' | 'indefinida'>('inicial')
 
   useEffect(() => {
     permissaoConcedida()
       .then((concedida) => setPermissao(concedida ? 'concedida' : 'inicial'))
       .catch(() => {})
   }, [])
+
+  // Remédios em tratamento de todos os pets (o provider só tem o pet ativo).
+  const carregarRemedios = useCallback(() => {
+    const hoje = diaIso(new Date())
+    return Promise.resolve(
+      supabase
+        .from('medications')
+        .select('*, pets(nome, especie)')
+        .eq('ativo', true)
+        .lte('inicio', hoje)
+        .or(`fim.is.null,fim.gte.${hoje}`),
+    ).then(({ data }) => {
+      setRemedios(
+        ((data ?? []) as RemedioDoTutor[]).map((r) => ({
+          ...r,
+          horarios: normalizarHorarios(r.horarios as unknown as (string | number)[]),
+        })),
+      )
+    })
+  }, [])
+
+  useFocusEffect(
+    useCallback(() => {
+      carregarRemedios()
+    }, [carregarRemedios]),
+  )
 
   const ativarAvisos = useCallback(async () => {
     const resultado = await pedirPermissao()
@@ -75,19 +117,41 @@ export default function Lembretes() {
     }
   }, [])
 
-  const nomePet = useCallback(
-    (id: string | null) => (id ? (pets.find((p) => p.id === id)?.nome ?? null) : null),
-    [pets],
-  )
+  const hoje = new Date()
+  const hojeIso = diaIso(hoje)
+  const inicioSemana = inicioDaSemana(hoje)
+  const semana = Array.from({ length: 7 }, (_, i) => {
+    const d = new Date(inicioSemana)
+    d.setDate(inicioSemana.getDate() + i)
+    return diaIso(d)
+  })
+  const fimSemana = semana[6]
+  const fimMes = diaIso(new Date(hoje.getFullYear(), hoje.getMonth() + 1, 0))
+  const diasComLembrete = new Set(lembretes.map((l) => l.proxima_em.split('T')[0]))
 
-  const filtrados = useMemo(() => {
-    const limite = aba === 'Hoje' ? 0 : aba === 'Semana' ? 7 : 31
-    return lembretes.filter((l) => {
-      const dias = diasAte(l.proxima_em)
-      // "Mês" mostra o que vem em até ~1 mês; vencidos ficam sempre visíveis.
-      return dias <= limite
-    })
-  }, [lembretes, aba])
+  const secoes = (() => {
+    const lista = diaEscolhido ? lembretes.filter((l) => l.proxima_em.startsWith(diaEscolhido)) : lembretes
+    const grupos: { titulo: string; itens: Lembrete[] }[] = [
+      { titulo: 'Atrasados', itens: [] },
+      { titulo: diaEscolhido ? 'Neste dia' : 'Esta semana', itens: [] },
+      { titulo: 'Este mês', itens: [] },
+      { titulo: 'Depois', itens: [] },
+    ]
+    for (const l of lista) {
+      const dia = l.proxima_em.split('T')[0]
+      if (diaEscolhido) grupos[1].itens.push(l)
+      else if (dia < hojeIso) grupos[0].itens.push(l)
+      else if (dia <= fimSemana) grupos[1].itens.push(l)
+      else if (dia <= fimMes) grupos[2].itens.push(l)
+      else grupos[3].itens.push(l)
+    }
+    return grupos
+  })()
+
+  const petDe = (id: string | null) => {
+    const indice = pets.findIndex((p) => p.id === id)
+    return indice >= 0 ? { pet: pets[indice], cores: coresDoPet(pets[indice], indice) } : null
+  }
 
   const confirmarRemocao = (lembrete: Lembrete) => {
     Alert.alert('Remover lembrete?', `"${lembrete.titulo}" será apagado.`, [
@@ -96,216 +160,290 @@ export default function Lembretes() {
     ])
   }
 
+  const mostrarRemedios = !diaEscolhido && remedios.length > 0
+  const vazio = !carregando && secoes.every((s) => s.itens.length === 0) && !mostrarRemedios
+
   return (
     <View style={estilos.tela}>
-      <View style={estilos.cabecalho}>
-        <Text style={estilos.titulo}>Lembretes</Text>
-        <Pressable
-          accessibilityRole="button"
-          accessibilityLabel="Novo lembrete"
-          onPress={() => router.push('/lembretes/novo')}
-          style={({ pressed }) => [estilos.novo, shadow.floating, pressed && estilos.pressionado]}
-        >
-          <Text style={estilos.novoSinal}>＋</Text>
-        </Pressable>
-      </View>
-
-      <View style={estilos.abas}>
-        {ABAS.map((op) => {
-          const ativa = op === aba
-          return (
+      <View style={estilos.heroi}>
+        <View style={estilos.topo}>
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="Voltar"
+            hitSlop={8}
+            onPress={() => router.back()}
+            style={estilos.botaoBranco}
+          >
+            <Svg width={20} height={20} viewBox="0 0 24 24" fill="none">
+              <Path d="M15 5l-7 7 7 7" stroke={colors.black} strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round" />
+            </Svg>
+          </Pressable>
+          <View style={estilos.topoDireita}>
+            <Text style={estilos.mes}>
+              {MESES[hoje.getMonth()]} {hoje.getFullYear()}
+            </Text>
             <Pressable
-              key={op}
-              accessibilityRole="tab"
-              accessibilityState={{ selected: ativa }}
-              onPress={() => setAba(op)}
-              style={[estilos.aba, ativa && estilos.abaAtiva]}
+              accessibilityRole="button"
+              accessibilityLabel="Novo lembrete"
+              hitSlop={8}
+              onPress={() => router.push('/lembretes/novo')}
+              style={estilos.botaoPreto}
             >
-              <Text style={[estilos.abaTexto, ativa && estilos.abaTextoAtivo]}>{op}</Text>
+              <Text style={estilos.botaoPretoSinal}>+</Text>
             </Pressable>
-          )
-        })}
-      </View>
-
-      <View style={estilos.atalhoRotina}>
-        <LinhaIcone
-          icone={<Icone nome="relogio" />}
-          rotulo="Rotina de cuidados"
-          valor="Antipulgas, vermífugo, banho e mais"
-          onPress={() => router.push('/lembretes/rotina')}
-          direita={<Icone nome="seta" size={16} cor={colors.textMuted} />}
-        />
-      </View>
-
-      {permissao !== 'concedida' ? (
-        <Pressable
-          accessibilityRole="button"
-          onPress={ativarAvisos}
-          style={({ pressed }) => [estilos.banner, pressed && estilos.pressionado]}
-        >
-          <Text style={estilos.bannerTitulo}>
-            {permissao === 'negada' ? 'Avisos desativados' : 'Ative os avisos'}
-          </Text>
-          <Text style={estilos.bannerTexto}>
-            {permissao === 'negada'
-              ? 'Toque para abrir as configurações do aparelho.'
-              : 'Receba um toque antes de cada vacina, consulta ou remédio.'}
-          </Text>
-        </Pressable>
-      ) : null}
-
-      {carregando ? (
-        <View style={estilos.centro}>
-          <ActivityIndicator color={colors.primaryDeep} />
+          </View>
         </View>
-      ) : filtrados.length === 0 ? (
-        <View style={estilos.centro}>
-          <Flutuar><Mascote especie="gato" size={130} /></Flutuar>
-          <Text style={estilos.vazioTitulo}>Nenhum lembrete {aba.toLowerCase()}</Text>
-          <Text style={estilos.vazioTexto}>
-            Crie lembretes de vacina, consulta ou banho para não esquecer.
-          </Text>
-        </View>
-      ) : (
-        <ScrollView
-          contentContainerStyle={estilos.lista}
-          showsVerticalScrollIndicator={false}
-          refreshControl={
-            <RefreshControl
-              refreshing={atualizando}
-              onRefresh={async () => {
-                setAtualizando(true)
-                await recarregar()
-                setAtualizando(false)
-              }}
-              tintColor={colors.primaryDeep}
-            />
-          }
-        >
-          {filtrados.map((lembrete) => {
-            const tipo = TIPOS.find((t) => t.valor === lembrete.tipo) ?? TIPOS[4]
-            const proximidade = rotuloProximidade(lembrete.proxima_em)
-            const urgencia = corUrgencia(proximidade.urgencia)
-            const pet = nomePet(lembrete.pet_id)
-            const repeticao = REPETICOES.find((r) => r.valor === lembrete.repetir)
 
+        <Text style={estilos.titulo} accessibilityRole="header">
+          Lembretes
+        </Text>
+
+        <View style={estilos.semana}>
+          {semana.map((dia, i) => {
+            const ehHoje = dia === hojeIso
+            const escolhido = dia === diaEscolhido
+            const temLembrete = diasComLembrete.has(dia)
             return (
-              <View
-                key={lembrete.id}
-                style={[estilos.card, { backgroundColor: tipo.fundo }]}
+              <Pressable
+                key={dia}
+                accessibilityRole="button"
+                accessibilityState={{ selected: escolhido }}
+                accessibilityLabel={`${DIAS_SEMANA[i]} ${Number(dia.slice(8))}${temLembrete ? ', tem lembrete' : ''}`}
+                onPress={() => setDiaEscolhido(escolhido ? null : dia)}
+                style={estilos.dia}
               >
-                <View style={estilos.cardTopo}>
-                  <View style={estilos.flex}>
-                    <Text style={[estilos.cardTitulo, { color: tipo.cor }]}>{lembrete.titulo}</Text>
-                    <Text style={[estilos.cardSub, { color: tipo.cor }]}>
-                      {[pet, repeticao?.rotulo].filter(Boolean).join(' · ') || tipo.rotulo}
-                    </Text>
-                  </View>
-
-                  <View style={[estilos.etiqueta, { backgroundColor: urgencia.fundo }]}>
-                    <Text style={[estilos.etiquetaTexto, { color: urgencia.texto }]}>
-                      {proximidade.texto}
-                    </Text>
-                  </View>
+                <Text style={estilos.diaNome}>{DIAS_SEMANA[i]}</Text>
+                <View
+                  style={[
+                    estilos.diaCirculo,
+                    temLembrete && estilos.diaComLembrete,
+                    (ehHoje || escolhido) && estilos.diaHoje,
+                  ]}
+                >
+                  <Text style={[estilos.diaNumero, (ehHoje || escolhido) && estilos.diaNumeroHoje]}>
+                    {Number(dia.slice(8))}
+                  </Text>
                 </View>
-
-                <Text style={[estilos.cardData, { color: tipo.cor }]}>
-                  {dataParaExibicao(lembrete.proxima_em)}
-                </Text>
-
-                <View style={estilos.acoes}>
-                  <Pressable
-                    accessibilityRole="button"
-                    onPress={() => concluirLembrete(lembrete)}
-                    style={({ pressed }) => [estilos.botaoFeito, pressed && estilos.pressionado]}
-                  >
-                    <Text style={estilos.botaoFeitoTexto}>Marcar como feito</Text>
-                  </Pressable>
-                  <Pressable
-                    accessibilityRole="button"
-                    accessibilityLabel={`Remover ${lembrete.titulo}`}
-                    onPress={() => confirmarRemocao(lembrete)}
-                    hitSlop={8}
-                    style={({ pressed }) => [estilos.botaoRemover, pressed && estilos.pressionado]}
-                  >
-                    <Text style={estilos.botaoRemoverTexto}>✕</Text>
-                  </Pressable>
-                </View>
-              </View>
+              </Pressable>
             )
           })}
-        </ScrollView>
-      )}
+        </View>
+
+        <Svg style={estilos.onda} width={width} height={46} viewBox="0 0 390 46" preserveAspectRatio="none">
+          <Path
+            d="M0 46V26C28 8 56 10 80 24C104 38 132 40 154 26C180 8 214 10 238 26C262 42 300 38 322 22C346 6 372 12 390 24V46z"
+            fill={colors.surface}
+          />
+        </Svg>
+      </View>
+
+      <ScrollView
+        contentContainerStyle={estilos.conteudo}
+        showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl
+            refreshing={atualizando}
+            onRefresh={async () => {
+              setAtualizando(true)
+              await Promise.all([recarregar(), carregarRemedios()])
+              setAtualizando(false)
+            }}
+            tintColor={colors.primaryDeep}
+          />
+        }
+      >
+        {permissao !== 'concedida' ? (
+          <Pressable
+            accessibilityRole="button"
+            onPress={ativarAvisos}
+            style={({ pressed }) => [estilos.banner, pressed && { opacity: 0.8 }]}
+          >
+            <Text style={estilos.bannerTitulo}>{permissao === 'negada' ? 'Avisos desativados' : 'Ative os avisos'}</Text>
+            <Text style={estilos.bannerTexto}>
+              {permissao === 'negada'
+                ? 'Toque para abrir as configurações do aparelho.'
+                : 'Receba um toque antes de cada vacina, consulta ou remédio.'}
+            </Text>
+          </Pressable>
+        ) : null}
+
+        {carregando ? <ActivityIndicator color={colors.primaryDeep} style={{ marginTop: 24 }} /> : null}
+
+        {vazio ? (
+          <View style={estilos.vazio}>
+            <Flutuar>
+              <Mascote especie="gato" size={130} />
+            </Flutuar>
+            <Text style={estilos.vazioTitulo}>{diaEscolhido ? 'Nada neste dia' : 'Nenhum lembrete'}</Text>
+            <Text style={estilos.vazioTexto}>Crie lembretes de vacina, consulta ou banho para não esquecer.</Text>
+          </View>
+        ) : null}
+
+        {secoes.map((secao, s) => {
+          // Os remédios em curso entram em "Esta semana", logo abaixo dos lembretes.
+          const comRemedios = s === 1 && mostrarRemedios
+          if (secao.itens.length === 0 && !comRemedios) return null
+          return (
+            <View key={secao.titulo} style={estilos.secao}>
+              <Text style={estilos.secaoTitulo}>{secao.titulo}</Text>
+              {secao.itens.map((lembrete, i) => {
+                const dono = petDe(lembrete.pet_id)
+                const cores = dono?.cores ?? coresDoPet({ cor_etiqueta: null }, i)
+                return (
+                  <Surgir key={lembrete.id} indice={i}>
+                    <Pressable
+                      accessibilityRole="button"
+                      accessibilityHint="Segure para apagar"
+                      onLongPress={() => confirmarRemocao(lembrete)}
+                      style={[estilos.cartao, { backgroundColor: cores.fundo, borderColor: cores.borda }]}
+                    >
+                      <View style={estilos.avatar}>
+                        {dono ? <Mascote especie={dono.pet.especie} size={58} recorte /> : <Icone nome="sino" size={22} />}
+                      </View>
+                      <View style={estilos.flex}>
+                        <Text style={estilos.cartaoTitulo} numberOfLines={1}>
+                          {lembrete.titulo}
+                        </Text>
+                        <Text style={[estilos.cartaoSub, { color: cores.texto }]} numberOfLines={1}>
+                          {[dono?.pet.nome, dataPorExtenso(lembrete.proxima_em)].filter(Boolean).join(' · ')}
+                        </Text>
+                      </View>
+                      <Pressable
+                        accessibilityRole="button"
+                        accessibilityLabel={`Marcar ${lembrete.titulo} como feito`}
+                        hitSlop={6}
+                        onPress={() => concluirLembrete(lembrete)}
+                        style={estilos.feito}
+                      >
+                        <Text style={estilos.feitoSinal}>✓</Text>
+                      </Pressable>
+                    </Pressable>
+                  </Surgir>
+                )
+              })}
+              {comRemedios
+                ? remedios.map((remedio, i) => {
+                    const { dia, total } = progressoDias(remedio)
+                    const vezes = remedio.horarios.length
+                    return (
+                      <Surgir key={remedio.id} indice={secao.itens.length + i}>
+                        <Pressable
+                          accessibilityRole="button"
+                          accessibilityHint="Abre as doses do remédio"
+                          onPress={() =>
+                            router.push({ pathname: '/pet/[id]/medicamentos', params: { id: remedio.pet_id } })
+                          }
+                          style={[estilos.cartao, { backgroundColor: AMARELO.fundo, borderColor: AMARELO.borda }]}
+                        >
+                          <View style={estilos.avatar}>
+                            <Icone nome="capsula" size={22} />
+                          </View>
+                          <View style={estilos.flex}>
+                            <Text style={estilos.cartaoTitulo} numberOfLines={1}>
+                              {remedio.nome}
+                              {vezes ? `, ${vezes}× ao dia` : ''}
+                            </Text>
+                            <Text style={[estilos.cartaoSub, { color: AMARELO.texto }]} numberOfLines={1}>
+                              {[remedio.pets?.nome, total ? `dia ${dia} de ${total}` : `dia ${dia}`].filter(Boolean).join(' · ')}
+                            </Text>
+                          </View>
+                          <View style={estilos.feito}>
+                            <Icone nome="seta" size={16} />
+                          </View>
+                        </Pressable>
+                      </Surgir>
+                    )
+                  })
+                : null}
+            </View>
+          )
+        })}
+
+        <View style={estilos.secao}>
+          <LinhaIcone
+            icone={<Icone nome="relogio" />}
+            rotulo="Rotina de cuidados"
+            valor="Antipulgas, vermífugo, banho e mais"
+            onPress={() => router.push('/lembretes/rotina')}
+            direita={<Icone nome="seta" size={16} cor={colors.textMuted} />}
+          />
+        </View>
+      </ScrollView>
     </View>
   )
 }
 
 const estilos = StyleSheet.create({
-  tela: { flex: 1, backgroundColor: colors.background },
-  flex: { flex: 1 },
-  cabecalho: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: spacing.xl,
-    paddingTop: spacing.xxl,
-    paddingBottom: spacing.md,
-  },
-  titulo: { ...typography.h1, fontSize: 30, lineHeight: 36, color: colors.black },
-  novo: {
-    width: 52,
-    height: 52,
-    borderRadius: 26,
-    backgroundColor: colors.primary,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  novoSinal: { fontSize: 28, lineHeight: 32, color: colors.black },
-  abas: {
-    flexDirection: 'row',
-    gap: 4,
-    marginHorizontal: spacing.xl,
-    marginBottom: spacing.md,
-    backgroundColor: colors.disabled,
-    borderRadius: 26,
-    padding: 4,
-  },
-  atalhoRotina: { marginHorizontal: spacing.xl, marginBottom: spacing.md },
-  aba: { flex: 1, height: 40, borderRadius: 20, alignItems: 'center', justifyContent: 'center' },
-  abaAtiva: { backgroundColor: colors.black },
-  abaTexto: { ...typography.captionMedium, color: colors.textMuted },
-  abaTextoAtivo: { color: colors.white },
-  banner: {
-    marginHorizontal: spacing.xl,
-    marginBottom: spacing.md,
-    backgroundColor: colors.warningSurface,
-    borderRadius: radius.lg,
-    padding: spacing.lg,
-  },
-  bannerTitulo: { ...typography.bodyMedium, color: colors.warningText },
-  bannerTexto: { ...typography.caption, color: colors.warningText, marginTop: 2 },
-  centro: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: spacing.xxl, gap: spacing.md },
-  vazioTitulo: { ...typography.h3, color: colors.text, textAlign: 'center' },
-  vazioTexto: { ...typography.body, color: colors.textMuted, textAlign: 'center', lineHeight: 22 },
-  lista: { paddingHorizontal: spacing.xl, paddingBottom: 130, gap: spacing.md },
-  card: { borderRadius: radius.lg, padding: spacing.lg, gap: spacing.sm },
-  cardTopo: { flexDirection: 'row', alignItems: 'flex-start', gap: spacing.sm },
-  cardTitulo: { ...typography.h3, fontFamily: fontFamily.bold },
-  cardSub: { ...typography.caption, marginTop: 2, opacity: 0.8 },
-  cardData: { ...typography.captionMedium },
-  etiqueta: { paddingHorizontal: spacing.md, paddingVertical: spacing.xs, borderRadius: radius.pill },
-  etiquetaTexto: { ...typography.small, fontFamily: fontFamily.bold },
-  acoes: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm, marginTop: spacing.xs },
-  botaoFeito: {
-    flex: 1,
-    height: 40,
-    borderRadius: 20,
+  tela: { flex: 1, backgroundColor: colors.surface },
+  flex: { flex: 1, minWidth: 0 },
+  heroi: { height: 290, backgroundColor: colors.hero, overflow: 'hidden', paddingHorizontal: 24, paddingTop: 56 },
+  topo: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+  topoDireita: { flexDirection: 'row', alignItems: 'center', gap: 14 },
+  botaoBranco: {
+    width: 46,
+    height: 46,
+    borderRadius: 23,
     backgroundColor: colors.white,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  botaoFeitoTexto: { ...typography.captionMedium, color: colors.text },
-  botaoRemover: {
+  botaoPreto: {
+    width: 46,
+    height: 46,
+    borderRadius: 23,
+    backgroundColor: colors.black,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  botaoPretoSinal: { fontSize: 26, lineHeight: 30, color: colors.white },
+  mes: { fontSize: 15, fontFamily: fontFamily.medium, color: colors.black },
+  titulo: {
+    marginTop: 14,
+    fontSize: 40,
+    lineHeight: 46,
+    letterSpacing: -1.2,
+    fontFamily: fontFamily.medium,
+    color: colors.black,
+  },
+  semana: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 16, marginHorizontal: -8 },
+  dia: { alignItems: 'center', gap: 4, flex: 1 },
+  diaNome: { fontSize: 12, fontFamily: fontFamily.medium, color: colors.primaryDark },
+  diaCirculo: { width: 40, height: 40, borderRadius: 20, alignItems: 'center', justifyContent: 'center' },
+  diaComLembrete: { backgroundColor: colors.white },
+  diaHoje: { backgroundColor: colors.black },
+  diaNumero: { fontSize: 15, fontFamily: fontFamily.semiBold, color: colors.black },
+  diaNumeroHoje: { color: colors.white },
+  onda: { position: 'absolute', left: 0, bottom: -1 },
+  conteudo: { paddingHorizontal: 24, paddingTop: 4, paddingBottom: 48, gap: 16 },
+  banner: { backgroundColor: colors.warningSurface, borderRadius: 24, padding: 16, gap: 2 },
+  bannerTitulo: { fontSize: 15, fontFamily: fontFamily.bold, color: colors.warningText },
+  bannerTexto: { ...typography.caption, color: colors.warningText },
+  vazio: { alignItems: 'center', gap: 8, paddingTop: 24 },
+  vazioTitulo: { ...typography.h3, color: colors.text },
+  vazioTexto: { ...typography.caption, color: colors.textMuted, textAlign: 'center' },
+  secao: { gap: 10 },
+  secaoTitulo: { fontSize: 16, fontFamily: fontFamily.bold, color: colors.black },
+  cartao: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    borderRadius: 30,
+    borderWidth: 1.5,
+    padding: 12,
+    paddingRight: 14,
+  },
+  avatar: {
+    width: 52,
+    height: 52,
+    borderRadius: 26,
+    backgroundColor: colors.white,
+    overflow: 'hidden',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  cartaoTitulo: { fontSize: 16, fontFamily: fontFamily.bold, color: colors.black },
+  cartaoSub: { fontSize: 13, fontFamily: fontFamily.medium },
+  feito: {
     width: 40,
     height: 40,
     borderRadius: 20,
@@ -313,6 +451,5 @@ const estilos = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  botaoRemoverTexto: { fontSize: 16, color: colors.textMuted },
-  pressionado: { opacity: 0.6 },
+  feitoSinal: { fontSize: 16, fontFamily: fontFamily.bold, color: colors.black },
 })
