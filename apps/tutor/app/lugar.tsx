@@ -9,7 +9,6 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
-import { Camera, Map, Marker } from '@maplibre/maplibre-react-native';
 import Svg, { Path } from 'react-native-svg';
 import { abrirWhatsApp, ligarPara } from '../src/mapa/acoes';
 import { FolhaRota } from '../src/mapa/FolhaRota';
@@ -23,13 +22,10 @@ import {
   type CategoriaLugar,
   type Lugar as LugarRegistro,
 } from '../src/mapa/lugares';
-import { PinLugar } from '../src/mapa/PinLugar';
+import { MapaLugares } from '../src/mapa/MapaLugares';
 import { colors } from '../src/theme/colors';
 import { radius, shadow, spacing } from '../src/theme/tokens';
 import { fontFamily, typography } from '../src/theme/typography';
-
-/** Mesmo estilo de mapa gratuito da tela Mapa (OpenFreeMap). */
-const ESTILO_MAPA = 'https://tiles.openfreemap.org/styles/liberty';
 
 function CardInfo({
   icone,
@@ -125,24 +121,13 @@ export default function Lugar() {
         {lugar.fotos?.length ? (
           <GaleriaFotos fotos={lugar.fotos} altura={280} />
         ) : (
-          <Map
-            style={StyleSheet.absoluteFill}
-            mapStyle={ESTILO_MAPA}
-            logo={false}
-            attribution={false}
-            compass={false}
-            dragPan={false}
-            touchZoom={false}
-            doubleTapZoom={false}
-            doubleTapHoldZoom={false}
-            touchRotate={false}
-            touchPitch={false}
-          >
-            <Camera center={[lugar.lng, lugar.lat]} zoom={15.5} />
-            <Marker lngLat={[lugar.lng, lugar.lat]}>
-              <PinLugar categoria={lugar.categoria} selecionado />
-            </Marker>
-          </Map>
+          <MapaLugares
+            centro={lugar}
+            zoom={15.5}
+            pins={[lugar]}
+            selecionado={lugar.id}
+            interativo={false}
+          />
         )}
 
         <Svg style={estilos.onda} width={width} height={46} viewBox="0 0 390 46" preserveAspectRatio="none">

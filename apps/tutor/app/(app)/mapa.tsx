@@ -10,7 +10,6 @@ import {
   View,
 } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
-import { Camera, Map, Marker, type CameraRef } from '@maplibre/maplibre-react-native';
 import Svg, { Path } from 'react-native-svg';
 import { BotaoPrimario } from '../../src/components/BotaoPrimario';
 import { ligarPara } from '../../src/mapa/acoes';
@@ -19,6 +18,7 @@ import { Icone } from '../../src/components/Icone';
 import { lugaresSalvos } from '../../src/mapa/favoritos';
 import { FolhaRota } from '../../src/mapa/FolhaRota';
 import { IlustracaoLugar } from '../../src/mapa/IlustracaoLugar';
+import { MapaLugares, type ControleMapa } from '../../src/mapa/MapaLugares';
 import {
   buscarLugares,
   buscarPetFriendly,
@@ -30,14 +30,10 @@ import {
   type CategoriaLugar,
   type Lugar,
 } from '../../src/mapa/lugares';
-import { PinLugar } from '../../src/mapa/PinLugar';
 import { useLocalizacao } from '../../src/mapa/useLocalizacao';
 import { colors } from '../../src/theme/colors';
 import { radius, shadow, spacing } from '../../src/theme/tokens';
 import { fontFamily, typography } from '../../src/theme/typography';
-
-/** Estilo de mapa gratuito (OpenFreeMap: tiles OSM, sem chave). */
-const ESTILO_MAPA = 'https://tiles.openfreemap.org/styles/liberty';
 
 /** 'pet_friendly' chega da tela Pet friendly ("Ver no mapa"). */
 type Filtro = 'todos' | CategoriaLugar | '24h' | 'salvos' | 'pet_friendly';
@@ -82,7 +78,7 @@ export default function Mapa() {
   const [carregando, setCarregando] = useState(true);
   const [selecionado, setSelecionado] = useState<Lugar | null>(null);
   const [rotaAberta, setRotaAberta] = useState(false);
-  const cameraRef = useRef<CameraRef>(null);
+  const mapaRef = useRef<ControleMapa>(null);
   // O toque no pin também chega ao mapa logo depois; sem isto o cartão
   // do lugar abria e fechava no mesmo toque.
   const tocouPin = useRef(false);
@@ -123,11 +119,7 @@ export default function Mapa() {
   // Chegou a localização real: centraliza o mapa nela.
   useEffect(() => {
     if (posicao) {
-      cameraRef.current?.easeTo({
-        center: [posicao.lng, posicao.lat],
-        zoom: 14,
-        duration: 600,
-      });
+      mapaRef.current?.irPara(posicao, 14, 600);
     }
   }, [posicao]);
 
@@ -149,20 +141,12 @@ export default function Mapa() {
       tocouPin.current = false;
     }, 500);
     setSelecionado(lugar);
-    cameraRef.current?.easeTo({
-      center: [lugar.lng, lugar.lat],
-      zoom: 15,
-      duration: 350,
-    });
+    mapaRef.current?.irPara(lugar, 15, 350);
   }
 
   function meuLocal() {
     if (posicao) {
-      cameraRef.current?.easeTo({
-        center: [posicao.lng, posicao.lat],
-        zoom: 14,
-        duration: 350,
-      });
+      mapaRef.current?.irPara(posicao, 14, 350);
     } else {
       localizar();
     }
@@ -172,36 +156,22 @@ export default function Mapa() {
 
   return (
     <View style={estilos.tela}>
-      <Map
-        style={StyleSheet.absoluteFill}
-        mapStyle={ESTILO_MAPA}
-        logo={false}
-        attribution={false}
-        compass={false}
-        onPress={() => {
+      <MapaLugares
+        ref={mapaRef}
+        centro={CENTRO_PADRAO}
+        zoom={13}
+        pins={lugares}
+        selecionado={lugar?.id}
+        mostrarUsuario={permissao === 'concedida'}
+        onPin={(id) => {
+          const escolhido = lugares.find((l) => l.id === id);
+          if (escolhido) selecionar(escolhido);
+        }}
+        onToqueMapa={() => {
           if (tocouPin.current) return;
           setSelecionado(null);
         }}
-      >
-        <Camera
-          ref={cameraRef}
-          initialViewState={{ center: [CENTRO_PADRAO.lng, CENTRO_PADRAO.lat], zoom: 13 }}
-        />
-        {lugares.map((registro) => (
-          <Marker
-            key={registro.id}
-            id={registro.id}
-            lngLat={[registro.lng, registro.lat]}
-            anchor="bottom"
-            onPress={() => selecionar(registro)}
-          >
-            <PinLugar
-              categoria={registro.categoria}
-              selecionado={lugar?.id === registro.id}
-            />
-          </Marker>
-        ))}
-      </Map>
+      />
 
       {/* Topo: busca e filtros flutuando sobre o mapa (protótipo Mapa). */}
       <View style={estilos.topo} pointerEvents="box-none">
