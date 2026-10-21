@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { Alert, Pressable, ScrollView, StyleSheet, Text, View, useWindowDimensions } from 'react-native';
-import { useRouter, type Href } from 'expo-router';
+import { useFocusEffect, useRouter, type Href } from 'expo-router';
 import { IconeLocal, IconePerfil, IconeSino, OndaHeroi } from '../../src/components/Layout';
 import { Gradiente } from '../../src/components/Gradiente';
 import { Icone, type NomeIcone } from '../../src/components/Icone';
@@ -19,6 +19,15 @@ import {
   textoProximaVacina,
 } from '../../src/pets/carteirinha';
 import { usePets } from '../../src/pets/PetsProvider';
+import { sincronizarDoses } from '../../src/notificacoes/doses';
+import {
+  carregarDosesHoje,
+  confirmarDose,
+  emTratamentoHoje,
+  garantirDosesHoje,
+  type DoseHoje,
+} from '../../src/remedios/doses';
+import { useRemedios } from '../../src/remedios/RemediosProvider';
 import { useVacinas } from '../../src/saude/VacinasProvider';
 import { colors } from '../../src/theme/colors';
 import { fontFamily } from '../../src/theme/typography';
@@ -30,8 +39,14 @@ const ATALHOS: { nome: string; fundo: string; icone: NomeIcone; cor?: string; de
   { nome: 'Calcular', fundo: '#FFF0C9', icone: 'calculadora', destino: '/ferramentas/calculadoras' },
   { nome: 'Rotina', fundo: '#DDF3E6', icone: 'relogio', destino: '/lembretes/rotina' },
   { nome: 'Lembretes', fundo: '#EBDDFB', icone: 'sino', destino: '/lembretes' },
-  { nome: 'Pet friendly', fundo: '#FFE3CC', icone: 'pata', destino: '/mapa/pet-friendly' },
+  // Os outros (Medicamentos, Pet friendly, Carteirinha...) ficam em Todos os atalhos (BUSINESS.md 5.43).
+  { nome: 'Ver todos', fundo: '#F3F5F8', icone: 'grade', destino: '/atalhos' },
 ];
+
+/** Item da lista Hoje: lembrete ou dose de remédio do pet escolhido. */
+type ItemHoje =
+  | { tipo: 'lembrete'; chave: string; titulo: string; quando: string; icone: NomeIcone; lembrete: Lembrete }
+  | { tipo: 'dose'; chave: string; titulo: string; quando: string; icone: NomeIcone; dose: DoseHoje };
 
 /** Cartões de "Hoje", alternados (protótipo Início). */
 const PALETA_HOJE = [
@@ -80,20 +95,74 @@ export default function Inicio() {
   const { width } = useWindowDimensions();
   const { pets, petAtivo, definirPetAtivo } = usePets();
   const { lembretes, concluirLembrete } = useLembretes();
+  const { remedios } = useRemedios();
+  const [doses, setDoses] = useState<DoseHoje[]>([]);
   const { vacinas } = useVacinas();
   const cidade = useCidade();
   const [ola] = useState(saudacao);
   const [limiteHoje] = useState(fimDeHoje);
   const [concluindo, setConcluindo] = useState<string | null>(null);
 
-  const hoje = lembretes.filter((l) => new Date(l.proxima_em).getTime() <= limiteHoje).slice(0, 3);
+  // Doses de hoje dos remédios do pet escolhido (geradas como em Medicamentos).
+  const emCurso = remedios.filter(emTratamentoHoje);
+  const idsRemedios = emCurso.map((r) => r.id).join(',');
+  useFocusEffect(
+    useCallback(() => {
+      let vivo = true;
+      const lista = remedios.filter((r) => idsRemedios.split(',').includes(r.id));
+      garantirDosesHoje(lista)
+        .catch(() => undefined)
+        .then(() => carregarDosesHoje(lista.map((r) => r.id)))
+        .then(
+          (achadas) => {
+            if (vivo) setDoses(achadas);
+          },
+          () => undefined,
+        );
+      return () => {
+        vivo = false;
+      };
+    }, [idsRemedios, remedios]),
+  );
+
+  // "Hoje" segue o pet escolhido no topo (BUSINESS.md 5.43): os lembretes dele
+  // (e os sem pet) e as doses que faltam, na ordem do horário.
+  const hoje: ItemHoje[] = [
+    ...lembretes
+      .filter((l) => (l.pet_id === null || l.pet_id === petAtivo?.id) && new Date(l.proxima_em).getTime() <= limiteHoje)
+      .map((l): ItemHoje => ({ tipo: 'lembrete', chave: l.id, titulo: l.titulo, quando: l.proxima_em, icone: ICONE_TIPO[l.tipo], lembrete: l })),
+    ...doses
+      .filter((d) => !d.confirmada_em && !d.pulada)
+      .map((d): ItemHoje => ({
+        tipo: 'dose',
+        chave: d.id,
+        titulo: remedios.find((r) => r.id === d.medication_id)?.nome ?? 'Remédio',
+        quando: d.prevista_para,
+        icone: 'capsula',
+        dose: d,
+      })),
+  ]
+    .sort((a, b) => new Date(a.quando).getTime() - new Date(b.quando).getTime())
+    .slice(0, 4);
   const proxima = proximaVacina(vacinas);
   const nomePet = petAtivo?.nome ?? 'seu pet';
 
-  function feito(lembrete: Lembrete) {
+  function feito(item: ItemHoje) {
     if (concluindo) return;
-    setConcluindo(lembrete.id);
-    concluirLembrete(lembrete)
+    setConcluindo(item.chave);
+    const salvar =
+      item.tipo === 'lembrete'
+        ? concluirLembrete(item.lembrete)
+        : confirmarDose(item.dose.id).then(
+            () => {
+              setDoses((atual) => atual.filter((d) => d.id !== item.dose.id));
+              // Dose dada antes da hora: a notificação dela não toca mais.
+              sincronizarDoses().catch(() => undefined);
+              return true;
+            },
+            () => false,
+          );
+    salvar
       .then((ok) => {
         if (!ok) Alert.alert('Não deu para salvar', AVISO_SEM_SALVAR);
       })
@@ -261,20 +330,20 @@ export default function Inicio() {
               </View>
             </Tocavel>
           ) : (
-            hoje.map((lembrete, i) => {
+            hoje.map((item, i) => {
               const cores = PALETA_HOJE[i % PALETA_HOJE.length];
-              const pet = pets.find((p) => p.id === lembrete.pet_id);
-              const quando = quandoHoje(lembrete.proxima_em);
+              const pet = item.tipo === 'dose' ? petAtivo : pets.find((p) => p.id === item.lembrete.pet_id);
+              const quando = quandoHoje(item.quando);
               const destaque = i === 0;
               return (
-                <Surgir key={lembrete.id} indice={i}>
+                <Surgir key={item.chave} indice={i}>
                   <View style={[estilos.lembrete, { backgroundColor: cores.fundo }]}>
                     <View style={estilos.lembreteIcone}>
-                      <Icone nome={ICONE_TIPO[lembrete.tipo]} size={18} />
+                      <Icone nome={item.icone} size={18} />
                     </View>
                     <View style={estilos.flex}>
                       <Text style={estilos.lembreteTitulo} numberOfLines={1}>
-                        {lembrete.titulo}
+                        {item.titulo}
                       </Text>
                       <Text style={[estilos.lembreteSub, { color: cores.texto }]} numberOfLines={1}>
                         {pet ? `${pet.nome} · ${quando}` : quando}
@@ -282,9 +351,9 @@ export default function Inicio() {
                     </View>
                     <Tocavel
                       accessibilityRole="button"
-                      accessibilityLabel={`Marcar ${lembrete.titulo} como feito`}
+                      accessibilityLabel={`Marcar ${item.titulo} como feito`}
                       disabled={concluindo !== null}
-                      onPress={() => feito(lembrete)}
+                      onPress={() => feito(item)}
                       style={[estilos.feito, destaque ? estilos.feitoDestaque : estilos.feitoClaro]}
                     >
                       <Icone nome="check" size={18} cor={destaque ? colors.white : colors.black} espessura={2.4} />

@@ -4,7 +4,7 @@ import { CANAL_PADRAO, cancelarLocal } from './notificacoes'
 import { preferenciasAvisos } from './prefs'
 
 /**
- * Notificação da dose com os botões Dei e Adiar 15 min (BUSINESS.md 5.34 e
+ * Notificação da dose com os botões Feito e Adiar 15 min (BUSINESS.md 5.34 e
  * fluxo 19.25). As doses dos próximos dias são agendadas no aparelho; o
  * toque no botão chama `registrar_dose` sem abrir o app.
  */
@@ -43,7 +43,7 @@ type RemedioComPet = {
 /** Registra os botões da notificação. Chamar uma vez ao abrir o app. */
 export async function registrarCategoriaDose(): Promise<void> {
   await Notifications.setNotificationCategoryAsync(CATEGORIA_DOSE, [
-    { identifier: ACAO_DEI, buttonTitle: 'Dei', options: { opensAppToForeground: false } },
+    { identifier: ACAO_DEI, buttonTitle: 'Feito', options: { opensAppToForeground: false } },
     {
       identifier: ACAO_ADIAR,
       buttonTitle: `Adiar ${ADIAR_MINUTOS} min`,
@@ -145,7 +145,7 @@ function ehDose(dados: unknown): dados is DadosDose {
 }
 
 /**
- * Trata o toque em Dei ou Adiar. Devolve true quando era um botão da dose
+ * Trata o toque em Feito ou Adiar. Devolve true quando era um botão da dose
  * (o chamador não navega). Usado pelo listener com o app aberto e pela
  * tarefa de segundo plano; a função do servidor é idempotente.
  */

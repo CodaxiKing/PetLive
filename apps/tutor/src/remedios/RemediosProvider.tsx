@@ -73,7 +73,7 @@ export function RemediosProvider({ children }: { children: ReactNode }) {
     recarregar()
   }, [recarregar])
 
-  // Notificações das doses (com Dei e Adiar) acompanham os remédios.
+  // Notificações das doses (com Feito e Adiar) acompanham os remédios.
   useEffect(() => {
     if (carregando) return
     sincronizarDoses().catch(() => undefined)

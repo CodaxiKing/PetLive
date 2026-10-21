@@ -43,7 +43,7 @@ if (dsnSentry) {
  */
 function useObservadorNotificacoes() {
   useEffect(() => {
-    // Botões Dei e Adiar da notificação da dose (com o app fechado, quem
+    // Botões Feito e Adiar da notificação da dose (com o app fechado, quem
     // trata é a tarefa de segundo plano em src/notificacoes/tarefaDose.ts).
     registrarCategoriaDose().catch(() => undefined);
     registrarTarefaDose().catch(() => undefined);
@@ -112,6 +112,7 @@ function RaizProtegida() {
                 <Stack.Screen name="pet/[id]/index" />
                 <Stack.Screen name="pet/[id]/carteirinha" />
                 <Stack.Screen name="mapa/pet-friendly" />
+                <Stack.Screen name="atalhos" />
                 <Stack.Screen name="mapa/indicar" options={{ presentation: 'modal', animation: 'slide_from_bottom' }} />
                 <Stack.Screen name="pet/[id]/editar" options={{ presentation: 'modal', animation: 'slide_from_bottom' }} />
                 <Stack.Screen name="pet/[id]/vacina/nova" options={{ presentation: 'modal', animation: 'slide_from_bottom' }} />
