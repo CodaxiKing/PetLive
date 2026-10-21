@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Carteirinha, pet novo</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<style>
+body{margin:0;font-family:'Plus Jakarta Sans',system-ui,sans-serif;color:#111}
+a{text-decoration:none;color:inherit}
+.vr{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:6px;align-items:center;padding:9px 0;font-size:13px;font-weight:600}
+.vr + .vr{border-top:1px solid rgba(17,17,17,0.08)}
+@media (prefers-reduced-motion:no-preference){
+@keyframes rise{from{opacity:0;translate:0 18px}to{opacity:1;translate:0 0}}
+@keyframes bob{0%,100%{translate:0 0}50%{translate:0 -2.5%}}
+.rise{animation:rise .6s cubic-bezier(.2,.7,.2,1) both}
+svg[viewBox="0 0 200 200"]{animation:bob 3.4s ease-in-out infinite}
+a{transition:transform .18s ease}
+.tap:hover{transform:translateY(-2px)}
+.tap:active{transform:scale(.97)}
+}
+</style>
+</helmet>
+<div style="width:390px;height:1000px;box-sizing:border-box;background:#fff;display:flex;flex-direction:column;overflow:hidden">
+  <div style="position:relative;height:176px;background:#A9DCF6;flex:none;overflow:hidden"><a href="Inicio.dc.html" aria-label="Voltar" style="position:absolute;left:24px;top:56px;width:46px;height:46px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></a><h1 style="position:absolute;left:24px;top:116px;margin:0;font-weight:500;font-size:34px;line-height:1.05;letter-spacing:-0.03em">Carteirinha</h1><svg style="position:absolute;left:0;bottom:-1px" width="390" height="34" viewBox="0 0 390 46" preserveAspectRatio="none" aria-hidden="true"><path d="M0 46V26C28 8 56 10 80 24C104 38 132 40 154 26C180 8 214 10 238 26C262 42 300 38 322 22C346 6 372 12 390 24V46z" fill="#fff"/></svg></div>
+  <div style="flex:1;padding:0 24px 28px;display:flex;flex-direction:column;gap:12px">
+    <div class="rise" style="background:#fff;border:1.5px solid #E6EAF0;border-radius:28px;box-shadow:0 10px 30px rgba(17,17,17,0.08);overflow:hidden">
+      <div style="background:linear-gradient(160deg,#A9DCF6,#EBDDFB);padding:14px 16px;display:flex;align-items:center;gap:14px"><span style="width:76px;height:76px;border-radius:50%;background:#fff;overflow:hidden;display:flex;align-items:flex-end;justify-content:center;flex:none"><svg width="70" height="70" viewBox="0 0 200 200" aria-hidden="true"><path d="M52 150Q100 190 148 150L170 200H30z" fill="#EAD9B8"/><path d="M50 58C26 68 22 122 40 146C58 146 64 102 64 70z" fill="#D9C7A0"/><path d="M150 58C174 68 178 122 160 146C142 146 136 102 136 70z" fill="#D9C7A0"/><ellipse cx="100" cy="92" rx="52" ry="56" fill="#F5E9D0"/><ellipse cx="100" cy="120" rx="30" ry="24" fill="#F8E3C0"/><ellipse cx="100" cy="104" rx="11" ry="7.5" fill="#2A211C"/><circle cx="79" cy="82" r="7" fill="#2A211C"/><circle cx="121" cy="82" r="7" fill="#2A211C"/></svg></span><div style="flex:1;min-width:0"><div style="font-weight:700;font-size:28px;letter-spacing:-0.03em;line-height:1.05">Pipoca</div><div style="font-size:13px;color:#2B3A4A;margin-top:2px">Cão · Poodle</div><div style="font-size:13px;color:#2B3A4A;font-weight:700;margin-top:2px">Tutor: Diego</div></div></div>
+      <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;padding:12px 14px 14px"><div style="background:#FFF0C9;border-radius:18px;padding:8px 10px"><div style="font-size:11px;font-weight:600;color:#7A5A00">Idade</div><div style="font-size:15px;font-weight:700">2 meses</div></div><div style="background:#EBDDFB;border-radius:18px;padding:8px 10px"><div style="font-size:11px;font-weight:600;color:#5B3C8F">Sexo</div><div style="font-size:15px;font-weight:700">Fêmea</div></div><div style="background:#DDF3E6;border-radius:18px;padding:8px 10px"><div style="font-size:11px;font-weight:600;color:#1F6B45">Peso</div><div style="font-size:15px;font-weight:700">3 kg</div></div></div>
+    </div>
+    <div style="background:#FFF0C9;border-radius:20px;padding:10px 14px;display:flex;align-items:center;gap:10px"><div style="flex:1"><div style="font-size:13px;font-weight:700;color:#4A3800">Carteirinha quase vazia</div><div style="font-size:12px;color:#7A5A00">Complete 5 itens para ficar útil no veterinário</div></div><span style="font-size:13px;font-weight:800;color:#4A3800">1/6</span></div>
+    <div style="background:#E3F3FC;border-radius:26px;padding:14px 16px;display:flex;flex-direction:column;gap:8px"><div style="display:flex;align-items:center;gap:10px"><span style="width:34px;height:34px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;flex:none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4l6 6-9 9-6-6z"/><path d="M5 13l6 6"/></svg></span><span style="flex:1;font-weight:700;font-size:16px">Vacinas</span></div><div style="font-size:13px;line-height:1.45;color:#3C4656">Nenhuma vacina registrada ainda. Filhotes costumam começar as vacinas com 6 a 8 semanas. Converse com o veterinário.</div><div style="display:flex;gap:8px;flex-wrap:wrap"><a href="Vacina.dc.html" style="height:40px;padding:0 16px;border-radius:20px;background:#111;color:#fff;display:flex;align-items:center;font-size:13px;font-weight:700">Registrar vacina</a><a href="CartaoPremium.dc.html" style="height:40px;padding:0 16px;border-radius:20px;background:#fff;display:flex;align-items:center;font-size:13px;font-weight:700">Escanear cartão</a></div></div>
+    <div style="background:#FDE0E6;border-radius:26px;padding:14px 16px;display:flex;flex-direction:column;gap:8px"><div style="display:flex;align-items:center;gap:10px"><span style="width:34px;height:34px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;flex:none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l9 16H3z"/><path d="M12 10v4M12 17h.01"/></svg></span><span style="flex:1;font-weight:700;font-size:16px">Alergias</span></div><div style="font-size:13px;line-height:1.45;color:#3C4656">Nenhuma alergia registrada. Se o Pipoca tiver alguma, anote aqui.</div><div style="display:flex;gap:8px;flex-wrap:wrap"><a href="Remedio.dc.html" style="height:40px;padding:0 16px;border-radius:20px;background:#fff;display:flex;align-items:center;font-size:13px;font-weight:700">Adicionar alergia</a></div></div>
+    <div style="background:#FFF0C9;border-radius:26px;padding:14px 16px;display:flex;flex-direction:column;gap:8px"><div style="display:flex;align-items:center;gap:10px"><span style="width:34px;height:34px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;flex:none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="9" width="18" height="6" rx="3"/><path d="M12 9v6"/></svg></span><span style="flex:1;font-weight:700;font-size:16px">Remédios em uso</span></div><div style="font-size:13px;line-height:1.45;color:#3C4656">Nenhum remédio agora.</div><div style="display:flex;gap:8px;flex-wrap:wrap"><a href="Remedio.dc.html" style="height:40px;padding:0 16px;border-radius:20px;background:#fff;display:flex;align-items:center;font-size:13px;font-weight:700">Adicionar remédio</a></div></div>
+    <div style="background:#F3F5F8;border-radius:26px;padding:14px 16px;display:flex;flex-direction:column;gap:8px"><div style="display:flex;align-items:center;gap:10px"><span style="width:34px;height:34px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;flex:none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg></span><span style="flex:1;font-weight:700;font-size:16px">Veterinário</span></div><div style="font-size:13px;line-height:1.45;color:#3C4656">Ainda sem veterinário. Em uma emergência o SOS acha a clínica 24 h mais perto.</div><div style="display:flex;gap:8px;flex-wrap:wrap"><a href="Consultas.dc.html" style="height:40px;padding:0 16px;border-radius:20px;background:#fff;display:flex;align-items:center;font-size:13px;font-weight:700">Adicionar veterinário</a></div></div>
+    <div style="background:#EBDDFB;border-radius:26px;padding:14px 16px;display:flex;flex-direction:column;gap:8px"><div style="display:flex;align-items:center;gap:10px"><span style="width:34px;height:34px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;flex:none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h11l3 3v13H5z"/><path d="M8 11h8M8 15h6"/></svg></span><span style="flex:1;font-weight:700;font-size:16px">Observações</span></div><div style="font-size:13px;line-height:1.45;color:#3C4656">Conte o que ajuda quem cuida dele: medos, rotina e manias.</div><div style="display:flex;gap:8px;flex-wrap:wrap"><a href="Pet.dc.html" style="height:40px;padding:0 16px;border-radius:20px;background:#fff;display:flex;align-items:center;font-size:13px;font-weight:700">Escrever</a></div></div>
+    <div style="font-size:11px;line-height:1.45;color:#6A7484;text-align:center">Você pode compartilhar agora, mas só com os dados básicos.</div>
+    <a href="CompartilharOpcoes.dc.html" style="margin-top:auto;height:64px;border-radius:32px;background:#111;color:#fff;display:flex;align-items:center;padding:0 6px"><span style="width:52px;height:52px;border-radius:50%;background:#9AD6F8;display:flex;align-items:center;justify-content:center;flex:none"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="6" r="2.5"/><circle cx="18" cy="18" r="2.5"/><path d="M8.2 11l7.6-4M8.2 13l7.6 4"/></svg></span><span style="flex:1;text-align:center;font-weight:600;font-size:17px;padding-right:52px">Compartilhar carteirinha</span></a>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":1000}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>

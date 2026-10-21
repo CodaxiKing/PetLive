@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Avisos</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<style>
+body{margin:0;font-family:'Plus Jakarta Sans',system-ui,sans-serif;color:#111}
+a{text-decoration:none;color:inherit}
+button{font-family:inherit}
+@media (prefers-reduced-motion:no-preference){
+@keyframes rise{from{opacity:0;translate:0 14px}to{opacity:1;translate:0 0}}
+@keyframes up{from{translate:0 40px;opacity:0}to{translate:0 0;opacity:1}}
+.rise{animation:rise .5s cubic-bezier(.2,.7,.2,1) both}
+.sheet{animation:up .45s cubic-bezier(.2,.7,.2,1) both}
+a{transition:transform .18s ease}
+.tap:hover{transform:translateY(-2px)}
+.tap:active{transform:scale(.98)}
+}
+</style>
+</helmet>
+<div style="position:relative;width:390px;height:844px;box-sizing:border-box;background:#fff;overflow:hidden;display:flex;flex-direction:column">
+<div style="position:relative;height:190px;background:#A9DCF6;flex:none;overflow:hidden"><a href="Inicio.dc.html" aria-label="Voltar" style="position:absolute;left:24px;top:56px;width:46px;height:46px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></a><a href="Notificacoes.dc.html" aria-label="Configurar avisos" style="position:absolute;right:24px;top:56px;width:46px;height:46px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"/></svg></a><div style="position:absolute;left:24px;top:106px;font-size:14px;font-weight:500;color:#2F6F93">2 novos</div><h1 style="position:absolute;left:24px;top:126px;margin:0;font-weight:500;font-size:34px;letter-spacing:-0.03em;line-height:1.05">Avisos</h1><svg style="position:absolute;left:0;bottom:-1px" width="390" height="46" viewBox="0 0 390 46" preserveAspectRatio="none" aria-hidden="true"><path d="M0 46V26C28 8 56 10 80 24C104 38 132 40 154 26C180 8 214 10 238 26C262 42 300 38 322 22C346 6 372 12 390 24V46z" fill="#fff"/></svg></div>
+<div style="padding:0 24px;display:flex;flex-direction:column;gap:8px;flex:1;overflow:hidden">
+ <div style="font-size:12px;font-weight:700;color:#5E6878">Hoje</div>
+ <a href="Vacina.dc.html" class="tap" style="display:flex;align-items:center;gap:12px;background:#fff;border:1.5px solid #E1E6EE;border-radius:24px;padding:10px 14px 10px 10px;box-sizing:border-box"><span style="width:44px;height:44px;border-radius:50%;background:#EBDDFB;display:flex;align-items:center;justify-content:center;flex:none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4l6 6-9 9-6-6z"/><path d="M5 13l6 6"/></svg></span><div style="flex:1;min-width:0"><div style="font-size:14px;font-weight:700">V10 do Rex vence em 5 dias</div><div style="font-size:12px;color:#5E6878;line-height:1.35">Toque para registrar a vacina.</div></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex:none"><span style="font-size:11px;color:#6A7484">09:00</span><span style="width:10px;height:10px;border-radius:50%;background:#D93B5A"></span></div></a>
+ <a href="HotelBoletim.dc.html" class="tap" style="display:flex;align-items:center;gap:12px;background:#fff;border:1.5px solid #E1E6EE;border-radius:24px;padding:10px 14px 10px 10px;box-sizing:border-box"><span style="width:44px;height:44px;border-radius:50%;background:#DDF3E6;display:flex;align-items:center;justify-content:center;flex:none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-6-5.5-6-10a6 6 0 0 1 12 0c0 4.5-6 10-6 10z"/><circle cx="12" cy="11" r="2"/></svg></span><div style="flex:1;min-width:0"><div style="font-size:14px;font-weight:700">O Rex chegou bem ao hotel</div><div style="font-size:12px;color:#5E6878;line-height:1.35">[Nome da loja] fez o check-in às 10:12.</div></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex:none"><span style="font-size:11px;color:#6A7484">10:15</span><span style="width:10px;height:10px;border-radius:50%;background:#D93B5A"></span></div></a>
+ <a href="Medicamentos.dc.html" class="tap" style="display:flex;align-items:center;gap:12px;background:#F3F5F8;border-radius:24px;padding:10px 14px 10px 10px;box-sizing:border-box"><span style="width:44px;height:44px;border-radius:50%;background:#FFF0C9;display:flex;align-items:center;justify-content:center;flex:none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="9" width="18" height="6" rx="3"/><path d="M12 9v6"/></svg></span><div style="flex:1;min-width:0"><div style="font-size:14px;font-weight:600">Antibiótico do Rex dado</div><div style="font-size:12px;color:#5E6878;line-height:1.35">Marcado por [Camila] às 08:02.</div></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex:none"><span style="font-size:11px;color:#6A7484">08:02</span></div></a>
+ <div style="font-size:12px;font-weight:700;color:#5E6878;margin-top:4px">Ontem</div>
+ <a href="PetIdoso.dc.html" class="tap" style="display:flex;align-items:center;gap:12px;background:#F3F5F8;border-radius:24px;padding:10px 14px 10px 10px;box-sizing:border-box"><span style="width:44px;height:44px;border-radius:50%;background:#FFF0C9;display:flex;align-items:center;justify-content:center;flex:none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg></span><div style="flex:1;min-width:0"><div style="font-size:14px;font-weight:600">A Mia agora é sênior</div><div style="font-size:12px;color:#5E6878;line-height:1.35">Ajustamos a rotina de cuidados.</div></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex:none"><span style="font-size:11px;color:#6A7484">19:30</span></div></a>
+ <a href="EventosMapa.dc.html" class="tap" style="display:flex;align-items:center;gap:12px;background:#F3F5F8;border-radius:24px;padding:10px 14px 10px 10px;box-sizing:border-box"><span style="width:44px;height:44px;border-radius:50%;background:#D8F2E3;display:flex;align-items:center;justify-content:center;flex:none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="3"/><path d="M4 10h16M9 3v4M15 3v4"/></svg></span><div style="flex:1;min-width:0"><div style="font-size:14px;font-weight:600">Feira de adoção neste sábado</div><div style="font-size:12px;color:#5E6878;line-height:1.35">Perto de você, das 10h às 16h.</div></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex:none"><span style="font-size:11px;color:#6A7484">12:10</span></div></a>
+ <a href="Peso.dc.html" class="tap" style="display:flex;align-items:center;gap:12px;background:#F3F5F8;border-radius:24px;padding:10px 14px 10px 10px;box-sizing:border-box"><span style="width:44px;height:44px;border-radius:50%;background:#E3F3FC;display:flex;align-items:center;justify-content:center;flex:none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h16M4 12h16M4 16h10"/></svg></span><div style="flex:1;min-width:0"><div style="font-size:14px;font-weight:600">Peso do Rex registrado</div><div style="font-size:12px;color:#5E6878;line-height:1.35">28 kg, 0,4 kg a mais que no mês passado.</div></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex:none"><span style="font-size:11px;color:#6A7484">08:40</span></div></a>
+</div>
+<div style="padding:8px 24px 28px;flex:none"><a href="Notificacoes.dc.html" style="height:52px;border-radius:26px;border:1.5px solid #E1E6EE;box-sizing:border-box;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px">Escolher quais avisos receber</a></div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>

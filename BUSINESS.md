@@ -4,7 +4,7 @@ Este documento é a fonte única do escopo do PetLive. A **Parte A** (seções 1
 
 | Recurso | Link |
 | --- | --- |
-| Protótipo (160 telas e páginas, separadas por fase no canvas, com a paleta de cores) | https://claude.ai/artifact/UFhxFUGwCYokbjPKCXDqKK |
+| Protótipo (181 telas e páginas, separadas por fase no canvas, com a paleta de cores) | https://claude.ai/artifact/UFhxFUGwCYokbjPKCXDqKK |
 | Imagens das telas | [prototipo/imagens](prototipo/imagens/README.md) |
 | Plano de criação | https://claude.ai/code/artifact/871f3a23-4e21-4456-861f-b630c089235f |
 | Board de tarefas (194 tasks) | https://github.com/users/CodaxiKing/projects/5 |
@@ -17,7 +17,7 @@ O produto é entregue em fases. **Só a Fase 1 está em desenvolvimento agora.**
 
 | Fase | Foco | O que entra | Situação |
 | --- | --- | --- | --- |
-| **1** | **Pet, lugares e emergência** | Conta, pets, saúde, lembretes, remédios e rotina de cuidados; mapa de clínicas, petshops, creches, hotelzinhos e lugares pet friendly do Google Maps, com telefone, fotos e rota; **SOS com clínica 24 h e primeiros socorros sem internet**; calculadoras; botão **Dei** direto na notificação da dose | **Agora** |
+| **1** | **Pet, lugares e emergência** | Conta, pets, saúde, lembretes, remédios e rotina de cuidados; mapa de clínicas, petshops, creches, hotelzinhos e lugares pet friendly do Google Maps, com telefone, fotos e rota; **SOS com clínica 24 h e primeiros socorros sem internet**; calculadoras; botão **Feito** direto na notificação da dose | **Agora** |
 | 2 | Premium e operação | Premium, carteira em PDF, QR da coleira, página pública do QR, **eventos pet no mapa**, **ler cartão de vacina por foto**, **adoção**, **cuidador temporário**, **linha do tempo**, **checklist de viagem**, **selos de cuidado**, **passeios com GPS**, **despesas do pet**, **modo fogos e trovão**, **widget da tela inicial**, **cartão do pet para compartilhar**, **ficha de emergência por link**, **modo memorial**, **pet sênior com escala de qualidade de vida**, site e painel admin básico | Depois da Fase 1 |
 | 3 | Marketplace (parte separada) | Lojas no PetLive, produtos, serviços com agenda, pedidos, entrega, pagamentos, chat, cupons, avaliações, painel do lojista, admin das lojas e **agendar consulta direto na clínica**, **SOS com pré-chegada na clínica** e **álbum impresso do ano do pet** | Futuro, não é para agora |
 | 4 | Rede social | Comunidade, perfil público do pet, posts, seguir e feed | Futuro |
@@ -149,7 +149,7 @@ Em uma frase: a carteira de saúde do pet, com lembretes e um mapa de lugares pe
 - **Calculadoras:** idade do pet em anos humanos, porção diária de ração e peso ideal.
 - **Rotina de cuidados:** lembretes de antipulgas mensal, vermífugo, banho, escovar os dentes e aniversário do pet.
 - **Pet friendly no mapa:** parques, praias, restaurantes e hotéis que aceitam pets (dados do Google, seção 5.19).
-- **Botão Dei na notificação:** confirmar a dose ou o lembrete sem abrir o app (seção 5.34).
+- **Botão Feito na notificação:** confirmar a dose ou o lembrete sem abrir o app (seção 5.34).
 
 **Cuidados e memórias (Fase 2)**
 - **Ler o cartão de vacina por foto** (Premium): o app lê as vacinas da imagem, o tutor revisa e só então salva.
@@ -256,7 +256,7 @@ Uso interno da equipe PetLive, com login e verificação em duas etapas. A colun
 
 ## 5. Regras de negócio
 
-Vigência por fase: **5.7, 5.15 e 5.17 a 5.21 valem desde a Fase 1**. **5.6, 5.13, 5.16 e 5.22 a 5.27 valem na Fase 2.** **5.31 a 5.35 valem na Fase 2, exceto a ação Dei de 5.34, que vale desde a Fase 1.** **5.36 vale na Fase 3.** **5.37 vale em duas partes: a ficha por link na Fase 2 e o "Estou a caminho" na Fase 3.** **5.39 e 5.40 valem na Fase 2, 5.41 na Fase 3 e 5.38 na Fase 5.** **5.28 vale na Fase 4 e 5.29 e 5.30, na Fase 5.** **5.1 a 5.5, 5.8 a 5.12 e 5.14 valem só na Fase 3** (marketplace) e ficam registradas aqui para não se perderem.
+Vigência por fase: **5.7, 5.15 e 5.17 a 5.21 valem desde a Fase 1**. **5.6, 5.13, 5.16 e 5.22 a 5.27 valem na Fase 2.** **5.31 a 5.35 valem na Fase 2, exceto a ação Feito de 5.34, que vale desde a Fase 1.** **5.36 vale na Fase 3.** **5.37 vale em duas partes: a ficha por link na Fase 2 e o "Estou a caminho" na Fase 3.** **5.39 e 5.40 valem na Fase 2, 5.41 na Fase 3 e 5.38 na Fase 5.** **5.28 vale na Fase 4 e 5.29 e 5.30, na Fase 5.** **5.1 a 5.5, 5.8 a 5.12 e 5.14 valem só na Fase 3** (marketplace) e ficam registradas aqui para não se perderem.
 
 ### 5.1 O que a loja oferece
 
@@ -463,7 +463,7 @@ O PetLive organiza informações e não substitui o atendimento veterinário. Es
 
 ### 5.24 Cuidador temporário (Fase 2)
 
-> **Telas:** a visão do cuidador abre por link (`CuidadorVisao`): mostra os remédios do dia com o botão **Dei**, vacinas, alergias e os contatos de emergência, com o prazo no topo e aviso de que cada acesso é registrado.
+> **Telas:** a visão do cuidador abre por link (`CuidadorVisao`): mostra os remédios do dia com o botão **Feito**, vacinas, alergias e os contatos de emergência, com o prazo no topo e aviso de que cada acesso é registrado.
 
 - O tutor cria um **acesso com prazo** para um ou mais pets, escolhendo o período e **o que o cuidador pode ver**: vacinas e vermífugo, remédios e horários, e alergias e contatos de emergência.
 - O cuidador entra por **link ou código**, sem precisar do plano do tutor. Pode **marcar dose dada**, mas não edita o cadastro nem vê dados de pagamento, outros pets ou o histórico completo.
@@ -543,10 +543,10 @@ O PetLive organiza informações e não substitui o atendimento veterinário. Es
 - **Trovão e tempestade** (opcional): aviso de tempestade perto, via serviço de clima `[a definir]`.
 - O conteúdo **não recomenda remédio** e lembra de falar com o veterinário. Revisão veterinária como nas seções 5.18 e 5.26.
 
-### 5.34 Widget, atalhos e botão Dei (Fases 1 e 2)
+### 5.34 Widget, atalhos e botão Feito (Fases 1 e 2)
 
-- **Botão Dei na notificação (Fase 1):** a notificação de dose ou lembrete tem as ações **Dei** (registra a dose e recalcula o próximo) e **Adiar 15 min**. Sem abrir o app. O toque fica registrado com data e hora.
-- **Widget (Fase 2):** na tela inicial mostra a **próxima dose ou vacina** do pet escolhido e o botão **Dei**, em tamanho pequeno e médio. Atualiza em até `[15]` minutos. O tutor pode desligar o widget ou esconder o nome do remédio na tela bloqueada.
+- **Botão Feito na notificação (Fase 1):** a notificação de dose ou lembrete tem as ações **Feito** (registra a dose e recalcula o próximo) e **Adiar 15 min**. Sem abrir o app. O toque fica registrado com data e hora.
+- **Widget (Fase 2):** na tela inicial mostra a **próxima dose ou vacina** do pet escolhido e o botão **Feito**, em tamanho pequeno e médio. Atualiza em até `[15]` minutos. O tutor pode desligar o widget ou esconder o nome do remédio na tela bloqueada.
 - **Atalhos do ícone do app (Fase 2):** pressionar o ícone mostra SOS, registrar peso e iniciar passeio.
 - Widgets exigem código nativo no Expo `[conferir a abordagem na implementação]`.
 
@@ -651,9 +651,27 @@ O PetLive organiza informações e não substitui o atendimento veterinário. Es
 - **O que o hotel não vê.** Pagamentos e despesas do tutor, **outros pets** dele, localização e endereço de casa, e qualquer dado que o tutor tenha desligado.
 - **Vacinas em dia.** A exigência de vacinas já vale para reservar (seção 6). Se uma vacina vencer durante a estadia, a ficha mostra o aviso para a equipe.
 - **Quem abriu.** Cada abertura da ficha e cada dose marcada ficam em um **registro de acessos**, com o **nome do membro da equipe**, a data e a hora. O tutor também vê esse registro.
+- **O que o tutor vê (app).** Na reserva (`AgendarHotel`) há o cartão **"Compartilhar a carteirinha do Rex com o hotel"**, ligado por padrão, que abre `CompartilharHotel`: o tutor liga ou desliga cada seção (vacinas, remédios, alergias, contatos, observações), vê o prazo e o que o hotel nunca vê. Em **Cuidadores** (`Cuidador`), o hotel aparece em **Quem tem acesso agora** com o prazo e o botão **Ver**, e o tutor pode **revogar** a qualquer hora. Sem consentimento, o hotel vê só os dados da reserva.
+- **Chegou bem e boletim do dia.** No **check-in**, a equipe confirma a chegada e o tutor recebe o aviso **"O pet chegou bem ao hotel"** (`HotelNotificacao`). Durante a estadia, a equipe pode **enviar o boletim** (`Enviar boletim ao tutor` no painel): refeições, remédio dado, passeio, soneca e uma **foto**. O tutor lê tudo em `HotelBoletim`, com o botão **Falar com o hotel** (chat da loja). Cada boletim entra na **caixa de avisos** do tutor.
 - **Depois da estadia.** O hotel **perde o acesso aos dados de saúde** e fica só com o **registro da hospedagem** (datas, quarto, valor e quem atendeu), como em qualquer pedido. As doses marcadas continuam no histórico do **tutor**.
 - **Equipe.** Só membros da equipe da loja com a permissão **Ver hóspedes** abrem a ficha. O dono da loja define isso em Equipe.
 - **Privacidade.** O hotel não pode exportar nem baixar a carteirinha. Capturas de tela não são bloqueadas, por isso o aviso na ficha: "Dados do tutor, para uso durante a estadia".
+
+### 5.43 Início, caixa de avisos, estados do app e cadastro (Fases 1 e 2)
+
+> **Telas:** `Inicio`, `TodosAtalhos`, `CaixaAvisos`, `MapaSemPermissao`, `MapaSemInternet`, `MapaSemResultados`, `CartaoPremium`, `CarteirinhaVazia`, `CompartilharSecoes`.
+
+- **Início segue o pet escolhido.** O seletor de pets no topo troca o **cartão da próxima vacina ou dose**, a lista **Hoje** (cada item com o botão **Feito**) e o card da **Carteirinha**. O pet sênior mostra a etiqueta **Sênior**. O botão **+** abre o cadastro de um novo pet (limite do plano grátis na seção 10).
+- **Atalhos.** A linha rola para o lado e mostra **5 atalhos** (SOS, Lugares, Calcular, Rotina e Lembretes) mais **Ver todos**, que abre `TodosAtalhos` com os 12: SOS, Lugares, Calculadoras, Rotina, Lembretes, Medicamentos, Pet friendly, Eventos, Adoção, Passeios, Despesas e Carteirinha. Os de fases futuras só aparecem quando a fase existir.
+- **Caixa de avisos.** O sino da Início abre `CaixaAvisos`: o **histórico dos últimos `[30]` dias** de avisos (vacina, dose, hotel, sênior, eventos, peso), agrupado em **Hoje** e **Ontem**, com **ponto vermelho** nos não lidos e a hora. Tocar em um aviso abre a tela dele e o marca como lido. A engrenagem abre as **preferências** (`Notificacoes`). O aviso que o tutor desligou nas preferências **não chega**, mas o que já chegou continua na caixa.
+- **Mapa sem localização.** Se a permissão foi negada, o mapa mostra a explicação ("usamos sua posição só com o mapa aberto") e três saídas: **Permitir localização** (abre os ajustes do aparelho), **Buscar por bairro ou região** (funciona sem GPS) e **Abrir o SOS**.
+- **Mapa sem internet.** Mostra um aviso, os **últimos lugares vistos** (guardados no aparelho) com a data da última atualização e **Tentar de novo**. Telefone, horário e fotos podem estar desatualizados, e a busca e a rota exigem internet. O atalho **Primeiros socorros** segue funcionando.
+- **Mapa sem resultados.** Diz o que foi filtrado ("creches abertas em 3 km") e oferece **Aumentar a busca para 10 km**, **Limpar os filtros** e **Ver lugares pet friendly**.
+- **Escanear no plano grátis.** O atalho **Escanear** da Início e do pet leva ao convite `CartaoPremium`: explica o que a leitura faz (lê nome, data e próxima dose, o tutor revisa tudo e nada se repete), lembra que **registrar à mão é grátis e sem limite** e tem **Conhecer o Premium**. Quem já é Premium vai direto ao scanner (**Já sou Premium** no protótipo).
+- **Carteirinha de um pet novo.** Cada seção vazia mostra uma explicação curta e **uma ação** (registrar vacina, adicionar alergia, remédio, veterinário, observação), e o topo mostra a **completude** ("1/6"). Dá para compartilhar mesmo vazia, só com os dados básicos.
+- **O que incluir ao compartilhar.** Antes de escolher o formato (`CompartilharOpcoes`), o tutor passa por `CompartilharSecoes` e escolhe entre **8 itens**: dados do pet, vacinas, alergias, remédios, saúde e cuidados, veterinário, observações e o telefone do tutor. Vêm ligados dados, vacinas, alergias, veterinário e telefone. A escolha vale **só para aquele envio**.
+- **Ordem do cadastro.** Boas-vindas, Conta, **Termos e consentimento**, **Permissões do app**, Cadastro do pet e Início. O tutor só chega ao app depois de aceitar os termos.
+- **Um só nome para a ação de dose.** O botão que confirma remédio, vacina ou lembrete se chama **Feito**, na Início, na notificação, no widget e na visão do cuidador.
 
 ---
 
@@ -711,7 +729,7 @@ Acesso protegido por regras de linha (RLS) no Supabase: cada tutor só vê os da
 | Dados de lugares | Google Places API (New): busca por proximidade, detalhe, fotos |
 | Endereço e distância (Fase 3) | Geocodificação do Google ou equivalente `[a definir]` |
 | Backend | Supabase: Auth, Postgres, Storage, Realtime, Edge Functions e cron |
-| Notificações | expo-notifications (FCM e APNs), com ações Dei e Adiar nas notificações de dose |
+| Notificações | expo-notifications (FCM e APNs), com ações Feito e Adiar nas notificações de dose |
 | Dados no aparelho (offline) | Banco local `[expo-sqlite ou MMKV]` para o pacote de emergência, as calculadoras e a fila de sincronização |
 | GPS dos passeios (Fase 2) | expo-location, com gravação em segundo plano só se o tutor ativar |
 | Widget e atalhos (Fase 2) | Módulo nativo ou plugin de configuração do Expo `[conferir na implementação]` |
@@ -770,7 +788,7 @@ A divisão abaixo é uma **proposta para validar**. Regra geral: tudo que proteg
 | Pets | 1 pet. Pets a mais ficam só em leitura (seção 5.13) | Vários pets |
 | Saúde: vacinas, peso, consultas, lembretes, remédios, rotina | Sim | Sim |
 | Mapa de lugares, pet friendly, SOS, primeiros socorros, intoxicação, calculadoras | Sim | Sim |
-| Botão Dei na notificação | Sim | Sim |
+| Botão Feito na notificação | Sim | Sim |
 | Eventos (ver, confirmar presença e criar com limite) e adoção | Sim | Sim |
 | Fogos e trovão e selos de cuidado | Sim | Sim |
 | Passeios com GPS | Histórico dos últimos `[30]` dias | Histórico completo |
@@ -965,7 +983,7 @@ A divisão abaixo é uma **proposta para validar**. Regra geral: tudo que proteg
 | Cuidador temporário | Pessoa com acesso por prazo e escolha do tutor |
 | Selo de cuidado | Marca do dia a dia, como vacinas em dia, sem ranking nem pontos |
 | Modo calmo | Silencia avisos não urgentes numa noite de fogos |
-| Dei | Ação na notificação ou no widget que confirma a dose |
+| Feito | Ação na notificação ou no widget que confirma a dose |
 | Cartão do pet | Imagem com foto, nome e selos para compartilhar |
 | Ficha de emergência | Resumo do pet (alergias, remédios, vacinas, peso) em link ou QR temporário |
 | Pré-chegada | Aviso à clínica 24 h com a ficha e o tempo de chegada, antes do tutor chegar |
@@ -1052,7 +1070,8 @@ Navegação por abas: **Início**, **Pets**, **Mapa**, **Lembretes** e **Perfil*
 | Boas-vindas | `Welcome` | `/(auth)/welcome` | Nenhum | 1 |
 | Criar conta e entrar | `Login` | `/(auth)/criar-conta`, `/(auth)/entrar` | `auth.users`, `profiles` | 1 |
 | Cadastro do pet | `Main` | `/pets/novo` | `pets` | 1 |
-| Início | `Inicio` | `/(tabs)/inicio` | Próximas vacinas e doses, lugares próximos | 1 |
+| Início | `Inicio` | `/(tabs)/inicio` | Próximas vacinas e doses do pet escolhido, `notification_log` | 1 |
+| Todos os atalhos | `TodosAtalhos` | `/atalhos` | Nenhum | 1 |
 | Meus pets | `MeusPets` | `/(tabs)/pets` | `pets` | 1 |
 | Pet, vacinas | `Pet` | `/pets/[id]` | `pets`, `vaccinations`, `weights`, `visits` | 1 |
 | Registrar vacina | `Vacina` | `/pets/[id]/vacinas/nova` | `vaccinations`, `content_vaccines` | 1 |
@@ -1063,8 +1082,12 @@ Navegação por abas: **Início**, **Pets**, **Mapa**, **Lembretes** e **Perfil*
 | Novo remédio | `Remedio` | `/lembretes/remedio` | `medications` | 1 |
 | Medicamentos | `Medicamentos` | `/pets/[id]/medicamentos` | `medications`, doses confirmadas | 1 |
 | Lembrete personalizado | `Lembrete` | `/lembretes/[id]` | `reminders` | 1 |
-| Avisos | `Notificacoes` | `/avisos` | Preferências de notificação | 1 |
+| Avisos (preferências) | `Notificacoes` | `/avisos` | Preferências de notificação | 1 |
+| Caixa de avisos | `CaixaAvisos` | `/avisos/caixa` | `notification_log` | 1 |
 | Mapa | `Mapa` | `/(tabs)/mapa` | Google Places via `places-nearby`, `saved_places` | 1 |
+| Mapa sem localização | `MapaSemPermissao` | `/(tabs)/mapa` (estado) | Permissão do aparelho | 1 |
+| Mapa sem internet | `MapaSemInternet` | `/(tabs)/mapa` (estado) | `saved_places` no aparelho | 1 |
+| Mapa sem resultados | `MapaSemResultados` | `/(tabs)/mapa` (estado) | Nenhum | 1 |
 | SOS e emergência | `SOS` | `/sos` | `nearest-emergency`, pacote offline | 1 |
 | Primeiros socorros | `PrimeirosSocorros` | `/sos/primeiros-socorros` | `emergency_content` (offline) | 1 |
 | O que intoxica o pet | `Intoxicacao` | `/sos/intoxicacao` | `emergency_content` (offline) | 1 |
@@ -1076,6 +1099,17 @@ Navegação por abas: **Início**, **Pets**, **Mapa**, **Lembretes** e **Perfil*
 | Adoção | `Adocao` | `/adocao` | `adoption_pets`, `adoption_favorites` | 2 |
 | Pet para adoção | `AdocaoPet` | `/adocao/[id]` | `adoption_pets`, `adoption_contacts` | 2 |
 | Cuidador temporário | `Cuidador` | `/pets/[id]/cuidador` | `caregiver_access` | 2 |
+| Carteirinha de saúde | `Carteirinha` | `/pets/[id]/carteirinha` | `pets`, `vaccines`, `allergies`, `medications` | 2 |
+| Carteirinha de um pet novo | `CarteirinhaVazia` | `/pets/[id]/carteirinha` (estado) | `pets` | 2 |
+| O que incluir ao compartilhar | `CompartilharSecoes` | `/pets/[id]/compartilhar/secoes` | `pets`, `vaccines`, `allergies` | 2 |
+| Opções de compartilhar | `CompartilharOpcoes` | `/pets/[id]/compartilhar` | `pets` | 2 |
+| Escanear é Premium (plano grátis) | `CartaoPremium` | `/pets/[id]/cartao` | `subscriptions` | 2 |
+| Traçar rota com | `RotaApps`, `RotaSemApps` | Folha sobre `/lugares/[id]` | Apps de mapa instalados | 1 |
+| Pet sênior, tela do pet | `PetMia` | `/pets/[id]` (variante sênior) | `pets` | 2 |
+| Aviso: pet sênior | `SeniorNotificacao` | Notificação push | `reminders` | 2 |
+| Compartilhar a carteirinha com o hotel | `CompartilharHotel` | `/agendar/hotel/[sid]/compartilhar` | `caregiver_access`, `requests` | 3 |
+| Boletim do hotel | `HotelBoletim` | `/pedidos/[id]/boletim` | `hotel_reports` | 3 |
+| Aviso: o pet chegou bem | `HotelNotificacao` | Notificação push | `hotel_reports` | 3 |
 | Linha do tempo | `LinhaDoTempo` | `/pets/[id]/linha-do-tempo` | `timeline_entries` | 2 |
 | Checklist de viagem | `Viagem` | `/pets/[id]/viagem` | `travel_checklists` | 2 |
 | Selos de cuidado | `Selos` | `/pets/[id]/selos` | `pet_badges` | 2 |
@@ -1690,11 +1724,11 @@ flowchart TD
 
 ```mermaid
 flowchart LR
-  A[Hora da dose] --> B[Notificação com Dei e Adiar]
-  B -- Dei --> C[Registra a dose e recalcula a próxima]
+  A[Hora da dose] --> B[Notificação com Feito e Adiar]
+  B -- Feito --> C[Registra a dose e recalcula a próxima]
   B -- Adiar 15 min --> D[Nova notificação em 15 min]
   B -- sem resposta --> E[Repete no dia seguinte e marca dose perdida]
-  F[Widget na tela inicial] -- Dei --> C
+  F[Widget na tela inicial] -- Feito --> C
 ```
 
 ### 19.26 Consulta na clínica (Fase 3)
@@ -2024,6 +2058,8 @@ Convenções: `id uuid` em todas as tabelas, `created_at` e `updated_at`, soft d
 | `reminders` | `pet_id`, `type`, `title`, `due_at`, `repeat_rule`, `status`, `source` (`manual`/`vacina`/`remedio`/`reserva`) |
 | `consents` | `user_id`, `type` (`termos`/`privacidade`/`localizacao`/`dicas`), `version`, `granted`, `at` |
 | `push_tokens` | `user_id`, `token`, `platform`, `last_seen_at` |
+| `notification_log` | `user_id`, `pet_id` (opcional), `type`, `title`, `body`, `deep_link`, `sent_at`, `read_at` |
+| `hotel_reports` (F3) | `request_id`, `store_id`, `pet_id`, `kind` (`chegada`/`refeicao`/`remedio`/`passeio`/`soneca`/`foto`), `note`, `photo_url`, `by_user_id`, `at` |
 | `notification_prefs` | `user_id`, `type`, `enabled`, `quiet_from`, `quiet_to` |
 | `pet_qr_settings` | `pet_id`, `code` (único, curto), `show_photo`, `show_phone`, `show_allergies`, `active` |
 | `qr_scans` | `pet_id`, `scanned_at`, `lat`, `lng` (só se a pessoa enviou), `ip_hash` |
@@ -2222,7 +2258,7 @@ Canal: **push** (P), **e-mail** (E) ou **na tela de Avisos** (A). O tutor contro
 | Pedido de exportar ou apagar dados | Equipe admin | A no painel |
 | Campanha | Público escolhido | P, E |
 | Antipulgas, vermífugo, banho, dentes e aniversário (Fase 1) | Tutor | P, A |
-| Dose ou lembrete com as ações Dei e Adiar (Fase 1) | Tutor | P |
+| Dose ou lembrete com as ações Feito e Adiar (Fase 1) | Tutor | P |
 | Cartão de vacina lido, pronto para revisar (Fase 2) | Tutor | P |
 | Acesso do cuidador expira em 1 dia, e dose marcada pelo cuidador (Fase 2) | Tutor | P |
 | ONG aprovada ou com documentos pendentes (Fase 2) | ONG | P, E |
@@ -2366,7 +2402,7 @@ Cada bloco depende dos anteriores. **Só a Fase 1 está em desenvolvimento agora
 | --- | --- | --- | --- | --- |
 | 0. Base | Repositório, Expo, Supabase, tema, autenticação, RLS base, Sentry, EAS | Nada | 1 | P0 |
 | 1. Pets e saúde | Cadastro do pet, vacinas, peso, consultas, calendário sugerido | 0 | 1 | P0 e P1 |
-| 2. Lembretes e remédios | Lembretes, doses, push com ação Dei e Adiar, tela de Avisos | 1 | 1 | P0 e P1 |
+| 2. Lembretes e remédios | Lembretes, doses, push com ação Feito e Adiar, tela de Avisos | 1 | 1 | P0 e P1 |
 | 3. Lugares por perto | Projeto Google Cloud e chave, funções de lugares, mapa do Google, filtros, ficha com telefone e fotos, ligar, WhatsApp, rota, favoritos, controle de custo | 0 | 1 | P1 |
 | 3b. SOS e primeiros socorros | Botão SOS, clínica 24 h mais perto, pacote offline de primeiros socorros e tóxicos | 3 | 1 | P1 |
 | 3c. Pet friendly | Categorias e filtro pet friendly no mapa | 3 | 1 | P1 |
@@ -2456,7 +2492,7 @@ Uma tabela para consultar de uma vez: cada funcionalidade com a fase, a regra, a
 | Primeiros socorros e intoxicação (offline) | 5.18 | 47, 48 | `emergency_content` | `content-pack` |
 | Calculadoras | 5.20 | 50 | `calc_tables` | `content-pack` |
 | Rotina de cuidados | 5.21 | 51 | `routine_settings` | `birthday-reminders` |
-| Botão Dei na notificação | 5.34 | Notificação | `dose_actions` | Registro da dose |
+| Botão Feito na notificação | 5.34 | Notificação | `dose_actions` | Registro da dose |
 
 ### Fase 2: Premium, cuidados, eventos e operação
 
@@ -2469,6 +2505,8 @@ Uma tabela para consultar de uma vez: cada funcionalidade com a fase, a regra, a
 | Cartão de vacina por foto | 5.22 | 52, 53 | `vaccine_card_scans` | `scan-vaccine-card` |
 | Adoção e modo ONG | 5.23 | 54, 55, 93 a 95, admin Adoção | `ngos`, `adoption_pets`, `adoption_favorites`, `adoption_contacts` | `adoption-search`, `adoption-contact`, `adoption-stale` |
 | Cuidador temporário | 5.24 | 56, 92 | `caregiver_access`, `caregiver_access_log` | `create-caregiver-access`, `caregiver-view`, `caregiver-expire` |
+| Início, caixa de avisos, estados do app e cadastro | 5.43 | 4, 15, 16, 20, 52 | `notification_log` | `notification-log` |
+| Hóspedes do hotelzinho e boletim | 5.42 | 33 e painel do lojista | `caregiver_access`, `hotel_reports` | `create-caregiver-access`, `hotel-report` |
 | Linha do tempo | 5.25 | 57 | `timeline_entries` | Marcos automáticos |
 | Checklist de viagem | 5.26 | 58 | `travel_checklists` | Conteúdo mestre |
 | Selos de cuidado | 5.27 | 59 | `badges`, `pet_badges` | `badges-recalc` |

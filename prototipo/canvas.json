@@ -1358,9 +1358,97 @@
       "x": 1360,
       "y": 51330,
       "w": 1280,
-      "h": 880,
+      "h": 960,
       "is_interactive": true,
       "title": "Lojista computador · Hóspede, carteirinha e cuidador"
+    },
+    "CompartilharHotel.dc.html": {
+      "x": 2820,
+      "y": 35074,
+      "w": 390,
+      "h": 844,
+      "is_interactive": true,
+      "title": "33 · Compartilhar a carteirinha com o hotel"
+    },
+    "MapaSemPermissao.dc.html": {
+      "x": 2820,
+      "y": 7092,
+      "w": 390,
+      "h": 844,
+      "is_interactive": true,
+      "title": "16 · Mapa, sem localização"
+    },
+    "MapaSemInternet.dc.html": {
+      "x": 3290,
+      "y": 7092,
+      "w": 390,
+      "h": 844,
+      "is_interactive": true,
+      "title": "16 · Mapa, sem internet"
+    },
+    "MapaSemResultados.dc.html": {
+      "x": 3760,
+      "y": 7092,
+      "w": 390,
+      "h": 844,
+      "is_interactive": true,
+      "title": "16 · Mapa, sem resultados"
+    },
+    "CartaoPremium.dc.html": {
+      "x": 2820,
+      "y": 13088,
+      "w": 390,
+      "h": 844,
+      "is_interactive": true,
+      "title": "52 · Escanear é Premium (plano grátis)"
+    },
+    "CarteirinhaVazia.dc.html": {
+      "x": 3760,
+      "y": 10160,
+      "w": 390,
+      "h": 1000,
+      "is_interactive": true,
+      "title": "20 · Carteirinha de um pet novo"
+    },
+    "TodosAtalhos.dc.html": {
+      "x": 2820,
+      "y": 4200,
+      "w": 390,
+      "h": 1060,
+      "is_interactive": true,
+      "title": "4 · Todos os atalhos"
+    },
+    "CompartilharSecoes.dc.html": {
+      "x": 4230,
+      "y": 10160,
+      "w": 390,
+      "h": 844,
+      "is_interactive": true,
+      "title": "20 · O que incluir na carteirinha"
+    },
+    "HotelBoletim.dc.html": {
+      "x": 3290,
+      "y": 35074,
+      "w": 390,
+      "h": 844,
+      "is_interactive": true,
+      "title": "33 · Boletim do hotel (tutor)"
+    },
+    "HotelNotificacao.dc.html": {
+      "x": 3760,
+      "y": 35074,
+      "w": 390,
+      "h": 844,
+      "is_interactive": true,
+      "title": "33 · Aviso: o pet chegou bem"
+    },
+    "CaixaAvisos.dc.html": {
+      "x": 2820,
+      "y": 6128,
+      "w": 390,
+      "h": 844,
+      "is_interactive": true,
+      "title": "15 · Caixa de avisos"
     }
   },
   "createdOnFiles": {
@@ -1752,7 +1840,18 @@
     "PetMia.dc.html",
     "SeniorNotificacao.dc.html",
     "WebHospedes.dc.html",
-    "WebHospede.dc.html"
+    "WebHospede.dc.html",
+    "CompartilharHotel.dc.html",
+    "MapaSemPermissao.dc.html",
+    "MapaSemInternet.dc.html",
+    "MapaSemResultados.dc.html",
+    "CartaoPremium.dc.html",
+    "CarteirinhaVazia.dc.html",
+    "TodosAtalhos.dc.html",
+    "CompartilharSecoes.dc.html",
+    "HotelBoletim.dc.html",
+    "HotelNotificacao.dc.html",
+    "CaixaAvisos.dc.html"
   ],
   "pages": [],
   "title": "Wireframes App de Pets"
