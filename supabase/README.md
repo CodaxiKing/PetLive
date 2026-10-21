@@ -119,3 +119,18 @@ from sugestoes_lugar where status = 'em_analise' order by criado_em;
 select aprovar_sugestao_lugar('<id>');                 -- publica em places (fonte 'tutor')
 select recusar_sugestao_lugar('<id>', 'Motivo curto'); -- o tutor vê o motivo no app
 ```
+
+## Entrar com Apple (iPhone)
+
+A App Store exige "Entrar com Apple" em app que oferece o login do Google
+(diretriz 4.8). O app usa o login nativo (`expo-apple-authentication`) e troca
+o token por sessão com `signInWithIdToken` — não precisa de segredo nem de
+página de retorno. Para ligar em produção:
+
+1. Apple Developer › Identifiers › `app.petlive.tutor`: marcar **Sign in with Apple**.
+2. Supabase › Auth › Providers › Apple: ligar e pôr `app.petlive.tutor` em
+   **Client IDs** (o campo de segredo fica vazio no login nativo).
+3. Build de iOS pelo EAS (o `app.json` já tem `usesAppleSignIn`).
+
+O botão só aparece no iPhone; a Apple manda o nome só no primeiro login, e o
+app guarda nessa hora.

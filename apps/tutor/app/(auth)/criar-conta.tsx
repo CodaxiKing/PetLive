@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   KeyboardAvoidingView,
   Modal,
@@ -16,6 +16,8 @@ import * as Linking from 'expo-linking';
 import { BotaoPrimario } from '../../src/components/BotaoPrimario';
 import { Campo } from '../../src/components/Campo';
 import { ControleSegmentado } from '../../src/components/ControleSegmentado';
+import * as AppleAuthentication from 'expo-apple-authentication';
+import { appleDisponivel, entrarComApple } from '../../src/auth/apple';
 import { entrarComGoogle } from '../../src/auth/google';
 import { pedirNovaSenha } from '../../src/auth/senha';
 import { supabase, supabaseConfigurado } from '../../src/lib/supabase';
@@ -66,6 +68,12 @@ export default function CriarConta() {
   const [carregando, setCarregando] = useState(false);
   const [erro, setErro] = useState<string | null>(null);
   const [aviso, setAviso] = useState<string | null>(null);
+  // Entrar com Apple só aparece no iPhone (App Store, diretriz 4.8).
+  const [comApple, setComApple] = useState(false);
+
+  useEffect(() => {
+    appleDisponivel().then(setComApple);
+  }, []);
 
   const criando = modo === 'criar';
   const nomeValido = !criando || nome.trim().length >= 2;
@@ -137,6 +145,20 @@ export default function CriarConta() {
     try {
       await pedirNovaSenha(email.trim());
       setAviso('Se houver uma conta com esse e-mail, enviamos um link para criar uma nova senha. Abra-o neste celular.');
+    } catch (e) {
+      setErro(traduzirErro(e instanceof Error ? e.message : String(e)));
+    } finally {
+      setCarregando(false);
+    }
+  }
+
+  async function entrarApple() {
+    setErro(null);
+    setAviso(null);
+    setCarregando(true);
+    try {
+      // Com sessão criada, o layout raiz troca a rota sozinho (e pede o aceite dos termos).
+      await entrarComApple();
     } catch (e) {
       setErro(traduzirErro(e instanceof Error ? e.message : String(e)));
     } finally {
@@ -288,6 +310,16 @@ export default function CriarConta() {
 
         <View style={estilos.acoes}>
           <BotaoPrimario titulo="Continuar" onPress={enviar} carregando={carregando} />
+
+          {comApple ? (
+            <AppleAuthentication.AppleAuthenticationButton
+              buttonType={AppleAuthentication.AppleAuthenticationButtonType.CONTINUE}
+              buttonStyle={AppleAuthentication.AppleAuthenticationButtonStyle.BLACK}
+              cornerRadius={28}
+              onPress={entrarApple}
+              style={estilos.apple}
+            />
+          ) : null}
 
           <Pressable
             accessibilityRole="button"
@@ -544,6 +576,7 @@ const estilos = StyleSheet.create({
     gap: 10,
     paddingTop: spacing.lg,
   },
+  apple: { height: 56, width: '100%' },
   google: {
     height: 56,
     borderRadius: 28,

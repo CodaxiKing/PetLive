@@ -10,6 +10,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "app.petlive.tutor",
+      "usesAppleSignIn": true,
       "infoPlist": {
         "NSLocationWhenInUseUsageDescription": "O PetLive usa sua localização para mostrar clínicas, petshops e banho e tosa perto de você.",
         "NSLocationAlwaysAndWhenInUseUsageDescription": "O PetLive usa sua localização para avisar serviços próximos e manter o mapa atualizado."
@@ -57,6 +58,7 @@
       "@maplibre/maplibre-react-native",
       "@sentry/react-native",
       "expo-web-browser",
+      "expo-apple-authentication",
       "./plugins/apps-de-mapa"
     ],
     "experiments": {

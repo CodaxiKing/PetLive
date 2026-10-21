@@ -110,5 +110,6 @@ Respostas conforme o que o app faz hoje (conferir se algo mudar):
   informe e-mail e senha em "Informações para revisão".
 - O conteúdo de emergência precisa da **revisão veterinária** antes do lançamento
   (itens do board de SOS e Qualidade).
-- "Entrar com Google" no iPhone exige também "Entrar com Apple" (diretriz 4.8) —
-  ou o botão do Google sai do build de iOS na primeira versão.
+- "Entrar com Apple" já está no app (diretriz 4.8, exigida por causa do login
+  do Google): falta só ligar o provedor no Supabase e a capacidade no Apple
+  Developer (supabase/README.md › Entrar com Apple).

@@ -331,9 +331,12 @@ client_id = "env(SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_ID)"
 secret = "env(SUPABASE_AUTH_EXTERNAL_GOOGLE_SECRET)"
 skip_nonce_check = false
 
+# Entrar com Apple no iPhone (src/auth/apple.ts): login nativo com token,
+# sem segredo. Para ligar: enabled = true e client_id = o bundle id. Só
+# dá para testar num iPhone com build do EAS (ver supabase/README.md).
 [auth.external.apple]
 enabled = false
-client_id = ""
+client_id = "app.petlive.tutor"
 # DO NOT commit your OAuth provider secret to git. Use environment variable substitution instead:
 secret = "env(SUPABASE_AUTH_EXTERNAL_APPLE_SECRET)"
 # Overrides the default auth callback URL derived from auth.external_url.
