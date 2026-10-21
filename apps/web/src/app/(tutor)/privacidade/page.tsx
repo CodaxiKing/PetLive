@@ -63,6 +63,14 @@ const SECOES = [
     ],
   },
   {
+    titulo: "Site: cookies e formulários",
+    itens: [
+      "Cookies essenciais: guardam só a sua escolha sobre cookies. Não identificam você.",
+      "Cookies de medição (Google Analytics): só são usados se você tocar em Aceitar no aviso do site, com IP anonimizado e sem publicidade. Você muda a escolha a qualquer momento em Preferências de cookies, no rodapé.",
+      "Formulários de contato e de interesse de lojistas: guardamos nome, e-mail e o que você escrever (e, no caso de lojas, nome, tipo e cidade da loja) só para responder. Apagamos em até 12 meses, ou antes, se você pedir.",
+    ],
+  },
+  {
     titulo: "Seus direitos",
     paragrafos: [
       "Você pode solicitar confirmação de tratamento, acesso, correção, anonimização, portabilidade, eliminação e revogação do consentimento. A página Direitos na LGPD explica como exercer cada um.",
@@ -87,7 +95,7 @@ export default function PaginaPrivacidade() {
     <PaginaLegal
       titulo="Política de privacidade"
       resumo="Como coletamos, usamos, compartilhamos e protegemos os dados de você e do seu pet."
-      atualizado="20 de outubro de 2026"
+      atualizado="21 de outubro de 2026"
       secoes={SECOES}
     />
   );

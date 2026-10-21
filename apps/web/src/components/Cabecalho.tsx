@@ -4,7 +4,7 @@ import { Logo } from "./Logo";
 const LINKS = [
   { rotulo: "Recursos", href: "/#recursos" },
   { rotulo: "Como funciona", href: "/#como-funciona" },
-  { rotulo: "Para lojistas", href: "/#lojistas" },
+  { rotulo: "Para lojistas", href: "/lojistas" },
   { rotulo: "Perguntas", href: "/#perguntas" },
 ];
 

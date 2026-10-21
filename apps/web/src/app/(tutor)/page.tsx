@@ -293,8 +293,8 @@ export default function Home() {
               Venda e agende pelo PetLive.
             </h2>
           </div>
-          <a
-            href="mailto:parceiros@petlive.app.br"
+          <Link
+            href="/lojistas"
             className="flex h-16 shrink-0 items-center gap-4 rounded-full bg-tinta py-2 pl-7 pr-2 text-base font-semibold text-white transition hover:-translate-y-0.5"
           >
             Conhecer para lojistas
@@ -313,7 +313,7 @@ export default function Home() {
                 <path d="M5 12h14M13 6l6 6-6 6" />
               </svg>
             </span>
-          </a>
+          </Link>
         </div>
       </section>
 

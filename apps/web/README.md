@@ -24,6 +24,8 @@ src/
     termos/page.tsx       # Termos de uso
     privacidade/page.tsx  # Política de privacidade
     lgpd/page.tsx         # Direitos na LGPD
+    (tutor)/contato       # Contato (formulário)
+    lojistas/             # Para lojistas: layout escuro próprio e formulário de interesse
     globals.css           # tokens de cor PetLive (tema Tailwind v4)
   components/
     Logo.tsx  Cabecalho.tsx  Rodape.tsx  PaginaLegal.tsx
@@ -43,6 +45,8 @@ e espelham o design system do app do tutor e do protótipo `prototipo/SitePetLiv
 | --- | --- |
 | `NEXT_PUBLIC_URL_GOOGLE_PLAY` | Link do app no Google Play. Sem ela, o botão mostra "Em breve". |
 | `NEXT_PUBLIC_URL_APP_STORE` | Link do app na App Store. Sem ela, o botão mostra "Em breve". |
+| `NEXT_PUBLIC_SUPABASE_URL` e `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Formulários de contato e de lojistas (função `registrar_contato_site`). Sem elas, o formulário mostra o e-mail. |
+| `NEXT_PUBLIC_GA_ID` | ID do Google Analytics 4 (`G-...`). Só carrega depois do "Aceitar" no aviso de cookies; sem ela, nada é medido. |
 
 SEO: `src/app/sitemap.ts`, `src/app/robots.ts` e os dados estruturados
 (`MobileApplication`) na home.

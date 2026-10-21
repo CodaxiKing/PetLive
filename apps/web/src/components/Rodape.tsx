@@ -1,11 +1,13 @@
 import Link from "next/link";
+import { BotaoPreferenciasCookies } from "./ConsentimentoCookies";
 import { Logo } from "./Logo";
 
 const PRODUTO = [
   { rotulo: "Recursos", href: "/#recursos" },
   { rotulo: "Como funciona", href: "/#como-funciona" },
-  { rotulo: "Para lojistas", href: "/#lojistas" },
+  { rotulo: "Para lojistas", href: "/lojistas" },
   { rotulo: "Perguntas", href: "/#perguntas" },
+  { rotulo: "Contato", href: "/contato" },
 ];
 
 const LEGAL = [
@@ -57,6 +59,9 @@ export function Rodape() {
                 </Link>
               </li>
             ))}
+            <li>
+              <BotaoPreferenciasCookies className="transition hover:text-tinta" />
+            </li>
           </ul>
         </nav>
       </div>
