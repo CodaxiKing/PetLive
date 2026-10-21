@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Location from 'expo-location';
 import { comPrazo } from '../lib/prazo';
-import { buscarLugares, type Lugar } from '../mapa/lugares';
+import { buscarLugares, clinicaEmergenciaGoogle, type Lugar } from '../mapa/lugares';
 
 /** Raio da busca de emergência: maior que o do mapa, para não voltar vazio. */
 const RAIO_KM = 30;
@@ -82,14 +82,20 @@ export async function buscarClinicaEmergencia(origem?: {
       return { clinica: await ultimaClinica(), semLocalizacao };
     }
 
-    const [do24h] = await buscarLugares({ ...posicao, categoria: 'clinica', aberto24h: true, raioKm: RAIO_KM });
-    const lugar =
-      do24h ?? (await buscarLugares({ ...posicao, categoria: 'clinica', raioKm: RAIO_KM }))[0];
+    // Google (com a chave configurada) primeiro; senão, os lugares do OSM.
+    const doGoogle = await clinicaEmergenciaGoogle(posicao);
+    let lugar = doGoogle?.lugar ?? null;
+    let confirmada24h = doGoogle?.confirmada24h ?? false;
+    if (!doGoogle) {
+      const [do24h] = await buscarLugares({ ...posicao, categoria: 'clinica', aberto24h: true, raioKm: RAIO_KM });
+      lugar = do24h ?? (await buscarLugares({ ...posicao, categoria: 'clinica', raioKm: RAIO_KM }))[0] ?? null;
+      confirmada24h = Boolean(do24h);
+    }
     if (!lugar) return { clinica: await ultimaClinica(), semLocalizacao };
 
     const clinica: ClinicaEmergencia = {
       lugar,
-      confirmada24h: Boolean(do24h),
+      confirmada24h,
       consultadaEm: new Date().toISOString(),
       doAparelho: false,
     };

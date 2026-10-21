@@ -21,6 +21,7 @@ import {
   buscarLugares,
   CENTRO_PADRAO,
   COR_CATEGORIA,
+  FONTE_LUGARES,
   formatarDistancia,
   resumoStatus,
   ROTULO_CATEGORIA,
@@ -43,6 +44,13 @@ const FILTROS: { valor: Filtro; rotulo: string }[] = [
   { valor: 'clinica', rotulo: 'Clínicas' },
   { valor: 'banho_tosa', rotulo: 'Banho e tosa' },
   { valor: 'petshop', rotulo: 'Petshop' },
+  // Creches e hotelzinhos só existem nos dados do Google (busca por texto, 5.15).
+  ...(FONTE_LUGARES === 'google'
+    ? ([
+        { valor: 'creche', rotulo: 'Creches' },
+        { valor: 'hotelzinho', rotulo: 'Hotelzinhos' },
+      ] as const)
+    : []),
   { valor: '24h', rotulo: '24h' },
   { valor: 'salvos', rotulo: 'Salvos' },
 ];

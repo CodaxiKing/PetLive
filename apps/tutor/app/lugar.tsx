@@ -13,6 +13,7 @@ import { Camera, Map, Marker } from '@maplibre/maplibre-react-native';
 import Svg, { Path } from 'react-native-svg';
 import { abrirWhatsApp, ligarPara, tracarRota } from '../src/mapa/acoes';
 import { alternarSalvo, estaSalvo } from '../src/mapa/favoritos';
+import { GaleriaFotos } from '../src/mapa/GaleriaFotos';
 import { GlifoLugar } from '../src/mapa/GlifoLugar';
 import {
   COR_CATEGORIA,
@@ -118,24 +119,28 @@ export default function Lugar() {
   return (
     <View style={estilos.tela}>
       <View style={estilos.hero}>
-        <Map
-          style={StyleSheet.absoluteFill}
-          mapStyle={ESTILO_MAPA}
-          logo={false}
-          attribution={false}
-          compass={false}
-          dragPan={false}
-          touchZoom={false}
-          doubleTapZoom={false}
-          doubleTapHoldZoom={false}
-          touchRotate={false}
-          touchPitch={false}
-        >
-          <Camera center={[lugar.lng, lugar.lat]} zoom={15.5} />
-          <Marker lngLat={[lugar.lng, lugar.lat]}>
-            <PinLugar categoria={lugar.categoria} selecionado />
-          </Marker>
-        </Map>
+        {lugar.fotos?.length ? (
+          <GaleriaFotos fotos={lugar.fotos} altura={280} />
+        ) : (
+          <Map
+            style={StyleSheet.absoluteFill}
+            mapStyle={ESTILO_MAPA}
+            logo={false}
+            attribution={false}
+            compass={false}
+            dragPan={false}
+            touchZoom={false}
+            doubleTapZoom={false}
+            doubleTapHoldZoom={false}
+            touchRotate={false}
+            touchPitch={false}
+          >
+            <Camera center={[lugar.lng, lugar.lat]} zoom={15.5} />
+            <Marker lngLat={[lugar.lng, lugar.lat]}>
+              <PinLugar categoria={lugar.categoria} selecionado />
+            </Marker>
+          </Map>
+        )}
 
         <Svg style={estilos.onda} width={width} height={46} viewBox="0 0 390 46" preserveAspectRatio="none">
           <Path
@@ -186,6 +191,12 @@ export default function Lugar() {
         <Text style={estilos.nome} numberOfLines={2}>
           {lugar.nome}
         </Text>
+        {lugar.nota ? (
+          <Text style={estilos.subtitulo}>
+            {ROTULO_CATEGORIA[lugar.categoria]} · {lugar.nota.toFixed(1).replace('.', ',')} ★ no Google
+            {lugar.avaliacoes ? ` (${lugar.avaliacoes} avaliações)` : ''}
+          </Text>
+        ) : null}
 
         <View style={estilos.selinhas}>
           <View
@@ -296,7 +307,11 @@ export default function Lugar() {
             />
           )}
 
-          <Text style={estilos.fonte}>Informações do OpenStreetMap. Confirme com o local antes de ir.</Text>
+          <Text style={estilos.fonte}>
+            {lugar.fonte === 'google'
+              ? 'Informações e fotos do Google. Podem estar desatualizadas: confirme com o local.'
+              : 'Informações do OpenStreetMap. Confirme com o local antes de ir.'}
+          </Text>
 
           {!lugar.endereco && !telefone && !lugar.horario && !lugar.website && (
             <Text style={estilos.poucasInfo}>
@@ -403,6 +418,11 @@ const estilos = StyleSheet.create({
     position: 'absolute',
     left: 0,
     bottom: -1,
+  },
+  subtitulo: {
+    ...typography.caption,
+    color: colors.textMuted,
+    marginTop: -spacing.sm,
   },
   fonte: {
     ...typography.small,

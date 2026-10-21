@@ -59,3 +59,31 @@ select vault.create_secret('<service_role key>', 'service_role_key');
 Sem os secrets o cron roda e não faz nada. Para testar localmente:
 `npx supabase functions serve --no-verify-jwt` e um `POST` em
 `/functions/v1/lgpd-delete` com `Authorization: Bearer <service_role>`.
+
+## Lugares do Google (Places API New)
+
+As Edge Functions `places-nearby`, `place-details`, `place-photo` e
+`nearest-emergency` chamam o Google com a chave guardada só no servidor, pedem
+os campos mínimos e contam cada chamada em `places_usage` (limite diário por
+usuário: 80 buscas, 40 fichas, 120 fotos).
+
+Uma vez por ambiente remoto:
+
+```powershell
+npx supabase secrets set GOOGLE_PLACES_KEY=<chave restrita à Places API (New)>
+npx supabase functions deploy places-nearby place-details place-photo nearest-emergency
+```
+
+Sem a chave, as funções respondem `503 sem_chave` e o app segue com os
+lugares do OpenStreetMap. No app, `EXPO_PUBLIC_LUGARES_FONTE=google` liga a
+fonte do Google (junto com o mapa do Google, exigência dos termos).
+
+Teste local sem chave real, com um servidor que imita o Google:
+
+```powershell
+node supabase/tests/google-falso.mjs   # porta 8787
+# arquivo .env com GOOGLE_PLACES_KEY=chave-teste e
+# GOOGLE_PLACES_BASE_URL=http://host.docker.internal:8787/v1
+npx supabase functions serve --env-file <esse .env>
+node supabase/tests/testar-lugares.mjs <ANON_KEY>
+```
