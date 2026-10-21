@@ -7,7 +7,7 @@ name: 04 mapa
 - launchApp
 - tapOn: "Mapa"
 - extendedWaitUntil:
-    visible: "Buscar no mapa"
+    visible: "Buscar lugares pet"
     timeout: 60000
 - extendedWaitUntil:
     visible: "Carregando lugares"

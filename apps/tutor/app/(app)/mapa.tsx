@@ -67,6 +67,9 @@ export default function Mapa() {
   const [carregando, setCarregando] = useState(true);
   const [selecionado, setSelecionado] = useState<Lugar | null>(null);
   const cameraRef = useRef<CameraRef>(null);
+  // O toque no pin também chega ao mapa logo depois; sem isto o cartão
+  // do lugar abria e fechava no mesmo toque.
+  const tocouPin = useRef(false);
 
   const centro = posicao ?? CENTRO_PADRAO;
   const so24h = categoria === '24h';
@@ -123,6 +126,10 @@ export default function Mapa() {
   }
 
   function selecionar(lugar: Lugar) {
+    tocouPin.current = true;
+    setTimeout(() => {
+      tocouPin.current = false;
+    }, 500);
     setSelecionado(lugar);
     cameraRef.current?.easeTo({
       center: [lugar.lng, lugar.lat],
@@ -153,7 +160,10 @@ export default function Mapa() {
         logo={false}
         attribution={false}
         compass={false}
-        onPress={() => setSelecionado(null)}
+        onPress={() => {
+          if (tocouPin.current) return;
+          setSelecionado(null);
+        }}
       >
         <Camera
           ref={cameraRef}
@@ -192,7 +202,7 @@ export default function Mapa() {
           </Svg>
           <TextInput
             style={estilos.buscaEntrada}
-            placeholder="Buscar no mapa"
+            placeholder="Buscar lugares pet"
             placeholderTextColor={colors.textMuted}
             value={busca}
             onChangeText={setBusca}
@@ -383,7 +393,6 @@ export default function Mapa() {
                 >
                   <Path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z" />
                 </Svg>
-                <Text style={estilos.ligarTexto}>Ligar</Text>
               </Pressable>
             )}
 
@@ -600,37 +609,38 @@ const estilos = StyleSheet.create({
     gap: spacing.md,
   },
   ligar: {
-    alignItems: 'center',
-    gap: 4,
     width: 56,
+    height: 56,
+    borderRadius: 28,
+    backgroundColor: colors.background,
+    alignItems: 'center',
+    justifyContent: 'center',
     flexShrink: 0,
-  },
-  ligarTexto: {
-    ...typography.caption,
-    fontSize: 11,
-    color: colors.textMuted,
   },
   rota: {
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
     gap: spacing.sm,
-    backgroundColor: colors.primary,
+    backgroundColor: colors.black,
     borderRadius: radius.pill,
     height: 56,
+    paddingLeft: 6,
   },
   rotaCirculo: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: colors.white,
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: colors.primary,
     alignItems: 'center',
     justifyContent: 'center',
   },
   rotaTexto: {
     ...typography.bodyMedium,
     fontFamily: fontFamily.bold,
-    color: colors.black,
+    color: colors.white,
+    flex: 1,
+    textAlign: 'center',
+    marginRight: 50,
   },
 });
