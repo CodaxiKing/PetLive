@@ -173,8 +173,10 @@ export function PetsProvider({ children }: { children: ReactNode }) {
     [petAtivoId],
   )
 
+  // Sem escolha do tutor, o primeiro pet é o ativo (título do Início,
+  // vacinas e remédios carregados).
   const petAtivo = useMemo(
-    () => pets.find((p) => p.id === petAtivoId) ?? null,
+    () => pets.find((p) => p.id === petAtivoId) ?? pets[0] ?? null,
     [pets, petAtivoId],
   )
 

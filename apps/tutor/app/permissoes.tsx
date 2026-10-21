@@ -75,7 +75,15 @@ export default function Permissoes() {
             // "Agora não" vale até sair da tela, se o sistema ainda não sabe.
             atual[permissao.chave] === 'adiada' && resultado.status === 'undetermined'
               ? atual
-              : { ...atual, [permissao.chave]: traduzir(resultado.status) },
+              : {
+                  ...atual,
+                  // Android 13+: "negada" antes de perguntar, mas ainda pode
+                  // perguntar. Só conta como recusa depois do diálogo.
+                  [permissao.chave]:
+                    resultado.status === 'denied' && resultado.canAskAgain
+                      ? 'pendente'
+                      : traduzir(resultado.status),
+                },
           );
           setPodePerguntar((atual) => ({ ...atual, [permissao.chave]: resultado.canAskAgain }));
         },
