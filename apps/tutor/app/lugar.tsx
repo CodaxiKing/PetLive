@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Text,
   View,
+  useWindowDimensions,
 } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { Camera, Map, Marker } from '@maplibre/maplibre-react-native';
@@ -54,6 +55,7 @@ function CardInfo({
  */
 export default function Lugar() {
   const { id } = useLocalSearchParams<{ id: string }>();
+  const { width } = useWindowDimensions();
   const [lugar, setLugar] = useState<LugarRegistro | null>(null);
   const [carregando, setCarregando] = useState(true);
   const [falha, setFalha] = useState(false);
@@ -134,6 +136,13 @@ export default function Lugar() {
             <PinLugar categoria={lugar.categoria} selecionado />
           </Marker>
         </Map>
+
+        <Svg style={estilos.onda} width={width} height={46} viewBox="0 0 390 46" preserveAspectRatio="none">
+          <Path
+            d="M0 46V26C28 8 56 10 80 24C104 38 132 40 154 26C180 8 214 10 238 26C262 42 300 38 322 22C346 6 372 12 390 24V46z"
+            fill={colors.surface}
+          />
+        </Svg>
 
         <Pressable
           accessibilityRole="button"
@@ -287,6 +296,8 @@ export default function Lugar() {
             />
           )}
 
+          <Text style={estilos.fonte}>Informações do OpenStreetMap. Confirme com o local antes de ir.</Text>
+
           {!lugar.endereco && !telefone && !lugar.horario && !lugar.website && (
             <Text style={estilos.poucasInfo}>
               Este lugar tem poucas informações no mapa. Vale ligar ou ir até lá.
@@ -320,7 +331,6 @@ export default function Lugar() {
               >
                 <Path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z" />
               </Svg>
-              <Text style={estilos.acaoCircularTexto}>Ligar</Text>
             </Pressable>
 
             <Pressable
@@ -345,7 +355,6 @@ export default function Lugar() {
                 <Path d="M21 11.5a8.5 8.5 0 0 1-12.6 7.4L4 20.5l1.7-4.2A8.5 8.5 0 1 1 21 11.5z" />
                 <Path d="M9 9.5c.4 2.6 2.4 4.6 5 5l1-1.4 1.7.8-.4 1.5c-3.8.6-7.8-3.4-7.2-7.2l1.5-.4.8 1.7L9 9.5z" />
               </Svg>
-              <Text style={estilos.acaoCircularTexto}>WhatsApp</Text>
             </Pressable>
           </>
         )}
@@ -358,6 +367,7 @@ export default function Lugar() {
           }}
           style={estilos.rotaBotao}
         >
+          <View style={estilos.rotaCirculo}>
           <Svg
             width={20}
             height={20}
@@ -371,6 +381,7 @@ export default function Lugar() {
           >
             <Path d="M21 3L10 21l-1.5-7.5L1 12l20-9z" />
           </Svg>
+          </View>
           <Text style={estilos.rotaBotaoTexto}>Traçar rota</Text>
         </Pressable>
       </View>
@@ -386,6 +397,18 @@ const estilos = StyleSheet.create({
   hero: {
     height: 280,
     backgroundColor: '#CFE8FB',
+    overflow: 'hidden',
+  },
+  onda: {
+    position: 'absolute',
+    left: 0,
+    bottom: -1,
+  },
+  fonte: {
+    ...typography.small,
+    color: '#6A7484',
+    textAlign: 'center',
+    marginTop: spacing.xs,
   },
   voltar: {
     position: 'absolute',
@@ -511,8 +534,6 @@ const estilos = StyleSheet.create({
     paddingHorizontal: spacing.xxl,
     paddingTop: spacing.lg,
     paddingBottom: spacing.huge,
-    borderTopWidth: 1,
-    borderTopColor: colors.border,
     backgroundColor: colors.surface,
   },
   acaoCircular: {
@@ -525,24 +546,30 @@ const estilos = StyleSheet.create({
     backgroundColor: colors.background,
     flexShrink: 0,
   },
-  acaoCircularTexto: {
-    ...typography.caption,
-    fontSize: 10,
-    color: colors.textMuted,
-  },
   rotaBotao: {
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
     gap: spacing.sm,
     height: 64,
+    paddingLeft: 6,
     borderRadius: radius.pill,
+    backgroundColor: colors.black,
+  },
+  rotaCirculo: {
+    width: 52,
+    height: 52,
+    borderRadius: 26,
     backgroundColor: colors.primary,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   rotaBotaoTexto: {
     ...typography.bodyMedium,
     fontFamily: fontFamily.bold,
-    color: colors.black,
+    color: colors.white,
+    flex: 1,
+    textAlign: 'center',
+    marginRight: 52,
   },
 });
