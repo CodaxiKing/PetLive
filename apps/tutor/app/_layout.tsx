@@ -126,7 +126,8 @@ function RootLayout() {
   // ordem de hooks estável e abrir a rota certa ao tocar na notificação.
   useObservadorNotificacoes();
 
-  const [carregandoFontes] = useFonts({
+  // useFonts devolve [carregadas, erro]: true quando as fontes estão prontas.
+  const [fontesCarregadas, erroFontes] = useFonts({
     PlusJakartaSans_400Regular,
     PlusJakartaSans_500Medium,
     PlusJakartaSans_600SemiBold,
@@ -135,7 +136,8 @@ function RootLayout() {
   });
 
   // Espera as fontes: sem isso as telas piscam com a fonte do sistema.
-  if (carregandoFontes) {
+  // Se falharem, segue com a fonte do sistema em vez de travar.
+  if (!fontesCarregadas && !erroFontes) {
     return (
       <View style={estilos.carregando}>
         <ActivityIndicator size="large" color={colors.primaryDark} />
