@@ -335,8 +335,8 @@ const estilos = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  maisSinal: { fontSize: 26, lineHeight: 30, color: colors.white },
-  maisCta: { fontSize: 28, lineHeight: 32, color: colors.black },
+  maisSinal: { fontFamily: fontFamily.regular, fontSize: 26, lineHeight: 30, color: colors.white },
+  maisCta: { fontFamily: fontFamily.regular, fontSize: 28, lineHeight: 32, color: colors.black },
   conteudo: {
     paddingHorizontal: spacing.xl,
     paddingTop: spacing.lg,
@@ -362,7 +362,7 @@ const estilos = StyleSheet.create({
     justifyContent: 'center',
   },
   cartaoNome: { fontFamily: fontFamily.bold, fontSize: 17, color: colors.black },
-  cartaoSub: { fontSize: 12, marginTop: 2 },
+  cartaoSub: { fontFamily: fontFamily.regular, fontSize: 12, marginTop: 2 },
   badge: {
     backgroundColor: colors.white,
     borderRadius: radius.pill,
@@ -406,7 +406,7 @@ const estilos = StyleSheet.create({
     gap: spacing.md,
   },
   fichaTitulo: { fontFamily: fontFamily.semiBold, fontSize: 15, color: colors.text },
-  fichaSub: { fontSize: 12, color: colors.textMuted, marginTop: 2 },
+  fichaSub: { fontFamily: fontFamily.regular, fontSize: 12, color: colors.textMuted, marginTop: 2 },
   etiqueta: {
     backgroundColor: colors.successSurface,
     borderRadius: radius.pill,

@@ -21,7 +21,7 @@ import { usePets } from '../../src/pets/PetsProvider'
 import { idadeEmAnos } from '../../src/pets/types'
 import type { Pet } from '../../src/pets/types'
 import { colors } from '../../src/theme/colors'
-import { typography } from '../../src/theme/typography'
+import { fontFamily, typography } from '../../src/theme/typography'
 
 /** "Vermífugo da Mia" -> "Vermífugo": no cartão da Mia o nome já está no topo. */
 function tituloSemPet(titulo: string, nome: string): string {
@@ -168,7 +168,7 @@ const estilos = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  maisSinal: { fontSize: 28, lineHeight: 32, color: colors.black },
+  maisSinal: { fontFamily: fontFamily.regular, fontSize: 28, lineHeight: 32, color: colors.black },
   carregando: { marginTop: 40 },
   lista: { paddingHorizontal: 24, paddingTop: 8, paddingBottom: 120, gap: 14 },
   vazio: { alignItems: 'center', gap: 12, paddingVertical: 12 },

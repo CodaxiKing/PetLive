@@ -336,7 +336,7 @@ const estilos = StyleSheet.create({
     overflow: 'hidden',
     flexShrink: 0,
   },
-  petRotulo: { fontSize: 11, color: colors.textMuted },
+  petRotulo: { fontFamily: fontFamily.regular, fontSize: 11, color: colors.textMuted },
   petNome: { fontSize: 15, fontFamily: fontFamily.semiBold, color: colors.black },
   cartaoAviso: {
     flexDirection: 'row',
@@ -349,7 +349,7 @@ const estilos = StyleSheet.create({
     paddingVertical: spacing.md,
   },
   avisoTitulo: { fontFamily: fontFamily.semiBold, fontSize: 14, color: colors.black },
-  avisoSub: { fontSize: 12, color: colors.textMuted, marginTop: 2 },
+  avisoSub: { fontFamily: fontFamily.regular, fontSize: 12, color: colors.textMuted, marginTop: 2 },
   fundoModal: { flex: 1, backgroundColor: colors.overlay, justifyContent: 'flex-end' },
   cartaoModal: {
     backgroundColor: colors.white,

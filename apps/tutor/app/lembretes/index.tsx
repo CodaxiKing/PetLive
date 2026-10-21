@@ -395,7 +395,7 @@ const estilos = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  botaoPretoSinal: { fontSize: 26, lineHeight: 30, color: colors.white },
+  botaoPretoSinal: { fontFamily: fontFamily.regular, fontSize: 26, lineHeight: 30, color: colors.white },
   mes: { fontSize: 15, fontFamily: fontFamily.medium, color: colors.black },
   titulo: {
     marginTop: 14,

@@ -299,6 +299,7 @@ const estilos = StyleSheet.create({
     paddingHorizontal: 20,
   },
   buscaTexto: {
+    fontFamily: fontFamily.regular,
     fontSize: 14,
     color: '#6A7484',
   },
@@ -388,6 +389,7 @@ const estilos = StyleSheet.create({
     color: colors.black,
   },
   lembreteSub: {
+    fontFamily: fontFamily.regular,
     fontSize: 12,
     marginTop: 2,
   },

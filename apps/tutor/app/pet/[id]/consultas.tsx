@@ -8,9 +8,9 @@ import {
   View,
 } from 'react-native'
 import { router, useFocusEffect, useLocalSearchParams } from 'expo-router'
-import Svg, { Circle, Path } from 'react-native-svg'
 import { BotaoPrimario } from '../../../src/components/BotaoPrimario'
-import { CabecalhoTela } from '../../../src/components/CabecalhoTela'
+import { HeroiOnda } from '../../../src/components/HeroiOnda'
+import { MarcaPata } from '../../../src/components/MarcaPata'
 import { usePets } from '../../../src/pets/PetsProvider'
 import {
   carregarConsultas,
@@ -40,7 +40,6 @@ export default function TelaConsultas() {
 
   const [consultas, setConsultas] = useState<Consulta[]>([])
   const [carregando, setCarregando] = useState(true)
-  const [larguraHero, setLarguraHero] = useState(0)
 
   // Recarrega a cada foco: volta da tela de registro já com o novo item.
   useFocusEffect(
@@ -71,45 +70,9 @@ export default function TelaConsultas() {
 
   return (
     <View style={estilos.tela}>
-      <View
-        style={estilos.hero}
-        onLayout={(e) => setLarguraHero(Math.round(e.nativeEvent.layout.width))}
-      >
-        <CabecalhoTela titulo={pet?.nome ?? ''} />
-
-        <Text style={estilos.titulo}>Consultas</Text>
-
-        {/* Marca d'água de pata (decorativa, como no protótipo). */}
-        <Svg
-          style={estilos.pata}
-          width={110}
-          height={110}
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke={colors.white}
-          strokeWidth={1.1}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          aria-hidden
-        >
-          <Circle cx={6} cy={10} r={1.8} />
-          <Circle cx={10} cy={6} r={1.8} />
-          <Circle cx={14} cy={6} r={1.8} />
-          <Circle cx={18} cy={10} r={1.8} />
-          <Path d="M12 12c-3 0-5 2.5-5 4.5 0 1.5 1.2 2 2.6 2 1 0 1.6-.4 2.4-.4s1.4.4 2.4.4c1.4 0 2.6-.5 2.6-2 0-2-2-4.5-5-4.5z" />
-        </Svg>
-
-        {larguraHero > 0 ? (
-          <View style={estilos.onda}>
-            <Svg width={larguraHero} height={46} viewBox="0 0 390 46" preserveAspectRatio="none">
-              <Path
-                d="M0 46V26C28 8 56 10 80 24C104 38 132 40 154 26C180 8 214 10 238 26C262 42 300 38 322 22C346 6 372 12 390 24V46z"
-                fill={colors.surface}
-              />
-            </Svg>
-          </View>
-        ) : null}
-      </View>
+      <HeroiOnda subtitulo={pet?.nome ?? ''} titulo="Consultas" altura={220}>
+        <MarcaPata size={110} style={estilos.pata} />
+      </HeroiOnda>
 
       <ScrollView
         style={estilos.flex}
@@ -189,7 +152,7 @@ export default function TelaConsultas() {
       </ScrollView>
 
       <View style={estilos.rodape}>
-        <BotaoPrimario titulo="Registrar consulta" onPress={abrirNova} />
+        <BotaoPrimario titulo="Registrar consulta" icone={<Text style={estilos.maisCta}>+</Text>} onPress={abrirNova} />
       </View>
     </View>
   )
@@ -198,23 +161,8 @@ export default function TelaConsultas() {
 const estilos = StyleSheet.create({
   tela: { flex: 1, backgroundColor: colors.surface },
   flex: { flex: 1 },
-  hero: {
-    backgroundColor: colors.hero,
-    paddingBottom: 44,
-    overflow: 'hidden',
-    justifyContent: 'space-between',
-  },
-  titulo: {
-    ...typography.h1,
-    fontSize: 38,
-    lineHeight: 40,
-    letterSpacing: -1.1,
-    color: colors.black,
-    paddingHorizontal: 24,
-    paddingBottom: spacing.lg,
-  },
-  pata: { position: 'absolute', right: 20, top: 60 },
-  onda: { position: 'absolute', left: 0, right: 0, bottom: -1 },
+  pata: { position: 'absolute', right: 30, top: 56 },
+  maisCta: { fontFamily: fontFamily.regular, fontSize: 28, lineHeight: 32, color: colors.black },
   conteudo: {
     paddingHorizontal: spacing.xl,
     paddingTop: spacing.lg,
@@ -233,7 +181,7 @@ const estilos = StyleSheet.create({
     gap: spacing.md,
   },
   proximaTitulo: { ...typography.bodyMedium, fontFamily: fontFamily.bold, color: colors.text },
-  proximaSub: { fontSize: 12, color: colors.premiumText, marginTop: 2 },
+  proximaSub: { fontFamily: fontFamily.regular, fontSize: 12, color: colors.premiumText, marginTop: 2 },
   botaoAgendar: {
     height: 36,
     paddingHorizontal: spacing.lg,
@@ -270,7 +218,7 @@ const estilos = StyleSheet.create({
   dataDia: { fontFamily: fontFamily.bold, fontSize: 20, lineHeight: 22, color: colors.black },
   dataMes: { fontSize: 11, fontFamily: fontFamily.semiBold, color: colors.black },
   fichaTitulo: { fontFamily: fontFamily.semiBold, fontSize: 15, color: colors.text },
-  fichaSub: { fontSize: 12, color: colors.textMuted, marginTop: 2 },
+  fichaSub: { fontFamily: fontFamily.regular, fontSize: 12, color: colors.textMuted, marginTop: 2 },
   etiqueta: {
     backgroundColor: colors.successSurface,
     borderRadius: radius.pill,

@@ -2,7 +2,7 @@ import { Alert, Image, Pressable, StyleSheet, Text, View } from 'react-native'
 import * as ImagePicker from 'expo-image-picker'
 import { colors } from '../theme/colors'
 import { spacing } from '../theme/tokens'
-import { typography } from '../theme/typography'
+import { fontFamily, typography } from '../theme/typography'
 
 export type AtivoFoto = { uri: string; mimeType?: string }
 
@@ -100,7 +100,7 @@ const estilos = StyleSheet.create({
     borderColor: colors.border,
   },
   imagem: { width: 96, height: 96 },
-  semFoto: { fontSize: 34 },
+  semFoto: { fontFamily: fontFamily.regular, fontSize: 34 },
   acoes: { flex: 1, gap: spacing.xs },
   botao: {
     backgroundColor: colors.surface,

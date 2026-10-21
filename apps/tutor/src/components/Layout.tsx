@@ -127,6 +127,7 @@ const estilos = StyleSheet.create({
     color: colors.black,
   },
   secaoAcao: {
+    fontFamily: fontFamily.regular,
     fontSize: 12,
     color: colors.textMuted,
   },

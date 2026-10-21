@@ -351,7 +351,7 @@ const estilos = StyleSheet.create({
     flexShrink: 0,
   },
   cartaoTitulo: { fontFamily: fontFamily.semiBold, fontSize: 15, color: colors.black },
-  cartaoQuando: { fontSize: 12, color: colors.textMuted, marginTop: 2 },
+  cartaoQuando: { fontFamily: fontFamily.regular, fontSize: 12, color: colors.textMuted, marginTop: 2 },
   cartaoHorario: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -378,7 +378,7 @@ const estilos = StyleSheet.create({
     gap: spacing.sm,
   },
   tituloModal: { ...typography.h3, color: colors.text },
-  subtituloModal: { fontSize: 13, color: colors.textMuted, marginBottom: spacing.xs },
+  subtituloModal: { fontFamily: fontFamily.regular, fontSize: 13, color: colors.textMuted, marginBottom: spacing.xs },
   listaHorarios: { maxHeight: 320 },
   listaHorariosConteudo: { gap: spacing.xs },
   linhaHorario: {

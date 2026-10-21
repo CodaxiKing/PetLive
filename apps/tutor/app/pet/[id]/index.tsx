@@ -466,7 +466,7 @@ const estilos = StyleSheet.create({
   vazio: { ...typography.caption, color: colors.textMuted, textAlign: 'center', paddingVertical: 12 },
   verTudo: { fontSize: 13, fontFamily: fontFamily.semiBold, color: colors.primaryDeep, textAlign: 'center' },
   rodape: { paddingHorizontal: 24, paddingTop: 10, paddingBottom: 28, backgroundColor: colors.surface },
-  ctaMais: { fontSize: 28, lineHeight: 32, color: colors.black },
+  ctaMais: { fontFamily: fontFamily.regular, fontSize: 28, lineHeight: 32, color: colors.black },
   fundoModal: { flex: 1, backgroundColor: colors.overlay, justifyContent: 'flex-end' },
   folha: {
     backgroundColor: colors.surface,

@@ -184,7 +184,7 @@ const estilos = StyleSheet.create({
     overflow: 'hidden',
   },
   pata: { position: 'absolute', right: 30, top: 60 },
-  maisCta: { fontSize: 28, lineHeight: 32, color: colors.black },
+  maisCta: { fontFamily: fontFamily.regular, fontSize: 28, lineHeight: 32, color: colors.black },
   heroConteudo: {
     paddingHorizontal: 24,
     paddingTop: spacing.lg,
@@ -199,6 +199,7 @@ const estilos = StyleSheet.create({
     color: colors.black,
   },
   kgUnidade: {
+    fontFamily: fontFamily.regular,
     fontSize: 28,
     letterSpacing: -0.5,
   },

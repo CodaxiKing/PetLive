@@ -8,7 +8,7 @@ import { textoRevisao } from '../../src/sos/conteudo';
 import { usePacoteEmergencia } from '../../src/sos/pacote';
 import { colors } from '../../src/theme/colors';
 import { spacing } from '../../src/theme/tokens';
-import { typography } from '../../src/theme/typography';
+import { fontFamily, typography } from '../../src/theme/typography';
 
 const ROSA = '#FDE0E6';
 
@@ -93,7 +93,7 @@ const estilos = StyleSheet.create({
     paddingHorizontal: 16,
   },
   situacaoTitulo: { fontSize: 14, lineHeight: 19, fontFamily: typography.h1.fontFamily, color: colors.black },
-  sinal: { fontSize: 18, lineHeight: 20, color: colors.black },
+  sinal: { fontFamily: fontFamily.regular, fontSize: 18, lineHeight: 20, color: colors.black },
   passos: {
     backgroundColor: colors.white,
     borderWidth: 1.5,
