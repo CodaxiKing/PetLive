@@ -19,6 +19,7 @@ import {
   textoProximaVacina,
 } from '../../src/pets/carteirinha';
 import { usePets } from '../../src/pets/PetsProvider';
+import { contarNaoLidos } from '../../src/notificacoes/caixa';
 import { sincronizarDoses } from '../../src/notificacoes/doses';
 import {
   carregarDosesHoje,
@@ -97,6 +98,14 @@ export default function Inicio() {
   const { lembretes, concluirLembrete } = useLembretes();
   const { remedios } = useRemedios();
   const [doses, setDoses] = useState<DoseHoje[]>([]);
+  const [naoLidos, setNaoLidos] = useState(0);
+
+  // Ponto vermelho no sino: avisos ainda não lidos na caixa.
+  useFocusEffect(
+    useCallback(() => {
+      contarNaoLidos().then(setNaoLidos);
+    }, []),
+  );
   const { vacinas } = useVacinas();
   const cidade = useCidade();
   const [ola] = useState(saudacao);
@@ -182,11 +191,12 @@ export default function Inicio() {
           <View style={estilos.flex} />
           <Tocavel
             accessibilityRole="button"
-            accessibilityLabel="Avisos"
-            onPress={() => router.push('/avisos')}
+            accessibilityLabel={naoLidos > 0 ? `Avisos, ${naoLidos} ${naoLidos === 1 ? 'novo' : 'novos'}` : 'Avisos'}
+            onPress={() => router.push('/avisos/caixa')}
             style={estilos.botaoRedondo}
           >
             <IconeSino />
+            {naoLidos > 0 ? <View style={estilos.pontoSino} /> : null}
           </Tocavel>
           <Tocavel
             accessibilityRole="button"
@@ -455,6 +465,17 @@ const estilos = StyleSheet.create({
     backgroundColor: colors.white,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  pontoSino: {
+    position: 'absolute',
+    right: 9,
+    top: 9,
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    backgroundColor: '#D93B5A',
+    borderWidth: 2,
+    borderColor: colors.white,
   },
   botaoPerfil: { backgroundColor: colors.black },
   ola: { fontFamily: fontFamily.semiBold, fontSize: 13, color: colors.primaryDark, marginTop: 14, paddingHorizontal: 24 },

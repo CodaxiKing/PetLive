@@ -121,6 +121,7 @@ function RaizProtegida() {
                 <Stack.Screen name="lembretes/novo" options={{ presentation: 'modal', animation: 'slide_from_bottom' }} />
                 <Stack.Screen name="lembretes/rotina" />
                 <Stack.Screen name="avisos" />
+                <Stack.Screen name="avisos/caixa" />
                 <Stack.Screen name="termos" options={{ animation: 'fade_from_bottom' }} />
                 <Stack.Screen name="permissoes" options={{ animation: 'fade_from_bottom' }} />
                 <Stack.Screen name="privacidade" />
