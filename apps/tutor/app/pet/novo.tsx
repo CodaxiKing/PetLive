@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Alert, KeyboardAvoidingView, Platform, StyleSheet, Text, View } from 'react-native'
-import { router } from 'expo-router'
+import { router, useLocalSearchParams } from 'expo-router'
 import { BotaoPrimario } from '../../src/components/BotaoPrimario'
 import { MarcaPata } from '../../src/components/MarcaPata'
 import { FormularioPet } from '../../src/pets/FormularioPet'
@@ -17,6 +17,8 @@ import { fontFamily } from '../../src/theme/typography'
  * com sexo, peso e castração. A foto sobe depois que o pet existe.
  */
 export default function NovoPet() {
+  // Primeiro acesso: veio de Permissões e segue para o Início (BUSINESS.md 5.43).
+  const { primeiroAcesso } = useLocalSearchParams<{ primeiroAcesso?: string }>()
   const { criarPet, salvarFoto, salvando } = usePets()
   const [form, setForm] = useState<PetForm>(FORM_VAZIO)
   const [passo, setPasso] = useState<1 | 2>(1)
@@ -47,7 +49,8 @@ export default function NovoPet() {
         )
       }
     }
-    router.back()
+    if (primeiroAcesso === '1') router.replace('/inicio')
+    else router.back()
   }
 
   return (

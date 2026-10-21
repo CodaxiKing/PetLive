@@ -6,6 +6,7 @@ import * as Location from 'expo-location';
 import { BotaoPrimario } from '../src/components/BotaoPrimario';
 import { HeroiOnda } from '../src/components/HeroiOnda';
 import { Icone, type NomeIcone } from '../src/components/Icone';
+import { usePets } from '../src/pets/PetsProvider';
 import { registrarConsentimento, type TipoConsentimento } from '../src/privacidade/consentimentos';
 import { colors } from '../src/theme/colors';
 import { spacing } from '../src/theme/tokens';
@@ -61,6 +62,7 @@ function traduzir(status: string): Estado {
  */
 export default function Permissoes() {
   const { primeiroAcesso } = useLocalSearchParams<{ primeiroAcesso?: string }>();
+  const { pets } = usePets();
   const ehPrimeiroAcesso = primeiroAcesso === '1';
 
   const [estados, setEstados] = useState<Record<string, Estado>>({});
@@ -120,7 +122,8 @@ export default function Permissoes() {
 
   function continuar() {
     if (ehPrimeiroAcesso) {
-      router.replace('/inicio');
+      // Ordem do cadastro (BUSINESS.md 5.43): Termos, Permissões, Cadastro do pet, Início.
+      router.replace(pets.length === 0 ? '/pet/novo?primeiroAcesso=1' : '/inicio');
     } else {
       router.back();
     }
