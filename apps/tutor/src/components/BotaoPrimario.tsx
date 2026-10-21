@@ -1,7 +1,9 @@
 import type { ReactNode } from 'react';
-import { ActivityIndicator, Pressable, StyleSheet, Text, View, type ViewStyle } from 'react-native';
+import { useEffect, useState } from 'react';
+import { ActivityIndicator, Animated, Easing, StyleSheet, Text, View, type ViewStyle } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 import { colors } from '../theme/colors';
+import { Tocavel, useMovimentoReduzido } from './Animacoes';
 import { typography } from '../theme/typography';
 
 type Props = {
@@ -25,17 +27,14 @@ export function BotaoPrimario({ titulo, onPress, carregando, desabilitado, varia
   const inativo = desabilitado || carregando;
 
   return (
-    <Pressable
+    <Tocavel
       accessibilityRole="button"
       accessibilityLabel={titulo}
       accessibilityState={{ disabled: Boolean(inativo), busy: Boolean(carregando) }}
-      onPress={inativo ? undefined : onPress}
-      style={({ pressed }) => [
-        estilos.botao,
-        inativo && estilos.botaoInativo,
-        pressed && !inativo && estilos.botaoPressionado,
-        estilo,
-      ]}
+      disabled={Boolean(inativo)}
+      onPress={onPress}
+      escala={0.97}
+      style={[estilos.botao, inativo && estilos.botaoInativo, estilo]}
     >
       <View style={estilos.circulo}>
         {carregando ? (
@@ -63,12 +62,40 @@ export function BotaoPrimario({ titulo, onPress, carregando, desabilitado, varia
         {titulo}
       </Text>
 
-      <View style={estilos.seta}>
-        <Svg width={20} height={20} viewBox="0 0 24 24" fill="none">
-          <Path d="M7 6l6 6-6 6M13 6l6 6-6 6" stroke={colors.white} strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round" />
-        </Svg>
-      </View>
-    </Pressable>
+      <SetaConvite parada={Boolean(inativo)} />
+    </Tocavel>
+  );
+}
+
+/** "»" discreto que avança e volta devagar, convidando ao toque. */
+function SetaConvite({ parada }: { parada: boolean }) {
+  const reduzido = useMovimentoReduzido();
+  const valor = useState(() => new Animated.Value(0))[0];
+
+  useEffect(() => {
+    if (reduzido || parada) {
+      valor.setValue(0);
+      return;
+    }
+    const ciclo = Animated.loop(
+      Animated.sequence([
+        Animated.timing(valor, { toValue: 1, duration: 700, easing: Easing.inOut(Easing.quad), useNativeDriver: true }),
+        Animated.timing(valor, { toValue: 0, duration: 700, easing: Easing.inOut(Easing.quad), useNativeDriver: true }),
+        Animated.delay(900),
+      ]),
+    );
+    ciclo.start();
+    return () => ciclo.stop();
+  }, [reduzido, parada, valor]);
+
+  return (
+    <Animated.View
+      style={[estilos.seta, { transform: [{ translateX: valor.interpolate({ inputRange: [0, 1], outputRange: [0, 5] }) }] }]}
+    >
+      <Svg width={20} height={20} viewBox="0 0 24 24" fill="none">
+        <Path d="M7 6l6 6-6 6M13 6l6 6-6 6" stroke={colors.white} strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round" />
+      </Svg>
+    </Animated.View>
   );
 }
 
@@ -84,9 +111,6 @@ const estilos = StyleSheet.create({
   },
   botaoInativo: {
     opacity: 0.55,
-  },
-  botaoPressionado: {
-    transform: [{ scale: 0.98 }],
   },
   circulo: {
     width: 52,

@@ -11,6 +11,7 @@ import {
   View,
 } from 'react-native'
 import { router } from 'expo-router'
+import { Tocavel } from '../../src/components/Animacoes'
 import { BotaoPrimario } from '../../src/components/BotaoPrimario'
 import { Campo } from '../../src/components/Campo'
 import { HeroiOnda } from '../../src/components/HeroiOnda'
@@ -174,18 +175,19 @@ export default function NovoLembrete() {
               {ESCOLHAS.map((item) => {
                 const ativo = escolha?.chave === item.chave
                 return (
-                  <Pressable
+                  <Tocavel
                     key={item.chave}
                     accessibilityRole="radio"
                     accessibilityState={{ checked: ativo }}
                     onPress={() => setEscolha(item)}
+                    estiloExterno={estilos.cartaoTipoLugar}
                     style={[estilos.cartaoTipo, { backgroundColor: item.fundo }, ativo && estilos.cartaoTipoAtivo]}
                   >
                     <View style={estilos.cartaoIcone}>
                       <Icone nome={item.icone} size={20} />
                     </View>
                     <Text style={estilos.cartaoTexto}>{item.rotulo}</Text>
-                  </Pressable>
+                  </Tocavel>
                 )
               })}
             </View>
@@ -367,9 +369,8 @@ const estilos = StyleSheet.create({
   corpo: { paddingHorizontal: 24, gap: 12 },
   pergunta: { fontSize: 16, fontFamily: fontFamily.bold, color: colors.black },
   grade: { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
+  cartaoTipoLugar: { width: '48%', flexGrow: 1 },
   cartaoTipo: {
-    width: '48%',
-    flexGrow: 1,
     height: 92,
     borderRadius: 26,
     padding: 14,

@@ -10,7 +10,7 @@ import {
   View,
 } from 'react-native'
 import { router } from 'expo-router'
-import { Flutuar, Surgir } from '../../src/components/Animacoes'
+import { Flutuar, Surgir, Tocavel } from '../../src/components/Animacoes'
 import { HeroiOnda } from '../../src/components/HeroiOnda'
 import { MarcaPata } from '../../src/components/MarcaPata'
 import { Mascote } from '../../src/components/Mascote'
@@ -102,15 +102,11 @@ export default function Pets() {
             const proximo = lembretes.find((l) => l.pet_id === pet.id)
             return (
               <Surgir key={pet.id} indice={indice}>
-                <Pressable
+                <Tocavel
                   accessibilityRole="button"
                   accessibilityLabel={`Abrir ${pet.nome}`}
                   onPress={() => abrirPet(pet)}
-                  style={({ pressed }) => [
-                    estilos.cartao,
-                    { backgroundColor: cores.fundo, borderColor: cores.borda },
-                    pressed && { transform: [{ scale: 0.98 }] },
-                  ]}
+                  style={[estilos.cartao, { backgroundColor: cores.fundo, borderColor: cores.borda }]}
                 >
                   <View style={estilos.cartaoTexto}>
                     <Text style={estilos.nome} numberOfLines={1}>
@@ -136,7 +132,7 @@ export default function Pets() {
                       <Mascote especie={pet.especie} size={180} recorte />
                     )}
                   </View>
-                </Pressable>
+                </Tocavel>
               </Surgir>
             )
           })}

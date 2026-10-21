@@ -1,5 +1,14 @@
 import { useEffect, useState, type ReactNode } from 'react';
-import { AccessibilityInfo, Animated, Easing, type StyleProp, type ViewStyle } from 'react-native';
+import {
+  AccessibilityInfo,
+  Animated,
+  Easing,
+  LayoutAnimation,
+  Pressable,
+  type PressableProps,
+  type StyleProp,
+  type ViewStyle,
+} from 'react-native';
 
 /**
  * Animações do protótipo (CSS dos .dc.html): cartões que sobem ao entrar
@@ -142,4 +151,120 @@ export function BarraProgresso({
       />
     </Animated.View>
   );
+}
+
+/**
+ * Pressable com "mola": encolhe um pouco ao tocar e volta com spring, como
+ * os botões do protótipo (`:active { transform: scale(.97) }`).
+ */
+export function Tocavel({
+  children,
+  style,
+  escala = 0.96,
+  estiloExterno,
+  ...props
+}: Omit<PressableProps, 'style' | 'children'> & {
+  children: ReactNode;
+  style?: StyleProp<ViewStyle>;
+  /** Estilo do Pressable de fora (ex.: flex: 1 numa linha). */
+  estiloExterno?: StyleProp<ViewStyle>;
+  /** Quanto encolhe ao tocar (1 = nada). */
+  escala?: number;
+}) {
+  const reduzido = useMovimentoReduzido();
+  const valor = useState(() => new Animated.Value(1))[0];
+
+  const animar = (para: number) => {
+    if (reduzido) return;
+    Animated.spring(valor, { toValue: para, useNativeDriver: true, speed: 40, bounciness: para === 1 ? 8 : 0 }).start();
+  };
+
+  return (
+    <Pressable
+      {...props}
+      style={estiloExterno}
+      onPressIn={(e) => {
+        animar(escala);
+        props.onPressIn?.(e);
+      }}
+      onPressOut={(e) => {
+        animar(1);
+        props.onPressOut?.(e);
+      }}
+    >
+      <Animated.View style={[style, { transform: [{ scale: valor }] }]}>{children}</Animated.View>
+    </Pressable>
+  );
+}
+
+/** Balanço lento dos desenhos brancos do herói (protótipo: "sway" 5 s, ±7°). */
+export function Balancar({ children, style }: { children: ReactNode; style?: StyleProp<ViewStyle> }) {
+  const reduzido = useMovimentoReduzido();
+  const valor = useState(() => new Animated.Value(0))[0];
+
+  useEffect(() => {
+    if (reduzido) {
+      valor.setValue(0);
+      return;
+    }
+    const ciclo = Animated.loop(
+      Animated.sequence([
+        Animated.timing(valor, { toValue: 1, duration: 2500, easing: Easing.inOut(Easing.sin), useNativeDriver: true }),
+        Animated.timing(valor, { toValue: -1, duration: 2500, easing: Easing.inOut(Easing.sin), useNativeDriver: true }),
+      ]),
+    );
+    ciclo.start();
+    return () => ciclo.stop();
+  }, [reduzido, valor]);
+
+  return (
+    <Animated.View
+      style={[
+        style,
+        { transform: [{ rotate: valor.interpolate({ inputRange: [-1, 1], outputRange: ['-7deg', '7deg'] }) }] },
+      ]}
+    >
+      {children}
+    </Animated.View>
+  );
+}
+
+/** Entra subindo de baixo (cartões que aparecem sobre o mapa). */
+export function Deslizar({ children, style }: { children: ReactNode; style?: StyleProp<ViewStyle> }) {
+  const reduzido = useMovimentoReduzido();
+  const valor = useState(() => new Animated.Value(0))[0];
+
+  useEffect(() => {
+    if (reduzido) {
+      valor.setValue(1);
+      return;
+    }
+    const animacao = Animated.spring(valor, { toValue: 1, useNativeDriver: true, speed: 14, bounciness: 6 });
+    animacao.start();
+    return () => animacao.stop();
+  }, [reduzido, valor]);
+
+  return (
+    <Animated.View
+      style={[
+        style,
+        {
+          opacity: valor.interpolate({ inputRange: [0, 0.4, 1], outputRange: [0, 1, 1] }),
+          transform: [{ translateY: valor.interpolate({ inputRange: [0, 1], outputRange: [80, 0] }) }],
+        },
+      ]}
+    >
+      {children}
+    </Animated.View>
+  );
+}
+
+/** Anima a próxima mudança de layout (item que entra, sai ou muda de lugar). */
+export function animarLista() {
+  LayoutAnimation.configureNext({
+    duration: 280,
+    create: { type: 'easeInEaseOut', property: 'opacity' },
+    update: { type: 'spring', springDamping: 0.8 },
+    delete: { type: 'easeInEaseOut', property: 'opacity' },
+  });
 }

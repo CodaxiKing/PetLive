@@ -14,6 +14,7 @@ import { Camera, Map, Marker, type CameraRef } from '@maplibre/maplibre-react-na
 import Svg, { Path } from 'react-native-svg';
 import { BotaoPrimario } from '../../src/components/BotaoPrimario';
 import { ligarPara, tracarRota } from '../../src/mapa/acoes';
+import { Deslizar } from '../../src/components/Animacoes';
 import { lugaresSalvos } from '../../src/mapa/favoritos';
 import { GlifoLugar } from '../../src/mapa/GlifoLugar';
 import {
@@ -315,7 +316,7 @@ export default function Mapa() {
 
       {/* Card do lugar selecionado: resumo + ligar, rota e ficha. */}
       {lugar && (
-        <View style={estilos.ficha}>
+        <Deslizar key={lugar.id} style={estilos.ficha}>
           <Pressable
             onPress={() =>
               router.push({ pathname: '/lugar', params: { id: lugar.id } })
@@ -422,7 +423,7 @@ export default function Mapa() {
               <Text style={estilos.rotaTexto}>Traçar rota</Text>
             </Pressable>
           </View>
-        </View>
+        </Deslizar>
       )}
     </View>
   );

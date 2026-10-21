@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import { colors } from '../theme/colors';
-import { Surgir } from './Animacoes';
+import { Surgir, Tocavel } from './Animacoes';
 import { typography } from '../theme/typography';
 
 type Props = {
@@ -49,16 +49,17 @@ function Linha({ icone, rotulo, valor, fundo = colors.background, onPress, desab
   }
 
   return (
-    <Pressable
+    <Tocavel
       accessibilityRole="button"
       accessibilityLabel={`${rotulo}: ${valor}`}
       accessibilityState={{ disabled: Boolean(desabilitado) }}
       disabled={desabilitado}
       onPress={onPress}
-      style={({ pressed }) => [estilos.linha, { backgroundColor: fundo }, pressed && { opacity: 0.7 }]}
+      escala={0.97}
+      style={[estilos.linha, { backgroundColor: fundo }]}
     >
       {conteudo}
-    </Pressable>
+    </Tocavel>
   );
 }
 

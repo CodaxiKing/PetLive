@@ -8,7 +8,8 @@ export default function AuthLayout() {
       screenOptions={{
         headerShown: false,
         contentStyle: { backgroundColor: colors.surface },
-        animation: 'slide_from_right',
+        animation: 'ios_from_right',
+        animationDuration: 320,
       }}
     >
       <Stack.Screen name="welcome" options={{ animation: 'fade' }} />

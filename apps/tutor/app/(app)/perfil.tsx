@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Alert, Image, Modal, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useAuth } from '../../src/auth/AuthProvider';
-import { Surgir } from '../../src/components/Animacoes';
+import { Surgir, Tocavel } from '../../src/components/Animacoes';
 import { BotaoPrimario } from '../../src/components/BotaoPrimario';
 import { Campo } from '../../src/components/Campo';
 import { HeroiOnda } from '../../src/components/HeroiOnda';
@@ -128,7 +128,7 @@ export default function Perfil() {
               const cores = coresDoPet(pet, indice);
               return (
                 <Surgir key={pet.id} indice={indice} style={estilos.petSurgir}>
-                  <Pressable
+                  <Tocavel
                     accessibilityRole="button"
                     accessibilityLabel={`Abrir ${pet.nome}`}
                     onPress={() => {
@@ -150,7 +150,7 @@ export default function Perfil() {
                         <Mascote especie={pet.especie} size={96} recorte />
                       )}
                     </View>
-                  </Pressable>
+                  </Tocavel>
                 </Surgir>
               );
             })}
@@ -169,38 +169,30 @@ export default function Perfil() {
             <MarcaPata size={110} cor="#5E86A6" style={estilos.pataPremium} />
             <Text style={estilos.premiumSelo}>Plano Grátis</Text>
             <Text style={estilos.premiumTitulo}>Mais pets, PDF e QR da coleira</Text>
-            <Pressable
+            <Tocavel
               accessibilityRole="button"
               onPress={() =>
                 Alert.alert('Premium', 'O Premium chega na próxima fase do PetLive. Avisaremos você por aqui.')
               }
-              style={({ pressed }) => [estilos.premiumBotao, pressed && { opacity: 0.85 }]}
+              style={estilos.premiumBotao}
             >
               <Text style={estilos.premiumBotaoTexto}>Conhecer o Premium</Text>
-            </Pressable>
+            </Tocavel>
           </View>
 
           <View style={estilos.atalhos}>
-            <Pressable
-              accessibilityRole="button"
-              onPress={() => router.push('/avisos')}
-              style={({ pressed }) => [estilos.atalho, pressed && { opacity: 0.7 }]}
-            >
+            <Tocavel accessibilityRole="button" onPress={() => router.push('/avisos')} estiloExterno={estilos.flex1} style={estilos.atalho}>
               <View style={[estilos.atalhoIcone, { backgroundColor: colors.hero }]}>
                 <Icone nome="sino" />
               </View>
               <Text style={estilos.atalhoTexto}>Avisos</Text>
-            </Pressable>
-            <Pressable
-              accessibilityRole="button"
-              onPress={() => router.push('/privacidade')}
-              style={({ pressed }) => [estilos.atalho, pressed && { opacity: 0.7 }]}
-            >
+            </Tocavel>
+            <Tocavel accessibilityRole="button" onPress={() => router.push('/privacidade')} estiloExterno={estilos.flex1} style={estilos.atalho}>
               <View style={[estilos.atalhoIcone, { backgroundColor: colors.successSurface }]}>
                 <Icone nome="escudo" />
               </View>
               <Text style={estilos.atalhoTexto}>Privacidade</Text>
-            </Pressable>
+            </Tocavel>
           </View>
 
           <Pressable accessibilityRole="button" onPress={sair} hitSlop={12} style={estilos.sair}>
@@ -342,6 +334,7 @@ const estilos = StyleSheet.create({
   },
   premiumBotaoTexto: { fontSize: 14, fontFamily: typography.h1.fontFamily, color: colors.black },
   atalhos: { flexDirection: 'row', gap: 10 },
+  flex1: { flex: 1 },
   atalho: {
     flex: 1,
     flexDirection: 'row',

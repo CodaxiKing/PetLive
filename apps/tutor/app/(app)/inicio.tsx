@@ -11,7 +11,7 @@ import {
   Secao,
 } from '../../src/components/Layout';
 import { Icone, type NomeIcone } from '../../src/components/Icone';
-import { Surgir } from '../../src/components/Animacoes';
+import { Surgir, Tocavel } from '../../src/components/Animacoes';
 import { Mascote } from '../../src/components/Mascote';
 import { useLembretes } from '../../src/lembretes/LembretesProvider';
 import { rotuloProximidade } from '../../src/lembretes/types';
@@ -94,7 +94,7 @@ export default function Inicio() {
           {petAtivo ? `Para ${petAtivo.sexo === 'femea' ? 'a' : 'o'} ${petAtivo.nome}` : 'Olá!'}
         </Text>
 
-        <Pressable
+        <Tocavel
           style={estilos.busca}
           accessibilityRole="search"
           accessibilityLabel="Buscar clínica, banho e tosa"
@@ -102,7 +102,7 @@ export default function Inicio() {
         >
           <IconeBusca cor={colors.textMuted} />
           <Text style={estilos.buscaTexto}>Buscar clínica, banho e tosa…</Text>
-        </Pressable>
+        </Tocavel>
 
         <OndaHeroi largura={width} />
       </View>
@@ -111,7 +111,7 @@ export default function Inicio() {
         <Secao titulo="Categorias" acao="Ver todas ›" onAcao={() => router.push('/mapa')} />
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={estilos.categorias}>
           {CATEGORIAS.map((categoria) => (
-            <Pressable
+            <Tocavel
               key={categoria.nome}
               accessibilityRole="button"
               onPress={() => router.push({ pathname: '/mapa', params: { filtro: categoria.filtro } })}
@@ -126,11 +126,11 @@ export default function Inicio() {
               <Text style={[estilos.categoriaTexto, categoria.ativa && estilos.categoriaTextoAtivo]}>
                 {categoria.nome}
               </Text>
-            </Pressable>
+            </Tocavel>
           ))}
 
           {/* Atalhos da Fase 1: SOS (rosa, como no Mapa) e Calculadoras. */}
-          <Pressable
+          <Tocavel
             accessibilityRole="button"
             accessibilityLabel="SOS: emergência"
             onPress={() => router.push('/sos')}
@@ -140,8 +140,8 @@ export default function Inicio() {
               <Icone nome="cruz" cor="#A3324F" espessura={2.4} />
             </View>
             <Text style={[estilos.categoriaTexto, estilos.categoriaTextoSos]}>SOS</Text>
-          </Pressable>
-          <Pressable
+          </Tocavel>
+          <Tocavel
             accessibilityRole="button"
             onPress={() => router.push('/ferramentas/calculadoras')}
             style={[estilos.categoria, estilos.categoriaInativa]}
@@ -150,7 +150,7 @@ export default function Inicio() {
               <Icone nome="calculadora" />
             </View>
             <Text style={estilos.categoriaTexto}>Calculadoras</Text>
-          </Pressable>
+          </Tocavel>
         </ScrollView>
 
         <Secao titulo="Próximos lembretes" acao="Ver todos ›" onAcao={() => router.push('/lembretes')} />
@@ -162,7 +162,7 @@ export default function Inicio() {
             const quando = rotuloProximidade(lembrete.proxima_em).texto;
             return (
               <Surgir key={lembrete.id} indice={indice} style={estilos.lembreteSurgir}>
-              <Pressable
+              <Tocavel
                 accessibilityRole="button"
                 accessibilityLabel={`${lembrete.titulo}, ${quando}`}
                 onPress={() => router.push('/lembretes')}
@@ -191,16 +191,17 @@ export default function Inicio() {
                 <View style={estilos.lembreteAvatar}>
                   <Mascote especie={pet?.especie ?? 'cao'} size={84} recorte />
                 </View>
-              </Pressable>
+              </Tocavel>
               </Surgir>
             );
           })}
 
           {proximos.length < 2 ? (
-            <Pressable
+            <Tocavel
               accessibilityRole="button"
               accessibilityLabel="Novo lembrete"
               onPress={() => router.push('/lembretes/novo')}
+              estiloExterno={estilos.lembreteSurgir}
               style={[estilos.lembrete, estilos.lembreteNovo]}
             >
               <View style={estilos.lembreteTopo}>
@@ -212,13 +213,13 @@ export default function Inicio() {
                   <Text style={estilos.lembreteAdicionarSinal}>+</Text>
                 </View>
               </View>
-            </Pressable>
+            </Tocavel>
           ) : null}
         </View>
 
         {/* Atalho: vacina vencendo leva às clínicas por perto (board P1). */}
         {vacinasVencendo + vacinasAtrasadas > 0 ? (
-          <Pressable
+          <Tocavel
             style={estilos.avisoVacina}
             accessibilityRole="button"
             accessibilityLabel="Ver clínicas por perto"
@@ -236,7 +237,7 @@ export default function Inicio() {
             <View style={estilos.avisoVacinaBotao}>
               <Text style={estilos.avisoVacinaBotaoTexto}>Ver</Text>
             </View>
-          </Pressable>
+          </Tocavel>
         ) : null}
       </View>
 

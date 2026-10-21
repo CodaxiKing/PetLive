@@ -1,7 +1,9 @@
 import { type BottomTabBarProps } from 'expo-router/js-tabs';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { useEffect, useState } from 'react';
+import { Animated, Pressable, StyleSheet, View } from 'react-native';
 import Svg, { Circle, Path } from 'react-native-svg';
 import { colors } from '../theme/colors';
+import { useMovimentoReduzido } from './Animacoes';
 
 type Ícone = 'inicio' | 'pets' | 'mapa' | 'perfil' | 'avisos';
 
@@ -92,15 +94,60 @@ const RÓTULOS: Record<string, string> = {
  * Menu inferior flutuante: pílula preta suspensa com o item ativo em
  * círculo azul, como no protótipo (Inicio.dc.html <nav>).
  *
+ * A bolha azul desliza (spring) até a aba escolhida.
+ *
  * Segue o contrato do Expo Router 58: `emitter.emit` antes de navegar e
  * `navigateToTab` com a *chave* da rota (não o nome).
  */
 export function MenuInferior({ state, descriptors, emitter, navigateToTab, insets }: BottomTabBarProps) {
   const base = Math.max(insets.bottom, 20);
+  const reduzido = useMovimentoReduzido();
+  const [largura, setLargura] = useState(0);
+  const posicao = useState(() => new Animated.Value(state.index))[0];
+  const total = state.routes.length;
+  // Itens de 48 px distribuídos com space-between e 8 px de respiro nas pontas.
+  const passo = total > 1 && largura > 0 ? (largura - 16 - ITEM) / (total - 1) : 0;
+
+  useEffect(() => {
+    if (reduzido) {
+      posicao.setValue(state.index);
+      return;
+    }
+    const animacao = Animated.spring(posicao, {
+      toValue: state.index,
+      useNativeDriver: true,
+      speed: 16,
+      bounciness: 7,
+    });
+    animacao.start();
+    return () => animacao.stop();
+  }, [state.index, reduzido, posicao]);
 
   return (
     <View style={[estilos.envoltorio, { bottom: base }]} pointerEvents="box-none">
-      <View style={estilos.menu} role="tablist">
+      <View
+        style={estilos.menu}
+        role="tablist"
+        onLayout={(e) => setLargura(e.nativeEvent.layout.width)}
+      >
+        {largura > 0 ? (
+          <Animated.View
+            pointerEvents="none"
+            style={[
+              estilos.bolha,
+              {
+                transform: [
+                  {
+                    translateX: posicao.interpolate({
+                      inputRange: [0, Math.max(total - 1, 1)],
+                      outputRange: [8, 8 + passo * Math.max(total - 1, 1)],
+                    }),
+                  },
+                ],
+              },
+            ]}
+          />
+        ) : null}
         {state.routes.map((rota, indice) => {
           const focada = indice === state.index;
           const opcoes = descriptors[rota.key]?.options;
@@ -130,7 +177,7 @@ export function MenuInferior({ state, descriptors, emitter, navigateToTab, inset
               accessibilityState={{ selected: focada }}
               onPress={aoPressionar}
               onLongPress={aoPressionarLongo}
-              style={[estilos.item, focada && estilos.itemAtivo]}
+              style={[estilos.item, focada && largura === 0 && estilos.itemAtivo]}
             >
               <Svg width={22} height={22} viewBox="0 0 24 24" color={focada ? colors.black : colors.white}>
                 {desenhoÍcone(rota.name as Ícone)}
@@ -142,6 +189,8 @@ export function MenuInferior({ state, descriptors, emitter, navigateToTab, inset
     </View>
   );
 }
+
+const ITEM = 48;
 
 const estilos = StyleSheet.create({
   envoltorio: {
@@ -171,6 +220,15 @@ const estilos = StyleSheet.create({
     justifyContent: 'center',
   },
   itemAtivo: {
+    backgroundColor: colors.primary,
+  },
+  bolha: {
+    position: 'absolute',
+    left: 0,
+    top: 8,
+    width: ITEM,
+    height: ITEM,
+    borderRadius: ITEM / 2,
     backgroundColor: colors.primary,
   },
 });

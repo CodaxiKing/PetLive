@@ -40,6 +40,19 @@ export default function AppLayout() {
       screenOptions={{
         headerShown: false,
         sceneStyle: { backgroundColor: colors.surface },
+        // Troca de aba: a tela nova aparece e desliza um pouco no sentido da aba.
+        animation: 'shift',
+        transitionSpec: { animation: 'timing', config: { duration: 260 } },
+        sceneStyleInterpolator: ({ current }) => ({
+          sceneStyle: {
+            opacity: current.progress.interpolate({ inputRange: [-1, 0, 1], outputRange: [0, 1, 0] }),
+            transform: [
+              {
+                translateX: current.progress.interpolate({ inputRange: [-1, 0, 1], outputRange: [-28, 0, 28] }),
+              },
+            ],
+          },
+        }),
       }}
     >
       <Tabs.Screen name="inicio" options={{ title: 'Início' }} />

@@ -240,6 +240,7 @@ export default function PetDetalhe() {
             })}
           </View>
 
+          <Surgir key={aba}>
           {aba === 'Vacinas' ? (
             <View style={estilos.lista}>
               {vacinas.length === 0 ? (
@@ -330,6 +331,7 @@ export default function PetDetalhe() {
               ) : null}
             </View>
           ) : null}
+          </Surgir>
         </View>
       </ScrollView>
 

@@ -88,11 +88,14 @@ function RaizProtegida() {
               screenOptions={{
                 headerShown: false,
                 contentStyle: { backgroundColor: colors.background },
-                animation: 'slide_from_right',
+                // Desliza com leve parallax (como no iOS) nas duas plataformas.
+                animation: 'ios_from_right',
+                animationDuration: 320,
+                gestureEnabled: true,
               }}
             >
               <Stack.Protected guard={Boolean(session)}>
-                <Stack.Screen name="(app)" />
+                <Stack.Screen name="(app)" options={{ animation: 'fade' }} />
                 <Stack.Screen name="pet/novo" options={{ presentation: 'modal', animation: 'slide_from_bottom' }} />
                 <Stack.Screen name="pet/[id]/index" />
                 <Stack.Screen name="pet/[id]/editar" options={{ presentation: 'modal', animation: 'slide_from_bottom' }} />
@@ -102,16 +105,16 @@ function RaizProtegida() {
                 <Stack.Screen name="lembretes/novo" options={{ presentation: 'modal', animation: 'slide_from_bottom' }} />
                 <Stack.Screen name="lembretes/rotina" />
                 <Stack.Screen name="avisos" />
-                <Stack.Screen name="termos" />
-                <Stack.Screen name="permissoes" />
+                <Stack.Screen name="termos" options={{ animation: 'fade_from_bottom' }} />
+                <Stack.Screen name="permissoes" options={{ animation: 'fade_from_bottom' }} />
                 <Stack.Screen name="privacidade" />
-                <Stack.Screen name="sos/index" />
+                <Stack.Screen name="sos/index" options={{ animation: 'fade_from_bottom' }} />
                 <Stack.Screen name="sos/primeiros-socorros" />
                 <Stack.Screen name="sos/intoxicacao" />
                 <Stack.Screen name="ferramentas/calculadoras" />
               </Stack.Protected>
               <Stack.Protected guard={!session}>
-                <Stack.Screen name="(auth)" />
+                <Stack.Screen name="(auth)" options={{ animation: 'fade' }} />
               </Stack.Protected>
             </Stack>
           </RemediosProvider>

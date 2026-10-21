@@ -13,7 +13,7 @@ import {
 } from 'react-native'
 import Svg, { Path } from 'react-native-svg'
 import { router, useFocusEffect } from 'expo-router'
-import { Flutuar, Surgir } from '../../src/components/Animacoes'
+import { animarLista, Flutuar, Surgir, Tocavel } from '../../src/components/Animacoes'
 import { Icone } from '../../src/components/Icone'
 import { LinhaIcone } from '../../src/components/LinhaIcone'
 import { Mascote } from '../../src/components/Mascote'
@@ -156,7 +156,14 @@ export default function Lembretes() {
   const confirmarRemocao = (lembrete: Lembrete) => {
     Alert.alert('Remover lembrete?', `"${lembrete.titulo}" será apagado.`, [
       { text: 'Cancelar', style: 'cancel' },
-      { text: 'Remover', style: 'destructive', onPress: () => removerLembrete(lembrete.id) },
+      {
+        text: 'Remover',
+        style: 'destructive',
+        onPress: () => {
+          animarLista()
+          removerLembrete(lembrete.id)
+        },
+      },
     ])
   }
 
@@ -291,10 +298,11 @@ export default function Lembretes() {
                 const cores = dono?.cores ?? coresDoPet({ cor_etiqueta: null }, i)
                 return (
                   <Surgir key={lembrete.id} indice={i}>
-                    <Pressable
+                    <Tocavel
                       accessibilityRole="button"
                       accessibilityHint="Segure para apagar"
                       onLongPress={() => confirmarRemocao(lembrete)}
+                      escala={0.98}
                       style={[estilos.cartao, { backgroundColor: cores.fundo, borderColor: cores.borda }]}
                     >
                       <View style={estilos.avatar}>
@@ -312,12 +320,15 @@ export default function Lembretes() {
                         accessibilityRole="button"
                         accessibilityLabel={`Marcar ${lembrete.titulo} como feito`}
                         hitSlop={6}
-                        onPress={() => concluirLembrete(lembrete)}
+                        onPress={() => {
+                          animarLista()
+                          concluirLembrete(lembrete)
+                        }}
                         style={estilos.feito}
                       >
                         <Text style={estilos.feitoSinal}>✓</Text>
                       </Pressable>
-                    </Pressable>
+                    </Tocavel>
                   </Surgir>
                 )
               })}

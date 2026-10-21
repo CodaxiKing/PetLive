@@ -4,6 +4,7 @@ import Svg, { Path } from 'react-native-svg';
 import { router } from 'expo-router';
 import { colors } from '../theme/colors';
 import { typography } from '../theme/typography';
+import { Surgir } from './Animacoes';
 
 type Props = {
   titulo: string;
@@ -65,12 +66,12 @@ export function HeroiOnda({
 
       {selo ? <Text style={estilos.selo}>{selo}</Text> : null}
 
-      <View style={[estilos.blocoTitulo, semVoltar && estilos.blocoTituloAlto]}>
+      <Surgir style={[estilos.blocoTitulo, semVoltar && estilos.blocoTituloAlto]}>
         {subtitulo ? <Text style={estilos.subtitulo}>{subtitulo}</Text> : null}
         <Text style={estilos.titulo} accessibilityRole="header">
           {titulo}
         </Text>
-      </View>
+      </Surgir>
 
       <Svg
         style={estilos.onda}
