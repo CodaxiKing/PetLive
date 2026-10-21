@@ -14,6 +14,7 @@ const LEGAL = [
   { rotulo: "Termos de uso", href: "/termos" },
   { rotulo: "Política de privacidade", href: "/privacidade" },
   { rotulo: "Direitos na LGPD", href: "/lgpd" },
+  { rotulo: "Créditos dos mapas", href: "/creditos" },
 ];
 
 // Fixo para o build ficar determinístico (new Date() quebra o prerender).

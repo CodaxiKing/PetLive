@@ -1,5 +1,5 @@
 import { useEffect, useImperativeHandle, useRef, useState, type Ref } from 'react';
-import { Platform, StyleSheet } from 'react-native';
+import { Linking, Platform, Pressable, StyleSheet, Text, View, type StyleProp, type ViewStyle } from 'react-native';
 import Constants from 'expo-constants';
 import { Camera, Map, Marker, type CameraRef } from '@maplibre/maplibre-react-native';
 import type MapView from 'react-native-maps';
@@ -43,6 +43,8 @@ type Props = {
   /** Falso na ficha do lugar: mapa parado, só para mostrar o ponto. */
   interativo?: boolean;
   mostrarUsuario?: boolean;
+  /** Onde fica o crédito "© OpenStreetMap" (padrão: canto de baixo à esquerda). */
+  posicaoCredito?: StyleProp<ViewStyle>;
   ref?: Ref<ControleMapa>;
 };
 
@@ -56,6 +58,7 @@ export function MapaLugares({
   onToqueMapa,
   interativo = true,
   mostrarUsuario = false,
+  posicaoCredito,
   ref,
 }: Props) {
   const camera = useRef<CameraRef>(null);
@@ -131,26 +134,52 @@ export function MapaLugares({
   }
 
   return (
-    <Map
-      style={StyleSheet.absoluteFill}
-      mapStyle={ESTILO_OSM}
-      logo={false}
-      attribution={false}
-      compass={false}
-      dragPan={interativo}
-      touchZoom={interativo}
-      doubleTapZoom={interativo}
-      doubleTapHoldZoom={interativo}
-      touchRotate={false}
-      touchPitch={false}
-      onPress={() => onToqueMapa?.()}
-    >
-      <Camera ref={camera} initialViewState={{ center: [centro.lng, centro.lat], zoom }} />
-      {pins.map((pin) => (
-        <Marker key={pin.id} id={pin.id} lngLat={[pin.lng, pin.lat]} anchor="bottom" onPress={() => onPin?.(pin.id)}>
-          <PinLugar categoria={pin.categoria} selecionado={pin.id === selecionado} />
-        </Marker>
-      ))}
-    </Map>
+    <View style={StyleSheet.absoluteFill}>
+      <Map
+        style={StyleSheet.absoluteFill}
+        mapStyle={ESTILO_OSM}
+        logo={false}
+        attribution={false}
+        compass={false}
+        dragPan={interativo}
+        touchZoom={interativo}
+        doubleTapZoom={interativo}
+        doubleTapHoldZoom={interativo}
+        touchRotate={false}
+        touchPitch={false}
+        onPress={() => onToqueMapa?.()}
+      >
+        <Camera ref={camera} initialViewState={{ center: [centro.lng, centro.lat], zoom }} />
+        {pins.map((pin) => (
+          <Marker key={pin.id} id={pin.id} lngLat={[pin.lng, pin.lat]} anchor="bottom" onPress={() => onPin?.(pin.id)}>
+            <PinLugar categoria={pin.categoria} selecionado={pin.id === selecionado} />
+          </Marker>
+        ))}
+      </Map>
+      {/* ODbL: o crédito do OpenStreetMap precisa ficar visível no mapa. */}
+      <Pressable
+        accessibilityRole="link"
+        accessibilityLabel="Dados do mapa: OpenStreetMap"
+        onPress={() => Linking.openURL('https://www.openstreetmap.org/copyright').catch(() => undefined)}
+        hitSlop={6}
+        style={[estilos.credito, posicaoCredito ?? estilos.creditoPadrao]}
+      >
+        <Text style={estilos.creditoTexto} allowFontScaling={false}>
+          © OpenStreetMap
+        </Text>
+      </Pressable>
+    </View>
   );
 }
+
+const estilos = StyleSheet.create({
+  credito: {
+    position: 'absolute',
+    backgroundColor: 'rgba(255,255,255,0.85)',
+    borderRadius: 6,
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+  },
+  creditoPadrao: { left: 8, bottom: 8 },
+  creditoTexto: { fontSize: 10, color: '#333333' },
+});

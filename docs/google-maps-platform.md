@@ -1,5 +1,8 @@
 # Google Maps Platform: termos e preços (conferido em 21/10/2026)
 
+> O padrão do app é **sem Google**: mapa e lugares de dados abertos
+> (`docs/dados-abertos.md`). Este documento só vale se o Google for ligado.
+
 Apoio ao item do board **"Conferir termos e preços do Google Maps Platform antes do
 lançamento"**. A decisão final e o aceite dos termos são da conta do PetLive no
 Google Cloud. Fontes: [políticas do Places API](https://developers.google.com/maps/documentation/places/web-service/policies),

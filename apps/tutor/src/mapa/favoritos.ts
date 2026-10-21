@@ -12,7 +12,7 @@ const MAX_SALVOS_GOOGLE = 10;
 export async function lugaresSalvos(): Promise<Lugar[]> {
   const { data, error } = await supabase
     .from('saved_places')
-    .select('google_place_id, places(id, nome, categoria, endereco, telefone, horario, website, lat, lng, aberto_24h)')
+    .select('google_place_id, places(id, nome, categoria, endereco, telefone, horario, website, lat, lng, aberto_24h, fonte)')
     .order('saved_at', { ascending: false });
   if (error) throw new Error(error.message);
 

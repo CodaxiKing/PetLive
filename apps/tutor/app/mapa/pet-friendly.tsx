@@ -32,6 +32,25 @@ const FILTROS: { valor: Filtro; rotulo: string }[] = [
   { valor: 'hotel', rotulo: 'Hotéis' },
 ];
 
+const NOME_PLURAL: Record<Filtro, string> = {
+  todos: 'lugares pet friendly',
+  parque: 'parques pet friendly',
+  praia: 'praias pet friendly',
+  restaurante: 'restaurantes pet friendly',
+  hotel: 'hotéis pet friendly',
+};
+
+/**
+ * Lista vazia: nos dados abertos, restaurantes, hotéis e praias quase nunca
+ * vêm marcados como "aceita cães" — melhor dizer isso do que só "nada".
+ */
+function textoVazio(filtro: Filtro, google: boolean): string {
+  if (!google && (filtro === 'restaurante' || filtro === 'hotel' || filtro === 'praia')) {
+    return `Ainda não temos ${NOME_PLURAL[filtro]} nesta região: os mapas abertos quase não marcam quem aceita pets.`;
+  }
+  return `Nenhum dos ${NOME_PLURAL[filtro]} por perto. Tente outro bairro.`;
+}
+
 /** Região buscada pelo tutor: nome e ponto (geocodificação do aparelho, sem custo). */
 type Regiao = { nome: string; lat: number; lng: number };
 
@@ -46,7 +65,7 @@ export default function TelaPetFriendly() {
   const [texto, setTexto] = useState('');
   const [regiao, setRegiao] = useState<Regiao | null>(null);
   const [cidade, setCidade] = useState<string | null>(null);
-  const [lugares, setLugares] = useState<Lugar[] | null>([]);
+  const [lugares, setLugares] = useState<Lugar[]>([]);
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState<string | null>(null);
 
@@ -164,24 +183,22 @@ export default function TelaPetFriendly() {
         <ScrollView style={estilos.flex} contentContainerStyle={estilos.lista} showsVerticalScrollIndicator={false}>
           {carregando ? (
             <ActivityIndicator color={colors.primaryDeep} style={estilos.carregando} />
-          ) : lugares === null ? (
-            <Text style={estilos.vazio}>
-              Os lugares pet friendly vêm do Google Maps e chegam junto com o mapa do Google no app.
-            </Text>
           ) : erro ? (
             <Text style={estilos.vazio}>{erro}</Text>
           ) : visiveis.length === 0 ? (
-            <Text style={estilos.vazio}>Nenhum lugar pet friendly por perto. Tente outro bairro.</Text>
+            <Text style={estilos.vazio}>{textoVazio(filtro, Boolean(lugares.some((l) => l.fonte === 'google')))}</Text>
           ) : (
             visiveis.map((lugar, i) => <CartaoLugar key={lugar.id} lugar={lugar} indice={i} />)
           )}
 
-          {lugares !== null ? (
-            <View style={estilos.rodapeLista}>
+          <View style={estilos.rodapeLista}>
+            {lugares.some((l) => l.fonte === 'google') ? (
               <AtribuicaoGoogle />
-              <Text style={estilos.nota}>Confirme com o local antes de ir.</Text>
-            </View>
-          ) : null}
+            ) : (
+              <Text style={estilos.nota}>Dados abertos: © OpenStreetMap e Overture Maps.</Text>
+            )}
+            <Text style={estilos.nota}>Confirme com o local antes de ir.</Text>
+          </View>
         </ScrollView>
       </View>
 

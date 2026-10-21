@@ -312,7 +312,11 @@ export default function Lugar() {
               ) : null}
             </View>
           ) : (
-            <Text style={estilos.fonte}>Informações do OpenStreetMap. Confirme com o local antes de ir.</Text>
+            <Text style={estilos.fonte}>
+              {lugar.fonte === 'overture'
+                ? 'Informações do Overture Maps (dados abertos). Confirme com o local antes de ir.'
+                : 'Informações do OpenStreetMap. Confirme com o local antes de ir.'}
+            </Text>
           )}
 
           {!lugar.endereco && !telefone && !lugar.horario && !lugar.website && (

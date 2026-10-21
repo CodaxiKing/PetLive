@@ -50,3 +50,6 @@ Thumbs.db
 .vscode/*
 !.vscode/extensions.json
 *.swp
+
+# Python
+__pycache__/

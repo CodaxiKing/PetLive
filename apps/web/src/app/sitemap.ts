@@ -11,5 +11,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${SITE}/termos`, changeFrequency: "yearly", priority: 0.3 },
     { url: `${SITE}/privacidade`, changeFrequency: "yearly", priority: 0.3 },
     { url: `${SITE}/lgpd`, changeFrequency: "yearly", priority: 0.3 },
+    { url: `${SITE}/creditos`, changeFrequency: "yearly", priority: 0.2 },
   ];
 }

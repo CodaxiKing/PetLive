@@ -23,7 +23,6 @@ import {
   buscarLugares,
   buscarPetFriendly,
   CENTRO_PADRAO,
-  FONTE_LUGARES,
   formatarDistancia,
   resumoStatus,
   ROTULO_CATEGORIA,
@@ -43,13 +42,8 @@ const FILTROS: { valor: Filtro; rotulo: string }[] = [
   { valor: 'todos', rotulo: 'Todos' },
   { valor: 'clinica', rotulo: 'Clínicas' },
   { valor: 'petshop', rotulo: 'Petshops' },
-  // Creches e hotelzinhos só existem nos dados do Google (busca por texto, 5.15).
-  ...(FONTE_LUGARES === 'google'
-    ? ([
-        { valor: 'creche', rotulo: 'Creches' },
-        { valor: 'hotelzinho', rotulo: 'Hotelzinhos' },
-      ] as const)
-    : []),
+  { valor: 'creche', rotulo: 'Creches' },
+  { valor: 'hotelzinho', rotulo: 'Hotelzinhos' },
   { valor: 'banho_tosa', rotulo: 'Banho e tosa' },
   { valor: '24h', rotulo: '24 h' },
   { valor: 'salvos', rotulo: 'Salvos' },
@@ -93,7 +87,7 @@ export default function Mapa() {
       categoria === 'salvos'
         ? lugaresSalvos()
         : categoria === 'pet_friendly'
-          ? buscarPetFriendly({ lat: centro.lat, lng: centro.lng }).then((lista) => lista ?? [])
+          ? buscarPetFriendly({ lat: centro.lat, lng: centro.lng })
           : buscarLugares({
               lat: centro.lat,
               lng: centro.lng,
@@ -163,6 +157,7 @@ export default function Mapa() {
         pins={lugares}
         selecionado={lugar?.id}
         mostrarUsuario={permissao === 'concedida'}
+        posicaoCredito={estilos.creditoMapa}
         onPin={(id) => {
           const escolhido = lugares.find((l) => l.id === id);
           if (escolhido) selecionar(escolhido);
@@ -455,6 +450,10 @@ const estilos = StyleSheet.create({
     paddingHorizontal: spacing.xxl,
     paddingTop: 54,
     gap: spacing.sm,
+  },
+  creditoMapa: {
+    right: spacing.xxl,
+    top: 168,
   },
   linhaBusca: {
     flexDirection: 'row',

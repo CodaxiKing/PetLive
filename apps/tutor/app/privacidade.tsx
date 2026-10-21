@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import { Alert, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Alert, Linking, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { router, useFocusEffect } from 'expo-router';
 import { HeroiOnda } from '../src/components/HeroiOnda';
 import { Icone } from '../src/components/Icone';
@@ -151,6 +151,15 @@ export default function Privacidade() {
           icone={<Icone nome="escudo" />}
           rotulo="QR da coleira e ficha de emergência"
           valor="Nenhuma ficha ativa"
+        />
+
+        <Text style={[estilos.secao, estilos.secaoEspaco]}>MAPAS E LUGARES</Text>
+        <LinhaIcone
+          icone={<Icone nome="local" />}
+          rotulo="Créditos dos mapas"
+          valor="OpenStreetMap, Overture Maps e Foursquare"
+          onPress={() => Linking.openURL('https://petlive.app.br/creditos').catch(() => undefined)}
+          direita={seta}
         />
 
         <Text style={[estilos.secao, estilos.secaoEspaco]}>MEUS DADOS</Text>

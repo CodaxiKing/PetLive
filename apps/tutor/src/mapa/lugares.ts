@@ -2,10 +2,11 @@ import { supabase } from '../lib/supabase';
 
 /**
  * Lugares do mapa (BUSINESS.md 5.15). Duas fontes:
+ * - 'osm' (padrão): tabela places, de dados abertos e grátis: OpenStreetMap
+ *   e Overture Maps (scripts/importar-lugares.py).
  * - 'google': funções places-nearby e place-details (chave só no servidor,
  *   limite diário por usuário). Exige o mapa do Google na tela (termos do
  *   Google), então só liga com EXPO_PUBLIC_LUGARES_FONTE=google.
- * - 'osm': tabela places, importada do OpenStreetMap (padrão até lá).
  */
 export const FONTE_LUGARES: 'google' | 'osm' =
   process.env.EXPO_PUBLIC_LUGARES_FONTE === 'google' ? 'google' : 'osm';
@@ -47,7 +48,8 @@ export type Lugar = {
   fotos?: FotoLugar[];
   /** Link do lugar no Google Maps (o Google exige oferecer). */
   google_maps?: string | null;
-  fonte?: 'google' | 'osm';
+  /** De onde veio: Google, OpenStreetMap ou Overture Maps (dados abertos). */
+  fonte?: 'google' | 'osm' | 'overture';
   /** Pet friendly: o Google diz que aceita cães; parque com área para cães. */
   aceita_caes?: boolean | null;
   area_caes?: boolean;
@@ -175,16 +177,25 @@ export async function buscarLugares(opcoes: {
     p_raio_km: opcoes.raioKm ?? 10,
   });
   if (error) throw new Error(error.message);
-  return ((data ?? []) as Lugar[]).map((l) => ({ ...l, fonte: 'osm' as const }));
+  return (data ?? []) as Lugar[];
 }
 
 /**
- * Pet friendly por perto (5.19): parques, praias, restaurantes e hotéis,
- * uma busca por categoria, juntos pela distância. Null = sem dados do
- * Google (o OpenStreetMap importado não tem essas categorias).
+ * Pet friendly por perto (5.19): parques, praias, restaurantes e hotéis.
+ * Nos dados abertos é a tabela places (grupo pet_friendly); no Google, uma
+ * busca por categoria, juntas pela distância.
  */
-export async function buscarPetFriendly(posicao: { lat: number; lng: number }): Promise<Lugar[] | null> {
-  if (!usarGoogle()) return null;
+export async function buscarPetFriendly(posicao: { lat: number; lng: number }): Promise<Lugar[]> {
+  if (!usarGoogle()) {
+    const { data, error } = await supabase.rpc('lugares_por_perto', {
+      p_lat: posicao.lat,
+      p_lng: posicao.lng,
+      p_grupo: 'pet_friendly',
+      p_raio_km: 5,
+    });
+    if (error) throw new Error(error.message);
+    return (data ?? []) as Lugar[];
+  }
   try {
     const listas = await Promise.all(
       CATEGORIAS_PET_FRIENDLY.map((categoria) =>
@@ -200,11 +211,11 @@ export async function buscarPetFriendly(posicao: { lat: number; lng: number }): 
   } catch (e) {
     if ((e as { codigo?: string }).codigo !== 'sem_chave') throw e;
     googleIndisponivel = true;
-    return null;
+    return buscarPetFriendly(posicao);
   }
 }
 
-/** Selo verde do pet friendly: o que o Google informa sobre aceitar pets. */
+/** Selo verde do pet friendly: o que a fonte informa sobre aceitar pets. */
 export function seloPetFriendly(lugar: Lugar): string | null {
   if (lugar.area_caes) return 'Área para cães';
   if (lugar.aceita_caes) return 'Aceita cães';
@@ -259,12 +270,12 @@ export async function lugarPorId(id: string, categoria?: CategoriaLugar): Promis
 
   const { data, error } = await supabase
     .from('places')
-    .select('id, nome, categoria, endereco, telefone, horario, website, lat, lng, aberto_24h')
+    .select('id, nome, categoria, endereco, telefone, horario, website, lat, lng, aberto_24h, aceita_caes, area_caes, fonte')
     .eq('id', id)
     .maybeSingle();
   if (error) throw new Error(error.message);
   if (!data) return null;
-  return { ...(data as Lugar), fonte: 'osm' };
+  return data as Lugar;
 }
 
 /** Endereço de uma foto do Google (carregada sob demanda, 5.15). */
