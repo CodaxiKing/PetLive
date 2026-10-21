@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { LayoutAnimation, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { router } from 'expo-router';
 import { BotaoPrimario } from '../../src/components/BotaoPrimario';
@@ -9,6 +9,8 @@ import { usePacoteEmergencia } from '../../src/sos/pacote';
 import { colors } from '../../src/theme/colors';
 import { spacing } from '../../src/theme/tokens';
 import { typography } from '../../src/theme/typography';
+import { estaOffline } from '../../src/lib/cacheOffline';
+import { registrarEvento } from '../../src/lib/eventos';
 
 const AMARELO = '#FFF0C9';
 
@@ -29,6 +31,11 @@ function paraQuem(item: ItemToxico): string | null {
  */
 export default function Intoxicacao() {
   const pacote = usePacoteEmergencia();
+
+  // Acessos ao guia offline (métrica da Fase 1); "offline" é a última leitura sem rede.
+  useEffect(() => {
+    registrarEvento('guia_aberto', { guia: 'intoxicacao', offline: estaOffline() });
+  }, []);
   const [busca, setBusca] = useState('');
   const [aberto, setAberto] = useState<string | null>(null);
 

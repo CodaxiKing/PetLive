@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { LayoutAnimation, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { router } from 'expo-router';
 import { BotaoPrimario } from '../../src/components/BotaoPrimario';
@@ -9,6 +9,8 @@ import { usePacoteEmergencia } from '../../src/sos/pacote';
 import { colors } from '../../src/theme/colors';
 import { spacing } from '../../src/theme/tokens';
 import { fontFamily, typography } from '../../src/theme/typography';
+import { estaOffline } from '../../src/lib/cacheOffline';
+import { registrarEvento } from '../../src/lib/eventos';
 
 const ROSA = '#FDE0E6';
 
@@ -19,6 +21,11 @@ const ROSA = '#FDE0E6';
  */
 export default function PrimeirosSocorros() {
   const pacote = usePacoteEmergencia();
+
+  // Acessos ao guia offline (métrica da Fase 1); "offline" é a última leitura sem rede.
+  useEffect(() => {
+    registrarEvento('guia_aberto', { guia: 'primeiros_socorros', offline: estaOffline() });
+  }, []);
   const [aberta, setAberta] = useState<string | null>(null);
 
   function alternar(id: string) {

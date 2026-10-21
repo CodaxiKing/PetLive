@@ -10,7 +10,7 @@ export const SECOES_TERMOS: { titulo: string; paragrafo: string }[] = [
   {
     titulo: '2. Dados que coletamos',
     paragrafo:
-      'Nome, e-mail e as informações que você cadastra sobre seus pets (espécie, raça, peso, histórico de saúde e fotos opcionais). Não vendemos nem compartilhamos seus dados com terceiros para fins de publicidade.',
+      'Nome, e-mail e as informações que você cadastra sobre seus pets (espécie, raça, peso, histórico de saúde e fotos opcionais). Também registramos o uso de algumas funções (abrir o app, concluir lembretes, usar o SOS e os guias de emergência) para medir se o app está ajudando; esses registros não saem do PetLive e são apagados em 13 meses. Não vendemos nem compartilhamos seus dados com terceiros para fins de publicidade.',
   },
   {
     titulo: '3. Base legal (LGPD)',

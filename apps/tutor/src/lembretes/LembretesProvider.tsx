@@ -8,6 +8,7 @@ import {
   type ReactNode,
 } from 'react'
 import { mensagemDeErro } from '../lib/cacheOffline'
+import { registrarEvento } from '../lib/eventos'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../auth/AuthProvider'
 import { agendarUmLembrete, cancelarLembrete } from '../notificacoes/sincronizarLembretes'
@@ -121,6 +122,7 @@ export function LembretesProvider({ children }: { children: ReactNode }) {
         setErro(mensagemDeErro(error.message))
         return false
       }
+      registrarEvento('lembrete_concluido', { tipo: lembrete.tipo })
       setLembretes((atual) => {
         const restantes = atual.filter((l) => l.id !== lembrete.id)
         if (repete) {

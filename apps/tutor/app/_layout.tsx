@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { Stack, router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { ActivityIndicator, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, AppState, StyleSheet, View } from 'react-native';
 import * as Notifications from 'expo-notifications';
 import * as Sentry from '@sentry/react-native';
 import {
@@ -21,6 +21,7 @@ import { registrarCategoriaDose, tratarRespostaDose } from '../src/notificacoes/
 import { registrarTarefaDose } from '../src/notificacoes/tarefaDose';
 import { atualizarPacoteEmergencia } from '../src/sos/pacote';
 import { colors } from '../src/theme/colors';
+import { registrarAberturaDiaria } from '../src/lib/eventos';
 
 /**
  * Sentry: só liga quando há DSN (sem conta/DSN o app segue normal,
@@ -70,6 +71,17 @@ function useObservadorNotificacoes() {
 /** Decide para onde a rota raiz aponta, conforme a sessão. */
 function RaizProtegida() {
   const { session, carregando } = useAuth();
+  const logado = Boolean(session);
+
+  // Tutores ativos (métrica da Fase 1): uma abertura por dia, também ao voltar ao app.
+  useEffect(() => {
+    if (!logado) return;
+    registrarAberturaDiaria();
+    const assinatura = AppState.addEventListener('change', (estado) => {
+      if (estado === 'active') registrarAberturaDiaria();
+    });
+    return () => assinatura.remove();
+  }, [logado]);
 
   if (carregando) {
     return (

@@ -19,7 +19,7 @@ const SECOES = [
     itens: [
       "Cadastro: nome, e-mail e, se você fornecer, telefone.",
       "Dados do pet: nome, espécie, raça, data de nascimento, peso, foto, histórico de vacinas, vermífugos, medicamentos, consultas e lembretes.",
-      "Uso do app: eventos de agendamento, avaliação de serviços e preferências de notificação.",
+      "Uso do app: quando você abre o app, conclui lembretes e usa o SOS e os guias de emergência (para medir se o app ajuda; ficam só no PetLive e são apagados em 13 meses), além das preferências de notificação.",
       "Técnicos: identificadores de dispositivo e tokens de push notification (Expo), necessários para entregar lembretes.",
     ],
   },

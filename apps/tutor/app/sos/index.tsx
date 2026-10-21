@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   ActivityIndicator,
   Alert,
@@ -17,6 +17,7 @@ import { Campo } from '../../src/components/Campo';
 import { HeroiOnda } from '../../src/components/HeroiOnda';
 import { Icone } from '../../src/components/Icone';
 import { LinhaIcone } from '../../src/components/LinhaIcone';
+import { registrarEvento } from '../../src/lib/eventos';
 import { ligarPara, tracarRota } from '../../src/mapa/acoes';
 import { formatarDistancia } from '../../src/mapa/lugares';
 import {
@@ -50,6 +51,23 @@ export default function Sos() {
   const [veterinario, setVeterinario] = useState<MeuVeterinario | null>(null);
   const [editandoVet, setEditandoVet] = useState(false);
   const [formVet, setFormVet] = useState<MeuVeterinario>({ nome: '', telefone: '' });
+
+  // Métrica do SOS (BUSINESS.md 14): quantos segundos até ligar.
+  const abertoEm = useRef(0);
+  useEffect(() => {
+    abertoEm.current = Date.now();
+    registrarEvento('sos_aberto');
+  }, []);
+
+  function ligar(telefone: string, destino: 'clinica' | 'veterinario') {
+    registrarEvento('sos_ligou', { destino, segundos: Math.round((Date.now() - abertoEm.current) / 1000) });
+    ligarPara(telefone);
+  }
+
+  function rota(lugar: Parameters<typeof tracarRota>[0]) {
+    registrarEvento('sos_rota');
+    tracarRota(lugar);
+  }
 
   const aplicar = useCallback((resultado: ResultadoEmergencia) => {
     setClinica(resultado.clinica);
@@ -130,7 +148,7 @@ export default function Sos() {
                 )}
                 <Pressable
                   accessibilityRole="button"
-                  onPress={() => tracarRota(clinica.lugar)}
+                  onPress={() => rota(clinica.lugar)}
                   hitSlop={6}
                 >
                   <Text style={[estilos.chip, estilos.chipCinza]}>Rota</Text>
@@ -193,7 +211,7 @@ export default function Sos() {
           icone={<Icone nome="telefone" />}
           rotulo="Meu veterinário"
           valor={veterinario ? `Ligar para ${veterinario.nome}` : 'Adicionar o telefone'}
-          onPress={() => (veterinario ? ligarPara(veterinario.telefone) : abrirEdicaoVet())}
+          onPress={() => (veterinario ? ligar(veterinario.telefone, 'veterinario') : abrirEdicaoVet())}
           direita={
             veterinario ? (
               <Pressable accessibilityRole="button" onPress={abrirEdicaoVet} hitSlop={10}>
@@ -213,19 +231,19 @@ export default function Sos() {
           <BotaoPrimario
             titulo={clinica?.confirmada24h ? 'Ligar para a clínica 24 h' : 'Ligar para a clínica'}
             icone={<Icone nome="telefone" size={22} />}
-            onPress={() => ligarPara(telefoneClinica)}
+            onPress={() => ligar(telefoneClinica, 'clinica')}
           />
         ) : clinica ? (
           <BotaoPrimario
             titulo="Traçar rota até a clínica"
             icone={<Icone nome="rota" size={22} />}
-            onPress={() => tracarRota(clinica.lugar)}
+            onPress={() => rota(clinica.lugar)}
           />
         ) : veterinario ? (
           <BotaoPrimario
             titulo="Ligar para o veterinário"
             icone={<Icone nome="telefone" size={22} />}
-            onPress={() => ligarPara(veterinario.telefone)}
+            onPress={() => ligar(veterinario.telefone, 'veterinario')}
           />
         ) : null}
       </View>
