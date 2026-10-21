@@ -245,6 +245,8 @@ export function AbaSaude() {
           {grupo.itens.map((item, i) => (
             <Pressable
               key={item.id}
+              accessibilityRole="button"
+              accessibilityHint="Segure para editar ou apagar"
               onPress={grupo.chave === 'remedios' ? abrirMedicamentos : undefined}
               onLongPress={() => aoSegurar(grupo.chave, item)}
               delayLongPress={350}
@@ -284,6 +286,7 @@ export function AbaSaude() {
           consultas.slice(0, 3).map((c, i) => (
             <Pressable
               key={c.id}
+              accessibilityRole="button"
               onPress={abrirConsultas}
               style={[
                 estilos.linha,

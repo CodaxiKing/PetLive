@@ -1,14 +1,35 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import Svg, { Circle, Path } from 'react-native-svg';
 import { colors } from '../../src/theme/colors';
 import { typography } from '../../src/theme/typography';
 
-/** Botão redondo branco do cabeçalho, com ícone. */
-export function BotaoRedondo({ children, acessibilidade }: { children: React.ReactNode; acessibilidade: string }) {
+/** Botão redondo branco do cabeçalho, com ícone. Sem onPress é só um selo. */
+export function BotaoRedondo({
+  children,
+  acessibilidade,
+  onPress,
+}: {
+  children: React.ReactNode;
+  acessibilidade: string;
+  onPress?: () => void;
+}) {
+  if (!onPress) {
+    return (
+      <View accessibilityLabel={acessibilidade} style={estilos.botaoRedondo}>
+        {children}
+      </View>
+    );
+  }
   return (
-    <View accessibilityRole="button" accessibilityLabel={acessibilidade} style={estilos.botaoRedondo}>
+    <Pressable
+      accessibilityRole="button"
+      accessibilityLabel={acessibilidade}
+      hitSlop={4}
+      onPress={onPress}
+      style={({ pressed }) => [estilos.botaoRedondo, pressed && { opacity: 0.7 }]}
+    >
       {children}
-    </View>
+    </Pressable>
   );
 }
 

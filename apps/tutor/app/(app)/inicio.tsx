@@ -72,17 +72,13 @@ export default function Inicio() {
             <Text style={estilos.localNome}>Rio de Janeiro</Text>
           </View>
 
-          <Pressable onPress={() => router.push('/avisos')} hitSlop={4}>
-            <BotaoRedondo acessibilidade="Avisos">
-              <IconeSino />
-            </BotaoRedondo>
-          </Pressable>
+          <BotaoRedondo acessibilidade="Avisos" onPress={() => router.push('/avisos')}>
+            <IconeSino />
+          </BotaoRedondo>
 
-          <Pressable onPress={() => router.push('/perfil')} hitSlop={4}>
-            <BotaoRedondo acessibilidade="Perfil">
-              <IconePerfil />
-            </BotaoRedondo>
-          </Pressable>
+          <BotaoRedondo acessibilidade="Perfil" onPress={() => router.push('/perfil')}>
+            <IconePerfil />
+          </BotaoRedondo>
         </View>
 
         <Text style={estilos.titulo} numberOfLines={1}>
