@@ -36,3 +36,13 @@ e espelham o design system do app do tutor e do protótipo `prototipo/SitePetLiv
 
 - Botões das lojas de apps (Google Play / App Store) ainda são decorativos.
 - Paginação/OG image e sitemap entram junto do SEO.
+
+## Variáveis de ambiente
+
+| Variável | Para quê |
+| --- | --- |
+| `NEXT_PUBLIC_URL_GOOGLE_PLAY` | Link do app no Google Play. Sem ela, o botão mostra "Em breve". |
+| `NEXT_PUBLIC_URL_APP_STORE` | Link do app na App Store. Sem ela, o botão mostra "Em breve". |
+
+SEO: `src/app/sitemap.ts`, `src/app/robots.ts` e os dados estruturados
+(`MobileApplication`) na home.

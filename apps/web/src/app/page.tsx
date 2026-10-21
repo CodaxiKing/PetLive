@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { BotoesLojas, URL_APP_STORE, URL_GOOGLE_PLAY } from "@/components/BotoesLojas";
 
 const RECURSOS = [
   {
@@ -92,9 +93,30 @@ const PERGUNTAS = [
   },
 ];
 
+/** Dados estruturados do app para os buscadores (schema.org). */
+const DADOS_ESTRUTURADOS = {
+  "@context": "https://schema.org",
+  "@type": "MobileApplication",
+  name: "PetLive",
+  operatingSystem: "Android, iOS",
+  applicationCategory: "HealthApplication",
+  description:
+    "Carteira de saúde do pet, lembretes de vacinas e remédios, SOS com a clínica 24 h mais perto e lugares pet por perto.",
+  inLanguage: "pt-BR",
+  offers: { "@type": "Offer", price: "0", priceCurrency: "BRL" },
+  ...(URL_GOOGLE_PLAY || URL_APP_STORE
+    ? { downloadUrl: [URL_GOOGLE_PLAY, URL_APP_STORE].filter(Boolean) }
+    : {}),
+};
+
 export default function Home() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        // JSON fixo do próprio site, sem dado de usuário.
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(DADOS_ESTRUTURADOS) }}
+      />
       {/* Herói */}
       <section id="download" className="relative overflow-hidden bg-azul-hero">
         <svg
@@ -125,24 +147,7 @@ export default function Home() {
             Carteira de vacinação, lembretes de remédios, clínicas por perto e
             serviços com horário marcado. Tudo no PetLive.
           </p>
-          <div className="mt-9 flex flex-wrap gap-3.5">
-            <span className="flex h-16 cursor-default items-center gap-3 rounded-full bg-tinta pl-3.5 pr-6.5 text-[15px] font-bold text-white">
-              <span className="flex h-9.5 w-9.5 items-center justify-center rounded-full bg-azul">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="#111" aria-hidden="true">
-                  <path d="M7 3l12 9-12 9z" />
-                </svg>
-              </span>
-              Baixar no Google Play
-            </span>
-            <span className="flex h-16 cursor-default items-center gap-3 rounded-full bg-fundo px-6 text-[15px] font-bold">
-              <span className="flex h-9.5 w-9.5 items-center justify-center rounded-full bg-tinta">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="#9AD6F8" aria-hidden="true">
-                  <path d="M7 3l12 9-12 9z" />
-                </svg>
-              </span>
-              Baixar na App Store
-            </span>
-          </div>
+          <BotoesLojas />
           <p className="mt-5.5 text-[13px] font-medium text-azul-texto">
             Feito para tutores de cães e gatos no Rio de Janeiro.
           </p>

@@ -18,11 +18,22 @@ export const metadata: Metadata = {
   },
   description:
     "Carteira de saúde do pet, lembretes de vacinas e remédios, clínicas por perto e serviços com horário marcado.",
+  keywords: [
+    "carteira de vacinação do pet",
+    "lembrete de vacina",
+    "remédio do cachorro",
+    "clínica veterinária 24 horas Rio de Janeiro",
+    "app para tutores de cães e gatos",
+  ],
+  alternates: { canonical: "/" },
   openGraph: {
     locale: "pt_BR",
     type: "website",
     siteName: "PetLive",
+    url: "/",
   },
+  twitter: { card: "summary_large_image" },
+  robots: { index: true, follow: true },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
