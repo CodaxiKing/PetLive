@@ -11,6 +11,7 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { Camera, Map, Marker } from '@maplibre/maplibre-react-native';
 import Svg, { Path } from 'react-native-svg';
 import { abrirWhatsApp, ligarPara, tracarRota } from '../src/mapa/acoes';
+import { alternarSalvo, estaSalvo } from '../src/mapa/favoritos';
 import { GlifoLugar } from '../src/mapa/GlifoLugar';
 import {
   COR_CATEGORIA,
@@ -56,6 +57,22 @@ export default function Lugar() {
   const [lugar, setLugar] = useState<LugarRegistro | null>(null);
   const [carregando, setCarregando] = useState(true);
   const [falha, setFalha] = useState(false);
+  const [salvo, setSalvo] = useState(false);
+  const [salvando, setSalvando] = useState(false);
+
+  useEffect(() => {
+    if (id) estaSalvo(id).then(setSalvo, () => undefined);
+  }, [id]);
+
+  function alternarFavorito() {
+    if (!lugar || salvando) return;
+    setSalvando(true);
+    // Muda na hora; volta se o servidor recusar.
+    setSalvo(!salvo);
+    alternarSalvo(lugar.id, salvo)
+      .then(setSalvo, () => setSalvo(salvo))
+      .finally(() => setSalvando(false));
+  }
 
   useEffect(() => {
     let vivo = true;
@@ -130,6 +147,25 @@ export default function Lugar() {
               d="M15 5l-7 7 7 7"
               stroke={colors.black}
               strokeWidth={2.2}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </Svg>
+        </Pressable>
+
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={salvo ? 'Remover dos salvos' : 'Salvar lugar'}
+          accessibilityState={{ selected: salvo }}
+          hitSlop={12}
+          onPress={alternarFavorito}
+          style={({ pressed }) => [estilos.voltar, estilos.favorito, pressed && estilos.voltarPressionado]}
+        >
+          <Svg width={20} height={20} viewBox="0 0 24 24" fill={salvo ? '#E57373' : 'none'}>
+            <Path
+              d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 10c0 5.5-7 10-7 10z"
+              stroke={salvo ? '#E57373' : colors.black}
+              strokeWidth={1.9}
               strokeLinecap="round"
               strokeLinejoin="round"
             />
@@ -362,6 +398,10 @@ const estilos = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     ...shadow.card,
+  },
+  favorito: {
+    left: undefined,
+    right: spacing.xxl,
   },
   voltarPressionado: {
     opacity: 0.6,

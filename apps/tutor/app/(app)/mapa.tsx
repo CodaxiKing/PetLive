@@ -14,6 +14,7 @@ import { Camera, Map, Marker, type CameraRef } from '@maplibre/maplibre-react-na
 import Svg, { Path } from 'react-native-svg';
 import { BotaoPrimario } from '../../src/components/BotaoPrimario';
 import { ligarPara, tracarRota } from '../../src/mapa/acoes';
+import { lugaresSalvos } from '../../src/mapa/favoritos';
 import { GlifoLugar } from '../../src/mapa/GlifoLugar';
 import {
   buscarLugares,
@@ -34,7 +35,7 @@ import { typography } from '../../src/theme/typography';
 /** Estilo de mapa gratuito (OpenFreeMap: tiles OSM, sem chave). */
 const ESTILO_MAPA = 'https://tiles.openfreemap.org/styles/liberty';
 
-type Filtro = 'todos' | CategoriaLugar | '24h';
+type Filtro = 'todos' | CategoriaLugar | '24h' | 'salvos';
 
 const FILTROS: { valor: Filtro; rotulo: string }[] = [
   { valor: 'todos', rotulo: 'Todos' },
@@ -42,6 +43,7 @@ const FILTROS: { valor: Filtro; rotulo: string }[] = [
   { valor: 'banho_tosa', rotulo: 'Banho e tosa' },
   { valor: 'petshop', rotulo: 'Petshop' },
   { valor: '24h', rotulo: '24h' },
+  { valor: 'salvos', rotulo: 'Salvos' },
 ];
 
 /**
@@ -72,13 +74,17 @@ export default function Mapa() {
   // Consulta por perto muda com a posição, o filtro e a busca.
   useEffect(() => {
     let vivo = true;
-    buscarLugares({
-      lat: centro.lat,
-      lng: centro.lng,
-      categoria: so24h || categoria === 'todos' ? null : categoria,
-      busca: buscaAtiva,
-      aberto24h: so24h ? true : null,
-    })
+    const consulta =
+      categoria === 'salvos'
+        ? lugaresSalvos()
+        : buscarLugares({
+            lat: centro.lat,
+            lng: centro.lng,
+            categoria: so24h || categoria === 'todos' ? null : categoria,
+            busca: buscaAtiva,
+            aberto24h: so24h ? true : null,
+          });
+    consulta
       .then((lista) => {
         if (!vivo) return;
         setLugares(lista);
@@ -262,8 +268,14 @@ export default function Mapa() {
 
       {!carregando && lugares.length === 0 && (
         <View style={estilos.vazio} pointerEvents="none">
-          <Text style={estilos.vazioTitulo}>Nenhum lugar por perto</Text>
-          <Text style={estilos.vazioTexto}>Tente outro filtro ou uma busca diferente.</Text>
+          <Text style={estilos.vazioTitulo}>
+            {categoria === 'salvos' ? 'Nenhum lugar salvo' : 'Nenhum lugar por perto'}
+          </Text>
+          <Text style={estilos.vazioTexto}>
+            {categoria === 'salvos'
+              ? 'Toque no coração na ficha de um lugar para salvar.'
+              : 'Tente outro filtro ou uma busca diferente.'}
+          </Text>
         </View>
       )}
 
