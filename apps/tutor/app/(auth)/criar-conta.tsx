@@ -8,6 +8,7 @@ import {
   StyleSheet,
   Text,
   View,
+  useWindowDimensions,
 } from 'react-native';
 import Svg, { Circle, Path, Rect } from 'react-native-svg';
 import { useRouter } from 'expo-router';
@@ -52,6 +53,7 @@ function IconeSenha() {
 }
 
 export default function CriarConta() {
+  const { width } = useWindowDimensions();
   const router = useRouter();
   const [modo, setModo] = useState<Modo>('criar');
   const [nome, setNome] = useState('');
@@ -170,7 +172,7 @@ export default function CriarConta() {
           </Svg>
         </View>
 
-        <Svg width={390} height={46} viewBox="0 0 390 46" preserveAspectRatio="none" style={estilos.onda}>
+        <Svg width={width} height={46} viewBox="0 0 390 46" preserveAspectRatio="none" style={estilos.onda}>
           <Path d="M0 46V26C28 8 56 10 80 24C104 38 132 40 154 26C180 8 214 10 238 26C262 42 300 38 322 22C346 6 372 12 390 24V46z" fill="#fff" />
         </Svg>
       </View>
