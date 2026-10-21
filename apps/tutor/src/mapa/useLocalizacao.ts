@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import * as Location from 'expo-location';
+import { comPrazo } from '../lib/prazo';
 
 export type PermissaoLocalizacao = 'desconhecida' | 'concedida' | 'negada';
 
@@ -19,9 +20,12 @@ export function useLocalizacao() {
       .then((resultado) => {
         setPermissao(resultado.status === 'granted' ? 'concedida' : 'negada');
         if (resultado.status !== 'granted') return null;
-        return Location.getCurrentPositionAsync({
-          accuracy: Location.Accuracy.Balanced,
-        });
+        // GPS que não responde não pode deixar o mapa sem posição: espera
+        // até 8 s e cai na última posição conhecida.
+        return comPrazo(
+          Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Balanced }),
+          8000,
+        ).then((posicao) => posicao ?? Location.getLastKnownPositionAsync());
       })
       .then((posicaoObtida) => {
         if (posicaoObtida) {

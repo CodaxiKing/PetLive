@@ -1,5 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Location from 'expo-location';
+import { comPrazo } from '../lib/prazo';
 import { buscarLugares, type Lugar } from '../mapa/lugares';
 
 /** Raio da busca de emergência: maior que o do mapa, para não voltar vazio. */
@@ -38,14 +39,23 @@ async function ultimaClinica(): Promise<ClinicaEmergencia | null> {
   }
 }
 
-/** Posição atual sem pedir permissão de novo se já foi negada. */
+/** Quanto o SOS espera pelo GPS antes de seguir sem a posição atual. */
+const ESPERA_GPS_MS = 8000;
+
+/**
+ * Posição para o SOS, sem nunca travar a tela: a recente, a atual em até
+ * 8 s, ou a última conhecida de qualquer idade. Null = sem permissão ou
+ * sem posição (a tela oferece digitar o bairro).
+ */
 async function posicaoAtual(): Promise<{ lat: number; lng: number } | null> {
   const permissao = await Location.requestForegroundPermissionsAsync();
   if (permissao.status !== 'granted') return null;
-  const ultima = await Location.getLastKnownPositionAsync({ maxAge: 5 * 60 * 1000 });
+  const recente = await Location.getLastKnownPositionAsync({ maxAge: 5 * 60 * 1000 });
   const posicao =
-    ultima ?? (await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Balanced }));
-  return { lat: posicao.coords.latitude, lng: posicao.coords.longitude };
+    recente ??
+    (await comPrazo(Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Balanced }), ESPERA_GPS_MS)) ??
+    (await Location.getLastKnownPositionAsync());
+  return posicao ? { lat: posicao.coords.latitude, lng: posicao.coords.longitude } : null;
 }
 
 export type ResultadoEmergencia = {
