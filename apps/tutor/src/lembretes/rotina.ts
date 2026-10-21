@@ -1,3 +1,4 @@
+import { diaNoMes } from '../lib/datas'
 import { supabase } from '../lib/supabase'
 import type { Pet } from '../pets/types'
 import type { Lembrete, Repeticao, TipoLembrete } from './types'
@@ -112,9 +113,8 @@ function aPartirDe(dia: Date, horario: string, agora: Date): Date {
 /** Próximo dia `diaDoMes` no horário dado. */
 function proximoDiaDoMes(diaDoMes: number, horario: string, agora: Date): Date {
   const [h, min] = horario.split(':').map(Number)
-  const alvo = new Date(agora.getFullYear(), agora.getMonth(), diaDoMes, h, min)
-  if (alvo <= agora) alvo.setMonth(alvo.getMonth() + 1)
-  return alvo
+  const alvo = diaNoMes(agora.getFullYear(), agora.getMonth(), diaDoMes, h, min)
+  return alvo <= agora ? diaNoMes(agora.getFullYear(), agora.getMonth() + 1, diaDoMes, h, min) : alvo
 }
 
 /** Véspera do próximo aniversário, no horário dado. */

@@ -1,3 +1,5 @@
+import { somarMeses } from '../lib/datas'
+
 export type TipoLembrete = 'vacina' | 'vermifugo' | 'consulta' | 'banho_tosa' | 'outro'
 export type Repeticao = 'nao' | 'diario' | 'semanal' | 'mensal' | 'anual' | 'customizado'
 
@@ -162,12 +164,13 @@ export function formParaRegistro(form: LembreteForm, tutorId: string) {
 export function proximaOcorrencia(iso: string, repetir: Repeticao, intervaloDias: number): string {
   const [data, hora] = iso.split('T')
   const [a, m, d] = data.split('-').map(Number)
-  const alvo = new Date(a, m - 1, d)
+  let alvo = new Date(a, m - 1, d)
 
   if (repetir === 'diario') alvo.setDate(alvo.getDate() + 1)
   else if (repetir === 'semanal') alvo.setDate(alvo.getDate() + 7)
-  else if (repetir === 'mensal') alvo.setMonth(alvo.getMonth() + 1)
-  else if (repetir === 'anual') alvo.setFullYear(alvo.getFullYear() + 1)
+  // Dia 31 no mês seguinte sem 31 cai no último dia (como o servidor faz).
+  else if (repetir === 'mensal') alvo = somarMeses(alvo, 1)
+  else if (repetir === 'anual') alvo = somarMeses(alvo, 12)
   else if (repetir === 'customizado' && intervaloDias > 0) alvo.setDate(alvo.getDate() + intervaloDias)
 
   const p = (n: number) => String(n).padStart(2, '0')
