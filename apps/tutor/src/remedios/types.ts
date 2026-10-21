@@ -40,16 +40,6 @@ export const REMEDIO_FORM_VAZIO: RemedioForm = {
   observacao: '',
 }
 
-/** Frequências sugeridas, para o tutor não precisar digitar. */
-export const FREQUENCIAS_SUGERIDAS = [
-  '1x ao dia',
-  '2x ao dia',
-  '3x ao dia',
-  'a cada 8 horas',
-  'a cada 12 horas',
-  'semanal',
-] as const
-
 /** 'YYYY-MM-DD' -> 'DD/MM/AAAA'. */
 export function dataParaExibicao(iso: string | null | undefined): string {
   if (!iso) return ''
