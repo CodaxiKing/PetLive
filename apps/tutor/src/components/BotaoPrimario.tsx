@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import { useEffect, useState } from 'react';
 import { ActivityIndicator, Animated, Easing, StyleSheet, Text, View, type ViewStyle } from 'react-native';
-import Svg, { Path } from 'react-native-svg';
+import Svg, { Circle, Path } from 'react-native-svg';
 import { colors } from '../theme/colors';
 import { Tocavel, useMovimentoReduzido } from './Animacoes';
 import { typography } from '../theme/typography';
@@ -16,6 +16,7 @@ type Props = {
   variante?: 'seta' | 'pata';
   /** Ícone próprio no círculo azul (substitui a variante). */
   icone?: ReactNode;
+  /** Posição do botão no pai (flex, margem): vai no Pressable de fora. */
   estilo?: ViewStyle;
 };
 
@@ -34,7 +35,10 @@ export function BotaoPrimario({ titulo, onPress, carregando, desabilitado, varia
       disabled={Boolean(inativo)}
       onPress={onPress}
       escala={0.97}
-      style={[estilos.botao, inativo && estilos.botaoInativo, estilo]}
+      // Sem isto, um flex: 1 no estilo ficava na camada de dentro e o botão
+      // encolhia numa linha (ex.: "Começar" cortado nas boas-vindas).
+      estiloExterno={estilo}
+      style={[estilos.botao, inativo && estilos.botaoInativo]}
     >
       <View style={estilos.circulo}>
         {carregando ? (
@@ -44,7 +48,13 @@ export function BotaoPrimario({ titulo, onPress, carregando, desabilitado, varia
         ) : (
           <Svg width={24} height={24} viewBox="0 0 24 24" fill={variante === 'pata' ? colors.black : 'none'}>
             {variante === 'pata' ? (
-              <Path d="M12 12c-3 0-5 2.5-5 4.5 0 1.5 1.2 2 2.6 2 1 0 1.6-.4 2.4-.4s1.4.4 2.4.4c1.4 0 2.6-.5 2.6-2 0-2-2-4.5-5-4.5z" />
+              <>
+                <Circle cx={6} cy={10} r={1.9} />
+                <Circle cx={10} cy={6} r={1.9} />
+                <Circle cx={14} cy={6} r={1.9} />
+                <Circle cx={18} cy={10} r={1.9} />
+                <Path d="M12 12c-3 0-5 2.5-5 4.5 0 1.5 1.2 2 2.6 2 1 0 1.6-.4 2.4-.4s1.4.4 2.4.4c1.4 0 2.6-.5 2.6-2 0-2-2-4.5-5-4.5z" />
+              </>
             ) : (
               <Path
                 d="M5 12h14M13 6l6 6-6 6"
