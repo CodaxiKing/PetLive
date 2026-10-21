@@ -31,9 +31,10 @@ export async function enviarContato(dados: DadosContato): Promise<ResultadoConta
   try {
     const resposta = await fetch(`${URL_SUPABASE}/rest/v1/rpc/registrar_contato_site`, {
       method: "POST",
+      // Só o apikey: vale para a chave anon (JWT) e para a publishable
+      // (sb_publishable_...), que não pode ir no Authorization.
       headers: {
         apikey: CHAVE_ANON,
-        Authorization: `Bearer ${CHAVE_ANON}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
