@@ -12,10 +12,12 @@ import {
 } from 'react-native';
 import Svg, { Circle, Path, Rect } from 'react-native-svg';
 import { useRouter } from 'expo-router';
+import * as Linking from 'expo-linking';
 import { BotaoPrimario } from '../../src/components/BotaoPrimario';
 import { Campo } from '../../src/components/Campo';
 import { ControleSegmentado } from '../../src/components/ControleSegmentado';
 import { entrarComGoogle } from '../../src/auth/google';
+import { pedirNovaSenha } from '../../src/auth/senha';
 import { supabase, supabaseConfigurado } from '../../src/lib/supabase';
 import { colors } from '../../src/theme/colors';
 import { spacing } from '../../src/theme/tokens';
@@ -117,6 +119,24 @@ export default function CriarConta() {
         if (error) throw error;
         // Com sessão ativa o layout raiz redireciona sozinho para o Início.
       }
+    } catch (e) {
+      setErro(traduzirErro(e instanceof Error ? e.message : String(e)));
+    } finally {
+      setCarregando(false);
+    }
+  }
+
+  async function esqueciSenha() {
+    setErro(null);
+    setAviso(null);
+    if (!emailValido) {
+      setErro('Digite o seu e-mail acima e toque de novo em "Esqueci minha senha".');
+      return;
+    }
+    setCarregando(true);
+    try {
+      await pedirNovaSenha(email.trim());
+      setAviso('Se houver uma conta com esse e-mail, enviamos um link para criar uma nova senha. Abra-o neste celular.');
     } catch (e) {
       setErro(traduzirErro(e instanceof Error ? e.message : String(e)));
     } finally {
@@ -230,6 +250,12 @@ export default function CriarConta() {
           onChangeText={setSenha}
         />
 
+        {!criando ? (
+          <Pressable accessibilityRole="button" onPress={esqueciSenha} disabled={carregando} hitSlop={8} style={estilos.esqueci}>
+            <Text style={estilos.linkTermos}>Esqueci minha senha</Text>
+          </Pressable>
+        ) : null}
+
         {criando ? (
           <View>
             <Pressable
@@ -276,7 +302,11 @@ export default function CriarConta() {
             <Text style={estilos.googleTexto}>Continuar com Google</Text>
           </Pressable>
 
-          <Pressable accessibilityRole="link" onPress={() => {}} hitSlop={8}>
+          <Pressable
+            accessibilityRole="link"
+            onPress={() => Linking.openURL('https://petlive.app.br/lojistas').catch(() => undefined)}
+            hitSlop={8}
+          >
             <Text style={estilos.linkLojista}>Tenho uma loja ou clínica →</Text>
           </Pressable>
         </View>
@@ -367,6 +397,7 @@ function traduzirErro(mensagem: string): string {
 }
 
 const estilos = StyleSheet.create({
+  esqueci: { alignSelf: 'flex-end', marginTop: -4 },
   tela: {
     flex: 1,
     backgroundColor: colors.white,
