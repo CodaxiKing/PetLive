@@ -22,7 +22,7 @@ import {
 } from '../src/notificacoes/prefs'
 import { colors } from '../src/theme/colors'
 import { radius, spacing } from '../src/theme/tokens'
-import { typography } from '../src/theme/typography'
+import { fontFamily, typography } from '../src/theme/typography'
 
 /** Opções do "Horário dos avisos": de 30 em 30 minutos. */
 const HORARIOS = Array.from({ length: 48 }, (_, i) => {
@@ -317,7 +317,7 @@ const estilos = StyleSheet.create({
   },
   marcadagua: { position: 'absolute', right: 16, top: 44 },
   blocoTitulo: { paddingHorizontal: 24, paddingBottom: spacing.lg },
-  subtitulo: { fontSize: 14, fontWeight: '500', color: '#2F6F93' },
+  subtitulo: { fontSize: 14, fontFamily: fontFamily.medium, color: '#2F6F93' },
   titulo: {
     ...typography.h1,
     fontSize: 38,
@@ -350,7 +350,7 @@ const estilos = StyleSheet.create({
     justifyContent: 'center',
     flexShrink: 0,
   },
-  cartaoTitulo: { fontWeight: '600', fontSize: 15, color: colors.black },
+  cartaoTitulo: { fontFamily: fontFamily.semiBold, fontSize: 15, color: colors.black },
   cartaoQuando: { fontSize: 12, color: colors.textMuted, marginTop: 2 },
   cartaoHorario: {
     flexDirection: 'row',
@@ -362,8 +362,8 @@ const estilos = StyleSheet.create({
     paddingVertical: spacing.md,
     marginTop: spacing.xs,
   },
-  horarioRotulo: { fontSize: 12, fontWeight: '600', color: colors.premiumText },
-  horarioValor: { fontSize: 20, fontWeight: '700', color: colors.black, marginTop: 2 },
+  horarioRotulo: { fontSize: 12, fontFamily: fontFamily.semiBold, color: colors.premiumText },
+  horarioValor: { fontSize: 20, fontFamily: fontFamily.bold, color: colors.black, marginTop: 2 },
   fundoModal: {
     flex: 1,
     backgroundColor: colors.overlay,
@@ -390,8 +390,8 @@ const estilos = StyleSheet.create({
     paddingVertical: spacing.sm,
   },
   linhaHorarioEscolhida: { backgroundColor: colors.primarySurface },
-  linhaHorarioTexto: { fontSize: 16, fontWeight: '600', color: colors.text },
+  linhaHorarioTexto: { fontSize: 16, fontFamily: fontFamily.semiBold, color: colors.text },
   linhaHorarioTextoEscolhida: { color: colors.primaryDeep },
-  check: { fontSize: 16, fontWeight: '700', color: colors.primaryDeep },
+  check: { fontSize: 16, fontFamily: fontFamily.bold, color: colors.primaryDeep },
   acoesModal: { marginTop: spacing.sm },
 })

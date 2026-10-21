@@ -1,7 +1,7 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import Svg, { Circle, Path } from 'react-native-svg';
 import { colors } from '../../src/theme/colors';
-import { typography } from '../../src/theme/typography';
+import { fontFamily, typography } from '../../src/theme/typography';
 
 /** Botão redondo branco do cabeçalho, com ícone. Sem onPress é só um selo. */
 export function BotaoRedondo({
@@ -122,7 +122,7 @@ const estilos = StyleSheet.create({
   },
   secaoTitulo: {
     ...typography.h3,
-    fontWeight: '700',
+    fontFamily: fontFamily.bold,
     fontSize: 16,
     color: colors.black,
   },

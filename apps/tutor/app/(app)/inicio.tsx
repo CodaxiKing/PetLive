@@ -10,7 +10,7 @@ import {
   OndaHeroi,
   Secao,
 } from '../../src/components/Layout';
-import { Icone } from '../../src/components/Icone';
+import { Icone, type NomeIcone } from '../../src/components/Icone';
 import { Surgir } from '../../src/components/Animacoes';
 import { Mascote } from '../../src/components/Mascote';
 import { useLembretes } from '../../src/lembretes/LembretesProvider';
@@ -20,7 +20,7 @@ import { useVacinas } from '../../src/saude/VacinasProvider';
 import { diasAte } from '../../src/saude/types';
 import { colors } from '../../src/theme/colors';
 import { spacing } from '../../src/theme/tokens';
-import { typography } from '../../src/theme/typography';
+import { fontFamily, typography } from '../../src/theme/typography';
 
 /** Cores dos cartões de lembrete, alternadas (protótipo Início). */
 const PALETA_LEMBRETES = [
@@ -28,14 +28,23 @@ const PALETA_LEMBRETES = [
   { fundo: '#FCE1EF', borda: '#F5BFD9', texto: '#8A2E5C' },
 ];
 
-type Categoria = { nome: string; fundo: string; filtro: string; ativa?: boolean };
+type Categoria = { nome: string; fundo: string; filtro: string; icone: NomeIcone; ativa?: boolean };
 
 const CATEGORIAS: Categoria[] = [
-  { nome: 'Clínicas', fundo: colors.primary, filtro: 'clinica', ativa: true },
-  { nome: 'Banho', fundo: colors.primarySurface, filtro: 'banho_tosa' },
-  { nome: 'Petshop', fundo: colors.successSurface, filtro: 'petshop' },
-  { nome: '24h', fundo: colors.warningSurface, filtro: '24h' },
+  { nome: 'Clínicas', fundo: colors.primary, filtro: 'clinica', icone: 'cruz', ativa: true },
+  { nome: 'Banho', fundo: colors.primarySurface, filtro: 'banho_tosa', icone: 'gota' },
+  { nome: 'Petshop', fundo: colors.successSurface, filtro: 'petshop', icone: 'sacola' },
+  { nome: '24h', fundo: colors.warningSurface, filtro: '24h', icone: 'relogio' },
 ];
+
+/** "Rex tem 1 vacina vencendo esta semana e 1 atrasada." */
+function textoAvisoVacina(nome: string, vencendo: number, atrasadas: number): string {
+  const plural = (n: number, s: string) => `${n} ${s}${n > 1 ? 's' : ''}`;
+  if (!vencendo) return `${nome} tem ${plural(atrasadas, 'vacina')} ${atrasadas > 1 ? 'atrasadas' : 'atrasada'}.`;
+  const partes = [`${plural(vencendo, 'vacina')} vencendo esta semana`];
+  if (atrasadas) partes.push(plural(atrasadas, 'atrasada'));
+  return `${nome} tem ${partes.join(' e ')}.`;
+}
 
 /**
  * Início (board P0 "Tela Início: busca, categorias, lembretes e aviso de
@@ -50,10 +59,9 @@ export default function Inicio() {
   const { vacinas } = useVacinas();
 
   const proximos = lembretes.slice(0, 2);
-  const vacinasVencendo = vacinas.filter((v) => {
-    const dias = diasAte(v.proxima_dose);
-    return dias !== null && dias <= 7;
-  }).length;
+  const diasVacinas = vacinas.map((v) => diasAte(v.proxima_dose)).filter((d): d is number => d !== null);
+  const vacinasVencendo = diasVacinas.filter((d) => d >= 0 && d <= 7).length;
+  const vacinasAtrasadas = diasVacinas.filter((d) => d < 0).length;
   const nomePet = petAtivo?.nome ?? 'Seu pet';
 
   return (
@@ -113,7 +121,7 @@ export default function Inicio() {
               ]}
             >
               <View style={[estilos.categoriaÍcone, { backgroundColor: categoria.fundo }]}>
-                <Text style={estilos.categoriaSinal}>{categoria.ativa ? '+' : '•'}</Text>
+                <Icone nome={categoria.icone} size={18} espessura={categoria.ativa ? 2.4 : 1.8} />
               </View>
               <Text style={[estilos.categoriaTexto, categoria.ativa && estilos.categoriaTextoAtivo]}>
                 {categoria.nome}
@@ -169,6 +177,15 @@ export default function Inicio() {
                       {pet ? `${pet.nome} · ${quando}` : quando}
                     </Text>
                   </View>
+                  <Pressable
+                    accessibilityRole="button"
+                    accessibilityLabel="Novo lembrete"
+                    hitSlop={6}
+                    onPress={() => router.push('/lembretes/novo')}
+                    style={estilos.lembreteAdicionar}
+                  >
+                    <Text style={estilos.lembreteAdicionarSinal}>+</Text>
+                  </Pressable>
                 </View>
 
                 <View style={estilos.lembreteAvatar}>
@@ -200,7 +217,7 @@ export default function Inicio() {
         </View>
 
         {/* Atalho: vacina vencendo leva às clínicas por perto (board P1). */}
-        {vacinasVencendo > 0 ? (
+        {vacinasVencendo + vacinasAtrasadas > 0 ? (
           <Pressable
             style={estilos.avisoVacina}
             accessibilityRole="button"
@@ -214,9 +231,7 @@ export default function Inicio() {
               </Svg>
             </View>
             <Text style={estilos.avisoVacinaTexto}>
-              {vacinasVencendo === 1
-                ? `${nomePet} tem 1 vacina vencendo esta semana.`
-                : `${nomePet} tem ${vacinasVencendo} vacinas vencendo esta semana.`}
+              {textoAvisoVacina(nomePet, vacinasVencendo, vacinasAtrasadas)}
             </Text>
             <View style={estilos.avisoVacinaBotao}>
               <Text style={estilos.avisoVacinaBotaoTexto}>Ver</Text>
@@ -257,16 +272,16 @@ const estilos = StyleSheet.create({
   localRotulo: {
     fontSize: 11,
     color: colors.primaryDark,
-    fontWeight: '500',
+    fontFamily: fontFamily.medium,
   },
   localNome: {
     fontSize: 14,
-    fontWeight: '700',
+    fontFamily: fontFamily.bold,
     color: colors.black,
   },
   titulo: {
     ...typography.h1,
-    fontWeight: '500',
+    fontFamily: fontFamily.medium,
     fontSize: 38,
     lineHeight: 40,
     letterSpacing: -1.1,
@@ -328,12 +343,12 @@ const estilos = StyleSheet.create({
   },
   categoriaSinal: {
     fontSize: 18,
-    fontWeight: '700',
+    fontFamily: fontFamily.bold,
     color: colors.black,
   },
   categoriaTexto: {
     fontSize: 14,
-    fontWeight: '600',
+    fontFamily: fontFamily.semiBold,
     color: colors.black,
   },
   categoriaTextoAtivo: {
@@ -368,7 +383,7 @@ const estilos = StyleSheet.create({
     minWidth: 0,
   },
   lembreteTitulo: {
-    fontWeight: '700',
+    fontFamily: fontFamily.semiBold,
     fontSize: 15,
     color: colors.black,
   },
@@ -387,7 +402,7 @@ const estilos = StyleSheet.create({
   },
   lembreteAdicionarSinal: {
     fontSize: 18,
-    fontWeight: '700',
+    fontFamily: fontFamily.bold,
     color: colors.black,
     lineHeight: 20,
   },
@@ -421,7 +436,7 @@ const estilos = StyleSheet.create({
     flex: 1,
     fontSize: 12,
     lineHeight: 16,
-    fontWeight: '500',
+    fontFamily: fontFamily.medium,
     color: colors.text,
   },
   avisoVacinaBotao: {
@@ -434,7 +449,7 @@ const estilos = StyleSheet.create({
   },
   avisoVacinaBotaoTexto: {
     fontSize: 13,
-    fontWeight: '700',
+    fontFamily: fontFamily.bold,
     color: colors.black,
   },
   respiro: {

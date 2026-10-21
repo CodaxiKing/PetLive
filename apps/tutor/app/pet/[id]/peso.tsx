@@ -26,7 +26,7 @@ import {
 } from '../../../src/saude/peso'
 import { dataParaExibicao } from '../../../src/saude/types'
 import { colors } from '../../../src/theme/colors'
-import { typography } from '../../../src/theme/typography'
+import { fontFamily, typography } from '../../../src/theme/typography'
 import { spacing } from '../../../src/theme/tokens'
 
 /**
@@ -205,7 +205,7 @@ const estilos = StyleSheet.create({
   },
   pillTexto: {
     ...typography.small,
-    fontWeight: '700',
+    fontFamily: fontFamily.bold,
     color: colors.text,
   },
   onda: {
@@ -231,8 +231,8 @@ const estilos = StyleSheet.create({
     paddingHorizontal: 18,
     paddingVertical: spacing.md,
   },
-  linhaData: { ...typography.bodyMedium, fontWeight: '600', color: colors.text },
-  linhaKg: { ...typography.bodyMedium, fontWeight: '700', color: colors.text },
+  linhaData: { ...typography.bodyMedium, fontFamily: fontFamily.semiBold, color: colors.text },
+  linhaKg: { ...typography.bodyMedium, fontFamily: fontFamily.bold, color: colors.text },
   dica: { ...typography.small, color: colors.textMuted, textAlign: 'center' },
   rodape: {
     position: 'absolute',

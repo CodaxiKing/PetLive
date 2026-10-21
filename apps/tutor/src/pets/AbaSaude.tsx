@@ -18,7 +18,7 @@ import { useVacinas } from '../saude/VacinasProvider'
 import { carregarConsultas as carregarConsultasDoPet, type Consulta } from '../saude/consultas'
 import { dataParaExibicao, rotuloDose } from '../saude/types'
 import { colors } from '../theme/colors'
-import { typography } from '../theme/typography'
+import { fontFamily, typography } from '../theme/typography'
 import { components, radius, spacing } from '../theme/tokens'
 
 interface OutroRegistro {
@@ -369,16 +369,16 @@ const estilos = StyleSheet.create({
   proximaNome: { ...typography.bodyMedium, color: colors.text },
   proximaData: { ...typography.caption, color: colors.textMuted, marginTop: 2 },
   etiqueta: { paddingHorizontal: spacing.md, paddingVertical: spacing.xs, borderRadius: radius.pill },
-  etiquetaTexto: { ...typography.small, fontWeight: '700' },
+  etiquetaTexto: { ...typography.small, fontFamily: fontFamily.bold },
   tituloCartao: { ...typography.bodyMedium, color: colors.text, marginBottom: spacing.xs },
-  tituloSecao: { ...typography.bodyMedium, fontWeight: '700', color: colors.text },
+  tituloSecao: { ...typography.bodyMedium, fontFamily: fontFamily.bold, color: colors.text },
   cabecalhoSecao: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     marginBottom: spacing.xs,
   },
-  linkSecao: { fontSize: 13, fontWeight: '600', color: colors.primaryDeep },
+  linkSecao: { fontSize: 13, fontFamily: fontFamily.semiBold, color: colors.primaryDeep },
   linha: {
     flexDirection: 'row',
     alignItems: 'center',

@@ -4,7 +4,7 @@ import { useVacinas } from '../saude/VacinasProvider'
 import { diasAte, rotuloDose } from '../saude/types'
 import { colors } from '../theme/colors'
 import { radius, spacing } from '../theme/tokens'
-import { typography } from '../theme/typography'
+import { fontFamily, typography } from '../theme/typography'
 import { dataParaExibicao, idadeEmAnos, type Pet } from './types'
 
 type Etiqueta = {
@@ -106,7 +106,7 @@ const estilos = StyleSheet.create({
     paddingVertical: spacing.xs,
     borderRadius: radius.pill,
   },
-  avisoTexto: { ...typography.captionMedium, fontWeight: '700' },
+  avisoTexto: { ...typography.captionMedium, fontFamily: fontFamily.bold },
   linha: { flexDirection: 'row', gap: spacing.sm },
   etiqueta: {
     flex: 1,
@@ -115,7 +115,7 @@ const estilos = StyleSheet.create({
     alignItems: 'center',
     gap: 2,
   },
-  etiquetaValor: { ...typography.h3, fontWeight: '800' },
+  etiquetaValor: { ...typography.h3, fontFamily: fontFamily.extraBold },
   etiquetaRotulo: { ...typography.caption, opacity: 0.85 },
   nascimento: { ...typography.small, color: colors.textMuted },
 })

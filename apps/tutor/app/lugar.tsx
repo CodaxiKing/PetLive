@@ -22,7 +22,7 @@ import {
 import { PinLugar } from '../src/mapa/PinLugar';
 import { colors } from '../src/theme/colors';
 import { radius, shadow, spacing } from '../src/theme/tokens';
-import { typography } from '../src/theme/typography';
+import { fontFamily, typography } from '../src/theme/typography';
 
 /** Mesmo estilo de mapa gratuito da tela Mapa (OpenFreeMap). */
 const ESTILO_MAPA = 'https://tiles.openfreemap.org/styles/liberty';
@@ -413,7 +413,7 @@ const estilos = StyleSheet.create({
   },
   nome: {
     ...typography.h1,
-    fontWeight: '500',
+    fontFamily: fontFamily.medium,
     fontSize: 32,
     lineHeight: 36,
     letterSpacing: -0.8,
@@ -471,7 +471,7 @@ const estilos = StyleSheet.create({
   cardInfoValor: {
     ...typography.bodyMedium,
     fontSize: 14,
-    fontWeight: '600',
+    fontFamily: fontFamily.semiBold,
     color: colors.black,
   },
   poucasInfo: {
@@ -490,7 +490,7 @@ const estilos = StyleSheet.create({
   },
   centroTitulo: {
     ...typography.h3,
-    fontWeight: '700',
+    fontFamily: fontFamily.bold,
     color: colors.black,
   },
   centroTexto: {
@@ -500,7 +500,7 @@ const estilos = StyleSheet.create({
   },
   centroVoltar: {
     ...typography.bodyMedium,
-    fontWeight: '700',
+    fontFamily: fontFamily.bold,
     color: colors.primaryDeep,
     paddingVertical: spacing.sm,
   },
@@ -542,7 +542,7 @@ const estilos = StyleSheet.create({
   },
   rotaBotaoTexto: {
     ...typography.bodyMedium,
-    fontWeight: '700',
+    fontFamily: fontFamily.bold,
     color: colors.black,
   },
 });

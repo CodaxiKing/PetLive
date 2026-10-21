@@ -18,7 +18,7 @@ import { entrarComGoogle } from '../../src/auth/google';
 import { supabase, supabaseConfigurado } from '../../src/lib/supabase';
 import { colors } from '../../src/theme/colors';
 import { spacing } from '../../src/theme/tokens';
-import { typography } from '../../src/theme/typography';
+import { fontFamily, typography } from '../../src/theme/typography';
 
 type Modo = 'criar' | 'entrar';
 
@@ -404,7 +404,7 @@ const estilos = StyleSheet.create({
   },
   titulo: {
     ...typography.h1,
-    fontWeight: '500',
+    fontFamily: fontFamily.medium,
     fontSize: 38,
     lineHeight: 40,
     letterSpacing: -1.1,
@@ -530,19 +530,19 @@ const estilos = StyleSheet.create({
     justifyContent: 'center',
   },
   googleGTexto: {
-    fontWeight: '800',
+    fontFamily: fontFamily.extraBold,
     fontSize: 13,
     color: colors.black,
   },
   googleTexto: {
-    fontWeight: '600',
+    fontFamily: fontFamily.semiBold,
     fontSize: 15,
     color: colors.text,
   },
   linkLojista: {
     textAlign: 'center',
     fontSize: 13,
-    fontWeight: '600',
+    fontFamily: fontFamily.semiBold,
     color: colors.textMuted,
     paddingTop: 2,
   },

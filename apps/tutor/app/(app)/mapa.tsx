@@ -30,7 +30,7 @@ import { PinLugar } from '../../src/mapa/PinLugar';
 import { useLocalizacao } from '../../src/mapa/useLocalizacao';
 import { colors } from '../../src/theme/colors';
 import { radius, shadow, spacing } from '../../src/theme/tokens';
-import { typography } from '../../src/theme/typography';
+import { fontFamily, typography } from '../../src/theme/typography';
 
 /** Estilo de mapa gratuito (OpenFreeMap: tiles OSM, sem chave). */
 const ESTILO_MAPA = 'https://tiles.openfreemap.org/styles/liberty';
@@ -489,7 +489,7 @@ const estilos = StyleSheet.create({
   },
   permissaoTitulo: {
     ...typography.bodyMedium,
-    fontWeight: '700',
+    fontFamily: fontFamily.bold,
     color: colors.black,
   },
   permissaoTexto: {
@@ -522,7 +522,7 @@ const estilos = StyleSheet.create({
   },
   vazioTitulo: {
     ...typography.bodyMedium,
-    fontWeight: '700',
+    fontFamily: fontFamily.bold,
     color: colors.black,
   },
   vazioTexto: {
@@ -573,7 +573,7 @@ const estilos = StyleSheet.create({
   },
   fichaNome: {
     ...typography.h3,
-    fontWeight: '700',
+    fontFamily: fontFamily.bold,
     color: colors.black,
   },
   fichaLinha: {
@@ -630,7 +630,7 @@ const estilos = StyleSheet.create({
   },
   rotaTexto: {
     ...typography.bodyMedium,
-    fontWeight: '700',
+    fontFamily: fontFamily.bold,
     color: colors.black,
   },
 });

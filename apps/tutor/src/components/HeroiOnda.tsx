@@ -65,7 +65,7 @@ export function HeroiOnda({
 
       {selo ? <Text style={estilos.selo}>{selo}</Text> : null}
 
-      <View style={estilos.blocoTitulo}>
+      <View style={[estilos.blocoTitulo, semVoltar && estilos.blocoTituloAlto]}>
         {subtitulo ? <Text style={estilos.subtitulo}>{subtitulo}</Text> : null}
         <Text style={estilos.titulo} accessibilityRole="header">
           {titulo}
@@ -122,6 +122,10 @@ const estilos = StyleSheet.create({
     left: 24,
     right: 24,
     top: 112,
+  },
+  // Sem o botão de voltar, o título ocupa o topo (abas Pets e Perfil).
+  blocoTituloAlto: {
+    top: 96,
   },
   subtitulo: {
     ...typography.captionMedium,

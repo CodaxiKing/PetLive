@@ -1,27 +1,45 @@
 import { useCallback, useState } from 'react'
 import {
   ActivityIndicator,
-  FlatList,
+  Image,
   Pressable,
   RefreshControl,
+  ScrollView,
   StyleSheet,
   Text,
   View,
 } from 'react-native'
 import { router } from 'expo-router'
-import { IconeBusca } from '../../src/components/Layout'
+import { Flutuar, Surgir } from '../../src/components/Animacoes'
+import { HeroiOnda } from '../../src/components/HeroiOnda'
+import { MarcaPata } from '../../src/components/MarcaPata'
 import { Mascote } from '../../src/components/Mascote'
-import { Flutuar } from '../../src/components/Animacoes'
-import { AvatarPet } from '../../src/pets/AvatarPet'
+import { useLembretes } from '../../src/lembretes/LembretesProvider'
+import { rotuloProximidade } from '../../src/lembretes/types'
+import { coresDoPet } from '../../src/pets/coresPet'
 import { usePets } from '../../src/pets/PetsProvider'
 import { idadeEmAnos } from '../../src/pets/types'
 import type { Pet } from '../../src/pets/types'
 import { colors } from '../../src/theme/colors'
 import { typography } from '../../src/theme/typography'
-import { components, shadow, spacing } from '../../src/theme/tokens'
 
+/** "Vermífugo da Mia" -> "Vermífugo": no cartão da Mia o nome já está no topo. */
+function tituloSemPet(titulo: string, nome: string): string {
+  for (const ligacao of [' do ', ' da ', ' dos ', ' das ']) {
+    const sufixo = `${ligacao}${nome}`
+    if (titulo.toLowerCase().endsWith(sufixo.toLowerCase())) return titulo.slice(0, -sufixo.length)
+  }
+  return titulo
+}
+
+/**
+ * Meus pets (protótipo MeusPets; board P0 "Lista Meus pets"): herói com a
+ * contagem e o botão de adicionar, um cartão colorido por pet com raça,
+ * idade, o próximo lembrete e o mascote (ou a foto), e "Adicionar pet".
+ */
 export default function Pets() {
   const { pets, carregando, definirPetAtivo, recarregar } = usePets()
+  const { lembretes } = useLembretes()
   const [atualizando, setAtualizando] = useState(false)
 
   const abrirPet = useCallback(
@@ -38,155 +56,171 @@ export default function Pets() {
     setAtualizando(false)
   }, [recarregar])
 
-  const renderItem = ({ item }: { item: Pet }) => {
-    const detalhe = [item.raca, idadeEmAnos(item.nascimento)].filter(Boolean).join(' · ')
-    return (
-      <Pressable
-        accessibilityRole="button"
-        accessibilityLabel={`Abrir ${item.nome}`}
-        onPress={() => abrirPet(item)}
-        style={({ pressed }) => [components.card, estilos.cartao, pressed && estilos.pressionado]}
-      >
-        <AvatarPet especie={item.especie} foto={item.foto_url} size={52} />
-        <View style={estilos.flex}>
-          <Text style={estilos.nome}>{item.nome}</Text>
-          {detalhe ? <Text style={estilos.detalhe}>{detalhe}</Text> : null}
-        </View>
-        <Text style={estilos.chevron}>›</Text>
-      </Pressable>
-    )
-  }
-
-  if (carregando) {
-    return (
-      <View style={estilos.tela}>
-        <View style={estilos.centro}>
-          <ActivityIndicator color={colors.primaryDeep} />
-        </View>
-      </View>
-    )
-  }
+  const contagem =
+    pets.length === 0 ? 'Nenhum pet ainda' : pets.length === 1 ? '1 pet cadastrado' : `${pets.length} pets cadastrados`
 
   return (
     <View style={estilos.tela}>
-      <View style={estilos.cabecalho}>
-        <Text style={estilos.titulo}>Meus pets</Text>
-        <View style={estilos.iconeBusca}>
-          <IconeBusca size={18} cor={colors.textMuted} />
-        </View>
-      </View>
-
-      {pets.length === 0 ? (
-        <View style={estilos.centro}>
-          <Flutuar><Mascote especie="cao" size={140} /></Flutuar>
-          <Text style={estilos.vazioTitulo}>Nenhum pet ainda</Text>
-          <Text style={estilos.vazioTexto}>
-            Cadastre seu primeiro pet para acompanhar saúde, rotina e locais por perto.
-          </Text>
-          <Pressable
-            accessibilityRole="button"
-            onPress={() => router.push('/pet/novo')}
-            style={({ pressed }) => [estilos.novoBotao, pressed && estilos.pressionado]}
-          >
-            <Text style={estilos.novoBotaoTexto}>Cadastrar pet</Text>
-          </Pressable>
-        </View>
-      ) : (
-        <FlatList
-          data={pets}
-          keyExtractor={(item) => item.id}
-          renderItem={renderItem}
-          contentContainerStyle={estilos.lista}
-          showsVerticalScrollIndicator={false}
-          refreshControl={
-            <RefreshControl
-              refreshing={atualizando}
-              onRefresh={recarregarLista}
-              tintColor={colors.primaryDeep}
-            />
-          }
-        />
-      )}
-
-      {pets.length > 0 ? (
+      <HeroiOnda subtitulo={contagem} titulo="Meus pets" semVoltar altura={210}>
+        <MarcaPata size={120} style={estilos.pata} />
         <Pressable
           accessibilityRole="button"
           accessibilityLabel="Cadastrar novo pet"
+          hitSlop={8}
           onPress={() => router.push('/pet/novo')}
-          style={({ pressed }) => [estilos.fab, shadow.floating, pressed && estilos.pressionado]}
+          style={({ pressed }) => [estilos.mais, pressed && { opacity: 0.7 }]}
         >
-          <Text style={estilos.fabSinal}>＋</Text>
+          <Text style={estilos.maisSinal}>+</Text>
         </Pressable>
-      ) : null}
+      </HeroiOnda>
+
+      {carregando ? (
+        <ActivityIndicator color={colors.primaryDeep} style={estilos.carregando} />
+      ) : (
+        <ScrollView
+          contentContainerStyle={estilos.lista}
+          showsVerticalScrollIndicator={false}
+          refreshControl={
+            <RefreshControl refreshing={atualizando} onRefresh={recarregarLista} tintColor={colors.primaryDeep} />
+          }
+        >
+          {pets.length === 0 ? (
+            <View style={estilos.vazio}>
+              <Flutuar>
+                <Mascote especie="cao" size={140} />
+              </Flutuar>
+              <Text style={estilos.vazioTexto}>
+                Cadastre seu primeiro pet para acompanhar saúde, rotina e lugares por perto.
+              </Text>
+            </View>
+          ) : null}
+
+          {pets.map((pet, indice) => {
+            const cores = coresDoPet(pet, indice)
+            const idade = idadeEmAnos(pet.nascimento)
+            const raca = pet.raca || (pet.especie === 'gato' ? 'Gato' : 'Cão')
+            const proximo = lembretes.find((l) => l.pet_id === pet.id)
+            return (
+              <Surgir key={pet.id} indice={indice}>
+                <Pressable
+                  accessibilityRole="button"
+                  accessibilityLabel={`Abrir ${pet.nome}`}
+                  onPress={() => abrirPet(pet)}
+                  style={({ pressed }) => [
+                    estilos.cartao,
+                    { backgroundColor: cores.fundo, borderColor: cores.borda },
+                    pressed && { transform: [{ scale: 0.98 }] },
+                  ]}
+                >
+                  <View style={estilos.cartaoTexto}>
+                    <Text style={estilos.nome} numberOfLines={1}>
+                      {pet.nome}
+                    </Text>
+                    <View style={estilos.chips}>
+                      <Text style={estilos.chip} numberOfLines={1}>
+                        {raca}
+                      </Text>
+                      {idade ? <Text style={estilos.chip}>{idade}</Text> : null}
+                    </View>
+                    {proximo ? (
+                      <Text style={estilos.lembrete} numberOfLines={1}>
+                        {tituloSemPet(proximo.titulo, pet.nome)} {rotuloProximidade(proximo.proxima_em).texto}
+                      </Text>
+                    ) : null}
+                  </View>
+
+                  <View style={estilos.retrato}>
+                    {pet.foto_url ? (
+                      <Image source={{ uri: pet.foto_url }} style={estilos.foto} accessibilityLabel={`Foto de ${pet.nome}`} />
+                    ) : (
+                      <Mascote especie={pet.especie} size={180} recorte />
+                    )}
+                  </View>
+                </Pressable>
+              </Surgir>
+            )
+          })}
+
+          <Pressable
+            accessibilityRole="button"
+            onPress={() => router.push('/pet/novo')}
+            style={({ pressed }) => [estilos.adicionar, pressed && { opacity: 0.7 }]}
+          >
+            <Text style={estilos.adicionarTexto}>+   Adicionar pet</Text>
+          </Pressable>
+        </ScrollView>
+      )}
     </View>
   )
 }
 
 const estilos = StyleSheet.create({
-  tela: { flex: 1, backgroundColor: colors.background },
-  flex: { flex: 1 },
-  cabecalho: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: spacing.xl,
-    paddingTop: spacing.xxl,
-    paddingBottom: spacing.md,
-  },
-  titulo: { ...typography.h1, fontSize: 30, lineHeight: 36, color: colors.black },
-  iconeBusca: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
+  tela: { flex: 1, backgroundColor: colors.surface },
+  pata: { position: 'absolute', right: 70, top: 96 },
+  mais: {
+    position: 'absolute',
+    right: 24,
+    top: 56,
+    width: 54,
+    height: 54,
+    borderRadius: 27,
     backgroundColor: colors.white,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  centro: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: spacing.xxl,
-    gap: spacing.md,
+  maisSinal: { fontSize: 28, lineHeight: 32, color: colors.black },
+  carregando: { marginTop: 40 },
+  lista: { paddingHorizontal: 24, paddingTop: 8, paddingBottom: 120, gap: 14 },
+  vazio: { alignItems: 'center', gap: 12, paddingVertical: 12 },
+  vazioTexto: { ...typography.caption, color: colors.textMuted, textAlign: 'center' },
+  cartao: {
+    height: 172,
+    borderRadius: 32,
+    borderWidth: 1.5,
+    overflow: 'hidden',
+    flexDirection: 'row',
   },
-  lista: { paddingHorizontal: spacing.xl, paddingBottom: 130, gap: spacing.md },
-  cartao: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
-  nome: { ...typography.h3, color: colors.black },
-  detalhe: {
-    ...typography.caption,
-    color: colors.textMuted,
-    marginTop: 2,
-    textTransform: 'capitalize',
+  cartaoTexto: { flex: 1, paddingLeft: 20, paddingTop: 22, paddingBottom: 18, gap: 8, zIndex: 1 },
+  nome: {
+    fontSize: 28,
+    lineHeight: 32,
+    letterSpacing: -0.6,
+    fontFamily: typography.h1.fontFamily,
+    color: colors.black,
   },
-  chevron: { fontSize: 26, color: colors.textMuted },
-  vazioTitulo: { ...typography.h2, color: colors.black, textAlign: 'center' },
-  vazioTexto: {
-    ...typography.body,
-    color: colors.textMuted,
-    textAlign: 'center',
-    lineHeight: 22,
+  chips: { flexDirection: 'row', gap: 6, flexWrap: 'wrap' },
+  chip: {
+    fontSize: 13,
+    fontFamily: typography.captionMedium.fontFamily,
+    color: colors.black,
+    backgroundColor: colors.white,
+    borderRadius: 999,
+    overflow: 'hidden',
+    paddingHorizontal: 10,
+    paddingVertical: 4,
   },
-  novoBotao: {
-    marginTop: spacing.md,
-    height: 56,
-    paddingHorizontal: spacing.xxl,
-    borderRadius: 28,
-    backgroundColor: colors.black,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  novoBotaoTexto: { ...typography.button, color: colors.white },
-  fab: {
-    position: 'absolute',
-    right: spacing.xl,
-    bottom: 110,
-    width: 60,
-    height: 60,
-    borderRadius: 30,
+  lembrete: {
+    marginTop: 'auto',
+    alignSelf: 'flex-start',
+    fontSize: 13,
+    fontFamily: typography.label.fontFamily,
+    color: colors.black,
     backgroundColor: colors.primary,
+    borderRadius: 999,
+    overflow: 'hidden',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+  },
+  retrato: { width: 150, alignItems: 'center', justifyContent: 'flex-end' },
+  foto: { width: 132, height: 132, borderRadius: 66, marginBottom: 20 },
+  adicionar: {
+    height: 72,
+    borderRadius: 36,
+    borderWidth: 1.5,
+    borderStyle: 'dashed',
+    borderColor: colors.borderStrong,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  fabSinal: { fontSize: 30, lineHeight: 34, color: colors.black, fontWeight: '400' },
-  pressionado: { opacity: 0.7 },
+  adicionarTexto: { fontSize: 16, fontFamily: typography.captionMedium.fontFamily, color: colors.textMuted },
 })

@@ -30,7 +30,7 @@ import { dataParaExibicao, normalizarHorarios } from '../../../src/remedios/type
 import { sincronizarDoses } from '../../../src/notificacoes/doses'
 import { BarraProgresso } from '../../../src/components/Animacoes'
 import { colors } from '../../../src/theme/colors'
-import { typography } from '../../../src/theme/typography'
+import { fontFamily, typography } from '../../../src/theme/typography'
 import { radius, spacing } from '../../../src/theme/tokens'
 
 const CARTOES = [
@@ -360,7 +360,7 @@ const estilos = StyleSheet.create({
     gap: spacing.md,
   },
   centro: { paddingVertical: spacing.xxl, alignItems: 'center' },
-  secaoTitulo: { ...typography.bodyMedium, fontWeight: '700', color: colors.text },
+  secaoTitulo: { ...typography.bodyMedium, fontFamily: fontFamily.bold, color: colors.text },
   secaoMargem: { marginTop: spacing.sm },
   cartao: {
     borderRadius: 30,
@@ -377,7 +377,7 @@ const estilos = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  cartaoNome: { fontWeight: '700', fontSize: 17, color: colors.black },
+  cartaoNome: { fontFamily: fontFamily.bold, fontSize: 17, color: colors.black },
   cartaoSub: { fontSize: 12, marginTop: 2 },
   badge: {
     backgroundColor: colors.white,
@@ -385,7 +385,7 @@ const estilos = StyleSheet.create({
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.xs,
   },
-  badgeTexto: { fontSize: 12, fontWeight: '700', color: colors.black },
+  badgeTexto: { fontSize: 12, fontFamily: fontFamily.bold, color: colors.black },
   barra: {
     height: 8,
     borderRadius: 4,
@@ -407,8 +407,8 @@ const estilos = StyleSheet.create({
     gap: 6,
   },
   doseDada: { backgroundColor: colors.black },
-  doseTexto: { fontSize: 14, fontWeight: '700', color: colors.black },
-  doseTextoDada: { color: colors.white, fontWeight: '600' },
+  doseTexto: { fontSize: 14, fontFamily: fontFamily.bold, color: colors.black },
+  doseTextoDada: { color: colors.white, fontFamily: fontFamily.semiBold },
   vazioTitulo: { ...typography.h3, color: colors.text, marginBottom: spacing.xs },
   vazioTexto: { ...typography.body, color: colors.textMuted, textAlign: 'center', lineHeight: 22 },
   listaConcluidos: { gap: spacing.sm },
@@ -421,7 +421,7 @@ const estilos = StyleSheet.create({
     alignItems: 'center',
     gap: spacing.md,
   },
-  fichaTitulo: { fontWeight: '600', fontSize: 15, color: colors.text },
+  fichaTitulo: { fontFamily: fontFamily.semiBold, fontSize: 15, color: colors.text },
   fichaSub: { fontSize: 12, color: colors.textMuted, marginTop: 2 },
   etiqueta: {
     backgroundColor: colors.successSurface,
@@ -429,7 +429,7 @@ const estilos = StyleSheet.create({
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.xs,
   },
-  etiquetaTexto: { fontSize: 12, fontWeight: '700', color: colors.successText },
+  etiquetaTexto: { fontSize: 12, fontFamily: fontFamily.bold, color: colors.successText },
   rodape: {
     position: 'absolute',
     left: 0,

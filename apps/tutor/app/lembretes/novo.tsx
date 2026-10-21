@@ -24,7 +24,7 @@ import { AvatarPet } from '../../src/pets/AvatarPet'
 import { usePets } from '../../src/pets/PetsProvider'
 import { preferenciasAvisos } from '../../src/notificacoes/prefs'
 import { colors } from '../../src/theme/colors'
-import { typography } from '../../src/theme/typography'
+import { fontFamily, typography } from '../../src/theme/typography'
 import { radius, spacing } from '../../src/theme/tokens'
 
 const REPETIR_ROTULOS = REPETICOES.map((r) => r.rotulo)
@@ -337,7 +337,7 @@ const estilos = StyleSheet.create({
     flexShrink: 0,
   },
   petRotulo: { fontSize: 11, color: colors.textMuted },
-  petNome: { fontSize: 15, fontWeight: '600', color: colors.black },
+  petNome: { fontSize: 15, fontFamily: fontFamily.semiBold, color: colors.black },
   cartaoAviso: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -348,7 +348,7 @@ const estilos = StyleSheet.create({
     paddingHorizontal: spacing.lg,
     paddingVertical: spacing.md,
   },
-  avisoTitulo: { fontWeight: '600', fontSize: 14, color: colors.black },
+  avisoTitulo: { fontFamily: fontFamily.semiBold, fontSize: 14, color: colors.black },
   avisoSub: { fontSize: 12, color: colors.textMuted, marginTop: 2 },
   fundoModal: { flex: 1, backgroundColor: colors.overlay, justifyContent: 'flex-end' },
   cartaoModal: {
@@ -369,8 +369,8 @@ const estilos = StyleSheet.create({
     paddingHorizontal: spacing.sm,
     paddingVertical: spacing.sm,
   },
-  linhaPetTexto: { flex: 1, fontSize: 16, fontWeight: '600', color: colors.text },
-  check: { fontSize: 16, fontWeight: '700', color: colors.primaryDeep },
+  linhaPetTexto: { flex: 1, fontSize: 16, fontFamily: fontFamily.semiBold, color: colors.text },
+  check: { fontSize: 16, fontFamily: fontFamily.bold, color: colors.primaryDeep },
   acoesModal: { marginTop: spacing.sm },
   linhaDupla: { flexDirection: 'row', gap: spacing.md },
   metade: { flex: 1 },

@@ -1,6 +1,6 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { colors } from '../theme/colors';
-import { typography } from '../theme/typography';
+import { fontFamily, typography } from '../theme/typography';
 
 type Props = {
   opcoes: string[];
@@ -54,7 +54,7 @@ const estilos = StyleSheet.create({
   },
   texto: {
     ...typography.captionMedium,
-    fontWeight: '600',
+    fontFamily: fontFamily.semiBold,
     fontSize: 14,
     color: colors.textMuted,
   },

@@ -137,6 +137,13 @@ export default function Privacidade() {
           onPress={() => router.push('/termos')}
           direita={seta}
         />
+        <LinhaIcone
+          icone={<Icone nome="sino" />}
+          rotulo="Permissões do aparelho"
+          valor="Avisos e localização"
+          onPress={() => router.push('/permissoes')}
+          direita={seta}
+        />
 
         <Text style={[estilos.secao, estilos.secaoEspaco]}>QUEM VÊ OS DADOS DO PET</Text>
         <LinhaIcone icone={<Icone nome="pessoas" />} rotulo="Família e cuidadores" valor="Só você, por enquanto" />

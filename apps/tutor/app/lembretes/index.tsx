@@ -27,7 +27,7 @@ import {
 } from '../../src/lembretes/types'
 import { permissaoConcedida, pedirPermissao } from '../../src/notificacoes/notificacoes'
 import { colors } from '../../src/theme/colors'
-import { typography } from '../../src/theme/typography'
+import { fontFamily, typography } from '../../src/theme/typography'
 import { radius, shadow, spacing } from '../../src/theme/tokens'
 
 type Aba = 'Hoje' | 'Semana' | 'Mês'
@@ -290,11 +290,11 @@ const estilos = StyleSheet.create({
   lista: { paddingHorizontal: spacing.xl, paddingBottom: 130, gap: spacing.md },
   card: { borderRadius: radius.lg, padding: spacing.lg, gap: spacing.sm },
   cardTopo: { flexDirection: 'row', alignItems: 'flex-start', gap: spacing.sm },
-  cardTitulo: { ...typography.h3, fontWeight: '700' },
+  cardTitulo: { ...typography.h3, fontFamily: fontFamily.bold },
   cardSub: { ...typography.caption, marginTop: 2, opacity: 0.8 },
   cardData: { ...typography.captionMedium },
   etiqueta: { paddingHorizontal: spacing.md, paddingVertical: spacing.xs, borderRadius: radius.pill },
-  etiquetaTexto: { ...typography.small, fontWeight: '700' },
+  etiquetaTexto: { ...typography.small, fontFamily: fontFamily.bold },
   acoes: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm, marginTop: spacing.xs },
   botaoFeito: {
     flex: 1,

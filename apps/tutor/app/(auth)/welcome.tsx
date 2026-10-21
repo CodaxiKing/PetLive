@@ -4,7 +4,7 @@ import Svg, { Circle, Ellipse, Path } from 'react-native-svg';
 import { BotaoPrimario } from '../../src/components/BotaoPrimario';
 import { Flutuar } from '../../src/components/Animacoes';
 import { colors } from '../../src/theme/colors';
-import { typography } from '../../src/theme/typography';
+import { fontFamily, typography } from '../../src/theme/typography';
 
 /** Patinha do alto, canto superior direito do herói. */
 function Patinha({ size }: { size: number }) {
@@ -132,7 +132,7 @@ const estilos = StyleSheet.create({
     left: 24,
     top: 60,
     ...typography.h2,
-    fontWeight: '800',
+    fontFamily: fontFamily.extraBold,
     fontSize: 22,
     color: colors.black,
   },
@@ -179,7 +179,7 @@ const estilos = StyleSheet.create({
   },
   titulo: {
     ...typography.h1,
-    fontWeight: '500',
+    fontFamily: fontFamily.medium,
     fontSize: 44,
     lineHeight: 46,
     letterSpacing: -1.3,

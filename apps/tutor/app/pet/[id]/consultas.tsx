@@ -19,7 +19,7 @@ import {
 } from '../../../src/saude/consultas'
 import { dataParaExibicao } from '../../../src/saude/types'
 import { colors } from '../../../src/theme/colors'
-import { typography } from '../../../src/theme/typography'
+import { fontFamily, typography } from '../../../src/theme/typography'
 import { radius, spacing } from '../../../src/theme/tokens'
 
 const MESES_CURTOS = [
@@ -232,7 +232,7 @@ const estilos = StyleSheet.create({
     alignItems: 'center',
     gap: spacing.md,
   },
-  proximaTitulo: { ...typography.bodyMedium, fontWeight: '700', color: colors.text },
+  proximaTitulo: { ...typography.bodyMedium, fontFamily: fontFamily.bold, color: colors.text },
   proximaSub: { fontSize: 12, color: colors.premiumText, marginTop: 2 },
   botaoAgendar: {
     height: 36,
@@ -242,10 +242,10 @@ const estilos = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  botaoAgendarTexto: { fontSize: 13, fontWeight: '600', color: colors.white },
+  botaoAgendarTexto: { fontSize: 13, fontFamily: fontFamily.semiBold, color: colors.white },
   secaoTitulo: {
     ...typography.bodyMedium,
-    fontWeight: '700',
+    fontFamily: fontFamily.bold,
     color: colors.text,
     marginTop: spacing.xs,
   },
@@ -267,9 +267,9 @@ const estilos = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  dataDia: { fontWeight: '700', fontSize: 20, lineHeight: 22, color: colors.black },
-  dataMes: { fontSize: 11, fontWeight: '600', color: colors.black },
-  fichaTitulo: { fontWeight: '600', fontSize: 15, color: colors.text },
+  dataDia: { fontFamily: fontFamily.bold, fontSize: 20, lineHeight: 22, color: colors.black },
+  dataMes: { fontSize: 11, fontFamily: fontFamily.semiBold, color: colors.black },
+  fichaTitulo: { fontFamily: fontFamily.semiBold, fontSize: 15, color: colors.text },
   fichaSub: { fontSize: 12, color: colors.textMuted, marginTop: 2 },
   etiqueta: {
     backgroundColor: colors.successSurface,
@@ -277,7 +277,7 @@ const estilos = StyleSheet.create({
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.xs,
   },
-  etiquetaTexto: { fontSize: 12, fontWeight: '700', color: colors.successText },
+  etiquetaTexto: { fontSize: 12, fontFamily: fontFamily.bold, color: colors.successText },
   rodape: {
     position: 'absolute',
     left: 0,

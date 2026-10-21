@@ -4,7 +4,7 @@ import { usePets } from './PetsProvider'
 import { useVacinas } from '../saude/VacinasProvider'
 import { dataParaExibicao, rotuloDose, somarDias } from '../saude/types'
 import { colors } from '../theme/colors'
-import { typography } from '../theme/typography'
+import { fontFamily, typography } from '../theme/typography'
 import { components, radius, spacing } from '../theme/tokens'
 
 /**
@@ -143,6 +143,6 @@ const estilos = StyleSheet.create({
   nome: { ...typography.bodyMedium, color: colors.text },
   descricao: { ...typography.caption, color: colors.textMuted, marginTop: 2, lineHeight: 18 },
   data: { ...typography.caption, color: colors.textMuted, marginTop: 4 },
-  dataVencida: { color: colors.danger, fontWeight: '700' },
+  dataVencida: { color: colors.danger, fontFamily: fontFamily.bold },
   rodapeNota: { ...typography.small, color: colors.textMuted, textAlign: 'center' },
 })

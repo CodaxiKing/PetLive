@@ -1,7 +1,7 @@
 import { type ReactNode } from 'react';
 import { StyleSheet, Text, TextInput, View, type TextInputProps } from 'react-native';
 import { colors } from '../theme/colors';
-import { typography } from '../theme/typography';
+import { fontFamily, typography } from '../theme/typography';
 import { spacing } from '../theme/tokens';
 
 type Variante = 'roxo' | 'azul' | 'verde' | 'neutro';
@@ -65,7 +65,7 @@ const estilos = StyleSheet.create({
   },
   texto: {
     ...typography.body,
-    fontWeight: '600',
+    fontFamily: fontFamily.semiBold,
     fontSize: 16,
     paddingVertical: 0,
   },
