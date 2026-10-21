@@ -1,6 +1,10 @@
 packages:
   - "apps/*"
 
+# Nomes curtos em node_modules/.pnpm: no Windows o build nativo do Android
+# (CMake/ninja) falha com caminhos acima de 260 caracteres.
+virtualStoreDirMaxLength: 30
+
 # Builds de dependências com script de instalação.
 # unrs-resolver é o resolver nativo do ESLint (eslint-config-expo).
 allowBuilds:
