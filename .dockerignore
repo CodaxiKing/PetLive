@@ -1,0 +1,18 @@
+# Contexto do Docker: só o que o build do site precisa.
+**/node_modules
+**/.next
+**/.expo
+**/dist
+**/android
+**/ios
+.git
+backups
+marketing
+prototipo
+supabase
+scripts
+docs
+apps/tutor
+apps/lojista
+**/.env
+**/.env.*

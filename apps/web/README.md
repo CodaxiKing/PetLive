@@ -50,3 +50,29 @@ e espelham o design system do app do tutor e do protótipo `prototipo/SitePetLiv
 
 SEO: `src/app/sitemap.ts`, `src/app/robots.ts` e os dados estruturados
 (`MobileApplication`) na home.
+
+## Publicar no Coolify
+
+O site sobe como imagem Docker (`apps/web/Dockerfile`, saída `standalone` do Next).
+
+1. **New Resource › Public/Private Repository** › este repositório, branch `main`.
+2. **Build Pack:** `Dockerfile`.
+   - **Base Directory:** `/` (a raiz: é um monorepo pnpm)
+   - **Dockerfile Location:** `/apps/web/Dockerfile`
+3. **Ports Exposes:** `3000`.
+4. **Domains:** `https://petlive.app.br` (e `https://www.petlive.app.br`, se usar).
+   No DNS, aponte um registro `A` para o IP do servidor do Coolify; o
+   certificado HTTPS sai sozinho.
+5. **Environment Variables** — marque **Build Variable** em todas (o Next
+   embute as `NEXT_PUBLIC_*` no build; mudar exige novo deploy):
+   - `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY` (projeto de produção)
+   - opcionais: `NEXT_PUBLIC_GA_ID`, `NEXT_PUBLIC_URL_GOOGLE_PLAY`, `NEXT_PUBLIC_URL_APP_STORE`
+6. **Deploy.** O container tem healthcheck; para atualizar, um push na `main`
+   (com o deploy automático ligado) ou "Redeploy".
+
+Testar a imagem no computador:
+
+```bash
+docker build -f apps/web/Dockerfile -t petlive-site .
+docker run --rm -p 3000:3000 petlive-site
+```
