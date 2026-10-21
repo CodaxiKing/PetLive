@@ -13,14 +13,16 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { Camera, Map, Marker, type CameraRef } from '@maplibre/maplibre-react-native';
 import Svg, { Path } from 'react-native-svg';
 import { BotaoPrimario } from '../../src/components/BotaoPrimario';
-import { ligarPara, tracarRota } from '../../src/mapa/acoes';
+import { ligarPara } from '../../src/mapa/acoes';
 import { Deslizar } from '../../src/components/Animacoes';
+import { Icone } from '../../src/components/Icone';
 import { lugaresSalvos } from '../../src/mapa/favoritos';
-import { GlifoLugar } from '../../src/mapa/GlifoLugar';
+import { FolhaRota } from '../../src/mapa/FolhaRota';
+import { IlustracaoLugar } from '../../src/mapa/IlustracaoLugar';
 import {
   buscarLugares,
+  buscarPetFriendly,
   CENTRO_PADRAO,
-  COR_CATEGORIA,
   FONTE_LUGARES,
   formatarDistancia,
   resumoStatus,
@@ -37,13 +39,14 @@ import { fontFamily, typography } from '../../src/theme/typography';
 /** Estilo de mapa gratuito (OpenFreeMap: tiles OSM, sem chave). */
 const ESTILO_MAPA = 'https://tiles.openfreemap.org/styles/liberty';
 
-type Filtro = 'todos' | CategoriaLugar | '24h' | 'salvos';
+/** 'pet_friendly' chega da tela Pet friendly ("Ver no mapa"). */
+type Filtro = 'todos' | CategoriaLugar | '24h' | 'salvos' | 'pet_friendly';
 
+// Ordem do protótipo Mapa; o chip Pet friendly abre a tela própria (5.19).
 const FILTROS: { valor: Filtro; rotulo: string }[] = [
   { valor: 'todos', rotulo: 'Todos' },
   { valor: 'clinica', rotulo: 'Clínicas' },
-  { valor: 'banho_tosa', rotulo: 'Banho e tosa' },
-  { valor: 'petshop', rotulo: 'Petshop' },
+  { valor: 'petshop', rotulo: 'Petshops' },
   // Creches e hotelzinhos só existem nos dados do Google (busca por texto, 5.15).
   ...(FONTE_LUGARES === 'google'
     ? ([
@@ -51,9 +54,12 @@ const FILTROS: { valor: Filtro; rotulo: string }[] = [
         { valor: 'hotelzinho', rotulo: 'Hotelzinhos' },
       ] as const)
     : []),
-  { valor: '24h', rotulo: '24h' },
+  { valor: 'banho_tosa', rotulo: 'Banho e tosa' },
+  { valor: '24h', rotulo: '24 h' },
   { valor: 'salvos', rotulo: 'Salvos' },
 ];
+
+const FILTROS_DE_ATALHO: Filtro[] = [...FILTROS.map((f) => f.valor), 'pet_friendly'];
 
 /**
  * Mapa (board: [APP-CLIENTE] Mapa, P1): MapLibre com tiles gratuitos,
@@ -65,7 +71,7 @@ export default function Mapa() {
   // dos chips passa a valer assim que o toque um.
   const { filtro } = useLocalSearchParams<{ filtro?: string }>();
   const [categoriaManual, setCategoriaManual] = useState<Filtro | null>(null);
-  const filtroDoAtalho = FILTROS.find((opcao) => opcao.valor === filtro)?.valor ?? 'todos';
+  const filtroDoAtalho = FILTROS_DE_ATALHO.find((valor) => valor === filtro) ?? 'todos';
   const categoria: Filtro = categoriaManual ?? filtroDoAtalho;
 
   const { permissao, posicao, localizar } = useLocalizacao();
@@ -75,6 +81,7 @@ export default function Mapa() {
   const [lugares, setLugares] = useState<Lugar[]>([]);
   const [carregando, setCarregando] = useState(true);
   const [selecionado, setSelecionado] = useState<Lugar | null>(null);
+  const [rotaAberta, setRotaAberta] = useState(false);
   const cameraRef = useRef<CameraRef>(null);
   // O toque no pin também chega ao mapa logo depois; sem isto o cartão
   // do lugar abria e fechava no mesmo toque.
@@ -89,13 +96,15 @@ export default function Mapa() {
     const consulta =
       categoria === 'salvos'
         ? lugaresSalvos()
-        : buscarLugares({
-            lat: centro.lat,
-            lng: centro.lng,
-            categoria: so24h || categoria === 'todos' ? null : categoria,
-            busca: buscaAtiva,
-            aberto24h: so24h ? true : null,
-          });
+        : categoria === 'pet_friendly'
+          ? buscarPetFriendly({ lat: centro.lat, lng: centro.lng }).then((lista) => lista ?? [])
+          : buscarLugares({
+              lat: centro.lat,
+              lng: centro.lng,
+              categoria: so24h || categoria === 'todos' ? null : categoria,
+              busca: buscaAtiva,
+              aberto24h: so24h ? true : null,
+            });
     consulta
       .then((lista) => {
         if (!vivo) return;
@@ -183,6 +192,7 @@ export default function Mapa() {
             key={registro.id}
             id={registro.id}
             lngLat={[registro.lng, registro.lat]}
+            anchor="bottom"
             onPress={() => selecionar(registro)}
           >
             <PinLugar
@@ -195,6 +205,18 @@ export default function Mapa() {
 
       {/* Topo: busca e filtros flutuando sobre o mapa (protótipo Mapa). */}
       <View style={estilos.topo} pointerEvents="box-none">
+        <View style={estilos.linhaBusca}>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel="Voltar"
+          hitSlop={8}
+          onPress={() => (router.canGoBack() ? router.back() : router.navigate('/inicio'))}
+          style={({ pressed }) => [estilos.voltar, pressed && { opacity: 0.6 }]}
+        >
+          <Svg width={20} height={20} viewBox="0 0 24 24" fill="none" stroke={colors.black} strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+            <Path d="M15 5l-7 7 7 7" />
+          </Svg>
+        </Pressable>
         <View style={estilos.busca}>
           <Svg
             width={18}
@@ -222,10 +244,12 @@ export default function Mapa() {
             accessibilityLabel="Buscar lugares no mapa"
           />
         </View>
+        </View>
 
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
+          style={estilos.filtrosRolagem}
           contentContainerStyle={estilos.filtros}
         >
           {FILTROS.map((opcao) => {
@@ -244,6 +268,16 @@ export default function Mapa() {
               </Pressable>
             );
           })}
+          <Pressable
+            onPress={() => router.push('/mapa/pet-friendly')}
+            accessibilityRole="button"
+            accessibilityState={{ selected: categoria === 'pet_friendly' }}
+            style={[estilos.pilula, categoria === 'pet_friendly' && estilos.pilulaAtiva]}
+          >
+            <Text style={[estilos.pilulaTexto, categoria === 'pet_friendly' && estilos.pilulaTextoAtiva]}>
+              Pet friendly
+            </Text>
+          </Pressable>
           {/* SOS no fim dos filtros, em rosa (protótipo Mapa, BUSINESS 5.17). */}
           <Pressable
             onPress={() => router.push('/sos')}
@@ -327,50 +361,40 @@ export default function Mapa() {
         <Deslizar key={lugar.id} style={estilos.ficha}>
           <Pressable
             onPress={() =>
-              router.push({ pathname: '/lugar', params: { id: lugar.id } })
+              router.push({ pathname: '/lugar', params: { id: lugar.id, categoria: lugar.categoria } })
             }
             accessibilityRole="button"
             accessibilityLabel={`Abrir ficha de ${lugar.nome}`}
           >
             <View style={estilos.fichaTopo}>
-              <View
-                style={[estilos.fichaIcone, { backgroundColor: COR_CATEGORIA[lugar.categoria] }]}
-              >
-                <GlifoLugar categoria={lugar.categoria} tamanho={22} />
+              <View style={estilos.fichaFoto}>
+                <View style={estilos.fichaFotoMiolo}>
+                  <IlustracaoLugar categoria={lugar.categoria} tamanho={50} />
+                </View>
               </View>
               <View style={estilos.fichaTexto}>
                 <Text style={estilos.fichaNome} numberOfLines={1}>
                   {lugar.nome}
                 </Text>
                 <Text style={estilos.fichaLinha} numberOfLines={1}>
-                  {[formatarDistancia(lugar.distancia_km), resumoStatus(lugar)]
+                  {[
+                    ROTULO_CATEGORIA[lugar.categoria],
+                    formatarDistancia(lugar.distancia_km),
+                    lugar.nota ? `${lugar.nota.toFixed(1).replace('.', ',')} ★` : null,
+                  ]
                     .filter(Boolean)
                     .join(' · ')}
                 </Text>
               </View>
-              <Svg
-                width={20}
-                height={20}
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke={colors.black}
-                strokeWidth={2}
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                aria-hidden
-              >
-                <Path d="M9 5l7 7-7 7" />
-              </Svg>
+              <Icone nome="seta" size={20} espessura={2} />
             </View>
 
             <View style={estilos.fichaSelinhas}>
-              {lugar.aberto_24h && (
+              {lugar.aberto_24h || lugar.aberto_agora ? (
                 <View style={[estilos.selinha, { backgroundColor: colors.successSurface }]}>
-                  <Text style={[estilos.selinhaTexto, { color: colors.successText }]}>
-                    Aberto 24h
-                  </Text>
+                  <Text style={[estilos.selinhaTexto, { color: colors.successText }]}>{resumoStatus(lugar)}</Text>
                 </View>
-              )}
+              ) : null}
               <View style={[estilos.selinha, { backgroundColor: colors.premiumSurface }]}>
                 <Text style={[estilos.selinhaTexto, { color: colors.premiumText }]}>
                   {ROTULO_CATEGORIA[lugar.categoria]}
@@ -406,9 +430,7 @@ export default function Mapa() {
             )}
 
             <Pressable
-              onPress={() => {
-                tracarRota(lugar).catch(() => undefined);
-              }}
+              onPress={() => setRotaAberta(true)}
               accessibilityRole="button"
               accessibilityLabel={`Traçar rota até ${lugar.nome}`}
               style={estilos.rota}
@@ -433,6 +455,19 @@ export default function Mapa() {
           </View>
         </Deslizar>
       )}
+
+      <FolhaRota
+        destino={
+          rotaAberta && lugar
+            ? {
+                ...lugar,
+                placeId: lugar.fonte === 'google' ? lugar.id : null,
+                distanciaKm: lugar.distancia_km,
+              }
+            : null
+        }
+        onFechar={() => setRotaAberta(false)}
+      />
     </View>
   );
 }
@@ -451,7 +486,22 @@ const estilos = StyleSheet.create({
     paddingTop: 54,
     gap: spacing.sm,
   },
+  linhaBusca: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
+  voltar: {
+    width: 54,
+    height: 54,
+    borderRadius: 27,
+    backgroundColor: colors.surface,
+    alignItems: 'center',
+    justifyContent: 'center',
+    ...shadow.card,
+  },
   busca: {
+    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     gap: spacing.sm,
@@ -467,9 +517,13 @@ const estilos = StyleSheet.create({
     color: colors.black,
     padding: 0,
   },
+  filtrosRolagem: {
+    marginHorizontal: -spacing.xxl,
+  },
   filtros: {
     gap: spacing.sm,
-    paddingRight: spacing.xxl,
+    paddingHorizontal: spacing.xxl,
+    paddingBottom: 6,
   },
   pilula: {
     paddingHorizontal: spacing.lg,
@@ -576,13 +630,19 @@ const estilos = StyleSheet.create({
     gap: spacing.md,
     flexShrink: 0,
   },
-  fichaIcone: {
-    width: 52,
-    height: 52,
-    borderRadius: 18,
-    alignItems: 'center',
-    justifyContent: 'center',
+  fichaFoto: {
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    padding: 3,
+    backgroundColor: colors.primary,
     flexShrink: 0,
+  },
+  fichaFotoMiolo: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    overflow: 'hidden',
   },
   fichaTexto: {
     flex: 1,

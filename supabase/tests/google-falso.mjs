@@ -30,6 +30,14 @@ http
       if (req.headers['x-goog-api-key'] !== 'chave-teste') return json({ error: { message: 'API key not valid' } }, 403);
 
       if (req.url.startsWith('/v1/places:searchNearby')) {
+        if (JSON.parse(corpo).includedTypes.includes('dog_park')) {
+          return json({
+            places: [
+              lugar('ChIJparquecao001', 'Parcão do Aterro', -22.952, -43.183, { types: ['dog_park', 'park'] }),
+              lugar('ChIJparqueno0001', 'Parque sem cães', -22.953, -43.184, { types: ['park'], allowsDogs: false }),
+            ],
+          });
+        }
         return json({
           places: [
             lugar('ChIJperto0000001', 'Clínica Perto', -22.952, -43.183),

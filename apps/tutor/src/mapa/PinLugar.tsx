@@ -1,47 +1,62 @@
 import { StyleSheet, View } from 'react-native';
 import { colors } from '../theme/colors';
-import { GlifoLugar } from './GlifoLugar';
-import { COR_CATEGORIA, type CategoriaLugar } from './lugares';
+import { IlustracaoLugar } from './IlustracaoLugar';
+import type { CategoriaLugar } from './lugares';
 
 type Props = {
   categoria: CategoriaLugar;
-  /** Pin maior e azul quando é o lugar selecionado (protótipo Mapa). */
+  /** Pin maior com anel azul quando é o lugar selecionado (protótipo Mapa). */
   selecionado?: boolean;
 };
 
 /**
- * Pin do mapa: círculo com borda branca e o glifo da categoria —
- * clínica azul, banho e tosa verde, petshop roxo; selecionado vira azul marca.
+ * Pin do mapa (protótipo Mapa): círculo branco com sombra, a ilustração do
+ * lugar dentro e a pontinha embaixo, que marca o ponto (âncora "bottom").
  */
 export function PinLugar({ categoria, selecionado = false }: Props) {
-  const tamanho = selecionado ? 46 : 34;
+  const tamanho = selecionado ? 64 : 49;
+  const borda = selecionado ? 5 : 3.5;
+  const miolo = tamanho - borda * 2;
   return (
-    <View
-      style={[
-        estilos.pin,
-        {
-          width: tamanho,
-          height: tamanho,
-          borderRadius: tamanho / 2,
-          backgroundColor: selecionado ? colors.primary : COR_CATEGORIA[categoria],
-        },
-      ]}
-    >
-      <GlifoLugar categoria={categoria} tamanho={selecionado ? 21 : 17} />
+    <View style={estilos.pin}>
+      <View
+        style={[
+          estilos.circulo,
+          {
+            width: tamanho,
+            height: tamanho,
+            borderRadius: tamanho / 2,
+            padding: borda,
+            backgroundColor: selecionado ? colors.primary : colors.white,
+          },
+        ]}
+      >
+        <View style={{ width: miolo, height: miolo, borderRadius: miolo / 2, overflow: 'hidden' }}>
+          <IlustracaoLugar categoria={categoria} tamanho={miolo} />
+        </View>
+      </View>
+      <View style={[estilos.ponta, { borderTopColor: selecionado ? colors.primary : colors.white }]} />
     </View>
   );
 }
 
 const estilos = StyleSheet.create({
-  pin: {
-    borderWidth: 3,
-    borderColor: colors.white,
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowColor: '#2A211C',
+  pin: { alignItems: 'center' },
+  circulo: {
+    shadowColor: '#111111',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.18,
+    shadowOpacity: 0.25,
     shadowRadius: 4,
-    elevation: 4,
+    elevation: 5,
+  },
+  ponta: {
+    marginTop: -2,
+    width: 0,
+    height: 0,
+    borderLeftWidth: 7,
+    borderRightWidth: 7,
+    borderTopWidth: 10,
+    borderLeftColor: 'transparent',
+    borderRightColor: 'transparent',
   },
 });

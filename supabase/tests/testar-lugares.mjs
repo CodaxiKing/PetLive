@@ -35,6 +35,9 @@ ok(r.corpo.lugares?.length === 1 && r.corpo.lugares[0].nome.includes('creche'), 
 r = await chamar('places-nearby', { ...centro, categoria: 'restaurante', raioKm: 10 });
 ok(r.corpo.lugares?.[0]?.aceita_caes === true, 'pet friendly traz "aceita cães" do Google');
 
+r = await chamar('places-nearby', { ...centro, categoria: 'parque', raioKm: 10 });
+ok(r.corpo.lugares?.length === 1 && r.corpo.lugares[0].area_caes === true, 'parque: área para cães marcada e "não aceita cães" descartado');
+
 r = await chamar('places-nearby', { ...centro, categoria: 'banana' });
 ok(r.status === 400 && r.corpo.erro === 'pedido', 'categoria inválida recusada (400)');
 

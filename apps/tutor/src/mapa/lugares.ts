@@ -11,7 +11,18 @@ export const FONTE_LUGARES: 'google' | 'osm' =
   process.env.EXPO_PUBLIC_LUGARES_FONTE === 'google' ? 'google' : 'osm';
 
 /** Categorias do mapa (batem com places.categoria no banco e com o Google). */
-export type CategoriaLugar = 'clinica' | 'banho_tosa' | 'petshop' | 'creche' | 'hotelzinho';
+export type CategoriaLugar =
+  | 'clinica'
+  | 'banho_tosa'
+  | 'petshop'
+  | 'creche'
+  | 'hotelzinho'
+  | CategoriaPetFriendly;
+
+/** Pet friendly (5.19): só nos dados do Google. */
+export type CategoriaPetFriendly = 'parque' | 'praia' | 'restaurante' | 'hotel';
+
+export const CATEGORIAS_PET_FRIENDLY: CategoriaPetFriendly[] = ['parque', 'praia', 'restaurante', 'hotel'];
 
 export type FotoLugar = { nome: string; autores: { nome: string; uri: string | null }[] };
 
@@ -35,6 +46,9 @@ export type Lugar = {
   aberto_agora?: boolean | null;
   fotos?: FotoLugar[];
   fonte?: 'google' | 'osm';
+  /** Pet friendly: o Google diz que aceita cães; parque com área para cães. */
+  aceita_caes?: boolean | null;
+  area_caes?: boolean;
 };
 
 export const ROTULO_CATEGORIA: Record<CategoriaLugar, string> = {
@@ -43,6 +57,10 @@ export const ROTULO_CATEGORIA: Record<CategoriaLugar, string> = {
   petshop: 'Petshop',
   creche: 'Creche',
   hotelzinho: 'Hotelzinho',
+  parque: 'Parque',
+  praia: 'Praia',
+  restaurante: 'Restaurante',
+  hotel: 'Hotel',
 };
 
 /** Cores dos pins por categoria (protótipo Mapa). */
@@ -52,6 +70,11 @@ export const COR_CATEGORIA: Record<CategoriaLugar, string> = {
   petshop: '#EBDDFB',
   creche: '#FFF1C9',
   hotelzinho: '#FCE1EF',
+  // Pet friendly: as cores das miniaturas do protótipo PetFriendly.
+  parque: '#CFE8FB',
+  praia: '#DDF3E6',
+  restaurante: '#FFF1C9',
+  hotel: '#EBDDFB',
 };
 
 /** Centro de reserva (Rio de Janeiro) enquanto a localização não chega. */
@@ -84,6 +107,8 @@ type LugarGoogle = {
   lng: number;
   nota: number | null;
   aberto_agora: boolean | null;
+  aceita_caes?: boolean | null;
+  area_caes?: boolean;
   distancia_km: number;
 };
 
@@ -102,6 +127,8 @@ function deGoogle(l: LugarGoogle, aberto24h = false): Lugar {
     distancia_km: l.distancia_km,
     nota: l.nota,
     aberto_agora: l.aberto_agora,
+    aceita_caes: l.aceita_caes ?? null,
+    area_caes: l.area_caes ?? false,
     fonte: 'google',
   };
 }
@@ -147,6 +174,41 @@ export async function buscarLugares(opcoes: {
   });
   if (error) throw new Error(error.message);
   return ((data ?? []) as Lugar[]).map((l) => ({ ...l, fonte: 'osm' as const }));
+}
+
+/**
+ * Pet friendly por perto (5.19): parques, praias, restaurantes e hotéis,
+ * uma busca por categoria, juntos pela distância. Null = sem dados do
+ * Google (o OpenStreetMap importado não tem essas categorias).
+ */
+export async function buscarPetFriendly(posicao: { lat: number; lng: number }): Promise<Lugar[] | null> {
+  if (!usarGoogle()) return null;
+  try {
+    const listas = await Promise.all(
+      CATEGORIAS_PET_FRIENDLY.map((categoria) =>
+        chamarFuncao<{ lugares: LugarGoogle[] }>('places-nearby', { ...posicao, categoria, raioKm: 5 }),
+      ),
+    );
+    // Um lugar pode vir em duas categorias (parque na praia): fica a primeira.
+    const vistos = new Set<string>();
+    return listas
+      .flatMap(({ lugares }) => lugares.map((l) => deGoogle(l)))
+      .filter((l) => !vistos.has(l.id) && Boolean(vistos.add(l.id)))
+      .sort((a, b) => (a.distancia_km ?? 0) - (b.distancia_km ?? 0));
+  } catch (e) {
+    if ((e as { codigo?: string }).codigo !== 'sem_chave') throw e;
+    googleIndisponivel = true;
+    return null;
+  }
+}
+
+/** Selo verde do pet friendly: o que o Google informa sobre aceitar pets. */
+export function seloPetFriendly(lugar: Lugar): string | null {
+  if (lugar.area_caes) return 'Área para cães';
+  if (lugar.aceita_caes) return 'Aceita cães';
+  // Restaurantes e hotéis vêm da busca "pet friendly" mesmo sem o campo.
+  if (lugar.categoria === 'restaurante' || lugar.categoria === 'hotel') return 'Pet friendly';
+  return null;
 }
 
 /** O id do OSM é um uuid; o do Google, um place_id. */

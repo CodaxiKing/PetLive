@@ -11,7 +11,8 @@ import {
 import { router, useLocalSearchParams } from 'expo-router';
 import { Camera, Map, Marker } from '@maplibre/maplibre-react-native';
 import Svg, { Path } from 'react-native-svg';
-import { abrirWhatsApp, ligarPara, tracarRota } from '../src/mapa/acoes';
+import { abrirWhatsApp, ligarPara } from '../src/mapa/acoes';
+import { FolhaRota } from '../src/mapa/FolhaRota';
 import { alternarSalvo, estaSalvo } from '../src/mapa/favoritos';
 import { GaleriaFotos } from '../src/mapa/GaleriaFotos';
 import { GlifoLugar } from '../src/mapa/GlifoLugar';
@@ -19,6 +20,7 @@ import {
   COR_CATEGORIA,
   lugarPorId,
   ROTULO_CATEGORIA,
+  type CategoriaLugar,
   type Lugar as LugarRegistro,
 } from '../src/mapa/lugares';
 import { PinLugar } from '../src/mapa/PinLugar';
@@ -55,13 +57,14 @@ function CardInfo({
  * horário e contato, com a barra de ações embaixo.
  */
 export default function Lugar() {
-  const { id } = useLocalSearchParams<{ id: string }>();
+  const { id, categoria } = useLocalSearchParams<{ id: string; categoria?: CategoriaLugar }>();
   const { width } = useWindowDimensions();
   const [lugar, setLugar] = useState<LugarRegistro | null>(null);
   const [carregando, setCarregando] = useState(true);
   const [falha, setFalha] = useState(false);
   const [salvo, setSalvo] = useState(false);
   const [salvando, setSalvando] = useState(false);
+  const [rotaAberta, setRotaAberta] = useState(false);
 
   useEffect(() => {
     if (id) estaSalvo(id).then(setSalvo, () => undefined);
@@ -79,7 +82,7 @@ export default function Lugar() {
 
   useEffect(() => {
     let vivo = true;
-    (id ? lugarPorId(id) : Promise.resolve(null))
+    (id ? lugarPorId(id, categoria) : Promise.resolve(null))
       .then((registro) => {
         if (!vivo) return;
         setLugar(registro);
@@ -94,7 +97,7 @@ export default function Lugar() {
     return () => {
       vivo = false;
     };
-  }, [id]);
+  }, [id, categoria]);
 
   if (carregando || falha || !lugar) {
     return (
@@ -377,9 +380,7 @@ export default function Lugar() {
         <Pressable
           accessibilityRole="button"
           accessibilityLabel={`Traçar rota até ${lugar.nome}`}
-          onPress={() => {
-            tracarRota(lugar).catch(() => undefined);
-          }}
+          onPress={() => setRotaAberta(true)}
           style={estilos.rotaBotao}
         >
           <View style={estilos.rotaCirculo}>
@@ -400,6 +401,18 @@ export default function Lugar() {
           <Text style={estilos.rotaBotaoTexto}>Traçar rota</Text>
         </Pressable>
       </View>
+      <FolhaRota
+        destino={
+          rotaAberta
+            ? {
+                ...lugar,
+                placeId: lugar.fonte === 'google' ? lugar.id : null,
+                distanciaKm: lugar.distancia_km,
+              }
+            : null
+        }
+        onFechar={() => setRotaAberta(false)}
+      />
     </View>
   );
 }

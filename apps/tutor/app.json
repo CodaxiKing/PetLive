@@ -56,7 +56,8 @@
       ],
       "@maplibre/maplibre-react-native",
       "@sentry/react-native",
-      "expo-web-browser"
+      "expo-web-browser",
+      "./plugins/apps-de-mapa"
     ],
     "experiments": {
       "typedRoutes": true

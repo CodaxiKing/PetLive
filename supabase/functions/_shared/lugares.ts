@@ -61,6 +61,8 @@ export type LugarGoogle = {
   aberto_agora: boolean | null;
   /** Só quando o Google informa (pet friendly, 5.19). */
   aceita_caes: boolean | null;
+  /** Parque com área própria para cães (tipo dog_park do Google). */
+  area_caes: boolean;
   distancia_km: number;
   fonte: 'google';
 };
@@ -199,13 +201,16 @@ export async function buscarPorPerto(opcoes: {
         nota: p.rating ?? null,
         aberto_agora: p.currentOpeningHours?.openNow ?? null,
         aceita_caes: p.allowsDogs ?? null,
+        area_caes: (p.types ?? []).includes('dog_park'),
         distancia_km: distanciaKm(centro, lugar),
         fonte: 'google' as const,
       };
     })
     // A busca por texto só "prefere" o círculo; aqui fica só o que está dentro.
     .filter((l) => l.distancia_km <= raio / 1000)
-    .filter((l) => !opcoes.abertoAgora || l.aberto_agora !== false);
+    .filter((l) => !opcoes.abertoAgora || l.aberto_agora !== false)
+    // Pet friendly: fora o que o próprio Google diz que não aceita cães (5.19).
+    .filter((l) => !busca.petFriendly || l.aceita_caes !== false);
 
   return lugares.sort((a, b) => a.distancia_km - b.distancia_km);
 }
