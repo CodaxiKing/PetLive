@@ -12,12 +12,13 @@ import {
 } from 'react-native'
 import Svg, { Path } from 'react-native-svg'
 import { router, useFocusEffect, useLocalSearchParams } from 'expo-router'
-import { Surgir } from '../../../src/components/Animacoes'
+import { Surgir, Tocavel } from '../../../src/components/Animacoes'
 import { BotaoPrimario } from '../../../src/components/BotaoPrimario'
 import { Icone } from '../../../src/components/Icone'
 import { MarcaPata } from '../../../src/components/MarcaPata'
 import { Mascote } from '../../../src/components/Mascote'
 import { AbaCalendario } from '../../../src/pets/AbaCalendario'
+import { compartilharCarteirinha } from '../../../src/pets/carteirinha'
 import { usePets } from '../../../src/pets/PetsProvider'
 import { idadeEmAnos } from '../../../src/pets/types'
 import { carregarConsultas, type Consulta } from '../../../src/saude/consultas'
@@ -113,7 +114,7 @@ export default function PetDetalhe() {
   const pesoAtual = pesos.length ? pesos[pesos.length - 1].peso : petAtual.peso_atual
   const idade = idadeEmAnos(petAtual.nascimento)
 
-  function ir(pathname: '/pet/[id]/editar' | '/pet/[id]/medicamentos' | '/pet/[id]/peso' | '/pet/[id]/consultas' | '/pet/[id]/vacina/nova' | '/pet/[id]/consultas/nova') {
+  function ir(pathname: '/pet/[id]/carteirinha' | '/pet/[id]/editar' | '/pet/[id]/medicamentos' | '/pet/[id]/peso' | '/pet/[id]/consultas' | '/pet/[id]/vacina/nova' | '/pet/[id]/consultas/nova') {
     setMenuAberto(false)
     router.push({ pathname, params: { id: petAtual.id } })
   }
@@ -171,11 +172,8 @@ export default function PetDetalhe() {
               </Svg>
             </BotaoRedondo>
             <View style={estilos.topoDireita}>
-              <BotaoRedondo rotulo="Editar pet" onPress={() => ir('/pet/[id]/editar')}>
-                <Svg width={18} height={18} viewBox="0 0 24 24" fill="none" stroke={colors.black} strokeWidth={1.9} strokeLinecap="round" strokeLinejoin="round">
-                  <Path d="M4 20h4L19 9l-4-4L4 16z" />
-                  <Path d="M13.5 6.5l4 4" />
-                </Svg>
+              <BotaoRedondo rotulo={`Compartilhar a carteirinha de ${petAtual.nome}`} onPress={() => compartilharCarteirinha(petAtual, vacinas)}>
+                <Icone nome="compartilhar" size={19} />
               </BotaoRedondo>
               <BotaoRedondo rotulo="Mais opções" onPress={() => setMenuAberto(true)}>
                 <Text style={estilos.mais}>⋯</Text>
@@ -332,6 +330,28 @@ export default function PetDetalhe() {
             </View>
           ) : null}
           </Surgir>
+
+          {/* Atalhos do pet (protótipo Pet): remédios, carteirinha e compartilhar. */}
+          <View style={estilos.atalhos}>
+            {[
+              { rotulo: 'Medicamentos', icone: 'capsula' as const, fundo: '#FFF0C9', acao: () => ir('/pet/[id]/medicamentos') },
+              { rotulo: 'Carteirinha', icone: 'carteirinha' as const, fundo: '#EBDDFB', acao: () => ir('/pet/[id]/carteirinha') },
+              { rotulo: 'Compartilhar', icone: 'compartilhar' as const, fundo: '#E3F3FC', acao: () => compartilharCarteirinha(petAtual, vacinas) },
+            ].map((atalho) => (
+              <Tocavel
+                key={atalho.rotulo}
+                accessibilityRole="button"
+                onPress={atalho.acao}
+                estiloExterno={estilos.flex}
+                style={[estilos.atalho, { backgroundColor: atalho.fundo }]}
+              >
+                <Icone nome={atalho.icone} size={22} />
+                <Text style={estilos.atalhoTexto} numberOfLines={1}>
+                  {atalho.rotulo}
+                </Text>
+              </Tocavel>
+            ))}
+          </View>
         </View>
       </ScrollView>
 
@@ -347,6 +367,9 @@ export default function PetDetalhe() {
       <Modal visible={menuAberto} transparent animationType="fade" onRequestClose={() => setMenuAberto(false)}>
         <Pressable style={estilos.fundoModal} onPress={() => setMenuAberto(false)} accessibilityLabel="Fechar menu">
           <View style={estilos.folha}>
+            <Pressable accessibilityRole="button" onPress={() => ir('/pet/[id]/editar')} style={estilos.opcao}>
+              <Text style={estilos.opcaoTexto}>Editar {petAtual.nome}</Text>
+            </Pressable>
             <Pressable accessibilityRole="button" onPress={() => ir('/pet/[id]/medicamentos')} style={estilos.opcao}>
               <Text style={estilos.opcaoTexto}>Remédios e doses</Text>
             </Pressable>
@@ -386,6 +409,9 @@ export default function PetDetalhe() {
 const estilos = StyleSheet.create({
   tela: { flex: 1, backgroundColor: colors.surface },
   flex: { flex: 1, minWidth: 0 },
+  atalhos: { flexDirection: 'row', gap: 8, marginTop: 12 },
+  atalho: { height: 68, borderRadius: 24, alignItems: 'center', justifyContent: 'center', gap: 6, paddingHorizontal: 4 },
+  atalhoTexto: { fontFamily: fontFamily.bold, fontSize: 12, color: colors.black },
   conteudo: { paddingBottom: 24 },
   heroi: { height: 320, backgroundColor: colors.hero, overflow: 'hidden' },
   pata: { position: 'absolute', left: 30, top: 110 },
