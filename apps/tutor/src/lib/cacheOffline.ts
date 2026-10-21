@@ -130,9 +130,12 @@ export async function limparCacheOffline(): Promise<void> {
 /** Quando a escrita falha e a tela só sabe que não deu (provider devolve false). */
 export const AVISO_SEM_SALVAR = 'Confira a internet e tente de novo. Nada foi alterado.';
 
+/** A mensagem é de falta de rede (cada fetch descreve de um jeito). */
+export function ehErroDeRede(mensagem: string): boolean {
+  return /network request failed|failed to fetch|fetch failed|ConnectException|UnknownHost|TypeError/i.test(mensagem);
+}
+
 /** Erro de escrita para a tela: sem rede vira uma frase clara. */
 export function mensagemDeErro(mensagem: string): string {
-  return /network request failed|failed to fetch|fetch failed|ConnectException|UnknownHost|TypeError/i.test(mensagem)
-    ? 'Sem internet: não deu para salvar. Tente de novo quando a conexão voltar.'
-    : mensagem;
+  return ehErroDeRede(mensagem) ? 'Sem internet: não deu para salvar. Tente de novo quando a conexão voltar.' : mensagem;
 }

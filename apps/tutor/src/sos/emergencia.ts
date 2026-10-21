@@ -2,6 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Location from 'expo-location';
 import { comPrazo } from '../lib/prazo';
 import { buscarLugares, clinicaEmergenciaGoogle, type Lugar } from '../mapa/lugares';
+import { acharEndereco } from '../mapa/geocodificar';
 
 /** Raio da busca de emergência: maior que o do mapa, para não voltar vazio. */
 const RAIO_KM = 30;
@@ -111,12 +112,9 @@ export async function buscarClinicaEmergencia(origem?: {
 
 /** Bairro digitado -> ponto, pelo geocodificador do aparelho (precisa de rede). */
 export async function pontoDoBairro(bairro: string): Promise<{ lat: number; lng: number } | null> {
-  try {
-    const [ponto] = await Location.geocodeAsync(`${bairro.trim()}, Rio de Janeiro, Brasil`);
-    return ponto ? { lat: ponto.latitude, lng: ponto.longitude } : null;
-  } catch {
-    return null;
-  }
+  // Sem GPS o SOS pede o bairro; o geocodificador do Android exige a
+  // permissão de localização, por isso o acharEndereco tem o Nominatim de reserva.
+  return acharEndereco(`${bairro.trim()}, Rio de Janeiro`);
 }
 
 export async function carregarVeterinario(): Promise<MeuVeterinario | null> {

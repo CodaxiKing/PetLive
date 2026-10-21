@@ -8,6 +8,7 @@ import { HeroiOnda } from '../../src/components/HeroiOnda';
 import { Icone } from '../../src/components/Icone';
 import { MarcaPata } from '../../src/components/MarcaPata';
 import { AtribuicaoGoogle } from '../../src/mapa/AtribuicaoGoogle';
+import { acharEndereco } from '../../src/mapa/geocodificar';
 import { IlustracaoLugar } from '../../src/mapa/IlustracaoLugar';
 import {
   CENTRO_PADRAO,
@@ -98,18 +99,19 @@ export default function TelaPetFriendly() {
       .catch(() => undefined);
   }, [posicao]);
 
-  async function buscarRegiao() {
-    const termo = texto.trim();
+  // O texto vem do próprio envio: o estado do campo pode ainda não ter chegado.
+  async function buscarRegiao(enviado: string = texto) {
+    const termo = enviado.trim();
     if (!termo) return;
     setCarregando(true);
     try {
-      const [ponto] = await Location.geocodeAsync(`${termo}, ${cidade ?? 'Brasil'}`);
+      const ponto = await acharEndereco(cidade ? `${termo}, ${cidade}` : termo, posicao);
       if (!ponto) {
         setErro(`Não encontramos "${termo}". Tente outro bairro.`);
         setCarregando(false);
         return;
       }
-      setRegiao({ nome: termo, lat: ponto.latitude, lng: ponto.longitude });
+      setRegiao({ nome: termo, ...ponto });
     } catch {
       setErro('Não deu para achar essa região agora.');
       setCarregando(false);
@@ -137,7 +139,7 @@ export default function TelaPetFriendly() {
           <TextInput
             value={texto}
             onChangeText={setTexto}
-            onSubmitEditing={buscarRegiao}
+            onSubmitEditing={(e) => buscarRegiao(e.nativeEvent.text)}
             placeholder="Buscar por bairro ou região"
             placeholderTextColor="#6A7484"
             returnKeyType="search"

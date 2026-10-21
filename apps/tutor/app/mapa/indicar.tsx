@@ -9,6 +9,7 @@ import { HeroiOnda } from '../../src/components/HeroiOnda';
 import { Icone } from '../../src/components/Icone';
 import { MarcaPata } from '../../src/components/MarcaPata';
 import { mensagemDeErro } from '../../src/lib/cacheOffline';
+import { acharEndereco } from '../../src/mapa/geocodificar';
 import { IlustracaoLugar } from '../../src/mapa/IlustracaoLugar';
 import {
   indicarLugar,
@@ -92,9 +93,8 @@ export default function IndicarLugar() {
     try {
       let ponto = usarPosicao && posicao ? posicao : null;
       if (!ponto) {
-        const [achado] = await Location.geocodeAsync(`${endereco.trim()}, Brasil`);
-        if (!achado) throw new Error('Não achamos esse endereço. Confira e tente de novo.');
-        ponto = { lat: achado.latitude, lng: achado.longitude };
+        ponto = await acharEndereco(endereco, posicao);
+        if (!ponto) throw new Error('Não achamos esse endereço. Confira e tente de novo.');
       }
       await indicarLugar({
         nome: nome.trim(),

@@ -1,20 +1,26 @@
 import { useEffect, useRef, useState } from 'react';
 import {
   ActivityIndicator,
+  Alert,
   Linking,
   Pressable,
   ScrollView,
   StyleSheet,
   Text,
   TextInput,
+  type TextInputInstance,
   View,
 } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as Location from 'expo-location';
 import Svg, { Path } from 'react-native-svg';
-import { BotaoPrimario } from '../../src/components/BotaoPrimario';
 import { ligarPara } from '../../src/mapa/acoes';
 import { Deslizar } from '../../src/components/Animacoes';
 import { Icone } from '../../src/components/Icone';
+import { ehErroDeRede } from '../../src/lib/cacheOffline';
+import { acharEndereco } from '../../src/mapa/geocodificar';
+import { AcaoEstado, CartaoEstadoMapa } from '../../src/mapa/CartaoEstadoMapa';
 import { lugaresSalvos } from '../../src/mapa/favoritos';
 import { FolhaRota } from '../../src/mapa/FolhaRota';
 import { IlustracaoLugar } from '../../src/mapa/IlustracaoLugar';
@@ -51,6 +57,38 @@ const FILTROS: { valor: Filtro; rotulo: string }[] = [
 
 const FILTROS_DE_ATALHO: Filtro[] = [...FILTROS.map((f) => f.valor), 'pet_friendly'];
 
+/** Para o cartão "Nada por perto": "Não achamos creches perto de você." */
+const NOME_NO_PLURAL: Record<Filtro, string> = {
+  todos: 'lugares pet',
+  clinica: 'clínicas',
+  petshop: 'petshops',
+  banho_tosa: 'lugares de banho e tosa',
+  creche: 'creches',
+  hotelzinho: 'hotelzinhos',
+  '24h': 'clínicas abertas 24 h',
+  salvos: 'lugares salvos',
+  pet_friendly: 'lugares pet friendly',
+  parque: 'parques',
+  praia: 'praias',
+  restaurante: 'restaurantes',
+  hotel: 'hotéis',
+};
+
+/** Raio do mapa (protótipo: "em 3 km"); o cartão sem resultados oferece 10 km. */
+const RAIO_PADRAO_KM = 3;
+const RAIO_AMPLO_KM = 10;
+
+/** Últimos lugares vistos, para o mapa sem internet (BUSINESS.md 5.43). */
+const ULTIMOS_VISTOS = 'petlive-cache:mapa-ultimos';
+
+/** "hoje", "ontem" ou "há 3 dias". */
+function haQuanto(data: Date): string {
+  const dias = Math.floor((Date.now() - data.getTime()) / 86_400_000);
+  if (dias <= 0) return 'hoje';
+  if (dias === 1) return 'ontem';
+  return `há ${dias} dias`;
+}
+
 /**
  * Mapa (board: [APP-CLIENTE] Mapa, P1): MapLibre com tiles gratuitos,
  * permissão de localização, busca e filtros, pins por categoria e o
@@ -72,12 +110,20 @@ export default function Mapa() {
   const [carregando, setCarregando] = useState(true);
   const [selecionado, setSelecionado] = useState<Lugar | null>(null);
   const [rotaAberta, setRotaAberta] = useState(false);
+  const [raioKm, setRaioKm] = useState(RAIO_PADRAO_KM);
+  // Sem internet: mostra os últimos lugares vistos e quando foram atualizados.
+  const [semRede, setSemRede] = useState<{ desde: Date | null } | null>(null);
+  const [tentativa, setTentativa] = useState(0);
+  // Busca por bairro (sem GPS): o campo passa a mover o mapa até a região.
+  const [modoRegiao, setModoRegiao] = useState(false);
+  const [regiao, setRegiao] = useState<{ lat: number; lng: number } | null>(null);
+  const campoBusca = useRef<TextInputInstance>(null);
   const mapaRef = useRef<ControleMapa>(null);
   // O toque no pin também chega ao mapa logo depois; sem isto o cartão
   // do lugar abria e fechava no mesmo toque.
   const tocouPin = useRef(false);
 
-  const centro = posicao ?? CENTRO_PADRAO;
+  const centro = regiao ?? posicao ?? CENTRO_PADRAO;
   const so24h = categoria === '24h';
 
   // Consulta por perto muda com a posição, o filtro e a busca.
@@ -94,21 +140,36 @@ export default function Mapa() {
               categoria: so24h || categoria === 'todos' ? null : categoria,
               busca: buscaAtiva,
               aberto24h: so24h ? true : null,
+              raioKm,
             });
     consulta
       .then((lista) => {
         if (!vivo) return;
         setLugares(lista);
         setSelecionado(null);
+        setSemRede(null);
         setCarregando(false);
+        if (lista.length > 0) {
+          AsyncStorage.setItem(ULTIMOS_VISTOS, JSON.stringify({ quando: new Date().toISOString(), lugares: lista })).catch(
+            () => undefined,
+          );
+        }
       })
-      .catch(() => {
-        if (vivo) setCarregando(false);
+      .catch(async (e: Error) => {
+        if (!vivo) return;
+        if (ehErroDeRede(e.message)) {
+          const guardado = await AsyncStorage.getItem(ULTIMOS_VISTOS).catch(() => null);
+          const ultimos = guardado ? (JSON.parse(guardado) as { quando: string; lugares: Lugar[] }) : null;
+          if (!vivo) return;
+          setLugares(ultimos?.lugares ?? []);
+          setSemRede({ desde: ultimos ? new Date(ultimos.quando) : null });
+        }
+        setCarregando(false);
       });
     return () => {
       vivo = false;
     };
-  }, [centro.lat, centro.lng, categoria, buscaAtiva, so24h]);
+  }, [centro.lat, centro.lng, categoria, buscaAtiva, so24h, raioKm, tentativa]);
 
   // Chegou a localização real: centraliza o mapa nela.
   useEffect(() => {
@@ -123,9 +184,45 @@ export default function Mapa() {
     setCarregando(true);
   }
 
-  function aplicarBusca() {
-    setBuscaAtiva(busca.trim());
+  // O texto vem do próprio envio: o estado do campo pode ainda não ter chegado.
+  async function aplicarBusca(enviado: string = busca) {
+    if (modoRegiao) {
+      // Bairro ou região: o mapa vai até lá e a busca por perto usa esse ponto.
+      const texto = enviado.trim();
+      if (!texto) return;
+      const ponto = await acharEndereco(texto, centro);
+      if (!ponto) {
+        Alert.alert('Não achamos esse lugar', `Confira "${texto}" ou tente o nome do bairro e da cidade.`);
+        return;
+      }
+      setRegiao(ponto);
+      mapaRef.current?.irPara(ponto, 14, 600);
+      setModoRegiao(false);
+      setBusca('');
+      setCarregando(true);
+      return;
+    }
+    setBuscaAtiva(enviado.trim());
     setSelecionado(null);
+    setCarregando(true);
+  }
+
+  function buscarPorRegiao() {
+    setModoRegiao(true);
+    setBusca('');
+    campoBusca.current?.focus();
+  }
+
+  async function permitirLocalizacao() {
+    const { canAskAgain } = await Location.getForegroundPermissionsAsync();
+    if (canAskAgain) localizar();
+    else Linking.openSettings().catch(() => undefined);
+  }
+
+  function limparFiltros() {
+    setCategoriaManual('todos');
+    setBusca('');
+    setBuscaAtiva('');
     setCarregando(true);
   }
 
@@ -147,6 +244,8 @@ export default function Mapa() {
   }
 
   const lugar = selecionado;
+  // Algum cartão de estado (sem internet, sem localização, sem resultados) na tela.
+  const comEstado = !lugar && (Boolean(semRede) || (permissao === 'negada' && !regiao) || (!carregando && lugares.length === 0));
 
   return (
     <View style={estilos.tela}>
@@ -198,11 +297,12 @@ export default function Mapa() {
           </Svg>
           <TextInput
             style={estilos.buscaEntrada}
-            placeholder="Buscar lugares pet"
+            ref={campoBusca}
+            placeholder={modoRegiao ? 'Bairro ou região' : 'Buscar lugares pet'}
             placeholderTextColor={colors.textMuted}
             value={busca}
             onChangeText={setBusca}
-            onSubmitEditing={aplicarBusca}
+            onSubmitEditing={(e) => aplicarBusca(e.nativeEvent.text)}
             returnKeyType="search"
             autoCapitalize="none"
             autoCorrect={false}
@@ -255,26 +355,6 @@ export default function Mapa() {
         </ScrollView>
       </View>
 
-      {/* Localização negada: explica e leva às configurações do aparelho. */}
-      {permissao === 'negada' && (
-        <View style={estilos.permissaoCartao}>
-          <Text style={estilos.permissaoTitulo}>Sua localização está desligada</Text>
-          <Text style={estilos.permissaoTexto}>
-            Ative para ver clínicas, petshops e banho e tosa perto de você. Enquanto isso, o mapa
-            mostra o Rio de Janeiro.
-          </Text>
-          <BotaoPrimario
-            titulo="Abrir configurações"
-            onPress={() => {
-              Linking.openSettings().catch(() => undefined);
-            }}
-          />
-          <Pressable onPress={localizar} hitSlop={8} accessibilityRole="button">
-            <Text style={estilos.permissaoRepetir}>Tentar de novo</Text>
-          </Pressable>
-        </View>
-      )}
-
       {carregando && (
         <ActivityIndicator
           style={estilos.indicador}
@@ -284,21 +364,93 @@ export default function Mapa() {
         />
       )}
 
-      {!carregando && lugares.length === 0 && (
-        <View style={estilos.vazio} pointerEvents="none">
-          <Text style={estilos.vazioTitulo}>
-            {categoria === 'salvos' ? 'Nenhum lugar salvo' : 'Nenhum lugar por perto'}
-          </Text>
-          <Text style={estilos.vazioTexto}>
-            {categoria === 'salvos'
-              ? 'Toque no coração na ficha de um lugar para salvar.'
-              : 'Tente outro filtro ou uma busca diferente.'}
-          </Text>
+      {/* Estados do mapa (BUSINESS.md 5.43): sem internet, sem localização, sem resultados. */}
+      {semRede ? (
+        <View style={estilos.faixaSemRede} pointerEvents="none">
+          <Icone nome="semRede" size={18} cor={colors.warningText} espessura={2} />
+          <Text style={estilos.faixaSemRedeTexto}>Sem internet. Mostrando os últimos lugares vistos.</Text>
         </View>
-      )}
+      ) : null}
+
+      {!lugar && !carregando && semRede ? (
+        <CartaoEstadoMapa
+          icone="semRede"
+          fundoIcone={colors.warningSurface}
+          titulo="Você está sem internet"
+          sub={semRede.desde ? `Atualizado ${haQuanto(semRede.desde)}` : 'Nenhum lugar guardado ainda'}
+          texto="Os lugares salvos continuam na lista, mas telefone, horário e fotos podem estar desatualizados. A busca e a rota precisam de internet."
+        >
+          <Pressable
+            accessibilityRole="button"
+            onPress={() => router.push('/sos/primeiros-socorros')}
+            style={({ pressed }) => [estilos.atalhoSos, pressed && { opacity: 0.7 }]}
+          >
+            <View style={estilos.atalhoSosIcone}>
+              <Icone nome="cruz" size={20} cor="#B3173A" espessura={2.2} />
+            </View>
+            <View>
+              <Text style={estilos.atalhoSosTitulo}>Primeiros socorros</Text>
+              <Text style={estilos.atalhoSosSub}>Funciona sem internet</Text>
+            </View>
+          </Pressable>
+          <AcaoEstado
+            rotulo="Tentar de novo"
+            onPress={() => {
+              setCarregando(true);
+              setTentativa((t) => t + 1);
+            }}
+          />
+        </CartaoEstadoMapa>
+      ) : !lugar && permissao === 'negada' && !regiao ? (
+        <CartaoEstadoMapa
+          icone="local"
+          fundoIcone={colors.primarySurface}
+          titulo="Ative a localização"
+          sub="Para mostrar o que há por perto"
+          texto="O PetLive usa a sua posição só enquanto o mapa está aberto, para achar clínicas, petshops e lugares pet friendly perto de você."
+        >
+          <AcaoEstado rotulo="Permitir localização" onPress={permitirLocalizacao} />
+          <AcaoEstado rotulo="Buscar por bairro ou região" tipo="secundaria" onPress={buscarPorRegiao} />
+          <AcaoEstado rotulo="Emergência? Abrir o SOS" tipo="link" cor="#B3173A" onPress={() => router.push('/sos')} />
+        </CartaoEstadoMapa>
+      ) : !lugar && !carregando && lugares.length === 0 ? (
+        categoria === 'salvos' ? (
+          <CartaoEstadoMapa
+            icone="coracao"
+            fundoIcone={colors.premiumSurface}
+            titulo="Nenhum lugar salvo"
+            sub="Seus favoritos aparecem aqui"
+            texto="Toque no coração na ficha de um lugar para salvar."
+          >
+            <AcaoEstado rotulo="Ver lugares por perto" onPress={limparFiltros} />
+          </CartaoEstadoMapa>
+        ) : (
+          <CartaoEstadoMapa
+            icone="lupaMenos"
+            fundoIcone={colors.premiumSurface}
+            titulo="Nada por perto"
+            sub={`Com estes filtros, em ${raioKm} km`}
+            texto={`Não achamos ${NOME_NO_PLURAL[categoria]}${buscaAtiva ? ` com "${buscaAtiva}"` : ''} perto de você. Tente um destes caminhos.`}
+          >
+            {raioKm < RAIO_AMPLO_KM ? (
+              <AcaoEstado
+                rotulo={`Aumentar a busca para ${RAIO_AMPLO_KM} km`}
+                onPress={() => {
+                  setCarregando(true);
+                  setRaioKm(RAIO_AMPLO_KM);
+                }}
+              />
+            ) : null}
+            {categoria !== 'todos' || buscaAtiva ? (
+              <AcaoEstado rotulo="Limpar os filtros" tipo={raioKm < RAIO_AMPLO_KM ? 'secundaria' : 'principal'} onPress={limparFiltros} />
+            ) : null}
+            <AcaoEstado rotulo="Ver lugares pet friendly por perto" tipo="link" onPress={() => router.push('/mapa/pet-friendly')} />
+          </CartaoEstadoMapa>
+        )
+      ) : null}
 
       {/* Botão "meu local" (some enquanto o card do lugar está aberto). */}
-      {!lugar && (
+      {!lugar && !comEstado && (
         <Pressable
           style={estilos.fab}
           onPress={meuLocal}
@@ -517,6 +669,32 @@ const estilos = StyleSheet.create({
   pilulaTextoAtiva: {
     color: colors.white,
   },
+  faixaSemRede: {
+    position: 'absolute',
+    top: 168,
+    left: spacing.xxl,
+    right: spacing.xxl,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    backgroundColor: colors.warningSurface,
+    borderRadius: 18,
+    paddingVertical: 10,
+    paddingHorizontal: 14,
+    ...shadow.card,
+  },
+  faixaSemRedeTexto: { flex: 1, fontFamily: fontFamily.bold, fontSize: 13, color: colors.warningText },
+  atalhoSos: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    backgroundColor: '#FBDADF',
+    borderRadius: 22,
+    padding: 10,
+  },
+  atalhoSosIcone: { width: 44, height: 44, borderRadius: 22, backgroundColor: colors.white, alignItems: 'center', justifyContent: 'center' },
+  atalhoSosTitulo: { fontFamily: fontFamily.bold, fontSize: 15, color: colors.black },
+  atalhoSosSub: { fontFamily: fontFamily.regular, fontSize: 12, color: '#A3324F' },
   permissaoCartao: {
     position: 'absolute',
     top: 190,
