@@ -8,6 +8,7 @@ import { Icone, type NomeIcone } from '../../src/components/Icone';
 import { MarcaPata } from '../../src/components/MarcaPata';
 import { Mascote } from '../../src/components/Mascote';
 import { limparCacheOffline } from '../../src/lib/cacheOffline';
+import { usePlano } from '../../src/lib/plano';
 import { mascaraTelefone } from '../../src/lib/mascaras';
 import { supabase } from '../../src/lib/supabase';
 import { useLembretes } from '../../src/lembretes/LembretesProvider';
@@ -33,6 +34,7 @@ export default function Perfil() {
   const router = useRouter();
   const { user } = useAuth();
   const { pets, definirPetAtivo, adicionarPet } = usePets();
+  const plano = usePlano();
 
   const [nome, setNome] = useState<string | null>(null);
   const [telefone, setTelefone] = useState<string | null>(null);
@@ -208,19 +210,19 @@ export default function Perfil() {
 
           <Tocavel
             accessibilityRole="button"
-            accessibilityLabel="Plano Grátis. Conhecer o Premium"
-            onPress={() =>
-              Alert.alert('Premium', 'O Premium chega na próxima fase do PetLive. Avisaremos você por aqui.')
-            }
+            accessibilityLabel={plano === 'premium' ? 'Plano Premium. Minha assinatura' : 'Plano Grátis. Conhecer o Premium'}
+            onPress={() => router.push(plano === 'premium' ? '/premium/assinatura' : '/premium')}
             escala={0.98}
             style={estilos.premium}
           >
             <View style={estilos.flex1}>
-              <Text style={estilos.premiumSelo}>Plano Grátis</Text>
-              <Text style={estilos.premiumTitulo}>Mais pets, PDF e QR da coleira</Text>
+              <Text style={estilos.premiumSelo}>{plano === 'premium' ? 'Plano Premium' : 'Plano Grátis'}</Text>
+              <Text style={estilos.premiumTitulo}>
+                {plano === 'premium' ? 'Vários pets, PDF e QR da coleira' : 'Mais pets, PDF e QR da coleira'}
+              </Text>
             </View>
             <View style={estilos.premiumBotao}>
-              <Text style={estilos.premiumBotaoTexto}>Premium</Text>
+              <Text style={estilos.premiumBotaoTexto}>{plano === 'premium' ? 'Assinatura' : 'Premium'}</Text>
             </View>
           </Tocavel>
 
