@@ -1,0 +1,55 @@
+# QA: anexos de saúde (P-B7CbI)
+
+Roteiro manual para o critério 13. Faça uma vez no **Android** e outra no **iOS**, com um development build (`pnpm tutor:android` / `pnpm tutor:ios`) ou um build do EAS, sempre contra o Supabase local com o seed (`demo@petlive.dev` / `petlive123`). Em cada plataforma, marque cada passo e anexe ao PR um print ou vídeo curto dos passos 3, 6 e 8.
+
+## Verificação automática (critérios A e C), sem shell
+
+Em cada push na branch, com ou sem PR aberto, e em cada atualização do PR, o workflow **verify** do GitHub Actions sobe o Supabase local (`supabase start`) e roda `pnpm verify:supabase`. Isso inclui install com lockfile congelado, typecheck, testes e o `supabase/tests/testar-anexos.mjs`, que testa o bucket e por isso nunca sai como PULADO nesse modo. O resultado aparece em três lugares:
+
+1. **Comentário no PR** "pnpm verify:supabase: ✅ passou / ❌ falhou". Existe um só comentário, atualizado a cada push, com o commit verificado e a saída completa em "Saída completa".
+2. **Resumo do run**, na aba Actions › verify › Summary.
+3. **Artefato** `verify-saida`.
+4. **Arquivo `docs/qa/verify-saida.txt` na própria branch**, para quem só lê o repositório (ver abaixo).
+
+Para aprovar, o commit do comentário precisa ser o último commit de código do PR. O workflow faz o checkout do próprio commit do PR, e não do merge com a main, então o hash da primeira linha da saída é o mesmo da lista de commits do PR.
+
+**Sem shell e sem acesso ao PR:** depois de cada run, o workflow faz um commit do `github-actions[bot]` na branch (também quando o PR ainda não foi aberto), com a mensagem `docs(qa): saída do pnpm verify:supabase em <commit>` e só o arquivo `docs/qa/verify-saida.txt`. Para conferir:
+
+- O último commit da branch é esse commit do bot, e o anterior a ele é o commit citado na mensagem. Se vier algum commit de código depois do commit do bot, a saída está velha e é preciso esperar o próximo run.
+- A primeira linha do arquivo traz o mesmo commit (`PetLive verify — … — commit <hash> — …`).
+- A última linha é `Tudo certo: install, typecheck, testes e testes do Supabase passaram.` Nunca aparece `PULADO`, porque o `:supabase` torna o teste do bucket obrigatório.
+
+Se o arquivo ainda não existir na branch, o workflow não rodou depois do último push. Nesse caso é bloqueio de ambiente, e não reprovação.
+
+Quem tiver shell também pode gerar o arquivo localmente (`supabase start` e depois `pnpm verify:supabase`) e versionar. O commit do bot substitui esse arquivo no run seguinte. Quem empurra para a branch precisa dar `git pull` antes, por causa do commit do bot. Já o `pnpm verify` sem `:supabase` pula o teste do bucket quando o Supabase local está fora do ar, então **não** serve para comprovar o critério C.
+
+## Situação do critério 13 (Android e iOS)
+
+Pendente: o roteiro abaixo precisa ser feito num aparelho Android e num iPhone, ou em emuladores com development build. Não dá para fazer isso numa sessão sem aparelho. Quem rodar marca ✅ ou ❌ em cada coluna, com a data, o modelo do aparelho e a versão do sistema, e anexa no PR os prints ou vídeos dos passos 3, 6 e 8.
+
+## Decisões sobre os critérios
+
+Caminho dos arquivos (critério 5): o caminho completo no Storage é `anexos/{uid}/anexos/{pet}/{arquivo}`, ou seja, bucket `anexos`, primeira pasta `{uid}`, depois a área `anexos` e a pasta do pet. Esse caminho começa com `anexos/{uid}/`, como o critério pede, e fica ligado ao pet pela pasta e pela coluna `pet_id`. A área intermediária `anexos/` existe porque o mesmo bucket guarda `{uid}/despesas/` e `{uid}/marcos/`. A RLS e o `lgpd-delete` usam o `{uid}` do primeiro segmento. O código, as policies, a limpeza de órfãos e o `testar-anexos.mjs` seguem esse padrão.
+
+Progresso do envio (critério 6): durante o envio aparecem uma barra e o texto "Enviando a foto… NN%", com o percentual real de bytes enviados (`src/saude/envioComProgresso.ts`, coberto por `envioComProgresso.test.ts`). Quando a foto termina de subir, o texto muda para "Salvando o anexo…" enquanto o registro é criado. O botão Salvar fica desativado o tempo todo.
+
+## Roteiro no aparelho
+
+Restrição de tipo no bucket inteiro (critério C): o bucket `anexos` também guarda os recibos de despesas (`{uid}/despesas/...`) e as fotos da linha do tempo (`{uid}/marcos/...`). Esses envios usam a mesma regra (`mimeAceito`): HEIC/HEIF do iPhone sobe como `image/heic`, e WebP, GIF ou outro formato é recusado no app, antes do envio, com a mensagem "Só dá para enviar fotos em JPG, PNG ou HEIC." Ou seja, o storage nunca chega a devolver erro. O app não converte para JPEG, porque isso exigiria uma dependência nativa nova (`expo-image-manipulator`) e um novo development build. O `src/__testes__/fotosBucketAnexos.test.ts` cobre esse comportamento, e o passo 14 confere no aparelho.
+
+| # | Passo | Esperado | Android | iOS |
+| --- | --- | --- | --- | --- |
+| 1 | Pet › Saúde › Anexos sem nenhum anexo | Estado vazio com o botão para anexar o primeiro | | |
+| 2 | Anexar › Câmera (primeiro uso) | O app pede permissão da câmera | | |
+| 3 | Negar a permissão | Mensagem com o motivo e atalho para as Configurações; o app não trava | | |
+| 4 | Anexar › Galeria | O app pede permissão da galeria (no iOS 14+, também com acesso limitado) e abre o seletor | | |
+| 5 | Escolher uma foto | Prévia com Confirmar e Trocar foto; tipo Cartão de vacina ou Exame; data de hoje em DD/MM/AAAA | | |
+| 6 | Salvar | Barra com "Enviando a foto… NN%" subindo até "Salvando o anexo…" e botão Salvar desativado; o anexo aparece no topo da lista | | |
+| 7 | Modo avião › Salvar | Erro com "Tentar novamente"; nenhum anexo pela metade na lista | | |
+| 8 | Tocar no anexo | Tela cheia com zoom de pinça | | |
+| 9 | Filtro por tipo | Mostra só o tipo escolhido, do mais recente para o mais antigo | | |
+| 10 | Editar título, tipo e data | As alterações aparecem na lista | | |
+| 11 | Excluir e confirmar | Some da lista; no Studio, o arquivo some de `anexos/{uid}/anexos/{pet}` | | |
+| 12 | Foto HEIC do iPhone / foto grande (> 10 MB) | HEIC entra; a foto grande é comprimida ou recusada com uma mensagem clara | | |
+| 13 | Carteirinha pública do pet | Nenhum anexo aparece | | |
+| 14 | Despesa com recibo e marco da linha do tempo com foto (JPG e HEIC; no Android, também uma imagem WebP baixada) | JPG e HEIC salvam e abrem; o WebP é recusado com "Só dá para enviar fotos em JPG, PNG ou HEIC." e nada é salvo pela metade | | |

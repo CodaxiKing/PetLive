@@ -88,6 +88,16 @@ npx supabase functions serve --env-file <esse .env>
 node supabase/tests/testar-lugares.mjs <ANON_KEY>
 ```
 
+## Storage: bucket `anexos`
+
+Privado, só aceita `image/jpeg`, `image/png`, `image/heic` e `image/heif`
+até 10 MB (regra no próprio bucket). Para conferir pela API, com a pilha local
+no ar:
+
+```powershell
+node supabase/tests/testar-anexos.mjs <ANON_KEY>
+```
+
 ## Auth: redirecionamentos do app
 
 O app usa `petlive://auth/callback` (login com Google) e `petlive://auth/nova-senha`

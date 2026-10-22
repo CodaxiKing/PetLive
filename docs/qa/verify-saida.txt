@@ -1,0 +1,19 @@
+PetLive verify — 2026-10-22T18:48:58.065Z — commit 76edbe7 — node v22.23.3 — linux
+
+=== Instalar (lockfile congelado): pnpm install --frozen-lockfile
+Scope: all 3 workspace projects
+Already up to date
+Done in 391ms using pnpm v11.5.2
+
+=== Typecheck: pnpm -r typecheck
+Scope: 2 of 3 workspace projects
+apps/tutor typecheck$ tsc --noEmit
+apps/tutor typecheck: src/__testes__/anexosLimpeza.test.ts(56,46): error TS2345: Argument of type '{ arquivo_path: string; }[] | { id: string; }[]' is not assignable to parameter of type '{ arquivo_path: string; }[]'.
+apps/tutor typecheck:   Type '{ id: string; }[]' is not assignable to type '{ arquivo_path: string; }[]'.
+apps/tutor typecheck:     Property 'arquivo_path' is missing in type '{ id: string; }' but required in type '{ arquivo_path: string; }'.
+apps/tutor typecheck: Failed
+/home/runner/work/PetLive/PetLive/apps/tutor:
+[ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL] petlive-tutor@0.1.0 typecheck: `tsc --noEmit`
+Exit status 2
+
+FALHA em "Typecheck" (código 2).
