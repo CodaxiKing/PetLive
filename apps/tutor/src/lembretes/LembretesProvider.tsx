@@ -12,6 +12,7 @@ import { registrarEvento } from '../lib/eventos'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../auth/AuthProvider'
 import { agendarUmLembrete, cancelarLembrete } from '../notificacoes/sincronizarLembretes'
+import { conviteSeRecusado } from '../pets/convitePremium'
 import type { Lembrete, LembreteForm } from './types'
 import { LEMBRETE_FORM_VAZIO, formParaRegistro, proximaOcorrencia } from './types'
 
@@ -21,8 +22,12 @@ interface LembretesContextValue {
   salvando: boolean
   erro: string | null
   criarLembrete: (form: LembreteForm) => Promise<Lembrete | null>
-  concluirLembrete: (lembrete: Lembrete) => Promise<boolean>
-  removerLembrete: (id: string) => Promise<boolean>
+  /**
+   * false: não deu para salvar. null: o pet está só para consulta, o
+   * servidor recusou (PT402) e o convite Premium já abriu.
+   */
+  concluirLembrete: (lembrete: Lembrete) => Promise<boolean | null>
+  removerLembrete: (lembrete: Lembrete) => Promise<boolean | null>
   recarregar: () => Promise<void>
   FORM_VAZIO: LembreteForm
 }
@@ -79,7 +84,8 @@ export function LembretesProvider({ children }: { children: ReactNode }) {
       ).then(({ data, error }) => {
         setSalvando(false)
         if (error) {
-          setErro(mensagemDeErro(error.message))
+          // Pet só para consulta: o convite Premium no lugar do erro genérico.
+          if (!conviteSeRecusado(error, form.pet_id)) setErro(mensagemDeErro(error.message))
           return null
         }
         const lembrete = data as Lembrete
@@ -119,6 +125,7 @@ export function LembretesProvider({ children }: { children: ReactNode }) {
     return Promise.resolve(atualizacao).then(({ error }) => {
       setSalvando(false)
       if (error) {
+        if (conviteSeRecusado(error, lembrete.pet_id)) return null
         setErro(mensagemDeErro(error.message))
         return false
       }
@@ -143,18 +150,19 @@ export function LembretesProvider({ children }: { children: ReactNode }) {
     })
   }, [])
 
-  const removerLembrete = useCallback((id: string) => {
+  const removerLembrete = useCallback((lembrete: Lembrete) => {
     setSalvando(true)
     setErro(null)
 
-    return Promise.resolve(supabase.from('reminders').delete().eq('id', id)).then(({ error }) => {
+    return Promise.resolve(supabase.from('reminders').delete().eq('id', lembrete.id)).then(({ error }) => {
       setSalvando(false)
       if (error) {
+        if (conviteSeRecusado(error, lembrete.pet_id)) return null
         setErro(mensagemDeErro(error.message))
         return false
       }
-      setLembretes((atual) => atual.filter((l) => l.id !== id))
-      cancelarLembrete(id).catch(() => {})
+      setLembretes((atual) => atual.filter((l) => l.id !== lembrete.id))
+      cancelarLembrete(lembrete.id).catch(() => {})
       return true
     })
   }, [])

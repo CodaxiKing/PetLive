@@ -20,6 +20,7 @@ import {
 } from '../../src/despesas/despesas'
 import { mensagemDeErro } from '../../src/lib/cacheOffline'
 import { escolherFoto, type AtivoFoto } from '../../src/pets/CampoFoto'
+import { conviteSeRecusado } from '../../src/pets/convitePremium'
 import { usePets } from '../../src/pets/PetsProvider'
 import { dataParaExibicao, dataParaIso, hojeComoCampo } from '../../src/saude/types'
 import { colors } from '../../src/theme/colors'
@@ -37,7 +38,7 @@ function centavosDe(texto: string): number {
 export default function TelaNovaDespesa() {
   const { id } = useLocalSearchParams<{ id?: string }>()
   const { user } = useAuth()
-  const { pets, petAtivo } = usePets()
+  const { pets, petAtivo, editarPet } = usePets()
   const [categoria, setCategoria] = useState<Categoria>('racao')
   const [centavos, setCentavos] = useState(0)
   const [data, setData] = useState(hojeComoCampo())
@@ -77,7 +78,19 @@ export default function TelaNovaDespesa() {
     ])
   }
 
-  async function salvar() {
+  // Despesa de pet só para consulta (a escolhida ou a que já estava gravada):
+  // salvar e apagar abrem o convite Premium.
+  function doPetEditavel(acao: () => void) {
+    const travado = [petId, original?.pet_id].find((p) => p && pets.find((x) => x.id === p)?.somente_leitura)
+    if (travado) editarPet(travado, acao)
+    else acao()
+  }
+
+  function salvar() {
+    doPetEditavel(gravar)
+  }
+
+  async function gravar() {
     if (!user) return
     const dataIso = dataParaIso(data)
     if (!dataIso) {
@@ -102,20 +115,28 @@ export default function TelaNovaDespesa() {
       })
       router.back()
     } catch (e) {
-      Alert.alert('Não deu para salvar', mensagemDeErro(e instanceof Error ? e.message : String(e)))
+      if (!conviteSeRecusado(e, petId)) Alert.alert('Não deu para salvar', mensagemDeErro(e instanceof Error ? e.message : String(e)))
     } finally {
       setSalvando(false)
     }
   }
 
   function apagar() {
+    doPetEditavel(confirmarApagar)
+  }
+
+  function confirmarApagar() {
     if (!original) return
     Alert.alert('Apagar esta despesa?', `${reais(original.valor_centavos)} em ${dataParaExibicao(original.data)}.`, [
       { text: 'Manter', style: 'cancel' },
       {
         text: 'Apagar',
         style: 'destructive',
-        onPress: () => apagarDespesa(original).then(() => router.back(), (e) => Alert.alert('Não deu para apagar', String(e))),
+        onPress: () =>
+          apagarDespesa(original).then(
+            () => router.back(),
+            (e) => conviteSeRecusado(e, original.pet_id) || Alert.alert('Não deu para apagar', String(e)),
+          ),
       },
     ])
   }
@@ -172,7 +193,7 @@ export default function TelaNovaDespesa() {
               </Tocavel>
             ) : null}
             {pets.map((p) => (
-              <Tocavel key={p.id} accessibilityRole="radio" accessibilityState={{ selected: petId === p.id }} onPress={() => setPetId(p.id)} style={[estilos.chipPet, petId === p.id && estilos.chipPetAtivo]}>
+              <Tocavel key={p.id} accessibilityRole="radio" accessibilityState={{ selected: petId === p.id }} onPress={() => editarPet(p.id, () => setPetId(p.id))} style={[estilos.chipPet, petId === p.id && estilos.chipPetAtivo]}>
                 <Text style={[estilos.chipTexto, petId === p.id && estilos.chipTextoAtivo]}>{p.nome}</Text>
               </Tocavel>
             ))}

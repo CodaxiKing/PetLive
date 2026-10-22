@@ -21,7 +21,15 @@ export function reativaSomenteLeitura(plano: Plano, ativos: number): boolean {
 }
 
 /** Recusa do servidor por causa do plano (SQLSTATE PT402, HTTP 402). */
-export function motivoPremiumDoErro(erro: { code?: string; hint?: string | null } | null | undefined): MotivoPremium | null {
-  if (erro?.code !== 'PT402') return null
-  return erro.hint === 'limite_pets' ? 'limite_pets' : 'somente_leitura'
+export function motivoPremiumDoErro(erro: unknown): MotivoPremium | null {
+  if (!erro || typeof erro !== 'object' || (erro as { code?: unknown }).code !== 'PT402') return null
+  return (erro as { hint?: unknown }).hint === 'limite_pets' ? 'limite_pets' : 'somente_leitura'
+}
+
+/**
+ * Erro do Supabase virando exceção sem perder o código: assim quem chama
+ * reconhece a recusa do plano (motivoPremiumDoErro) e abre o convite.
+ */
+export function erroDoServidor(erro: { message: string; code?: string; hint?: string | null }): Error {
+  return Object.assign(new Error(erro.message), { code: erro.code, hint: erro.hint })
 }

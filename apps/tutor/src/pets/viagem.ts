@@ -1,6 +1,7 @@
 import { escaparHtml } from '../lib/pdf'
 import { supabase } from '../lib/supabase'
 import { antirrabicaEmDia } from './carteirinha'
+import { erroDoServidor } from './limite'
 import type { Pet } from './types'
 import type { Vacina } from '../saude/types'
 
@@ -43,7 +44,7 @@ export async function salvarViagem(viagem: Omit<Viagem, 'id'> & { id: string | n
     ? supabase.from('viagens').update(corpo).eq('id', id).select('id').single()
     : supabase.from('viagens').insert(corpo).select('id').single()
   const { data, error } = await pedido
-  if (error) throw new Error(error.message)
+  if (error) throw erroDoServidor(error)
   return (data as { id: string }).id
 }
 

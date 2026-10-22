@@ -74,6 +74,21 @@ if (remedioMia) {
   ok(dose.status === 402, 'não marca Feito em dose do pet só para consulta');
 }
 
+const lembreteMia = await pedir('/rest/v1/reminders', { token: tutor, corpo: { tutor_id: eu, pet_id: mia.id, tipo: 'outro', titulo: 'Teste', proxima_em: new Date().toISOString() } });
+ok(lembreteMia.status === 402, 'não cria lembrete no pet só para consulta');
+const lembretesMia = (await pedir(`/rest/v1/reminders?select=id&pet_id=eq.${mia.id}`, { token: tutor, metodo: 'GET' })).corpo;
+if (lembretesMia[0]) {
+  const feito = await pedir(`/rest/v1/reminders?id=eq.${lembretesMia[0].id}`, { token: tutor, metodo: 'PATCH', corpo: { ativo: false } });
+  ok(feito.status === 402, 'não marca Feito nem desliga lembrete do pet só para consulta');
+}
+ok((await pedir('/rest/v1/viagens', { token: tutor, corpo: { pet_id: mia.id, modo: 'carro' } })).status === 402, 'não salva checklist de viagem do pet só para consulta');
+ok((await pedir('/rest/v1/despesas', { token: tutor, corpo: { pet_id: mia.id, categoria: 'racao', valor_centavos: 100 } })).status === 402, 'não registra despesa do pet só para consulta');
+const despesaGeral = await pedir('/rest/v1/despesas', { token: tutor, corpo: { categoria: 'racao', valor_centavos: 100 } });
+ok(despesaGeral.status < 300, 'despesa de todos os pets continua liberada');
+if (despesaGeral.corpo?.[0]) await pedir(`/rest/v1/despesas?id=eq.${despesaGeral.corpo[0].id}`, { token: tutor, metodo: 'DELETE' });
+const cuidador = await rpc('criar_acesso_cuidador', tutor, { p_pets: [mia.id], p_cuidador: 'Teste', p_fim: new Date(Date.now() + 86_400_000).toISOString() });
+ok(cuidador.status === 402 || cuidador.corpo?.message?.includes('1 acesso ativo'), 'não cria acesso de cuidador com o pet só para consulta');
+
 const vacinaRex = await pedir('/rest/v1/vaccinations', { token: tutor, corpo: { pet_id: rex.id, nome: 'Teste', aplicada_em: '2026-01-01' } });
 ok(vacinaRex.status < 300, 'o pet editável segue com todas as funções');
 if (vacinaRex.corpo?.[0]) await pedir(`/rest/v1/vaccinations?id=eq.${vacinaRex.corpo[0].id}`, { token: tutor, metodo: 'DELETE' });

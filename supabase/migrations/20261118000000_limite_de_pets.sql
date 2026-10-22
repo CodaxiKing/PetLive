@@ -158,6 +158,74 @@ create trigger marcos_somente_leitura before insert or update or delete on publi
   for each row execute function public.guardar_pet_somente_leitura();
 create trigger qualidade_vida_somente_leitura before insert or update or delete on public.qualidade_vida
   for each row execute function public.guardar_pet_somente_leitura();
+-- Listas de viagem e despesas do pet (despesa sem pet, de todos, passa).
+create trigger viagens_somente_leitura before insert or update or delete on public.viagens
+  for each row execute function public.guardar_pet_somente_leitura();
+create trigger despesas_somente_leitura before insert or update or delete on public.despesas
+  for each row execute function public.guardar_pet_somente_leitura();
+
+-- ============================================================
+-- Cuidador temporário: o cuidador marca doses, então o acesso só vale para
+-- pets editáveis. Os acessos nascem por RPC (security definer), por isso a
+-- checagem olha o tutor da requisição (auth.uid()), não o current_user.
+-- Revogar continua liberado. Compartilhar a carteirinha e a ficha de
+-- emergência também: é consulta, não muda o pet, e o que protege o pet não
+-- fica atrás de assinatura (BUSINESS.md 10).
+-- ============================================================
+create or replace function public.cuidador_acessos_somente_leitura()
+returns trigger
+language plpgsql
+security invoker
+set search_path = public
+as $$
+declare
+  v_pet uuid;
+begin
+  if auth.uid() is null then return new; end if;
+  foreach v_pet in array new.pet_ids loop
+    perform public.exigir_pet_editavel(v_pet);
+  end loop;
+  return new;
+end;
+$$;
+
+create trigger cuidador_acessos_somente_leitura before insert on public.cuidador_acessos
+  for each row execute function public.cuidador_acessos_somente_leitura();
+
+/** O cuidador marca a dose como dada; o tutor é avisado. Pet só para consulta: recusa. */
+create or replace function public.cuidador_marcar_dose(p_codigo text, p_medication uuid, p_prevista_para timestamptz)
+returns void
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  a cuidador_acessos := public.cuidador_acesso_valido(p_codigo);
+  m medications;
+  v_pet pets;
+begin
+  if a.id is null then raise exception 'Este acesso terminou.' using errcode = '42501'; end if;
+  if not a.ver_remedios then raise exception 'O tutor não liberou os remédios.' using errcode = '42501'; end if;
+  select * into m from medications where id = p_medication;
+  if m.id is null or not (m.pet_id = any (a.pet_ids)) then raise exception 'Remédio não encontrado.' using errcode = '42501'; end if;
+  if abs(extract(epoch from (p_prevista_para - now()))) > 86400 then raise exception 'Só dá para marcar as doses de hoje.'; end if;
+  perform public.exigir_pet_editavel(m.pet_id);
+
+  insert into medication_doses (medication_id, prevista_para, confirmada_em, origem, confirmada_por)
+  values (m.id, p_prevista_para, now(), 'cuidador', a.cuidador)
+  on conflict (medication_id, prevista_para) do update
+    set confirmada_em = coalesce(medication_doses.confirmada_em, now()),
+        origem = coalesce(medication_doses.origem, 'cuidador'),
+        confirmada_por = coalesce(medication_doses.confirmada_por, a.cuidador);
+
+  insert into cuidador_registros (acesso_id, acao, detalhe) values (a.id, 'dose', m.nome);
+  select * into v_pet from pets where id = m.pet_id;
+  perform public.avisar_tutor(a.tutor_id, v_pet.id, 'dose',
+    a.cuidador || ' deu o ' || m.nome || ' ' || case when v_pet.sexo = 'femea' then 'da ' else 'do ' end || v_pet.nome,
+    'Marcado pelo acesso de cuidador às ' || to_char(now() at time zone 'America/Sao_Paulo', 'HH24:MI') || '.',
+    '/pet/' || v_pet.id || '/medicamentos');
+end;
+$$;
 
 -- ============================================================
 -- O plano só muda pelo servidor (pagamento, admin), nunca pelo próprio tutor
@@ -223,6 +291,7 @@ revoke all on function public.exigir_pet_editavel(uuid) from public, anon;
 revoke all on function public.pets_limite_do_plano() from public, anon;
 revoke all on function public.guardar_pet_somente_leitura() from public, anon;
 revoke all on function public.profiles_plano_do_servidor() from public, anon;
+revoke all on function public.cuidador_acessos_somente_leitura() from public, anon;
 grant execute on function public.limite_pets(text) to authenticated;
 grant execute on function public.somente_leitura(pets) to authenticated;
 -- Os gatilhos rodam como o tutor (invoker) e chamam a checagem.

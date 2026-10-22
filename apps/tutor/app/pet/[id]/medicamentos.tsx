@@ -13,6 +13,7 @@ import Svg, { Path } from 'react-native-svg'
 import { BotaoPrimario } from '../../../src/components/BotaoPrimario'
 import { HeroiOnda } from '../../../src/components/HeroiOnda'
 import { supabase } from '../../../src/lib/supabase'
+import { conviteSeRecusado } from '../../../src/pets/convitePremium'
 import { usePets } from '../../../src/pets/PetsProvider'
 import {
   carregarDosesHoje,
@@ -119,7 +120,7 @@ export default function TelaMedicamentos() {
         ),
       )
     } catch (e) {
-      Alert.alert('Não foi possível confirmar', e instanceof Error ? e.message : String(e))
+      if (!conviteSeRecusado(e, id)) Alert.alert('Não foi possível confirmar', e instanceof Error ? e.message : String(e))
     } finally {
       setSalvandoDose(null)
     }

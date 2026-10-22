@@ -1,5 +1,6 @@
 import { supabase } from '../lib/supabase'
 import { quando } from './linkCarteirinha'
+import { erroDoServidor } from './limite'
 
 /**
  * Cuidador temporário (BUSINESS.md 5.24): acesso com prazo, por link, ao que
@@ -50,7 +51,7 @@ export async function criarAcesso(opcoes: {
     p_remedios: opcoes.remedios,
     p_contatos: opcoes.contatos,
   })
-  if (error) throw new Error(error.message)
+  if (error) throw erroDoServidor(error)
   return data as { codigo: string; fim: string }
 }
 

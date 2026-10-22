@@ -15,6 +15,7 @@ import {
   revogarAcesso,
   type AcessoCuidador,
 } from '../../../src/pets/cuidador'
+import { conviteSeRecusado } from '../../../src/pets/convitePremium'
 import { quando } from '../../../src/pets/linkCarteirinha'
 import { usePets } from '../../../src/pets/PetsProvider'
 import { colors } from '../../../src/theme/colors'
@@ -34,8 +35,11 @@ type Permissao = (typeof PERMISSOES)[number]['chave']
  */
 export default function TelaCuidador() {
   const { id } = useLocalSearchParams<{ id: string }>()
-  const { pets } = usePets()
-  const [escolhidos, setEscolhidos] = useState<Set<string>>(() => new Set(id ? [id] : []))
+  const { pets, editarPet } = usePets()
+  // O cuidador marca doses: pet só para consulta não entra no acesso (BUSINESS.md 5.13).
+  const [escolhidos, setEscolhidos] = useState<Set<string>>(
+    () => new Set(id && !pets.find((p) => p.id === id)?.somente_leitura ? [id] : []),
+  )
   const [duracao, setDuracao] = useState(1)
   const [cuidador, setCuidador] = useState('')
   const [ver, setVer] = useState<Record<Permissao, boolean>>({ vacinas: true, remedios: true, contatos: true })
@@ -56,6 +60,11 @@ export default function TelaCuidador() {
       .join(' e ')
 
   function alternarPet(petId: string) {
+    if (escolhidos.has(petId)) marcarPet(petId)
+    else editarPet(petId, () => marcarPet(petId))
+  }
+
+  function marcarPet(petId: string) {
     setEscolhidos((atual) => {
       const nova = new Set(atual)
       if (nova.has(petId)) nova.delete(petId)
@@ -68,7 +77,13 @@ export default function TelaCuidador() {
     await Share.share({ title: 'Acesso de cuidador', message: mensagemCuidador(nomePets(ids), codigo, fim) }).catch(() => undefined)
   }
 
-  async function gerar() {
+  function gerar() {
+    const travado = [...escolhidos].find((p) => pets.find((x) => x.id === p)?.somente_leitura)
+    if (travado) editarPet(travado, criar)
+    else criar()
+  }
+
+  async function criar() {
     const ids = [...escolhidos]
     setSalvando(true)
     try {
@@ -78,7 +93,7 @@ export default function TelaCuidador() {
       carregar()
       await enviar(acesso.codigo, acesso.fim, ids)
     } catch (e) {
-      Alert.alert('Não deu para criar o acesso', mensagemDeErro(e instanceof Error ? e.message : String(e)))
+      if (!conviteSeRecusado(e, ids[0])) Alert.alert('Não deu para criar o acesso', mensagemDeErro(e instanceof Error ? e.message : String(e)))
     } finally {
       setSalvando(false)
     }

@@ -6,7 +6,9 @@ import { HeroiOnda } from '../../../src/components/HeroiOnda'
 import { Icone } from '../../../src/components/Icone'
 import { Interruptor } from '../../../src/components/Interruptor'
 import type { Lembrete } from '../../../src/lembretes/types'
+import { conviteSeRecusado } from '../../../src/pets/convitePremium'
 import { usePets } from '../../../src/pets/PetsProvider'
+import { FaixaSomenteLeitura } from '../../../src/pets/SomenteLeitura'
 import { ligarLembrete, rotinaSenior } from '../../../src/pets/senior'
 import { idadeEmAnos } from '../../../src/pets/types'
 import { colors } from '../../../src/theme/colors'
@@ -30,7 +32,7 @@ function dataCurta(iso: string): string {
  */
 export default function TelaSenior() {
   const { id } = useLocalSearchParams<{ id: string }>()
-  const { pets } = usePets()
+  const { pets, editarPet } = usePets()
   const pet = pets.find((p) => p.id === id) ?? null
   const [rotina, setRotina] = useState<Lembrete[] | null>(null)
 
@@ -44,13 +46,14 @@ export default function TelaSenior() {
   if (!pet) return <View style={estilos.tela} />
   const da = pet.sexo === 'femea' ? 'a' : 'o'
 
+  // Pet só para consulta: ligar ou desligar um lembrete abre o convite Premium.
   async function alternar(l: Lembrete) {
     setRotina((atual) => atual?.map((x) => (x.id === l.id ? { ...x, ativo: !l.ativo } : x)) ?? null)
     try {
       await ligarLembrete(l.id, !l.ativo)
     } catch (e) {
       setRotina((atual) => atual?.map((x) => (x.id === l.id ? { ...x, ativo: l.ativo } : x)) ?? null)
-      Alert.alert('Não deu para mudar', e instanceof Error ? e.message : String(e))
+      if (!conviteSeRecusado(e, l.pet_id)) Alert.alert('Não deu para mudar', e instanceof Error ? e.message : String(e))
     }
   }
 
@@ -60,6 +63,7 @@ export default function TelaSenior() {
     <View style={estilos.tela}>
       <HeroiOnda subtitulo={[pet.nome, idadeEmAnos(pet.nascimento)].filter(Boolean).join(' · ')} titulo="Pet sênior" altura={200} />
       <ScrollView contentContainerStyle={estilos.conteudo} showsVerticalScrollIndicator={false}>
+        <FaixaSomenteLeitura pet={pet} />
         <View style={estilos.aviso}>
           <Text style={estilos.avisoTitulo}>Rotina adaptada para a idade</Text>
           <Text style={estilos.avisoTexto}>
@@ -79,7 +83,7 @@ export default function TelaSenior() {
                   <Text style={estilos.itemTitulo}>{r.titulo}</Text>
                   <Text style={estilos.itemSub}>{l.ativo ? r.detalhe(l) : 'Desligado'}</Text>
                 </View>
-                <Interruptor ligado={l.ativo} rotulo={r.titulo} onToggle={() => alternar(l)} />
+                <Interruptor ligado={l.ativo} rotulo={r.titulo} onToggle={() => editarPet(pet.id, () => alternar(l))} />
               </View>
             )
           })

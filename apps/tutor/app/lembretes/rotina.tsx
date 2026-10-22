@@ -16,7 +16,9 @@ import {
 } from '../../src/lembretes/rotina'
 import { agendarUmLembrete, cancelarLembrete } from '../../src/notificacoes/sincronizarLembretes'
 import { carregarAvisos, HORARIO_PADRAO } from '../../src/notificacoes/prefs'
+import { conviteSeRecusado } from '../../src/pets/convitePremium'
 import { usePets } from '../../src/pets/PetsProvider'
+import { FaixaSomenteLeitura } from '../../src/pets/SomenteLeitura'
 import { colors } from '../../src/theme/colors'
 import { spacing } from '../../src/theme/tokens'
 import { typography } from '../../src/theme/typography'
@@ -32,7 +34,7 @@ const HORARIOS = Array.from({ length: 16 }, (_, i) => `${String(i + 6).padStart(
  */
 export default function Rotina() {
   const { petId: petParam } = useLocalSearchParams<{ petId?: string }>()
-  const { pets, petAtivo } = usePets()
+  const { pets, petAtivo, editarPet } = usePets()
   const { recarregar } = useLembretes()
 
   const [petEscolhido, setPetEscolhido] = useState<string | null>(null)
@@ -68,7 +70,12 @@ export default function Rotina() {
     )
   }
 
-  async function salvar() {
+  // Pet só para consulta: a rotina aparece, mas salvar abre o convite Premium.
+  function salvar() {
+    if (pet) editarPet(pet.id, gravar)
+  }
+
+  async function gravar() {
     if (!pet || !estado || salvando) return
     setSalvando(true)
     try {
@@ -82,7 +89,7 @@ export default function Rotina() {
       await recarregar()
       router.back()
     } catch (e) {
-      Alert.alert('Não foi possível salvar', e instanceof Error ? e.message : String(e))
+      if (!conviteSeRecusado(e, pet.id)) Alert.alert('Não foi possível salvar', e instanceof Error ? e.message : String(e))
     } finally {
       setSalvando(false)
     }
@@ -111,6 +118,8 @@ export default function Rotina() {
             })}
           </ScrollView>
         ) : null}
+
+        {pet ? <FaixaSomenteLeitura pet={pet} /> : null}
 
         {!pet ? (
           <Text style={estilos.vazio}>Cadastre um pet para montar a rotina de cuidados.</Text>

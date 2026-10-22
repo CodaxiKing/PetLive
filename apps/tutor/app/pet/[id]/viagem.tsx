@@ -9,7 +9,9 @@ import { Icone } from '../../../src/components/Icone'
 import { mensagemDeErro } from '../../../src/lib/cacheOffline'
 import { abrirPdf } from '../../../src/lib/pdf'
 import { usePlano } from '../../../src/lib/plano'
+import { conviteSeRecusado } from '../../../src/pets/convitePremium'
 import { usePets } from '../../../src/pets/PetsProvider'
+import { FaixaSomenteLeitura } from '../../../src/pets/SomenteLeitura'
 import {
   AVISO_REGRAS,
   carregarConteudo,
@@ -37,7 +39,7 @@ const MODOS: Modo[] = ['carro', 'aviao']
  */
 export default function TelaViagem() {
   const { id } = useLocalSearchParams<{ id: string }>()
-  const { pets } = usePets()
+  const { pets, editarPet } = usePets()
   const plano = usePlano()
   const pet = pets.find((p) => p.id === id) ?? null
   const [itens, setItens] = useState<ItemViagem[] | null>(null)
@@ -100,7 +102,12 @@ export default function TelaViagem() {
     }
   }
 
-  async function salvar() {
+  // Pet só para consulta: a lista aparece, mas salvar abre o convite Premium.
+  function salvar() {
+    editarPet(pet!.id, gravar)
+  }
+
+  async function gravar() {
     if (data && !dataParaIso(data)) {
       Alert.alert('Confira a data', 'Use o formato DD/MM/AAAA.')
       return
@@ -110,7 +117,7 @@ export default function TelaViagem() {
       setViagemId(await salvarViagem({ id: viagemId, ...viagemAtual() }))
       Alert.alert('Checklist salvo', `${feitos.size} de ${lista.length} itens prontos. ${modo === 'aviao' ? AVISO_REGRAS : ''}`)
     } catch (e) {
-      Alert.alert('Não deu para salvar', mensagemDeErro(e instanceof Error ? e.message : String(e)))
+      if (!conviteSeRecusado(e, pet!.id)) Alert.alert('Não deu para salvar', mensagemDeErro(e instanceof Error ? e.message : String(e)))
     } finally {
       setSalvando(false)
     }
@@ -130,6 +137,7 @@ export default function TelaViagem() {
     <KeyboardAvoidingView style={estilos.tela} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
       <HeroiOnda subtitulo={`Viagem · ${pet.nome}`} titulo="Viagem com pet" altura={200} />
       <ScrollView contentContainerStyle={estilos.conteudo} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
+        <FaixaSomenteLeitura pet={pet} />
         <ControleSegmentado opcoes={['Carro', 'Avião']} ativo={MODOS.indexOf(modo)} onSelecionar={(i) => setModo(MODOS[i])} />
 
         <View style={estilos.destino}>

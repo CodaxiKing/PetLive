@@ -1,4 +1,5 @@
 import { supabase } from '../lib/supabase'
+import { erroDoServidor } from '../pets/limite'
 
 /** Despesas do pet (BUSINESS.md 5.32): só registro, privado do tutor. */
 export type Categoria = 'racao' | 'veterinario' | 'banho_tosa' | 'remedios' | 'acessorios' | 'hotel_creche' | 'outros'
@@ -64,13 +65,13 @@ export async function salvarDespesa(id: string | null, despesa: DespesaForm): Pr
     ? supabase.from('despesas').update(despesa).eq('id', id).select('id').single()
     : supabase.from('despesas').insert(despesa).select('id').single()
   const { data, error } = await pedido
-  if (error) throw new Error(error.message)
+  if (error) throw erroDoServidor(error)
   return (data as { id: string }).id
 }
 
 export async function apagarDespesa(despesa: Despesa): Promise<void> {
   const { error } = await supabase.from('despesas').delete().eq('id', despesa.id)
-  if (error) throw new Error(error.message)
+  if (error) throw erroDoServidor(error)
   if (despesa.recibo_path) await supabase.storage.from('anexos').remove([despesa.recibo_path]).catch(() => undefined)
 }
 

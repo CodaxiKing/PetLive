@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { LIMITE_PETS, motivoPremiumDoErro, podeCadastrarPet, reativaSomenteLeitura } from '../pets/limite'
+import { erroDoServidor, LIMITE_PETS, motivoPremiumDoErro, podeCadastrarPet, reativaSomenteLeitura } from '../pets/limite'
 
 describe('podeCadastrarPet', () => {
   it('no grátis é 1 pet ativo', () => {
@@ -33,5 +33,18 @@ describe('motivoPremiumDoErro', () => {
   it('outros erros seguem o caminho de sempre', () => {
     expect(motivoPremiumDoErro({ code: '42501' })).toBeNull()
     expect(motivoPremiumDoErro(null)).toBeNull()
+  })
+})
+
+describe('erroDoServidor', () => {
+  it('vira exceção sem perder a recusa do plano', () => {
+    const erro = erroDoServidor({ message: 'Este pet está só para consulta.', code: 'PT402', hint: 'somente_leitura' })
+    expect(erro).toBeInstanceOf(Error)
+    expect(erro.message).toBe('Este pet está só para consulta.')
+    expect(motivoPremiumDoErro(erro)).toBe('somente_leitura')
+  })
+  it('erro comum continua comum', () => {
+    expect(motivoPremiumDoErro(erroDoServidor({ message: 'falhou', code: '23505' }))).toBeNull()
+    expect(motivoPremiumDoErro(new Error('rede'))).toBeNull()
   })
 })

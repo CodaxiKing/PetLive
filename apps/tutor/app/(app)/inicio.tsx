@@ -18,6 +18,7 @@ import {
   textoProximaVacina,
 } from '../../src/pets/carteirinha';
 import { usePets } from '../../src/pets/PetsProvider';
+import { conviteSeRecusado } from '../../src/pets/convitePremium';
 import { contarNaoLidos } from '../../src/notificacoes/caixa';
 import { sincronizarDoses } from '../../src/notificacoes/doses';
 import {
@@ -175,11 +176,12 @@ export default function Inicio() {
               sincronizarDoses().catch(() => undefined);
               return true;
             },
-            () => false,
+            // Recusa do servidor pelo plano: o convite Premium já abriu.
+            (e) => (conviteSeRecusado(e, petAtivo?.id) ? null : false),
           );
     salvar
       .then((ok) => {
-        if (!ok) Alert.alert('Não deu para salvar', AVISO_SEM_SALVAR);
+        if (ok === false) Alert.alert('Não deu para salvar', AVISO_SEM_SALVAR);
       })
       .finally(() => setConcluindo(null));
   }
