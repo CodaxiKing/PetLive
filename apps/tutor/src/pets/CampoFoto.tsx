@@ -3,8 +3,8 @@ import * as ImagePicker from 'expo-image-picker'
 
 export type AtivoFoto = { uri: string; mimeType?: string }
 
-/** Abre a galeria ou a câmera (com recorte quadrado) e devolve a foto, ou null. */
-export async function escolherFoto(origem: 'galeria' | 'camera'): Promise<AtivoFoto | null> {
+/** Abre a galeria ou a câmera e devolve a foto, ou null. Recorte quadrado por padrão (foto do pet). */
+export async function escolherFoto(origem: 'galeria' | 'camera', quadrado = true): Promise<AtivoFoto | null> {
   const permissao =
     origem === 'galeria'
       ? await ImagePicker.requestMediaLibraryPermissionsAsync()
@@ -18,7 +18,7 @@ export async function escolherFoto(origem: 'galeria' | 'camera'): Promise<AtivoF
     )
     return null
   }
-  const opcoes: ImagePicker.ImagePickerOptions = { allowsEditing: true, aspect: [1, 1], quality: 0.85 }
+  const opcoes: ImagePicker.ImagePickerOptions = quadrado ? { allowsEditing: true, aspect: [1, 1], quality: 0.85 } : { quality: 0.7 }
   const resultado =
     origem === 'galeria'
       ? await ImagePicker.launchImageLibraryAsync({ ...opcoes, mediaTypes: ['images'] })
