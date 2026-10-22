@@ -103,7 +103,9 @@ pnpm verify:supabase
 
 A chave vem do `supabase status`, ou de `SUPABASE_ANON_KEY` e `SUPABASE_URL` no ambiente. O teste cria os próprios usuários e não depende do seed.
 
-A saída completa fica em `docs/qa/verify-saida.txt`, para anexar ao PR. O roteiro manual de QA no Android e no iOS está em [docs/qa/anexos-de-saude.md](docs/qa/anexos-de-saude.md).
+A saída completa fica em `docs/qa/verify-saida.txt`, para anexar ao PR.
+
+Sem shell, o QA pode usar o CI. O workflow `.github/workflows/verify.yml` roda `supabase start` e `pnpm verify:supabase` em cada PR e publica o `verify-saida.txt` como artefato `verify-saida` do run. Para rodar à mão, use **Actions › verify › Run workflow**. O roteiro manual de QA no Android e no iOS está em [docs/qa/anexos-de-saude.md](docs/qa/anexos-de-saude.md).
 
 ## Roadmap resumido
 

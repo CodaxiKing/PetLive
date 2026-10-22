@@ -2,7 +2,9 @@
 
 Roteiro manual para o critério 13. Faça uma vez no **Android** e outra no **iOS**, com um development build (`pnpm tutor:android` / `pnpm tutor:ios`) ou um build do EAS, sempre contra o Supabase local com o seed (`demo@petlive.dev` / `petlive123`). Em cada plataforma, marque cada passo e anexe ao PR um print ou vídeo curto dos passos 3, 6 e 8.
 
-Antes, rode `pnpm verify:supabase` e anexe `docs/qa/verify-saida.txt` (critérios A e C).
+Antes, rode `pnpm verify:supabase` e anexe `docs/qa/verify-saida.txt` (critérios A e C). Sem shell, baixe o artefato `verify-saida` do workflow **verify** do PR no GitHub Actions. Ele roda `supabase start` e `pnpm verify:supabase`, então o teste do bucket não sai como PULADO.
+
+Pendente de decisão do PO (critério 6): durante o envio, o progresso aparece como um indicador com "Enviando a foto…", sem percentual.
 
 | # | Passo | Esperado | Android | iOS |
 | --- | --- | --- | --- | --- |

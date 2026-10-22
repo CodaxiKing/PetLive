@@ -1,0 +1,35 @@
+# Roda o `pnpm verify:supabase` (critérios A e C) em cada PR, para o QA ter a
+# saída sem precisar de shell: o docs/qa/verify-saida.txt sai como artefato do run.
+name: verify
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+      - name: Supabase local
+        run: supabase start
+      - name: pnpm verify:supabase
+        run: pnpm verify:supabase
+      - name: Anexar a saída do verify
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: verify-saida
+          path: docs/qa/verify-saida.txt
+          if-no-files-found: warn
