@@ -19,6 +19,7 @@ import { Icone } from '../../../src/components/Icone'
 import { MarcaPata } from '../../../src/components/MarcaPata'
 import { Mascote } from '../../../src/components/Mascote'
 import { AbaCalendario } from '../../../src/pets/AbaCalendario'
+import { conferirSenior } from '../../../src/pets/senior'
 import { usePets } from '../../../src/pets/PetsProvider'
 import { idadeEmAnos } from '../../../src/pets/types'
 import { carregarConsultas, type Consulta } from '../../../src/saude/consultas'
@@ -63,7 +64,7 @@ function BotaoRedondo({ rotulo, onPress, children }: { rotulo: string; onPress: 
 export default function PetDetalhe() {
   const { id } = useLocalSearchParams<{ id: string }>()
   const { width } = useWindowDimensions()
-  const { pets, petsMemoria, definirPetAtivo, removerPet } = usePets()
+  const { pets, petsMemoria, seniores, marcarSenior, definirPetAtivo, removerPet } = usePets()
   const { vacinas, removerVacina } = useVacinas()
   const [aba, setAba] = useState<Aba>('Vacinas')
   const [pesos, setPesos] = useState<RegistroPeso[]>([])
@@ -84,7 +85,9 @@ export default function PetDetalhe() {
       if (!id) return
       carregarPesos(id).then(setPesos, () => undefined)
       carregarConsultas(id).then(setConsultas, () => undefined)
-    }, [id]),
+      // Pode ter virado sênior desde o último job: o servidor confere e cria a rotina.
+      conferirSenior(id).then((senior) => senior && marcarSenior(id), () => undefined)
+    }, [id, marcarSenior]),
   )
 
   // Pet em memória abre a tela Em memória (o pet sai da lista ativa).
@@ -119,7 +122,7 @@ export default function PetDetalhe() {
   const pesoAtual = pesos.length ? pesos[pesos.length - 1].peso : petAtual.peso_atual
   const idade = idadeEmAnos(petAtual.nascimento)
 
-  function ir(pathname: '/pet/[id]/carteirinha' | '/pet/[id]/editar' | '/pet/[id]/medicamentos' | '/pet/[id]/peso' | '/pet/[id]/consultas' | '/pet/[id]/vacina/nova' | '/pet/[id]/consultas/nova' | '/pet/[id]/linha-do-tempo' | '/pet/[id]/partida') {
+  function ir(pathname: '/pet/[id]/carteirinha' | '/pet/[id]/editar' | '/pet/[id]/medicamentos' | '/pet/[id]/peso' | '/pet/[id]/consultas' | '/pet/[id]/vacina/nova' | '/pet/[id]/consultas/nova' | '/pet/[id]/linha-do-tempo' | '/pet/[id]/partida' | '/pet/[id]/senior') {
     setMenuAberto(false)
     router.push({ pathname, params: { id: petAtual.id } })
   }
@@ -226,6 +229,23 @@ export default function PetDetalhe() {
               <Text style={[estilos.resumoRotulo, { color: '#25683F' }]}>Peso</Text>
             </Pressable>
           </View>
+
+          {seniores.has(petAtual.id) ? (
+            <Tocavel
+              accessibilityRole="button"
+              onPress={() => ir('/pet/[id]/senior')}
+              style={estilos.senior}
+            >
+              <View style={estilos.seniorIcone}>
+                <Icone nome="relogio" size={20} />
+              </View>
+              <View style={estilos.flex}>
+                <Text style={estilos.seniorTitulo}>{petAtual.sexo === 'femea' ? 'A' : 'O'} {petAtual.nome} é sênior</Text>
+                <Text style={estilos.seniorSub}>Rotina adaptada para a idade</Text>
+              </View>
+              <Text style={estilos.seniorSeta}>›</Text>
+            </Tocavel>
+          ) : null}
 
           <View style={estilos.abas} accessibilityRole="tablist">
             {ABAS.map((op) => {
@@ -473,6 +493,11 @@ const estilos = StyleSheet.create({
   resumoItem: { flex: 1, borderRadius: 24, paddingVertical: 12, alignItems: 'center' },
   resumoValor: { fontSize: 16, fontFamily: fontFamily.bold, color: colors.black },
   resumoRotulo: { fontSize: 12, fontFamily: fontFamily.medium },
+  senior: { flexDirection: 'row', alignItems: 'center', gap: 12, backgroundColor: '#FFF0C9', borderRadius: 26, padding: 12, marginTop: 14 },
+  seniorIcone: { width: 44, height: 44, borderRadius: 22, backgroundColor: colors.white, alignItems: 'center', justifyContent: 'center' },
+  seniorTitulo: { fontFamily: fontFamily.bold, fontSize: 16, color: '#4A3800' },
+  seniorSub: { fontFamily: fontFamily.regular, fontSize: 13, color: '#7A5A00' },
+  seniorSeta: { fontFamily: fontFamily.bold, fontSize: 24, color: '#4A3800', paddingRight: 6 },
   abas: { flexDirection: 'row', gap: 22, borderBottomWidth: 1.5, borderBottomColor: colors.border },
   aba: { paddingVertical: 8, borderBottomWidth: 3, borderBottomColor: 'transparent', marginBottom: -1.5 },
   abaAtiva: { borderBottomColor: colors.primary },

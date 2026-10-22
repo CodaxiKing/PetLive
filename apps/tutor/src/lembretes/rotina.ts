@@ -188,7 +188,10 @@ export async function carregarRotina(petId: string, horarioPadrao: string): Prom
 
   const linhas = (data ?? []) as Lembrete[]
   const existentes: EstadoRotina['existentes'] = {}
-  for (const linha of linhas) if (linha.rotina_item) existentes[linha.rotina_item] = linha
+  for (const linha of linhas) {
+    const item = ITENS_ROTINA.find((d) => d.item === linha.rotina_item)?.item
+    if (item) existentes[item] = linha
+  }
 
   const itens = {} as EstadoRotina['itens']
   for (const definicao of ITENS_ROTINA) {
@@ -202,7 +205,8 @@ export async function carregarRotina(petId: string, horarioPadrao: string): Prom
     }
   }
 
-  const algumaAtiva = linhas.find((l) => l.ativo)
+  // Só os itens desta tela (a rotina do pet sênior tem horário próprio).
+  const algumaAtiva = linhas.find((l) => l.ativo && ITENS_ROTINA.some((d) => d.item === l.rotina_item))
   const horario = algumaAtiva ? algumaAtiva.proxima_em.split('T')[1].slice(0, 5) : horarioPadrao
   return { horario, itens, existentes }
 }

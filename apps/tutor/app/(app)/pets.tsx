@@ -38,7 +38,7 @@ function tituloSemPet(titulo: string, nome: string): string {
  * idade, o próximo lembrete e o mascote (ou a foto), e "Adicionar pet".
  */
 export default function Pets() {
-  const { pets, petsMemoria, carregando, definirPetAtivo, recarregar } = usePets()
+  const { pets, petsMemoria, seniores, carregando, definirPetAtivo, recarregar } = usePets()
   const { lembretes } = useLembretes()
   const [atualizando, setAtualizando] = useState(false)
 
@@ -117,6 +117,7 @@ export default function Pets() {
                         {raca}
                       </Text>
                       {idade ? <Text style={estilos.chip}>{idade}</Text> : null}
+                      {seniores.has(pet.id) ? <Text style={[estilos.chip, estilos.chipSenior]}>Sênior</Text> : null}
                     </View>
                     {proximo ? (
                       <Text style={estilos.lembrete} numberOfLines={1}>
@@ -174,6 +175,7 @@ export default function Pets() {
 }
 
 const estilos = StyleSheet.create({
+  chipSenior: { backgroundColor: '#FFF0C9', color: '#7A5A00' },
   memoria: { flexDirection: 'row', alignItems: 'center', gap: 14, backgroundColor: colors.premiumSurface, borderRadius: 28, padding: 14, marginTop: 12 },
   memoriaRetrato: { width: 56, height: 56, borderRadius: 28, overflow: 'hidden', backgroundColor: colors.white, alignItems: 'center', justifyContent: 'center' },
   memoriaFoto: { width: 56, height: 56 },

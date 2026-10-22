@@ -130,6 +130,8 @@ function RaizProtegida() {
                 <Stack.Screen name="pet/[id]/memorial" options={{ animation: 'fade' }} />
                 <Stack.Screen name="pet/[id]/reativar" />
                 <Stack.Screen name="apoio-luto" />
+                <Stack.Screen name="pet/[id]/senior" />
+                <Stack.Screen name="pet/[id]/qualidade-de-vida" />
                 <Stack.Screen name="despesas/index" />
                 <Stack.Screen name="despesas/nova" options={{ presentation: 'modal', animation: 'slide_from_bottom' }} />
                 <Stack.Screen name="ficha/enviar" />

@@ -93,7 +93,7 @@ function quandoHoje(iso: string): string {
 export default function Inicio() {
   const router = useRouter();
   const { width } = useWindowDimensions();
-  const { pets, petAtivo, definirPetAtivo } = usePets();
+  const { pets, petAtivo, definirPetAtivo, seniores } = usePets();
   const { lembretes, concluirLembrete } = useLembretes();
   const { remedios } = useRemedios();
   const [doses, setDoses] = useState<DoseHoje[]>([]);
@@ -235,6 +235,7 @@ export default function Inicio() {
               >
                 <AvatarPet especie={pet.especie} foto={pet.foto_url} size={30} />
                 <Text style={[estilos.petNome, ativo && estilos.petNomeAtivo]}>{pet.nome}</Text>
+                {seniores.has(pet.id) ? <Text style={estilos.etiquetaSenior}>Sênior</Text> : null}
               </Tocavel>
             );
           })}
@@ -501,6 +502,7 @@ const estilos = StyleSheet.create({
   petChipAtivo: { backgroundColor: colors.black },
   petChipInativo: { backgroundColor: colors.white },
   petNome: { fontFamily: fontFamily.bold, fontSize: 13, color: colors.black },
+  etiquetaSenior: { fontFamily: fontFamily.bold, fontSize: 10, color: '#7A5A00', backgroundColor: '#FFF0C9', borderRadius: 999, overflow: 'hidden', paddingVertical: 2, paddingHorizontal: 7 },
   petNomeAtivo: { color: colors.white },
   petMais: {
     width: 40,

@@ -3,6 +3,7 @@ import { mensagemDeErro } from '../lib/cacheOffline'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../auth/AuthProvider'
 import { enviarFotoPet } from './foto'
+import { petsSenior } from './senior'
 import type { Pet, PetForm } from './types'
 import { FORM_VAZIO, formParaRegistro } from './types'
 
@@ -11,6 +12,10 @@ interface PetsContextValue {
   pets: Pet[]
   /** Pets com a partida registrada (modo memorial). */
   petsMemoria: Pet[]
+  /** Ids dos pets sênior (faixa na tela do pet e etiqueta Sênior). */
+  seniores: Set<string>
+  /** O pet acabou de virar sênior (checado ao abrir a tela dele). */
+  marcarSenior: (id: string) => void
   petAtivo: Pet | null
   carregando: boolean
   salvando: boolean
@@ -36,6 +41,8 @@ export function PetsProvider({ children }: { children: ReactNode }) {
   const [todos, setPets] = useState<Pet[]>([])
   const pets = useMemo(() => todos.filter((p) => !p.em_memoria), [todos])
   const petsMemoria = useMemo(() => todos.filter((p) => p.em_memoria), [todos])
+  const [seniores, setSeniores] = useState<Set<string>>(new Set())
+  const marcarSenior = useCallback((id: string) => setSeniores((atual) => (atual.has(id) ? atual : new Set(atual).add(id))), [])
   const [petAtivoId, setPetAtivoId] = useState<string | null>(null)
   const [carregando, setCarregando] = useState(true)
   const [salvando, setSalvando] = useState(false)
@@ -47,6 +54,8 @@ export function PetsProvider({ children }: { children: ReactNode }) {
     const consulta = tutorId
       ? supabase.from('pets').select('*').order('criado_em', { ascending: false })
       : Promise.resolve({ data: [] as Pet[], error: null })
+
+    if (tutorId) petsSenior().then(setSeniores, () => undefined)
 
     return Promise.resolve(consulta).then(({ data, error }) => {
       if (error) {
@@ -190,6 +199,8 @@ export function PetsProvider({ children }: { children: ReactNode }) {
     () => ({
       pets,
       petsMemoria,
+      seniores,
+      marcarSenior,
       petAtivo,
       carregando,
       salvando,
@@ -203,7 +214,7 @@ export function PetsProvider({ children }: { children: ReactNode }) {
       recarregar,
       FORM_VAZIO,
     }),
-    [pets, petsMemoria, petAtivo, carregando, salvando, erro, criarPet, atualizarPet, salvarFoto, removerFoto, removerPet, recarregar],
+    [pets, petsMemoria, seniores, marcarSenior, petAtivo, carregando, salvando, erro, criarPet, atualizarPet, salvarFoto, removerFoto, removerPet, recarregar],
   )
 
   return <PetsContext.Provider value={value}>{children}</PetsContext.Provider>

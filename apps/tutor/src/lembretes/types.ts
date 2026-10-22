@@ -19,7 +19,7 @@ export interface Lembrete {
   aviso_antes: boolean
   /** 'rotina' quando veio da tela Rotina de cuidados. */
   origem?: 'manual' | 'rotina'
-  rotina_item?: 'antipulgas' | 'vermifugo' | 'banho' | 'dentes' | 'aniversario' | null
+  rotina_item?: 'antipulgas' | 'vermifugo' | 'banho' | 'dentes' | 'aniversario' | 'senior_consulta' | 'senior_pesagem' | 'senior_exames' | null
   criado_em: string
 }
 
