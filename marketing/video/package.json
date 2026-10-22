@@ -1,0 +1,25 @@
+{
+  "name": "petlive-video",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Anúncio vertical do PetLive (Remotion). Fora dos workspaces do pnpm de propósito: instale com npm aqui dentro.",
+  "scripts": {
+    "dev": "remotion studio src/index.ts --port=3020 --no-open",
+    "render": "remotion render src/index.ts PetLive-Anuncio out/petlive-anuncio.mp4",
+    "still": "remotion still src/index.ts PetLive-Anuncio out/still.png",
+    "typecheck": "tsc",
+    "audio": "node scripts/gerar-audio.mjs"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.532",
+    "@remotion/google-fonts": "4.0.532",
+    "@remotion/transitions": "4.0.532",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "remotion": "4.0.532"
+  },
+  "devDependencies": {
+    "@types/react": "19.3.0",
+    "typescript": "7.0.2"
+  }
+}
