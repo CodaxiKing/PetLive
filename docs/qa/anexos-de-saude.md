@@ -4,6 +4,8 @@ Roteiro manual para o critério 13. Faça uma vez no **Android** e outra no **iO
 
 Antes, rode `pnpm verify:supabase` e anexe `docs/qa/verify-saida.txt` (critérios A e C). Sem shell, baixe o artefato `verify-saida` do workflow **verify** do PR no GitHub Actions. Ele roda `supabase start` e `pnpm verify:supabase`, então o teste do bucket não sai como PULADO.
 
+Caminho dos arquivos (critério 5): o texto do critério diz `anexos/{uid}/...`. Na prática, os arquivos ficam no bucket `anexos`, no caminho `{uid}/anexos/{pet}/...`. O código, as policies de RLS, a limpeza de órfãos e o `testar-anexos.mjs` seguem esse mesmo padrão. O primeiro segmento do caminho é o `uid`, e é nele que a RLS se apoia. Falta o autor do critério confirmar.
+
 Pendente de decisão do PO (critério 6): durante o envio, o progresso aparece como um indicador com "Enviando a foto…", sem percentual.
 
 | # | Passo | Esperado | Android | iOS |
