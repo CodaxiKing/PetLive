@@ -13,7 +13,6 @@ import { useCidade } from '../../src/mapa/useCidade';
 import { AvatarPet } from '../../src/pets/AvatarPet';
 import {
   antirrabicaEmDia,
-  compartilharCarteirinha,
   proximaVacina,
   seloProximaVacina,
   textoProximaVacina,
@@ -418,7 +417,7 @@ export default function Inicio() {
               <Tocavel
                 accessibilityRole="button"
                 accessibilityLabel={`Enviar a carteirinha de ${petAtivo.nome}`}
-                onPress={() => compartilharCarteirinha(petAtivo, vacinas)}
+                onPress={() => router.push(`/pet/${petAtivo.id}/compartilhar`)}
                 estiloExterno={estilos.flex}
                 style={[estilos.acao, estilos.acaoEscura]}
               >

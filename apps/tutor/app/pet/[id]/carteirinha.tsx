@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState, type ReactNode } from 'react'
 import { ActivityIndicator, ScrollView, StyleSheet, Text, View } from 'react-native'
-import { useFocusEffect, useLocalSearchParams } from 'expo-router'
+import { router, useFocusEffect, useLocalSearchParams } from 'expo-router'
 import { useAuth } from '../../../src/auth/AuthProvider'
 import { Surgir, Tocavel } from '../../../src/components/Animacoes'
 import { BotaoPrimario } from '../../../src/components/BotaoPrimario'
@@ -10,7 +10,6 @@ import { Icone, type NomeIcone } from '../../../src/components/Icone'
 import { supabase } from '../../../src/lib/supabase'
 import { AvatarPet } from '../../../src/pets/AvatarPet'
 import {
-  compartilharCarteirinha,
   proximaVacina,
   remediosEmUso,
   textoProximaVacina,
@@ -102,7 +101,7 @@ export default function TelaCarteirinha() {
         <Tocavel
           accessibilityRole="button"
           accessibilityLabel={`Compartilhar a carteirinha de ${pet.nome}`}
-          onPress={() => compartilharCarteirinha(pet, vacinas)}
+          onPress={() => router.push(`/pet/${pet.id}/compartilhar`)}
           estiloExterno={estilos.compartilharTopo}
           style={estilos.compartilharTopoBotao}
         >
@@ -214,17 +213,33 @@ export default function TelaCarteirinha() {
                 </View>
               </View>
             </Bloco>
+
+            {pet.alergias ? (
+              <Bloco icone="alerta" titulo="Alergias e condições" fundo="#FCE1E6" indice={4}>
+                <Text style={estilos.textoLivre}>{pet.alergias}</Text>
+              </Bloco>
+            ) : null}
+            {pet.veterinario ? (
+              <Bloco icone="telefone" titulo="Veterinário" fundo={colors.background} indice={5}>
+                <Text style={estilos.textoLivre}>{pet.veterinario}</Text>
+              </Bloco>
+            ) : null}
+            {pet.observacoes ? (
+              <Bloco icone="livro" titulo="Observações" fundo={colors.premiumSurface} indice={6}>
+                <Text style={estilos.textoLivre}>{pet.observacoes}</Text>
+              </Bloco>
+            ) : null}
           </>
         )}
 
-        <Text style={estilos.nota}>Dados informados pelo tutor. Ao compartilhar, a mensagem leva o que está aqui.</Text>
+        <Text style={estilos.nota}>Dados informados pelo tutor. Ao compartilhar, você escolhe o que vai no link e por quanto tempo ele vale.</Text>
       </ScrollView>
 
       <View style={estilos.rodape}>
         <BotaoPrimario
           titulo="Compartilhar carteirinha"
           icone={<Icone nome="compartilhar" size={22} espessura={2} />}
-          onPress={() => compartilharCarteirinha(pet, vacinas)}
+          onPress={() => router.push(`/pet/${pet.id}/compartilhar`)}
         />
       </View>
     </View>
@@ -346,6 +361,7 @@ const estilos = StyleSheet.create({
   cuidado: { flex: 1, minWidth: 0, backgroundColor: colors.white, borderRadius: 16, paddingVertical: 8, paddingHorizontal: 10 },
   cuidadoRotulo: { fontFamily: fontFamily.semiBold, fontSize: 11, color: '#1F6B45' },
   cuidadoValor: { fontFamily: fontFamily.bold, fontSize: 14, color: colors.black },
+  textoLivre: { fontFamily: fontFamily.medium, fontSize: 14, lineHeight: 20, color: colors.black },
   nota: { fontFamily: fontFamily.regular, fontSize: 11, lineHeight: 16, color: '#6A7484', textAlign: 'center' },
   rodape: { paddingHorizontal: 24, paddingTop: 12, paddingBottom: 28 },
 })

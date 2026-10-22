@@ -1,9 +1,7 @@
-import { Share } from 'react-native'
 import { supabase } from '../lib/supabase'
 import { emTratamentoHoje } from '../remedios/doses'
 import { normalizarHorarios, type Remedio } from '../remedios/types'
-import { dataParaExibicao, diasAte, type Vacina } from '../saude/types'
-import { idadeEmAnos, type Pet } from './types'
+import { diasAte, type Vacina } from '../saude/types'
 
 /** Próxima vacina do pet: a dose com data mais perto (atrasadas primeiro). */
 export type ProximaVacina = {
@@ -68,43 +66,4 @@ export async function remediosEmUso(petId: string): Promise<Remedio[]> {
   return ((data ?? []) as (Omit<Remedio, 'horarios'> & { horarios: (string | number)[] | null })[])
     .map((linha) => ({ ...linha, horarios: normalizarHorarios(linha.horarios) }))
     .filter(emTratamentoHoje)
-}
-
-/**
- * Carteirinha em texto, para o menu de compartilhar do sistema (BUSINESS.md:
- * sem depender de API do WhatsApp). A carteira em PDF fica para a Fase 2.
- */
-export function textoCarteirinha(pet: Pet, vacinas: Vacina[], remedios: Remedio[]): string {
-  const especie = pet.especie === 'gato' ? 'Gato' : 'Cão'
-  const dados = [
-    [especie, pet.raca].filter(Boolean).join(' · '),
-    idadeEmAnos(pet.nascimento),
-    pet.sexo ? (pet.sexo === 'femea' ? 'Fêmea' : 'Macho') : null,
-    pet.peso_atual ? `${String(pet.peso_atual).replace('.', ',')} kg` : null,
-    pet.castrado === null ? null : pet.castrado ? 'Castrado' : 'Não castrado',
-  ].filter(Boolean)
-
-  const linhas = [`Carteirinha de ${pet.nome} (PetLive)`, dados.join(' · ')]
-
-  if (vacinas.length > 0) {
-    linhas.push('', 'Vacinas:')
-    for (const v of vacinas) {
-      const proxima = v.proxima_dose ? ` · próxima ${dataParaExibicao(v.proxima_dose)}` : ''
-      linhas.push(`- ${v.nome}: aplicada ${dataParaExibicao(v.aplicada_em)}${proxima}`)
-    }
-  }
-  if (remedios.length > 0) {
-    linhas.push('', 'Remédios em uso:')
-    for (const r of remedios) linhas.push(`- ${r.nome}: ${[r.dose, r.frequencia].filter(Boolean).join(', ')}`)
-  }
-  return linhas.join('\n')
-}
-
-/** Abre o menu de compartilhar com a carteirinha em texto. */
-export async function compartilharCarteirinha(pet: Pet, vacinas: Vacina[]): Promise<void> {
-  const remedios = await remediosEmUso(pet.id).catch(() => [] as Remedio[])
-  await Share.share({
-    title: `Carteirinha de ${pet.nome}`,
-    message: textoCarteirinha(pet, vacinas, remedios),
-  }).catch(() => undefined)
 }

@@ -111,6 +111,7 @@ function RaizProtegida() {
                 <Stack.Screen name="pet/novo" options={{ presentation: 'modal', animation: 'slide_from_bottom' }} />
                 <Stack.Screen name="pet/[id]/index" />
                 <Stack.Screen name="pet/[id]/carteirinha" />
+                <Stack.Screen name="pet/[id]/compartilhar" />
                 <Stack.Screen name="mapa/pet-friendly" />
                 <Stack.Screen name="atalhos" />
                 <Stack.Screen name="mapa/indicar" options={{ presentation: 'modal', animation: 'slide_from_bottom' }} />

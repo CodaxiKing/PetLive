@@ -19,7 +19,6 @@ import { Icone } from '../../../src/components/Icone'
 import { MarcaPata } from '../../../src/components/MarcaPata'
 import { Mascote } from '../../../src/components/Mascote'
 import { AbaCalendario } from '../../../src/pets/AbaCalendario'
-import { compartilharCarteirinha } from '../../../src/pets/carteirinha'
 import { usePets } from '../../../src/pets/PetsProvider'
 import { idadeEmAnos } from '../../../src/pets/types'
 import { carregarConsultas, type Consulta } from '../../../src/saude/consultas'
@@ -173,7 +172,7 @@ export default function PetDetalhe() {
               </Svg>
             </BotaoRedondo>
             <View style={estilos.topoDireita}>
-              <BotaoRedondo rotulo={`Compartilhar a carteirinha de ${petAtual.nome}`} onPress={() => compartilharCarteirinha(petAtual, vacinas)}>
+              <BotaoRedondo rotulo={`Compartilhar a carteirinha de ${petAtual.nome}`} onPress={() => router.push(`/pet/${petAtual.id}/compartilhar`)}>
                 <Icone nome="compartilhar" size={19} />
               </BotaoRedondo>
               <BotaoRedondo rotulo="Mais opções" onPress={() => setMenuAberto(true)}>
@@ -338,7 +337,7 @@ export default function PetDetalhe() {
             {[
               { rotulo: 'Medicamentos', icone: 'capsula' as const, fundo: '#FFF0C9', acao: () => ir('/pet/[id]/medicamentos') },
               { rotulo: 'Carteirinha', icone: 'carteirinha' as const, fundo: '#EBDDFB', acao: () => ir('/pet/[id]/carteirinha') },
-              { rotulo: 'Compartilhar', icone: 'compartilhar' as const, fundo: '#E3F3FC', acao: () => compartilharCarteirinha(petAtual, vacinas) },
+              { rotulo: 'Compartilhar', icone: 'compartilhar' as const, fundo: '#E3F3FC', acao: () => router.push(`/pet/${petAtual.id}/compartilhar`) },
             ].map((atalho) => (
               <Tocavel
                 key={atalho.rotulo}

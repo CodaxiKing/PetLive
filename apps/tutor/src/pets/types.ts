@@ -14,6 +14,10 @@ export interface Pet {
   castrado: boolean | null
   foto_url: string | null
   cor_etiqueta: string | null
+  /** Texto livre da carteirinha (alergias e condições, veterinário habitual, observações). */
+  alergias?: string | null
+  veterinario?: string | null
+  observacoes?: string | null
   ativo: boolean
   criado_em: string
 }
