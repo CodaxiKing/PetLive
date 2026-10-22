@@ -1,10 +1,12 @@
 import { useEffect, useImperativeHandle, useRef, useState, type Ref } from 'react';
 import { Linking, Platform, Pressable, StyleSheet, Text, View, type StyleProp, type ViewStyle } from 'react-native';
 import Constants from 'expo-constants';
+import * as Location from 'expo-location';
 import { Camera, Map, Marker, type CameraRef } from '@maplibre/maplibre-react-native';
 import type MapView from 'react-native-maps';
 import { FONTE_LUGARES, type CategoriaLugar } from './lugares';
 import { PinLugar } from './PinLugar';
+import { PontoUsuario } from './PontoUsuario';
 
 /** Estilo de mapa gratuito (OpenFreeMap: tiles OSM, sem chave). */
 const ESTILO_OSM = 'https://tiles.openfreemap.org/styles/liberty';
@@ -30,7 +32,44 @@ export type PinMapa = { id: string; lat: number; lng: number; categoria: Categor
 export type ControleMapa = {
   /** Move a câmera até o ponto, com animação. */
   irPara: (ponto: { lat: number; lng: number }, zoom: number, duracaoMs?: number) => void;
+  /** Onde o GPS diz que a pessoa está agora (o ponto azul), se já chegou. */
+  posicaoUsuario: () => { lat: number; lng: number } | null;
 };
+
+/**
+ * Posição ao vivo para o ponto azul: acompanha o GPS enquanto o mapa está
+ * na tela (só com a permissão já dada; quem pede é a tela do mapa).
+ */
+function usePosicaoAoVivo(ativo: boolean) {
+  const [ponto, setPonto] = useState<{ lat: number; lng: number } | null>(null);
+
+  useEffect(() => {
+    if (!ativo) return;
+    let vivo = true;
+    let assinatura: Location.LocationSubscription | null = null;
+    Location.getForegroundPermissionsAsync()
+      .then(({ granted }) =>
+        granted && vivo
+          ? Location.watchPositionAsync(
+              { accuracy: Location.Accuracy.High, distanceInterval: 3, timeInterval: 2000 },
+              (p) => setPonto({ lat: p.coords.latitude, lng: p.coords.longitude }),
+            )
+          : null,
+      )
+      .then((s) => {
+        if (vivo) assinatura = s;
+        else s?.remove();
+      })
+      // GPS desligado: o mapa segue sem o ponto.
+      .catch(() => undefined);
+    return () => {
+      vivo = false;
+      assinatura?.remove();
+    };
+  }, [ativo]);
+
+  return ativo ? ponto : null;
+}
 
 type Props = {
   centro: { lat: number; lng: number };
@@ -62,6 +101,8 @@ export function MapaLugares({
   ref,
 }: Props) {
   const camera = useRef<CameraRef>(null);
+  // No Google o ponto azul é o nativo (showsUserLocation).
+  const usuario = usePosicaoAoVivo(mostrarUsuario);
   const google = useRef<MapView>(null);
   // Google no Android desenha o pin como imagem: acompanha as mudanças só
   // logo depois de os pins chegarem (com o desenho pronto), depois congela.
@@ -89,6 +130,7 @@ export function MapaLugares({
         camera.current?.easeTo({ center: [ponto.lng, ponto.lat], zoom: zoomAlvo, duration: duracaoMs });
       }
     },
+    posicaoUsuario: () => usuario,
   }));
 
   if (Google) {
@@ -155,6 +197,13 @@ export function MapaLugares({
             <PinLugar categoria={pin.categoria} selecionado={pin.id === selecionado} />
           </Marker>
         ))}
+        {/* O MapLibre empilha na ordem em que os marcadores entram: a chave
+            muda com os pins para o ponto azul entrar de novo, por cima. */}
+        {usuario && !MAPA_GOOGLE ? (
+          <Marker key={`usuario-${assinaturaPins}`} id="usuario" lngLat={[usuario.lng, usuario.lat]} anchor="center">
+            <PontoUsuario />
+          </Marker>
+        ) : null}
       </Map>
       {/* ODbL: o crédito do OpenStreetMap precisa ficar visível no mapa. */}
       <Pressable

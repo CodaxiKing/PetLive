@@ -236,8 +236,10 @@ export default function Mapa() {
   }
 
   function meuLocal() {
-    if (posicao) {
-      mapaRef.current?.irPara(posicao, 14, 350);
+    // O ponto azul anda com o GPS; a primeira posição fica de reserva.
+    const agora = mapaRef.current?.posicaoUsuario() ?? posicao;
+    if (agora) {
+      mapaRef.current?.irPara(agora, 15, 350);
     } else {
       localizar();
     }

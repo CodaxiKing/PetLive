@@ -23,10 +23,14 @@ export async function enviarFotoPet({ tutorId, petId, uri, mimeType }: EnvioFoto
   const nome = `${petId}.${extensao}`
   const caminho = `${tutorId}/${nome}`
 
-  const conteudo = new FormData()
-  // No React Native o item de upload é { uri, name, type }, que não existe no
-  // FormData do DOM — por isso o cast (é o formato aceito pelo fetch nativo).
-  conteudo.append('file', { uri, name: nome, type: tipo } as unknown as Blob)
+  // Os bytes do arquivo, e não FormData com { uri }: o fetch novo do React
+  // Native recusa esse item ("Unsupported FormDataPart implementation").
+  let conteudo: ArrayBuffer
+  try {
+    conteudo = await (await fetch(uri)).arrayBuffer()
+  } catch {
+    return { url: null, erro: 'Não deu para ler a foto escolhida. Tente outra.' }
+  }
 
   const { error } = await supabase.storage.from('pets').upload(caminho, conteudo, {
     contentType: tipo,
@@ -38,7 +42,8 @@ export async function enviarFotoPet({ tutorId, petId, uri, mimeType }: EnvioFoto
   await limparFotosAntigas(tutorId, petId, nome)
 
   const { data } = supabase.storage.from('pets').getPublicUrl(caminho)
-  return { url: data.publicUrl, erro: null }
+  // O caminho é sempre o mesmo: o ?v= faz a foto nova aparecer em vez da antiga em cache.
+  return { url: `${data.publicUrl}?v=${Date.now()}`, erro: null }
 }
 
 function extensaoDe(mimeType?: string): string {

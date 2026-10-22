@@ -129,6 +129,7 @@ export default function Lugar() {
             pins={[lugar]}
             selecionado={lugar.id}
             interativo={false}
+            mostrarUsuario
           />
         )}
 

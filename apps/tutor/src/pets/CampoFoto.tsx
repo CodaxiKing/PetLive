@@ -38,7 +38,7 @@ export function pedirFoto(onEscolher: (ativo: AtivoFoto | null) => void, temFoto
       if (ativo) onEscolher(ativo)
     })
   }
-  Alert.alert('Foto do pet', 'A foto fica visível só para você, na ficha do pet.', [
+  Alert.alert('Foto do pet', 'A foto aparece na ficha do pet e na carteirinha que você compartilhar.', [
     temFoto
       ? { text: 'Remover', style: 'destructive', onPress: () => onEscolher(null) }
       : { text: 'Cancelar', style: 'cancel' },
