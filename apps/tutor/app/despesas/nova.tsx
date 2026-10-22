@@ -161,7 +161,7 @@ export default function TelaNovaDespesa() {
           />
         </View>
 
-        <Campo rotulo="Data" placeholder="DD/MM/AAAA" keyboardType="number-pad" value={data} onChangeText={setData} maxLength={10} />
+        <Campo rotulo="Data" mascara="data" placeholder="DD/MM/AAAA" value={data} onChangeText={setData} maxLength={10} />
 
         <View style={estilos.campoPets}>
           <Text style={estilos.valorRotulo}>Pet</Text>

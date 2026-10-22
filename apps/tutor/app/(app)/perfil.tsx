@@ -1,15 +1,14 @@
-import { useEffect, useState } from 'react';
-import { Alert, Image, Modal, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
-import { useRouter } from 'expo-router';
+import { useCallback, useEffect, useState } from 'react';
+import { Alert, Image, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { useFocusEffect, useRouter } from 'expo-router';
 import { useAuth } from '../../src/auth/AuthProvider';
 import { Surgir, Tocavel } from '../../src/components/Animacoes';
-import { BotaoPrimario } from '../../src/components/BotaoPrimario';
-import { Campo } from '../../src/components/Campo';
 import { HeroiOnda } from '../../src/components/HeroiOnda';
 import { Icone, type NomeIcone } from '../../src/components/Icone';
 import { MarcaPata } from '../../src/components/MarcaPata';
 import { Mascote } from '../../src/components/Mascote';
 import { limparCacheOffline } from '../../src/lib/cacheOffline';
+import { mascaraTelefone } from '../../src/lib/mascaras';
 import { supabase } from '../../src/lib/supabase';
 import { useLembretes } from '../../src/lembretes/LembretesProvider';
 import { useCidade } from '../../src/mapa/useCidade';
@@ -36,9 +35,8 @@ export default function Perfil() {
   const { pets, definirPetAtivo } = usePets();
 
   const [nome, setNome] = useState<string | null>(null);
-  const [editando, setEditando] = useState(false);
-  const [nomeEdicao, setNomeEdicao] = useState('');
-  const [salvando, setSalvando] = useState(false);
+  const [telefone, setTelefone] = useState<string | null>(null);
+  const [cidadePerfil, setCidadePerfil] = useState<string | null>(null);
   const [salvos, setSalvos] = useState<number | null>(null);
   const [limiteHoje] = useState(fimDeHoje);
   const { lembretes } = useLembretes();
@@ -52,17 +50,22 @@ export default function Perfil() {
       .then(({ count }) => setSalvos(count ?? 0));
   }, []);
 
-  useEffect(() => {
-    if (!user) return;
-    supabase
-      .from('profiles')
-      .select('nome')
-      .eq('id', user.id)
-      .maybeSingle()
-      .then(({ data }) => {
-        setNome(data?.nome ?? null);
-      });
-  }, [user]);
+  // Recarrega ao voltar de Meus dados.
+  useFocusEffect(
+    useCallback(() => {
+      if (!user) return;
+      supabase
+        .from('profiles')
+        .select('nome, telefone, cidade')
+        .eq('id', user.id)
+        .maybeSingle()
+        .then(({ data }) => {
+          setNome(data?.nome ?? null);
+          setTelefone(data?.telefone ?? null);
+          setCidadePerfil(data?.cidade ?? null);
+        });
+    }, [user]),
+  );
 
   const nomeExibido =
     nome?.trim() ||
@@ -71,36 +74,6 @@ export default function Perfil() {
     user?.email ||
     'Tutor PetLive';
   const inicial = nomeExibido.trim().charAt(0).toUpperCase();
-
-  function abrirEdicao() {
-    setNomeEdicao(nomeExibido);
-    setEditando(true);
-  }
-
-  async function salvarNome() {
-    if (!user) return;
-    const limpo = nomeEdicao.trim();
-    if (!limpo) return;
-
-    setSalvando(true);
-    try {
-      const { error } = await supabase.from('profiles').update({ nome: limpo }).eq('id', user.id);
-      if (error) throw error;
-
-      // Mantém os metadados do auth em dia (exibidos em outras telas).
-      const { error: erroAuth } = await supabase.auth.updateUser({
-        data: { nome: limpo, full_name: limpo },
-      });
-      if (erroAuth) throw erroAuth;
-
-      setNome(limpo);
-      setEditando(false);
-    } catch (e) {
-      Alert.alert('Não foi possível salvar', e instanceof Error ? e.message : String(e));
-    } finally {
-      setSalvando(false);
-    }
-  }
 
   async function sair() {
     // Dados de saúde guardados para uso sem internet saem junto com a conta.
@@ -121,6 +94,7 @@ export default function Perfil() {
   ];
 
   const linhas: { rotulo: string; icone: NomeIcone; fundo: string; acao: () => void; perigo?: boolean }[] = [
+    { rotulo: 'Meus dados', icone: 'pessoas', fundo: '#FFF0C9', acao: () => router.push('/meus-dados') },
     { rotulo: 'Notificações', icone: 'sino', fundo: colors.hero, acao: () => router.push('/avisos') },
     { rotulo: 'Privacidade e dados', icone: 'escudo', fundo: colors.successSurface, acao: () => router.push('/privacidade') },
     { rotulo: 'Sair', icone: 'sair', fundo: '#FBDADF', acao: sair, perigo: true },
@@ -142,14 +116,14 @@ export default function Perfil() {
               <View style={estilos.cidade}>
                 <Icone nome="local" size={12} espessura={2.2} />
                 <Text style={estilos.cidadeTexto} numberOfLines={1}>
-                  {cidade}
+                  {[cidadePerfil || cidade, telefone ? mascaraTelefone(telefone) : null].filter(Boolean).join(' · ')}
                 </Text>
               </View>
             </View>
             <Tocavel
               accessibilityRole="button"
-              accessibilityLabel="Editar perfil"
-              onPress={abrirEdicao}
+              accessibilityLabel="Editar meus dados"
+              onPress={() => router.push('/meus-dados')}
               style={estilos.editar}
             >
               <Icone nome="lapis" size={18} cor={colors.white} />
@@ -158,6 +132,16 @@ export default function Perfil() {
         </HeroiOnda>
 
         <View style={estilos.corpo}>
+          {/* Sem celular: a clínica, o hotel e o cuidador não têm como falar com o tutor. */}
+          {nome !== null && !telefone ? (
+            <Tocavel accessibilityRole="button" onPress={() => router.push('/meus-dados')} style={estilos.semCelular}>
+              <Icone nome="telefone" size={20} />
+              <View style={estilos.flex1}>
+                <Text style={estilos.semCelularTitulo}>Adicione seu celular</Text>
+                <Text style={estilos.semCelularTexto}>Para a clínica e o cuidador falarem com você pela carteirinha.</Text>
+              </View>
+            </Tocavel>
+          ) : null}
           <Surgir indice={0} style={estilos.numeros}>
             {numeros.map((n) => (
               <View key={n.rotulo} style={[estilos.numero, { backgroundColor: n.fundo }]}>
@@ -259,37 +243,14 @@ export default function Perfil() {
         </View>
       </ScrollView>
 
-      {/* Editar nome */}
-      <Modal visible={editando} animationType="slide" transparent onRequestClose={() => setEditando(false)}>
-        <View style={estilos.fundoModal}>
-          <View style={estilos.cartaoModal}>
-            <Text style={estilos.tituloModal}>Meus dados</Text>
-            <Campo
-              rotulo="Como você quer ser chamado"
-              variante="azul"
-              autoCapitalize="words"
-              returnKeyType="done"
-              value={nomeEdicao}
-              onChangeText={setNomeEdicao}
-              editable={!salvando}
-            />
-            <BotaoPrimario
-              titulo="Salvar"
-              carregando={salvando}
-              desabilitado={!nomeEdicao.trim() || salvando}
-              onPress={salvarNome}
-            />
-            <Pressable accessibilityRole="button" onPress={() => setEditando(false)} hitSlop={8} disabled={salvando}>
-              <Text style={estilos.fecharModal}>Cancelar</Text>
-            </Pressable>
-          </View>
-        </View>
-      </Modal>
     </View>
   );
 }
 
 const estilos = StyleSheet.create({
+  semCelular: { flexDirection: 'row', alignItems: 'center', gap: 14, backgroundColor: '#FFF0C9', borderRadius: 24, padding: 16, marginBottom: 12 },
+  semCelularTitulo: { fontFamily: fontFamily.bold, fontSize: 15, color: '#4A3800' },
+  semCelularTexto: { fontFamily: fontFamily.regular, fontSize: 13, color: '#7A5A00' },
   tela: { flex: 1, backgroundColor: colors.surface },
   conteudo: { paddingBottom: 120 },
   pataHeroi: { position: 'absolute', right: 6, top: 44 },

@@ -117,7 +117,7 @@ export default function TelaMarco() {
           </View>
         ) : null}
         <Campo rotulo="Título" placeholder="Ex.: Primeiro passeio na praia" value={titulo} onChangeText={setTitulo} maxLength={80} />
-        <Campo rotulo="Quando" placeholder="DD/MM/AAAA" keyboardType="number-pad" value={data} onChangeText={setData} maxLength={10} />
+        <Campo rotulo="Quando" mascara="data" placeholder="DD/MM/AAAA" value={data} onChangeText={setData} maxLength={10} />
         <Campo rotulo="Detalhe (opcional)" placeholder="Ex.: Praia de Botafogo, com a família" value={descricao} onChangeText={setDescricao} maxLength={200} />
 
         <Tocavel accessibilityRole="button" onPress={pedirFoto} style={[estilos.foto, !fotoMostrada && estilos.fotoVazia]}>

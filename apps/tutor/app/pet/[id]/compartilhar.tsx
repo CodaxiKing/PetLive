@@ -10,6 +10,7 @@ import { Icone } from '../../../src/components/Icone'
 import { Interruptor } from '../../../src/components/Interruptor'
 import { mensagemDeErro } from '../../../src/lib/cacheOffline'
 import { useRecurso } from '../../../src/lib/configApp'
+import { mascaraTelefone } from '../../../src/lib/mascaras'
 import { supabase } from '../../../src/lib/supabase'
 import {
   cancelarLink,
@@ -188,7 +189,7 @@ export default function TelaCompartilhar() {
               {ligado && texto ? (
                 <TextInput
                   value={textos[texto]}
-                  onChangeText={(v) => setTextos((t) => ({ ...t, [texto]: v }))}
+                  onChangeText={(v) => setTextos((t) => ({ ...t, [texto]: texto === 'telefone' ? mascaraTelefone(v) : v }))}
                   placeholder={DICAS[texto]}
                   placeholderTextColor={colors.textMuted}
                   accessibilityLabel={s.titulo}

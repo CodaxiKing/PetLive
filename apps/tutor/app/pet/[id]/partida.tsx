@@ -69,7 +69,7 @@ export default function TelaPartida() {
         <Text style={estilos.intro}>
           Sentimos muito pela partida {doPet}. Quando quiser, registre aqui. Nada será apagado.
         </Text>
-        <Campo rotulo="Data" placeholder="DD/MM/AAAA" keyboardType="number-pad" value={data} onChangeText={setData} maxLength={10} />
+        <Campo rotulo="Data" mascara="data" placeholder="DD/MM/AAAA" value={data} onChangeText={setData} maxLength={10} />
         <Campo
           rotulo="Uma mensagem para guardar (opcional)"
           placeholder={`Obrigado por tudo, ${nome}.`}

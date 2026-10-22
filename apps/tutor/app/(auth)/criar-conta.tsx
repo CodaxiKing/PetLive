@@ -20,6 +20,7 @@ import * as AppleAuthentication from 'expo-apple-authentication';
 import { appleDisponivel, entrarComApple } from '../../src/auth/apple';
 import { entrarComGoogle } from '../../src/auth/google';
 import { pedirNovaSenha } from '../../src/auth/senha';
+import { telefoneValido } from '../../src/lib/mascaras';
 import { supabase, supabaseConfigurado } from '../../src/lib/supabase';
 import { colors } from '../../src/theme/colors';
 import { spacing } from '../../src/theme/tokens';
@@ -34,6 +35,15 @@ function IconeUser() {
     <Svg width={20} height={20} viewBox="0 0 24 24" fill="none" stroke={colors.premiumText} strokeWidth={1.9} strokeLinecap="round">
       <Circle cx={12} cy={8} r={4} />
       <Path d="M4 20c1-4 4-6 8-6s7 2 8 6" />
+    </Svg>
+  );
+}
+
+function IconeCelular() {
+  return (
+    <Svg width={20} height={20} viewBox="0 0 24 24" fill="none" stroke={colors.warningText} strokeWidth={1.9} strokeLinecap="round" strokeLinejoin="round">
+      <Rect x={7} y={3} width={10} height={18} rx={2.5} />
+      <Path d="M11 18h2" />
     </Svg>
   );
 }
@@ -61,6 +71,7 @@ export default function CriarConta() {
   const router = useRouter();
   const [modo, setModo] = useState<Modo>('criar');
   const [nome, setNome] = useState('');
+  const [celular, setCelular] = useState('');
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
   const [aceite, setAceite] = useState(false);
@@ -77,9 +88,11 @@ export default function CriarConta() {
 
   const criando = modo === 'criar';
   const nomeValido = !criando || nome.trim().length >= 2;
+  // Celular com DDD: é o contato que a clínica, o hotel e o cuidador usam.
+  const celularValido = !criando || telefoneValido(celular);
   const emailValido = /.+@.+\..+/.test(email.trim());
   const senhaValida = senha.length >= MINIMO_SENHA;
-  const podeEnviar = nomeValido && emailValido && senhaValida && (!criando || aceite) && !carregando;
+  const podeEnviar = nomeValido && celularValido && emailValido && senhaValida && (!criando || aceite) && !carregando;
 
   async function enviar() {
     if (!podeEnviar) return;
@@ -102,6 +115,7 @@ export default function CriarConta() {
             data: {
               full_name: nome.trim(),
               nome: nome.trim(),
+              telefone: celular,
               aceite_termos_em: aceiteEm,
             },
           },
@@ -246,6 +260,19 @@ export default function CriarConta() {
             autoComplete="name"
             value={nome}
             onChangeText={setNome}
+          />
+        ) : null}
+
+        {criando ? (
+          <Campo
+            rotulo="Celular com DDD (WhatsApp)"
+            variante="amarelo"
+            icone={<IconeCelular />}
+            placeholder="(21) 99999-9999"
+            mascara="telefone"
+            autoComplete="tel"
+            value={celular}
+            onChangeText={setCelular}
           />
         ) : null}
 

@@ -80,8 +80,8 @@ export default function NovaConsulta() {
 
         <Campo
           rotulo="Data"
+          mascara="data"
           placeholder="DD/MM/AAAA"
-          keyboardType="number-pad"
           value={form.realizada_em}
           onChangeText={(v) => alterar('realizada_em', v)}
           editable={!salvando}

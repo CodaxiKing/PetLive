@@ -269,8 +269,8 @@ export default function NovoLembrete() {
               <Campo
                 rotulo="Data"
                 variante="amarelo"
+                mascara="data"
                 placeholder="dd/mm/aaaa"
-                keyboardType="number-pad"
                 value={form.data}
                 onChangeText={(v) => alterar('data', v)}
               />
@@ -279,8 +279,8 @@ export default function NovoLembrete() {
               <Campo
                 rotulo="Hora"
                 variante="azul"
+                mascara="hora"
                 placeholder="09:00"
-                keyboardType="number-pad"
                 value={form.hora}
                 onChangeText={(v) => {
                   horaEditada.current = true

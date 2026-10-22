@@ -144,8 +144,8 @@ export function FormularioPet({ form, onChange, titulo, passo, foto, onFoto, onV
                 <Campo
                   rotulo="Nascimento"
                   variante="azul"
+                  mascara="data"
                   placeholder="dd/mm/aaaa"
-                  keyboardType="number-pad"
                   value={form.nascimento}
                   onChangeText={(v) => onChange('nascimento', v)}
                 />

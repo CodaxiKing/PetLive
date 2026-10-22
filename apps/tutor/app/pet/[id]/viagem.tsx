@@ -22,6 +22,7 @@ import {
   type Modo,
 } from '../../../src/pets/viagem'
 import { dataParaExibicao, dataParaIso } from '../../../src/saude/types'
+import { mascaraData } from '../../../src/lib/mascaras'
 import { supabase } from '../../../src/lib/supabase'
 import type { Vacina } from '../../../src/saude/types'
 import { colors } from '../../../src/theme/colors'
@@ -135,7 +136,7 @@ export default function TelaViagem() {
           <Text style={estilos.rotulo}>Destino e data</Text>
           <View style={estilos.linha}>
             <TextInput value={destino} onChangeText={setDestino} placeholder="Cidade" placeholderTextColor={colors.textMuted} accessibilityLabel="Destino" maxLength={80} style={[estilos.entrada, estilos.flex]} />
-            <TextInput value={data} onChangeText={setData} placeholder="DD/MM/AAAA" placeholderTextColor={colors.textMuted} accessibilityLabel="Data da viagem" keyboardType="number-pad" maxLength={10} style={[estilos.entrada, estilos.data]} />
+            <TextInput value={data} onChangeText={(t) => setData(mascaraData(t))} placeholder="DD/MM/AAAA" placeholderTextColor={colors.textMuted} accessibilityLabel="Data da viagem" keyboardType="number-pad" maxLength={10} style={[estilos.entrada, estilos.data]} />
           </View>
         </View>
 

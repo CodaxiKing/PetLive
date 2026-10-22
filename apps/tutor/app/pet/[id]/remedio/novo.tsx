@@ -19,6 +19,7 @@ import { Icone } from '../../../../src/components/Icone'
 import { usePets } from '../../../../src/pets/PetsProvider'
 import { useRemedios } from '../../../../src/remedios/RemediosProvider'
 import { REMEDIO_FORM_VAZIO, hojeComoCampo, parseHorarios } from '../../../../src/remedios/types'
+import { mascaraHora } from '../../../../src/lib/mascaras'
 import { colors } from '../../../../src/theme/colors'
 import { fontFamily } from '../../../../src/theme/typography'
 
@@ -240,7 +241,8 @@ export default function NovoRemedio() {
             <Text style={estilos.folhaTitulo}>Novo horário</Text>
             <TextInput
               value={novoHorario ?? ''}
-              onChangeText={setNovoHorario}
+              onChangeText={(t) => setNovoHorario(mascaraHora(t))}
+              maxLength={5}
               placeholder="HH:MM"
               placeholderTextColor={colors.textMuted}
               keyboardType="number-pad"

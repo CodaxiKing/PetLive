@@ -280,7 +280,7 @@ export default function Sos() {
               rotulo="Telefone"
               variante="azul"
               placeholder="(21) 99999-9999"
-              keyboardType="phone-pad"
+              mascara="telefone"
               value={formVet.telefone}
               onChangeText={(telefone) => setFormVet((atual) => ({ ...atual, telefone }))}
             />

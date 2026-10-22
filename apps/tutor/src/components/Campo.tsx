@@ -3,6 +3,7 @@ import { StyleSheet, Text, TextInput, View, type TextInputProps } from 'react-na
 import { colors } from '../theme/colors';
 import { fontFamily, typography } from '../theme/typography';
 import { spacing } from '../theme/tokens';
+import { aplicarMascara, TAMANHO_MASCARA, type Mascara } from '../lib/mascaras';
 
 type Variante = 'roxo' | 'azul' | 'verde' | 'amarelo' | 'neutro';
 
@@ -10,6 +11,8 @@ type Props = TextInputProps & {
   rotulo: string;
   variante?: Variante;
   icone?: ReactNode;
+  /** Data (DD/MM/AAAA), telefone ((21) 99876-5432) ou hora (09:30): os separadores entram sozinhos. */
+  mascara?: Mascara;
 };
 
 const temaPorVariante: Record<Variante, { fundo: string; texto: string }> = {
@@ -24,7 +27,7 @@ const temaPorVariante: Record<Variante, { fundo: string; texto: string }> = {
  * Campo do protótipo: caixa colorida arredondada com rótulo pequeno
  * colorido, ícone à esquerda e texto forte.
  */
-export function Campo({ rotulo, variante = 'neutro', icone, ...props }: Props) {
+export function Campo({ rotulo, variante = 'neutro', icone, mascara, ...props }: Props) {
   const tema = temaPorVariante[variante];
 
   return (
@@ -38,7 +41,11 @@ export function Campo({ rotulo, variante = 'neutro', icone, ...props }: Props) {
           accessibilityLabel={rotulo}
           placeholderTextColor={colors.textMuted}
           style={[estilos.texto, { color: colors.text }]}
+          {...(mascara
+            ? { keyboardType: mascara === 'telefone' ? 'phone-pad' : 'number-pad', maxLength: TAMANHO_MASCARA[mascara] }
+            : null)}
           {...props}
+          onChangeText={mascara ? (texto) => props.onChangeText?.(aplicarMascara(mascara, texto)) : props.onChangeText}
         />
       </View>
     </View>

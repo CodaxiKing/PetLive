@@ -176,8 +176,8 @@ export default function NovaVacina() {
               <Campo
                 rotulo="Data aplicada"
                 variante="roxo"
+                mascara="data"
                 placeholder="dd/mm/aaaa"
-                keyboardType="number-pad"
                 value={form.aplicada_em}
                 onChangeText={(v) => alterar('aplicada_em', v)}
               />
@@ -190,8 +190,8 @@ export default function NovaVacina() {
               <Campo
                 rotulo="Próxima dose"
                 variante="amarelo"
+                mascara="data"
                 placeholder="dd/mm/aaaa"
-                keyboardType="number-pad"
                 value={form.proxima_dose}
                 onChangeText={(v) => alterar('proxima_dose', v)}
               />
