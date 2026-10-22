@@ -1,8 +1,10 @@
 import { describe, expect, it } from 'vitest'
 import {
+  arquivosSemRegistro,
   caminhoAnexo,
   ehErroDeRede,
   filtrarAnexos,
+  FOLGA_ARQUIVO_SEM_REGISTRO,
   mimeAceito,
   ordenarAnexos,
   pastasOrfas,
@@ -78,6 +80,28 @@ describe('pastasOrfas', () => {
   it('não apaga nada quando todos os pets existem', () => {
     expect(pastasOrfas(['p1'], ['p1', 'p9'])).toEqual([])
     expect(pastasOrfas([], ['p1'])).toEqual([])
+  })
+})
+
+describe('arquivosSemRegistro', () => {
+  const agora = Date.parse('2026-10-22T12:00:00Z')
+  const pasta = 'u/anexos/p1'
+  it('a folga é de 24 h', () => {
+    expect(FOLGA_ARQUIVO_SEM_REGISTRO).toBe(24 * 60 * 60 * 1000)
+  })
+  it('devolve o arquivo antigo que nenhum anexo usa', () => {
+    const arquivos = [
+      { name: 'a.jpg', created_at: '2026-10-21T08:00:00Z' },
+      { name: 'b.jpg', created_at: '2026-10-21T08:00:00Z' },
+    ]
+    expect(arquivosSemRegistro(pasta, arquivos, ['u/anexos/p1/a.jpg'], agora)).toEqual(['u/anexos/p1/b.jpg'])
+  })
+  it('poupa o envio recente, que pode estar criando o registro agora', () => {
+    const arquivos = [{ name: 'c.jpg', created_at: new Date(agora - FOLGA_ARQUIVO_SEM_REGISTRO + 1000).toISOString() }]
+    expect(arquivosSemRegistro(pasta, arquivos, [], agora)).toEqual([])
+  })
+  it('sem data de criação, não apaga', () => {
+    expect(arquivosSemRegistro(pasta, [{ name: 'd.jpg', created_at: null }, { name: 'e.jpg' }], [], agora)).toEqual([])
   })
 })
 

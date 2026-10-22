@@ -1,6 +1,7 @@
 import { supabase } from '../lib/supabase'
 import type { AtivoFoto } from '../pets/CampoFoto'
 import {
+  arquivosSemRegistro,
   caminhoAnexo,
   ehErroDeRede,
   mimeAceito,
@@ -47,7 +48,8 @@ export async function urlsAnexos(caminhos: string[]): Promise<Record<string, str
 
 /**
  * Sobe a foto e cria o registro. Se o registro falhar, o arquivo enviado é
- * apagado: nada fica pela metade.
+ * apagado: nada fica pela metade. Se apagar também falhar (rede caiu),
+ * `limparAnexosOrfaos` leva o arquivo numa abertura do app depois de 24 h.
  */
 export async function enviarAnexo(tutorId: string, petId: string, foto: AtivoFoto, dados: DadosAnexo): Promise<Anexo> {
   const mime = mimeAceito(foto.mimeType, foto.uri)
@@ -97,10 +99,13 @@ export async function apagarAnexo(anexo: Anexo): Promise<void> {
 }
 
 /**
- * Apaga do Storage os arquivos de pets que já foram excluídos (a cascata leva
- * só os registros). Roda logo depois de excluir um pet e de novo ao abrir o
- * app: se a rede cair no meio, os arquivos saem na próxima vez. As pastas são
- * listadas antes dos pets, para não pegar a de um pet criado nesse meio-tempo.
+ * Apaga do Storage os arquivos que ficaram sem registro: os de pets já
+ * excluídos (a cascata leva só os registros) e, nos pets que existem, os de
+ * envios cujo registro e cuja limpeza falharam (ou que subiram direto pela
+ * API), passada a folga de `arquivosSemRegistro`. Roda logo depois de excluir
+ * um pet e de novo ao abrir o app: se a rede cair no meio, os arquivos saem na
+ * próxima vez. As pastas são listadas antes dos pets, para não pegar a de um
+ * pet criado nesse meio-tempo, e os arquivos antes dos registros.
  */
 export async function limparAnexosOrfaos(tutorId: string): Promise<void> {
   const raiz = `${tutorId}/anexos`
@@ -112,8 +117,11 @@ export async function limparAnexosOrfaos(tutorId: string): Promise<void> {
 
   const { data: pets, error: erroPets } = await supabase.from('pets').select('id')
   if (erroPets || !pets) return
+  const orfas = pastasOrfas(pastas, pets.map((p) => (p as { id: string }).id))
 
-  for (const pasta of pastasOrfas(pastas, pets.map((p) => (p as { id: string }).id))) {
+  await limparSemRegistro(raiz, pastas.filter((p) => !orfas.includes(p)))
+
+  for (const pasta of orfas) {
     for (;;) {
       const { data: arquivos, error } = await supabase.storage.from(BUCKET).list(`${raiz}/${pasta}`, { limit: 1000 })
       if (error || !arquivos?.length) break
@@ -123,6 +131,24 @@ export async function limparAnexosOrfaos(tutorId: string): Promise<void> {
       if (erroRemover) return
     }
   }
+}
+
+/** Arquivos sem registro nas pastas de pets que existem (melhor esforço). */
+async function limparSemRegistro(raiz: string, pastas: string[]): Promise<void> {
+  if (pastas.length === 0) return
+  const porPasta: { pasta: string; arquivos: { name: string; created_at?: string | null }[] }[] = []
+  for (const pasta of pastas) {
+    const { data: arquivos, error } = await supabase.storage.from(BUCKET).list(`${raiz}/${pasta}`, { limit: 1000 })
+    if (error) return
+    porPasta.push({ pasta: `${raiz}/${pasta}`, arquivos: (arquivos ?? []).filter((a) => a.name && a.id) })
+  }
+
+  const { data: registros, error: erroRegistros } = await supabase.from('anexos').select('arquivo_path')
+  if (erroRegistros || !registros) return
+  const registrados = registros.map((r) => (r as { arquivo_path: string }).arquivo_path)
+
+  const sobras = porPasta.flatMap(({ pasta, arquivos }) => arquivosSemRegistro(pasta, arquivos, registrados))
+  if (sobras.length > 0) await supabase.storage.from(BUCKET).remove(sobras)
 }
 
 function erroDeEnvio(mensagem: string): ErroAnexo {

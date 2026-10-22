@@ -86,6 +86,14 @@ Ainda não há código para rodar. Os primeiros passos do desenvolvimento, em or
 
 Quando o código existir, esta seção ganhará os comandos de instalação, variáveis de ambiente e como rodar cada app.
 
+## Verificação (QA)
+
+```powershell
+pnpm verify
+```
+
+Roda, um passo de cada vez, `pnpm install --frozen-lockfile`, o typecheck e os testes de todos os apps. Sai com erro no primeiro passo que falhar.
+
 ## Roadmap resumido
 
 | Fase | Entrega | Situação |

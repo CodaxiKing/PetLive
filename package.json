@@ -9,6 +9,7 @@
     "tutor:ios": "pnpm --filter petlive-tutor ios",
     "tutor:typecheck": "pnpm --filter petlive-tutor typecheck",
     "typecheck": "pnpm -r typecheck",
+    "verify": "node scripts/verify.mjs",
     "backup": "node scripts/backup-db.mjs",
     "monitor": "node scripts/monitorar.mjs"
   },

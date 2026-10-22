@@ -72,6 +72,34 @@ export function pastasOrfas(pastas: string[], petIds: string[]): string[] {
   return pastas.filter((p) => !existentes.has(p))
 }
 
+/**
+ * Folga antes de tratar um arquivo sem registro como sobra: o envio sobe o
+ * arquivo e só depois cria o registro, então um arquivo recente pode ser de
+ * um envio ainda em andamento. Passadas 24 h, o arquivo sem registro sai.
+ */
+export const FOLGA_ARQUIVO_SEM_REGISTRO = 24 * 60 * 60 * 1000
+
+/**
+ * Caminhos de `pasta` que nenhum anexo usa e que já passaram da folga: sobra
+ * de um envio cujo registro e cuja limpeza falharam, ou arquivo que subiu
+ * direto pela API sem passar pelo app. Sem data de criação, não apaga.
+ */
+export function arquivosSemRegistro(
+  pasta: string,
+  arquivos: { name: string; created_at?: string | null }[],
+  registrados: string[],
+  agora = Date.now(),
+): string[] {
+  const usados = new Set(registrados)
+  return arquivos
+    .filter((a) => {
+      const criado = a.created_at ? Date.parse(a.created_at) : NaN
+      return !Number.isNaN(criado) && agora - criado > FOLGA_ARQUIVO_SEM_REGISTRO
+    })
+    .map((a) => `${pasta}/${a.name}`)
+    .filter((caminho) => !usados.has(caminho))
+}
+
 /** Do mais recente para o mais antigo (data e, no empate, envio). */
 export function ordenarAnexos(anexos: Anexo[]): Anexo[] {
   return [...anexos].sort((a, b) => b.data.localeCompare(a.data) || b.criado_em.localeCompare(a.criado_em))
