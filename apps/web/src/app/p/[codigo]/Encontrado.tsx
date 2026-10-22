@@ -27,6 +27,7 @@ type RespostaQR =
       pet: PetQR;
       tutor: TutorQR;
       permitir_localizacao_finder: boolean;
+      scan_token: string;
     };
 
 type EstadoLocalizacao =
@@ -216,6 +217,12 @@ export default function Encontrado() {
       return;
     }
 
+    const token = resposta?.scan_token;
+    if (!token) {
+      setToast({ mensagem: "Sessão inválida. Recarregue a página e tente novamente.", tipo: "erro" });
+      return;
+    }
+
     setEstadoLocalizacao({ status: "loading" });
     setToast(null);
 
@@ -233,7 +240,7 @@ export default function Encontrado() {
       const resp = await fetch(`${URL_SUPABASE}/rest/v1/rpc/qr_location`, {
         method: "POST",
         headers: { apikey: CHAVE_ANON, "Content-Type": "application/json" },
-        body: JSON.stringify({ p_codigo: codigo, p_lat: latitude, p_lng: longitude }),
+        body: JSON.stringify({ p_codigo: codigo, p_lat: latitude, p_lng: longitude, p_token: token }),
       });
 
       const data = await resp.json();

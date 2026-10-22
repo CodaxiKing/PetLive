@@ -50,6 +50,7 @@ ok(publico.valido === true, 'página pública abre sem login');
 ok(publico.pet.nome === 'Rex', 'nome do pet aparece');
 ok(publico.permitir_localizacao_finder === true, 'flag permitir_localizacao_finder vem true');
 ok(publico.tutor.telefone !== null, 'telefone aparece porque show_phone=true');
+ok(typeof publico.scan_token === 'string' && publico.scan_token.length === 64, 'scan_token gerado (64 chars hex)');
 
 // 3) Tutor desliga permitir_localizacao_finder
 const upd2 = await rpc('atualizar_qr_pet', tutor, {
@@ -62,7 +63,7 @@ const publico2 = (await rpc('public_qr', null, { p_codigo: 'TEST123' })).corpo;
 ok(publico2.permitir_localizacao_finder === false, 'flag permitir_localizacao_finder agora false');
 
 // 4) Anônimo tenta enviar localização sem permissão -> erro
-const semPerm = await rpc('qr_location', null, { p_codigo: 'TEST123', p_lat: -22.9, p_lng: -43.2 });
+const semPerm = await rpc('qr_location', null, { p_codigo: 'TEST123', p_lat: -22.9, p_lng: -43.2, p_token: publico.scan_token });
 ok(semPerm.corpo.sucesso === false, 'qr_location falha quando tutor não autorizou');
 ok(semPerm.corpo.erro?.includes('não autorizou'), 'mensagem de erro clara');
 
@@ -74,22 +75,32 @@ await rpc('atualizar_qr_pet', tutor, {
 });
 
 // 6) Anônimo envia localização válida
-const comPerm = await rpc('qr_location', null, { p_codigo: 'TEST123', p_lat: -22.9068, p_lng: -43.1729 });
+const comPerm = await rpc('qr_location', null, { p_codigo: 'TEST123', p_lat: -22.9068, p_lng: -43.1729, p_token: publico.scan_token });
 ok(comPerm.corpo.sucesso === true, 'qr_location succeeds com permissão');
 
-// 7) Mesmo IP não pode enviar de novo (anti-spam 1 por abertura)
-const segunda = await rpc('qr_location', null, { p_codigo: 'TEST123', p_lat: -22.9068, p_lng: -43.1729 });
-ok(segunda.corpo.sucesso === false, 'segunda tentativa do mesmo IP falha');
+// 7) Mesmo token não pode enviar de novo (anti-spam 1 por abertura)
+const segunda = await rpc('qr_location', null, { p_codigo: 'TEST123', p_lat: -22.9068, p_lng: -43.1729, p_token: publico.scan_token });
+ok(segunda.corpo.sucesso === false, 'segunda tentativa do mesmo token falha');
 ok(segunda.corpo.erro?.includes('já enviada'), 'mensagem anti-spam clara');
 
+// 7b) Token inválido (muito curto) -> erro
+const tokenCurto = await rpc('qr_location', null, { p_codigo: 'TEST123', p_lat: -22.9068, p_lng: -43.1729, p_token: 'abc' });
+ok(tokenCurto.corpo.sucesso === false, 'qr_location falha com token curto');
+ok(tokenCurto.corpo.erro?.includes('inválido'), 'mensagem de token inválido');
+
+// 7c) Token ausente -> erro
+const semToken = await rpc('qr_location', null, { p_codigo: 'TEST123', p_lat: -22.9068, p_lng: -43.1729 });
+ok(semToken.corpo.sucesso === false, 'qr_location falha sem token');
+ok(semToken.corpo.erro?.includes('inválido'), 'mensagem de token ausente');
+
 // 8) QR inexistente -> erro
-const inexistente = await rpc('qr_location', null, { p_codigo: 'NAOEXISTE', p_lat: 0, p_lng: 0 });
+const inexistente = await rpc('qr_location', null, { p_codigo: 'NAOEXISTE', p_lat: 0, p_lng: 0, p_token: 'a'.repeat(64) });
 ok(inexistente.corpo.sucesso === false, 'qr_location falha com QR inexistente');
 ok(inexistente.corpo.erro?.includes('inválido'), 'mensagem de QR inválido');
 
 // 9) QR inativo -> erro
 await rpc('atualizar_qr_pet', tutor, { p_pet: rex.id, p_code: 'TEST123', p_active: false });
-const inativo = await rpc('qr_location', null, { p_codigo: 'TEST123', p_lat: 0, p_lng: 0 });
+const inativo = await rpc('qr_location', null, { p_codigo: 'TEST123', p_lat: 0, p_lng: 0, p_token: 'a'.repeat(64) });
 ok(inativo.corpo.sucesso === false, 'qr_location falha com QR inativo');
 
 // 10) Verifica se scan foi registrado com lat/lng
