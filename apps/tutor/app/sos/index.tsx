@@ -153,6 +153,18 @@ export default function Sos() {
                 >
                   <Text style={[estilos.chip, estilos.chipCinza]}>Rota</Text>
                 </Pressable>
+                <Pressable
+                  accessibilityRole="button"
+                  onPress={() =>
+                    router.push({
+                      pathname: '/ficha/enviar',
+                      params: { lugar: clinica.lugar.id, nome: clinica.lugar.nome, telefone: telefoneClinica ?? '' },
+                    })
+                  }
+                  hitSlop={6}
+                >
+                  <Text style={[estilos.chip, estilos.chipCinza]}>Enviar ficha</Text>
+                </Pressable>
                 {clinica.doAparelho ? null : (
                   <Pressable
                     accessibilityRole="button"

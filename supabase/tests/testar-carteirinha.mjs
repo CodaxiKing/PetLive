@@ -53,5 +53,16 @@ await rpc('cancelar_link_carteirinha', tutor, { p_id: lista[0].id });
 ok(JSON.stringify((await rpc('carteirinha_publica', null, { p_codigo: link.codigo })).corpo) === '{"valido":false}', 'link cancelado não mostra nada');
 ok(JSON.stringify((await rpc('carteirinha_publica', null, { p_codigo: 'nao-existe' })).corpo) === '{"valido":false}', 'código inexistente não mostra nada');
 
+// 5) Ficha de emergência: reaproveita a ativa, vermelha na página e avisa o tutor.
+const f1 = (await rpc('criar_link_carteirinha', tutor, { p_pet: rex.id, p_secoes: ['dados', 'alergias'], p_horas: 24, p_tipo: 'emergencia', p_lugar: 'teste:1', p_canal: 'whatsapp' })).corpo;
+const f2 = (await rpc('criar_link_carteirinha', tutor, { p_pet: rex.id, p_secoes: ['alergias', 'dados'], p_horas: 24, p_tipo: 'emergencia', p_canal: 'qr' })).corpo;
+ok(f1.codigo === f2.codigo && f2.reaproveitada === true, 'ficha de emergência ativa é reaproveitada');
+const vista = (await rpc('carteirinha_publica', null, { p_codigo: f1.codigo })).corpo;
+ok(vista.valido && vista.tipo === 'emergencia', 'página sabe que é ficha de emergência');
+const avisos = (await pedir('/rest/v1/notification_log?select=title&type=eq.sistema&order=sent_at.desc&limit=1', { token: tutor, metodo: 'GET' })).corpo;
+ok(avisos[0]?.title?.includes('foi aberta'), 'tutor é avisado quando abrem a ficha');
+const fichas = (await pedir(`/rest/v1/carteirinha_links?select=id&codigo=eq.${f1.codigo}`, { token: tutor, metodo: 'GET' })).corpo;
+await rpc('cancelar_link_carteirinha', tutor, { p_id: fichas[0].id });
+
 console.log(falhas ? `\n${falhas} falha(s)` : '\nTudo certo');
 process.exit(falhas ? 1 : 0);

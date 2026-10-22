@@ -25,7 +25,7 @@ type Conteudo = {
   observacoes?: string | null;
   tutor?: { nome: string | null; telefone: string | null };
 };
-type Resposta = { valido: false } | { valido: true; conteudo: Conteudo; secoes: string[]; criado_em: string; expira_em: string };
+type Resposta = { valido: false } | { valido: true; tipo?: "carteirinha" | "emergencia"; conteudo: Conteudo; secoes: string[]; criado_em: string; expira_em: string };
 
 /** "12/03/26" a partir de "2026-03-12". */
 function data(iso: string | null | undefined): string {
@@ -117,6 +117,9 @@ export default function Ficha() {
   if (!resposta.valido) return <Expirada />;
 
   const c = resposta.conteudo;
+  // Ficha de emergência: faixa vermelha, como no protótipo FichaVista.
+  const emergencia = resposta.tipo === "emergencia";
+  const rotuloFicha = emergencia ? "Ficha de emergência" : "Carteirinha do pet";
   const especie = c.especie === "gato" ? "Gato" : "Cão";
   const sexo = c.sexo ? (c.sexo === "femea" ? "fêmea" : "macho") : null;
   const sexoCastrado = [sexo, c.castrado === true ? (c.sexo === "femea" ? "castrada" : "castrado") : null].filter(Boolean).join(" ");
@@ -219,11 +222,11 @@ export default function Ficha() {
     </>
   );
 
-  const aviso = "Informações do tutor, pelo PetLive. Confirme com ele. Não substitui o histórico da clínica. O tutor vê quando a carteirinha foi aberta. Não precisa de login.";
+  const aviso = "Informações do tutor, pelo PetLive. Confirme com ele. Não substitui o histórico da clínica. O tutor é avisado de que a ficha foi aberta. Não precisa de login.";
 
   return (
     <main className="min-h-screen bg-fundo print:bg-white">
-      <header className="bg-azul">
+      <header className={emergencia ? "bg-[#A3324F] text-white" : "bg-azul"}>
         <div className="mx-auto flex max-w-6xl items-center gap-4 px-5 py-5 lg:px-12">
           <div className="flex h-20 w-20 flex-none items-center justify-center overflow-hidden rounded-full bg-white lg:hidden">
             {c.foto_url ? (
@@ -236,12 +239,14 @@ export default function Ficha() {
           <div className="min-w-0 flex-1 lg:flex lg:items-center lg:justify-between">
             <p className="flex items-center gap-3">
               <span className="hidden text-xl font-extrabold tracking-tight lg:inline">PetLive</span>
-              <span className="text-[13px] font-extrabold uppercase tracking-wider text-azul-texto lg:rounded-full lg:bg-white/60 lg:px-3 lg:py-1 lg:text-[12px]">
-                Carteirinha do pet
+              <span
+                className={`text-[13px] font-extrabold uppercase tracking-wider lg:rounded-full lg:px-3 lg:py-1 lg:text-[12px] ${emergencia ? "text-white/90 lg:bg-white/20" : "text-azul-texto lg:bg-white/60"}`}
+              >
+                {rotuloFicha}
               </span>
             </p>
             <h1 className="text-3xl font-bold tracking-tight lg:hidden">{c.nome}</h1>
-            <p className="text-[14px] text-azul-texto lg:hidden">{resumo}</p>
+            <p className={`text-[14px] lg:hidden ${emergencia ? "text-white/90" : "text-azul-texto"}`}>{resumo}</p>
             <p className="hidden text-[14px] font-bold lg:block">
               {quando(resposta.criado_em, "Gerada")} · {quando(resposta.expira_em, "válida até").replace("válida até em", "válida até")}
             </p>
@@ -314,7 +319,7 @@ function Expirada() {
           <path d="M8.5 11V8a3.5 3.5 0 0 1 7 0v3" />
         </svg>
       </span>
-      <h1 className="mt-6 text-3xl font-medium tracking-tight">Este link da carteirinha expirou</h1>
+      <h1 className="mt-6 text-3xl font-medium tracking-tight">Este link da ficha expirou</h1>
       <p className="mt-3 max-w-md text-[15px] leading-relaxed text-cinza">
         O prazo do link acabou ou o tutor cancelou o acesso. Por segurança, os dados não ficam abertos.
       </p>

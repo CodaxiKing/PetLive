@@ -25,6 +25,7 @@ import {
   type Lugar as LugarRegistro,
 } from '../src/mapa/lugares';
 import { MapaLugares } from '../src/mapa/MapaLugares';
+import { usePets } from '../src/pets/PetsProvider';
 import { colors } from '../src/theme/colors';
 import { radius, shadow, spacing } from '../src/theme/tokens';
 import { fontFamily, typography } from '../src/theme/typography';
@@ -56,6 +57,7 @@ function CardInfo({
  */
 export default function Lugar() {
   const { id, categoria } = useLocalSearchParams<{ id: string; categoria?: CategoriaLugar }>();
+  const { pets, petAtivo } = usePets();
   const { width } = useWindowDimensions();
   const [lugar, setLugar] = useState<LugarRegistro | null>(null);
   const [carregando, setCarregando] = useState(true);
@@ -298,6 +300,31 @@ export default function Lugar() {
             />
           )}
 
+          {/* Clínica: enviar a ficha de emergência do pet (protótipo FichaLugar). */}
+          {lugar.categoria === 'clinica' && pets.length > 0 ? (
+            <Pressable
+              accessibilityRole="button"
+              onPress={() =>
+                router.push({ pathname: '/ficha/enviar', params: { lugar: lugar.id, nome: lugar.nome, telefone: telefone ?? '' } })
+              }
+              style={estilos.enviarFicha}
+            >
+              <View style={estilos.enviarFichaIcone}>
+                <Svg width={22} height={22} viewBox="0 0 24 24" fill="none" stroke="#A3324F" strokeWidth={1.9} strokeLinecap="round" strokeLinejoin="round">
+                  <Path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z" />
+                  <Path d="M12 9v6M9 12h6" />
+                </Svg>
+              </View>
+              <View style={estilos.flexMin}>
+                <Text style={estilos.enviarFichaTitulo}>
+                  Enviar a ficha {(petAtivo ?? pets[0]).sexo === 'femea' ? 'da' : 'do'} {(petAtivo ?? pets[0]).nome} para esta clínica
+                </Text>
+                <Text style={estilos.enviarFichaSub}>Alergias, remédios, vacinas e peso, pelo WhatsApp</Text>
+              </View>
+              <Text style={estilos.enviarFichaSeta}>›</Text>
+            </Pressable>
+          ) : null}
+
           {lugar.fonte === 'google' ? (
             <View style={estilos.fonteGoogle}>
               <AtribuicaoGoogle />
@@ -424,6 +451,20 @@ export default function Lugar() {
 }
 
 const estilos = StyleSheet.create({
+  enviarFicha: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 14,
+    backgroundColor: '#FDE0E6',
+    borderRadius: 28,
+    paddingVertical: 14,
+    paddingHorizontal: 14,
+  },
+  enviarFichaIcone: { width: 48, height: 48, borderRadius: 24, backgroundColor: colors.white, alignItems: 'center', justifyContent: 'center' },
+  flexMin: { flex: 1, minWidth: 0 },
+  enviarFichaTitulo: { fontFamily: fontFamily.bold, fontSize: 16, lineHeight: 21, color: colors.black },
+  enviarFichaSub: { fontFamily: fontFamily.regular, fontSize: 13, color: '#A3324F' },
+  enviarFichaSeta: { fontFamily: fontFamily.bold, fontSize: 24, color: colors.black },
   tela: {
     flex: 1,
     backgroundColor: colors.surface,

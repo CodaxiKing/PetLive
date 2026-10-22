@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { ActivityIndicator, Alert, KeyboardAvoidingView, Platform, ScrollView, Share, StyleSheet, Text, TextInput, View } from 'react-native'
-import { useFocusEffect, useLocalSearchParams } from 'expo-router'
+import { router, useFocusEffect, useLocalSearchParams } from 'expo-router'
 import { useAuth } from '../../../src/auth/AuthProvider'
 import { Tocavel } from '../../../src/components/Animacoes'
 import { BotaoPrimario } from '../../../src/components/BotaoPrimario'
@@ -147,6 +147,17 @@ export default function TelaCompartilhar() {
         {!linkLigado ? (
           <Text style={estilos.pausado}>O envio por link está pausado agora. Tente de novo mais tarde.</Text>
         ) : null}
+        <Tocavel
+          accessibilityRole="button"
+          onPress={() => router.push(`/pet/${pet.id}/ficha`)}
+          style={estilos.emergencia}
+        >
+          <View style={estilos.flex}>
+            <Text style={estilos.emergenciaTitulo}>Ficha de emergência</Text>
+            <Text style={estilos.emergenciaSub}>Link com prazo para clínica ou cuidador, com QR</Text>
+          </View>
+          <Icone nome="seta" size={18} espessura={2} />
+        </Tocavel>
         <Text style={estilos.intro}>
           Escolha o que vai na carteirinha de {pet.nome}. Quem receber vê só isto. Incluídos: {ligadas.size} de {SECOES.length}.
         </Text>
@@ -235,6 +246,9 @@ const estilos = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 14,
   },
+  emergencia: { flexDirection: 'row', alignItems: 'center', gap: 12, backgroundColor: '#FDE0E6', borderRadius: 24, paddingVertical: 14, paddingHorizontal: 18 },
+  emergenciaTitulo: { fontFamily: fontFamily.bold, fontSize: 16, color: colors.black },
+  emergenciaSub: { fontFamily: fontFamily.regular, fontSize: 13, color: '#A3324F' },
   intro: { fontFamily: fontFamily.regular, fontSize: 15, lineHeight: 22, color: '#5E6878', marginBottom: 2 },
   item: { backgroundColor: colors.background, borderRadius: 24, paddingVertical: 12, paddingHorizontal: 16, gap: 10 },
   itemLinha: { flexDirection: 'row', alignItems: 'center', gap: 12 },

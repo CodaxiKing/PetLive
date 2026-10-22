@@ -33,6 +33,7 @@ export type LinkCarteirinha = {
   codigo: string
   pet_id: string
   secoes: Secao[]
+  tipo: 'carteirinha' | 'emergencia'
   criado_em: string
   expira_em: string
   cancelado_em: string | null
@@ -40,10 +41,25 @@ export type LinkCarteirinha = {
   ultima_abertura_em: string | null
 }
 
-export async function gerarLink(petId: string, secoes: Secao[], horas: number): Promise<{ codigo: string; expira_em: string }> {
-  const { data, error } = await supabase.rpc('criar_link_carteirinha', { p_pet: petId, p_secoes: secoes, p_horas: horas })
+/** De onde saiu o link (ficha de emergência): registra o lugar, nunca o número. */
+export type OrigemLink = { tipo?: 'carteirinha' | 'emergencia'; lugar?: string | null; canal?: 'whatsapp' | 'compartilhar' | 'qr' | 'copiar' }
+
+export async function gerarLink(
+  petId: string,
+  secoes: Secao[],
+  horas: number,
+  origem: OrigemLink = {},
+): Promise<{ codigo: string; expira_em: string; reaproveitada?: boolean }> {
+  const { data, error } = await supabase.rpc('criar_link_carteirinha', {
+    p_pet: petId,
+    p_secoes: secoes,
+    p_horas: horas,
+    p_tipo: origem.tipo ?? 'carteirinha',
+    p_lugar: origem.lugar ?? null,
+    p_canal: origem.canal ?? null,
+  })
   if (error) throw new Error(error.message)
-  return data as { codigo: string; expira_em: string }
+  return data as { codigo: string; expira_em: string; reaproveitada?: boolean }
 }
 
 export async function cancelarLink(id: string): Promise<void> {
@@ -55,7 +71,7 @@ export async function cancelarLink(id: string): Promise<void> {
 export async function linksAtivos(petId: string): Promise<LinkCarteirinha[]> {
   const { data, error } = await supabase
     .from('carteirinha_links')
-    .select('id, codigo, pet_id, secoes, criado_em, expira_em, cancelado_em, aberturas, ultima_abertura_em')
+    .select('id, codigo, pet_id, secoes, tipo, criado_em, expira_em, cancelado_em, aberturas, ultima_abertura_em')
     .eq('pet_id', petId)
     .is('cancelado_em', null)
     .gt('expira_em', new Date().toISOString())
