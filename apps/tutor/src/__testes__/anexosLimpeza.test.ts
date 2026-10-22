@@ -100,6 +100,20 @@ describe('foto órfã no storage', () => {
     expect(arquivos.size).toBe(1)
   })
 
+  it('arquivo solto na raiz <uid>/anexos/ (subiu direto pela API) sai depois da folga; o registrado fica', async () => {
+    const agora = new Date().toISOString()
+    arquivos.set('u/anexos/solto.jpg', agora)
+    arquivos.set('u/anexos/registrado.jpg', agora)
+    registros.push({ arquivo_path: 'u/anexos/registrado.jpg' })
+
+    await limparAnexosOrfaos('u')
+    expect(arquivos.size).toBe(2)
+
+    vi.setSystemTime(Date.now() + FOLGA_ARQUIVO_SEM_REGISTRO + 60_000)
+    await limparAnexosOrfaos('u')
+    expect([...arquivos.keys()]).toEqual(['u/anexos/registrado.jpg'])
+  })
+
   it('pasta com mais de 1000 arquivos: limpa todas as sobras e poupa os registrados', async () => {
     const antigo = new Date(Date.now() - 2 * FOLGA_ARQUIVO_SEM_REGISTRO).toISOString()
     for (let i = 0; i < 2500; i++) {

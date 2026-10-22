@@ -105,10 +105,12 @@ export async function apagarAnexo(anexo: Anexo): Promise<void> {
  * Apaga do Storage os arquivos que ficaram sem registro: os de pets já
  * excluídos (a cascata leva só os registros) e, nos pets que existem, os de
  * envios cujo registro e cuja limpeza falharam (ou que subiram direto pela
- * API), passada a folga de `arquivosSemRegistro`. Roda logo depois de excluir
- * um pet e de novo ao abrir o app: se a rede cair no meio, os arquivos saem na
- * próxima vez. As pastas são listadas antes dos pets, para não pegar a de um
- * pet criado nesse meio-tempo, e os arquivos antes dos registros.
+ * API), passada a folga de `arquivosSemRegistro`. Vale também para arquivos
+ * soltos na raiz `<uid>/anexos/`, fora de uma pasta de pet (o app nunca grava
+ * ali, mas a API deixa). Roda logo depois de excluir um pet e de novo ao abrir
+ * o app: se a rede cair no meio, os arquivos saem na próxima vez. As pastas são
+ * listadas antes dos pets, para não pegar a de um pet criado nesse meio-tempo,
+ * e os arquivos antes dos registros.
  */
 export async function limparAnexosOrfaos(tutorId: string): Promise<void> {
   const raiz = `${tutorId}/anexos`
@@ -116,13 +118,14 @@ export async function limparAnexosOrfaos(tutorId: string): Promise<void> {
   if (!itens) return
   // Subpasta vem sem id; arquivo vem com id.
   const pastas = itens.filter((i) => i.name && !i.id).map((i) => i.name)
-  if (pastas.length === 0) return
+  const soltos = itens.filter((i) => i.name && i.id)
+  if (pastas.length === 0 && soltos.length === 0) return
 
   const { data: pets, error: erroPets } = await supabase.from('pets').select('id')
   if (erroPets || !pets) return
   const orfas = pastasOrfas(pastas, pets.map((p) => (p as { id: string }).id))
 
-  await limparSemRegistro(raiz, pastas.filter((p) => !orfas.includes(p)))
+  await limparSemRegistro(raiz, pastas.filter((p) => !orfas.includes(p)), soltos)
 
   for (const pasta of orfas) {
     for (;;) {
@@ -137,13 +140,17 @@ export async function limparAnexosOrfaos(tutorId: string): Promise<void> {
 }
 
 /**
- * Arquivos sem registro nas pastas de pets que existem (melhor esforço). As
- * pastas são lidas página a página; os candidatos (antigos o bastante) são
- * conferidos na tabela em lotes, então nenhum limite de linhas faz um arquivo
- * registrado parecer sobra.
+ * Arquivos sem registro nas pastas de pets que existem e soltos na raiz
+ * (melhor esforço). As pastas são lidas página a página; os candidatos
+ * (antigos o bastante) são conferidos na tabela em lotes, então nenhum limite
+ * de linhas faz um arquivo registrado parecer sobra.
  */
-async function limparSemRegistro(raiz: string, pastas: string[]): Promise<void> {
-  const candidatos: string[] = []
+async function limparSemRegistro(
+  raiz: string,
+  pastas: string[],
+  soltos: { name: string; created_at?: string | null }[],
+): Promise<void> {
+  const candidatos = arquivosSemRegistro(raiz, soltos, [])
   for (const pasta of pastas) {
     const itens = await listarTudo(`${raiz}/${pasta}`)
     if (!itens) return
