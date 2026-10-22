@@ -24,6 +24,7 @@ const ICONES: Record<string, string[]> = {
   lgpd: ["M6 11h12v9H6z", "M8.5 11V8a3.5 3.5 0 0 1 7 0v3"],
   relatorios: ["M4 20h16", "M7 16v-4", "M12 16V7", "M17 16v-7"],
   conteudo: ["M6 4h12v16H6z", "M9 8h6", "M9 12h6", "M9 16h3"],
+  sistema: ["M3 12h4l2-6 4 12 2-6h6"],
   breve: ["M12 4a8 8 0 1 0 0 16 8 8 0 0 0 0-16z", "M12 8v4l2.5 1.5"],
 };
 
@@ -40,7 +41,7 @@ const AREAS: { rotulo: string; href?: string; icone: keyof typeof ICONES; papeis
   { rotulo: "Campanhas", icone: "breve" },
   { rotulo: "Conteúdo mestre", href: "/admin/conteudo", icone: "conteudo" },
   { rotulo: "Integrações", icone: "breve" },
-  { rotulo: "Sistema", icone: "breve" },
+  { rotulo: "Sistema", href: "/admin/sistema", icone: "sistema" },
   { rotulo: "Privacidade e LGPD", href: "/admin/lgpd", icone: "lgpd", papeis: ["suporte", "leitura"] },
   { rotulo: "Equipe", href: "/admin/equipe", icone: "equipe", papeis: [] },
 ];

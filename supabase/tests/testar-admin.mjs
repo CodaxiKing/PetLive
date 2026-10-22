@@ -131,6 +131,18 @@ const pacote = (await rpc('admin_conteudo', aal2)).corpo.pacotes.find((p) => p.t
 ok(pacote && !pacote.publicado, 'cria rascunho do pacote de emergência');
 ok((await rpc('admin_pacote_publicar', aal2, { p_id: pacote.id })).status >= 400, 'emergência não publica sem veterinário e CRMV');
 
+// Sistema: versão mínima e recursos (o app lê sem login).
+const sistema = (await rpc('admin_sistema', aal2)).corpo;
+ok(Array.isArray(sistema.versoes) && sistema.recursos.some((r) => r.chave === 'carteirinha_link'), 'sistema: versões e recursos');
+ok((await rpc('admin_definir_versao_minima', aal2, { p_plataforma: 'android', p_versao: 'abc' })).status >= 400, 'versão mínima inválida é barrada');
+await rpc('admin_definir_versao_minima', aal2, { p_plataforma: 'android', p_versao: '9.9.9' });
+await rpc('admin_definir_recurso', aal2, { p_chave: 'indicar_lugar', p_ligado: false });
+const config = (await rpc('config_app', null)).corpo;
+ok(config.versao_minima.android === '9.9.9' && config.recursos.indicar_lugar === false, 'o app lê a versão mínima e o recurso desligado');
+await rpc('admin_definir_versao_minima', aal2, { p_plataforma: 'android', p_versao: '0.0.0' });
+await rpc('admin_definir_recurso', aal2, { p_chave: 'indicar_lugar', p_ligado: true });
+ok((await rpc('admin_definir_recurso', tutor, { p_chave: 'indicar_lugar', p_ligado: false })).status >= 400, 'tutor comum não mexe nos recursos');
+
 // 5) Ninguém lê as tabelas direto.
 ok((await pedir('/rest/v1/audit_log?select=*', { token: aal2, metodo: 'GET' })).status >= 400, 'audit_log não é lido direto pela API');
 

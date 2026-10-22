@@ -9,6 +9,7 @@ import { HeroiOnda } from '../../../src/components/HeroiOnda'
 import { Icone } from '../../../src/components/Icone'
 import { Interruptor } from '../../../src/components/Interruptor'
 import { mensagemDeErro } from '../../../src/lib/cacheOffline'
+import { useRecurso } from '../../../src/lib/configApp'
 import { supabase } from '../../../src/lib/supabase'
 import {
   cancelarLink,
@@ -44,6 +45,7 @@ export default function TelaCompartilhar() {
   const { pets, recarregar } = usePets()
   const { user } = useAuth()
   const pet = pets.find((p) => p.id === id) ?? null
+  const linkLigado = useRecurso('carteirinha_link')
 
   const [ligadas, setLigadas] = useState<Set<Secao>>(() => new Set(SECOES.filter((s) => s.padrao).map((s) => s.chave)))
   const [textos, setTextos] = useState<Record<Texto, string>>({ alergias: '', veterinario: '', observacoes: '', telefone: '' })
@@ -142,6 +144,9 @@ export default function TelaCompartilhar() {
       <HeroiOnda titulo="O que incluir?" subtitulo="Compartilhar" altura={200} />
 
       <ScrollView style={estilos.flex} contentContainerStyle={estilos.conteudo} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
+        {!linkLigado ? (
+          <Text style={estilos.pausado}>O envio por link está pausado agora. Tente de novo mais tarde.</Text>
+        ) : null}
         <Text style={estilos.intro}>
           Escolha o que vai na carteirinha de {pet.nome}. Quem receber vê só isto. Incluídos: {ligadas.size} de {SECOES.length}.
         </Text>
@@ -206,6 +211,7 @@ export default function TelaCompartilhar() {
         <BotaoPrimario
           titulo="Continuar"
           carregando={enviando}
+          desabilitado={!linkLigado}
           icone={<Icone nome="compartilhar" size={22} espessura={2} />}
           onPress={continuar}
         />
@@ -219,6 +225,16 @@ const estilos = StyleSheet.create({
   centro: { alignItems: 'center', justifyContent: 'center' },
   flex: { flex: 1, minWidth: 0 },
   conteudo: { paddingHorizontal: 24, paddingBottom: 24, gap: 10 },
+  pausado: {
+    fontFamily: fontFamily.bold,
+    fontSize: 13,
+    color: '#7A5A00',
+    backgroundColor: '#FFF0C9',
+    borderRadius: 16,
+    overflow: 'hidden',
+    paddingVertical: 10,
+    paddingHorizontal: 14,
+  },
   intro: { fontFamily: fontFamily.regular, fontSize: 15, lineHeight: 22, color: '#5E6878', marginBottom: 2 },
   item: { backgroundColor: colors.background, borderRadius: 24, paddingVertical: 12, paddingHorizontal: 16, gap: 10 },
   itemLinha: { flexDirection: 'row', alignItems: 'center', gap: 12 },

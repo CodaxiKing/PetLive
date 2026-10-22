@@ -21,7 +21,9 @@ import { registrarCategoriaDose, tratarRespostaDose } from '../src/notificacoes/
 import { registrarTarefaDose } from '../src/notificacoes/tarefaDose';
 import { atualizarPacoteEmergencia } from '../src/sos/pacote';
 import { colors } from '../src/theme/colors';
+import { useConfigApp } from '../src/lib/configApp';
 import { registrarAberturaDiaria } from '../src/lib/eventos';
+import { TelaAtualizar } from '../src/components/TelaAtualizar';
 
 /**
  * Sentry: só liga quando há DSN (sem conta/DSN o app segue normal,
@@ -71,6 +73,7 @@ function useObservadorNotificacoes() {
 /** Decide para onde a rota raiz aponta, conforme a sessão. */
 function RaizProtegida() {
   const { session, carregando } = useAuth();
+  const { precisaAtualizar } = useConfigApp();
   const logado = Boolean(session);
 
   // Tutores ativos (métrica da Fase 1): uma abertura por dia, também ao voltar ao app.
@@ -82,6 +85,9 @@ function RaizProtegida() {
     });
     return () => assinatura.remove();
   }, [logado]);
+
+  // Versão abaixo da mínima do painel (área Sistema): só a tela de atualizar.
+  if (precisaAtualizar) return <TelaAtualizar />;
 
   if (carregando) {
     return (

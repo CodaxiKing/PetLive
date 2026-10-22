@@ -19,6 +19,7 @@ import {
   type CategoriaPetFriendly,
   type Lugar,
 } from '../../src/mapa/lugares';
+import { useRecurso } from '../../src/lib/configApp';
 import { useLocalizacao } from '../../src/mapa/useLocalizacao';
 import { colors } from '../../src/theme/colors';
 import { fontFamily } from '../../src/theme/typography';
@@ -62,6 +63,7 @@ type Regiao = { nome: string; lat: number; lng: number };
  */
 export default function TelaPetFriendly() {
   const { posicao } = useLocalizacao();
+  const podeIndicar = useRecurso('indicar_lugar');
   const [filtro, setFiltro] = useState<Filtro>('todos');
   const [texto, setTexto] = useState('');
   const [regiao, setRegiao] = useState<Regiao | null>(null);
@@ -202,21 +204,24 @@ export default function TelaPetFriendly() {
             <Text style={estilos.nota}>Confirme com o local antes de ir.</Text>
           </View>
 
-          <Tocavel
-            accessibilityRole="button"
-            onPress={() => router.push('/mapa/indicar')}
-            escala={0.98}
-            style={estilos.indicar}
-          >
-            <View style={estilos.indicarIcone}>
-              <Icone nome="pata" size={20} />
-            </View>
-            <View style={estilos.flex}>
-              <Text style={estilos.indicarTitulo}>Conhece um lugar que aceita pets?</Text>
-              <Text style={estilos.indicarSub}>Indique e ajude outros tutores</Text>
-            </View>
-            <Icone nome="seta" size={18} espessura={2} />
-          </Tocavel>
+          {/* O painel pode pausar as indicações (área Sistema). */}
+          {podeIndicar ? (
+            <Tocavel
+              accessibilityRole="button"
+              onPress={() => router.push('/mapa/indicar')}
+              escala={0.98}
+              style={estilos.indicar}
+            >
+              <View style={estilos.indicarIcone}>
+                <Icone nome="pata" size={20} />
+              </View>
+              <View style={estilos.flex}>
+                <Text style={estilos.indicarTitulo}>Conhece um lugar que aceita pets?</Text>
+                <Text style={estilos.indicarSub}>Indique e ajude outros tutores</Text>
+              </View>
+              <Icone nome="seta" size={18} espessura={2} />
+            </Tocavel>
+          ) : null}
         </ScrollView>
       </View>
 

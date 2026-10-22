@@ -1,4 +1,6 @@
+import { Platform } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { VERSAO_APP } from './configApp';
 import { supabase } from './supabase';
 
 /**
@@ -72,7 +74,8 @@ export async function registrarAberturaDiaria(): Promise<void> {
   const ultima = await AsyncStorage.getItem(ULTIMA_ABERTURA).catch(() => null);
   if (ultima !== hoje) {
     await AsyncStorage.setItem(ULTIMA_ABERTURA, hoje).catch(() => undefined);
-    registrarEvento('app_aberto');
+    // Versão e plataforma: o painel mostra quem ainda usa versão antiga.
+    registrarEvento('app_aberto', { versao: VERSAO_APP, plataforma: Platform.OS });
   } else {
     enviarFila();
   }
