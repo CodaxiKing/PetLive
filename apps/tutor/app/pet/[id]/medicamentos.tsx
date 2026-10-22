@@ -13,6 +13,7 @@ import Svg, { Path } from 'react-native-svg'
 import { BotaoPrimario } from '../../../src/components/BotaoPrimario'
 import { HeroiOnda } from '../../../src/components/HeroiOnda'
 import { supabase } from '../../../src/lib/supabase'
+import { conviteSeRecusado } from '../../../src/pets/convitePremium'
 import { usePets } from '../../../src/pets/PetsProvider'
 import {
   carregarDosesHoje,
@@ -72,7 +73,7 @@ async function carregarTudo(petId: string): Promise<Dados> {
  */
 export default function TelaMedicamentos() {
   const { id } = useLocalSearchParams<{ id: string }>()
-  const { pets } = usePets()
+  const { pets, editarPet } = usePets()
   const pet = pets.find((p) => p.id === id) ?? null
 
   const [lista, setLista] = useState<Remedio[]>([])
@@ -97,12 +98,17 @@ export default function TelaMedicamentos() {
     }, [id]),
   )
 
+  // Pet só para consulta: adicionar remédio e marcar Feito abrem o convite Premium.
   const abrirNovo = () => {
     if (!id) return
-    router.push({ pathname: '/pet/[id]/remedio/novo', params: { id } })
+    editarPet(id, () => router.push({ pathname: '/pet/[id]/remedio/novo', params: { id } }))
   }
 
-  const confirmar = async (dose: DoseHoje) => {
+  const confirmar = (dose: DoseHoje) => {
+    if (id) editarPet(id, () => darDose(dose))
+  }
+
+  const darDose = async (dose: DoseHoje) => {
     setSalvandoDose(dose.id)
     try {
       await confirmarDose(dose.id)
@@ -114,7 +120,7 @@ export default function TelaMedicamentos() {
         ),
       )
     } catch (e) {
-      Alert.alert('Não foi possível confirmar', e instanceof Error ? e.message : String(e))
+      if (!conviteSeRecusado(e, id)) Alert.alert('Não foi possível confirmar', e instanceof Error ? e.message : String(e))
     } finally {
       setSalvandoDose(null)
     }

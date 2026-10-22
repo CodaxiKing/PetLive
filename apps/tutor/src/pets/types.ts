@@ -20,6 +20,11 @@ export interface Pet {
   observacoes?: string | null
   /** Partida registrada (modo memorial): fora da lista ativa, nada apagado. */
   em_memoria?: boolean
+  /**
+   * Além do limite do plano grátis: só para consulta (BUSINESS.md 5.13).
+   * Calculado no servidor (select '*, somente_leitura').
+   */
+  somente_leitura?: boolean
   ativo: boolean
   criado_em: string
 }

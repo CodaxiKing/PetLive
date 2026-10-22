@@ -28,7 +28,7 @@ const TUDO = new Set(ITENS_FICHA.map((i) => i.chave))
  */
 export default function TelaEnviarFicha() {
   const { lugar, nome, telefone } = useLocalSearchParams<{ lugar?: string; nome?: string; telefone?: string }>()
-  const { pets, petAtivo, definirPetAtivo } = usePets()
+  const { pets, petAtivo, definirPetAtivo, adicionarPet } = usePets()
   const ligado = useRecurso('carteirinha_link')
   const pet = petAtivo ?? pets[0] ?? null
   const [enviando, setEnviando] = useState<OrigemLink['canal'] | null>(null)
@@ -41,7 +41,7 @@ export default function TelaEnviarFicha() {
         <HeroiOnda fundo={ROSA} subtitulo={nome ?? 'Clínica'} titulo="Enviar a ficha" altura={200} />
         <View style={estilos.vazio}>
           <Text style={estilos.vazioTexto}>Cadastre um pet para enviar a ficha de emergência.</Text>
-          <BotaoPrimario titulo="Cadastrar pet" onPress={() => router.push('/pet/novo')} />
+          <BotaoPrimario titulo="Cadastrar pet" onPress={adicionarPet} />
         </View>
       </View>
     )

@@ -38,7 +38,7 @@ function tituloSemPet(titulo: string, nome: string): string {
  * idade, o próximo lembrete e o mascote (ou a foto), e "Adicionar pet".
  */
 export default function Pets() {
-  const { pets, petsMemoria, seniores, carregando, definirPetAtivo, recarregar } = usePets()
+  const { pets, petsMemoria, seniores, carregando, definirPetAtivo, recarregar, adicionarPet } = usePets()
   const { lembretes } = useLembretes()
   const [atualizando, setAtualizando] = useState(false)
 
@@ -67,7 +67,7 @@ export default function Pets() {
           accessibilityRole="button"
           accessibilityLabel="Cadastrar novo pet"
           hitSlop={8}
-          onPress={() => router.push('/pet/novo')}
+          onPress={adicionarPet}
           style={({ pressed }) => [estilos.mais, pressed && { opacity: 0.7 }]}
         >
           <Text style={estilos.maisSinal}>+</Text>
@@ -118,6 +118,7 @@ export default function Pets() {
                       </Text>
                       {idade ? <Text style={estilos.chip}>{idade}</Text> : null}
                       {seniores.has(pet.id) ? <Text style={[estilos.chip, estilos.chipSenior]}>Sênior</Text> : null}
+                      {pet.somente_leitura ? <Text style={[estilos.chip, estilos.chipConsulta]}>Só consulta</Text> : null}
                     </View>
                     {proximo ? (
                       <Text style={estilos.lembrete} numberOfLines={1}>
@@ -163,7 +164,7 @@ export default function Pets() {
 
           <Pressable
             accessibilityRole="button"
-            onPress={() => router.push('/pet/novo')}
+            onPress={adicionarPet}
             style={({ pressed }) => [estilos.adicionar, pressed && { opacity: 0.7 }]}
           >
             <Text style={estilos.adicionarTexto}>+   Adicionar pet</Text>
@@ -176,6 +177,7 @@ export default function Pets() {
 
 const estilos = StyleSheet.create({
   chipSenior: { backgroundColor: '#FFF0C9', color: '#7A5A00' },
+  chipConsulta: { backgroundColor: colors.premiumSurface, color: colors.premiumText },
   memoria: { flexDirection: 'row', alignItems: 'center', gap: 14, backgroundColor: colors.premiumSurface, borderRadius: 28, padding: 14, marginTop: 12 },
   memoriaRetrato: { width: 56, height: 56, borderRadius: 28, overflow: 'hidden', backgroundColor: colors.white, alignItems: 'center', justifyContent: 'center' },
   memoriaFoto: { width: 56, height: 56 },

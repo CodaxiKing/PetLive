@@ -1,4 +1,5 @@
 import { supabase } from '../lib/supabase'
+import { erroDoServidor } from '../pets/limite'
 import type { Remedio } from './types'
 
 export type DoseHoje = {
@@ -111,7 +112,7 @@ export async function confirmarDose(doseId: string): Promise<void> {
     .update({ confirmada_em: new Date().toISOString(), origem: 'app' })
     .eq('id', doseId)
 
-  if (error) throw new Error(error.message)
+  if (error) throw erroDoServidor(error)
 }
 
 /** '2026-10-20T11:00:00+00:00' -> '11:00'. */

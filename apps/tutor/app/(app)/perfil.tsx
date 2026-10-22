@@ -32,7 +32,7 @@ function fimDeHoje(): number {
 export default function Perfil() {
   const router = useRouter();
   const { user } = useAuth();
-  const { pets, definirPetAtivo } = usePets();
+  const { pets, definirPetAtivo, adicionarPet } = usePets();
 
   const [nome, setNome] = useState<string | null>(null);
   const [telefone, setTelefone] = useState<string | null>(null);
@@ -195,7 +195,7 @@ export default function Perfil() {
               <Tocavel
                 accessibilityRole="button"
                 accessibilityLabel="Novo pet"
-                onPress={() => router.push('/pet/novo')}
+                onPress={adicionarPet}
                 style={[estilos.pet, estilos.petNovo]}
               >
                 <View style={estilos.petNovoMais}>

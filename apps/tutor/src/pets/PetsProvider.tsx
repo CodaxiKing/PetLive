@@ -1,8 +1,13 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react'
+import { AppState } from 'react-native'
+import { router } from 'expo-router'
 import { mensagemDeErro } from '../lib/cacheOffline'
+import type { Plano } from '../lib/plano'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../auth/AuthProvider'
+import { abrirConvitePremium } from './convitePremium'
 import { enviarFotoPet } from './foto'
+import { motivoPremiumDoErro, podeCadastrarPet } from './limite'
 import { petsSenior } from './senior'
 import type { Pet, PetForm } from './types'
 import { FORM_VAZIO, formParaRegistro } from './types'
@@ -17,6 +22,17 @@ interface PetsContextValue {
   /** O pet acabou de virar sênior (checado ao abrir a tela dele). */
   marcarSenior: (id: string) => void
   petAtivo: Pet | null
+  /** Plano do tutor (profiles.plano), relido junto com os pets. */
+  plano: Plano
+  /** Cabe mais um pet ativo no plano (BUSINESS.md 10). */
+  podeCadastrar: boolean
+  /** Todo botão de novo pet passa aqui: cadastro ou convite Premium. */
+  adicionarPet: () => void
+  /**
+   * Toda tentativa de edição de um pet passa aqui: se ele está só para
+   * consulta, abre o convite Premium em vez de seguir.
+   */
+  editarPet: (id: string, acao: () => void) => void
   carregando: boolean
   salvando: boolean
   erro: string | null
@@ -44,6 +60,7 @@ export function PetsProvider({ children }: { children: ReactNode }) {
   const [seniores, setSeniores] = useState<Set<string>>(new Set())
   const marcarSenior = useCallback((id: string) => setSeniores((atual) => (atual.has(id) ? atual : new Set(atual).add(id))), [])
   const [petAtivoId, setPetAtivoId] = useState<string | null>(null)
+  const [plano, setPlano] = useState<Plano>('gratis')
   const [carregando, setCarregando] = useState(true)
   const [salvando, setSalvando] = useState(false)
   const [erro, setErro] = useState<string | null>(null)
@@ -51,11 +68,22 @@ export function PetsProvider({ children }: { children: ReactNode }) {
   const recarregar = useCallback(() => {
     // Sem tutor não há consulta; resolve vazio para o estado também passar
     // pela fronteira assíncrona (mesmo motivo do .then() no AuthProvider).
+    // somente_leitura é calculado no servidor a cada leitura (limite do plano).
     const consulta = tutorId
-      ? supabase.from('pets').select('*').order('criado_em', { ascending: false })
+      ? supabase.from('pets').select('*, somente_leitura').order('criado_em', { ascending: false })
       : Promise.resolve({ data: [] as Pet[], error: null })
 
-    if (tutorId) petsSenior().then(setSeniores, () => undefined)
+    if (tutorId) {
+      petsSenior().then(setSeniores, () => undefined)
+      supabase
+        .from('profiles')
+        .select('plano')
+        .eq('id', tutorId)
+        .maybeSingle()
+        .then(({ data }) => {
+          if (data) setPlano(data.plano === 'premium' ? 'premium' : 'gratis')
+        })
+    }
 
     return Promise.resolve(consulta).then(({ data, error }) => {
       if (error) {
@@ -72,6 +100,27 @@ export function PetsProvider({ children }: { children: ReactNode }) {
     recarregar()
   }, [recarregar])
 
+  // O plano pode ter mudado fora do app (assinatura, cobrança): ao voltar
+  // para o app, relê e os pets voltam a ser editáveis na hora.
+  useEffect(() => {
+    const assinatura = AppState.addEventListener('change', (estado) => {
+      if (estado === 'active') recarregar()
+    })
+    return () => assinatura.remove()
+  }, [recarregar])
+
+  /** Recusa do servidor pelo plano: relê os pets e abre o convite. */
+  const recusaDoPlano = useCallback(
+    (error: { code?: string; hint?: string | null }, petId?: string) => {
+      const motivo = motivoPremiumDoErro(error)
+      if (!motivo) return false
+      recarregar()
+      abrirConvitePremium(motivo, petId)
+      return true
+    },
+    [recarregar],
+  )
+
   const criarPet = useCallback(
     async (form: PetForm) => {
       if (!tutorId) return null
@@ -84,7 +133,7 @@ export function PetsProvider({ children }: { children: ReactNode }) {
         .single()
       setSalvando(false)
       if (error) {
-        setErro(mensagemDeErro(error.message))
+        if (!recusaDoPlano(error)) setErro(mensagemDeErro(error.message))
         return null
       }
       const pet = data as Pet
@@ -92,7 +141,7 @@ export function PetsProvider({ children }: { children: ReactNode }) {
       setPetAtivoId(pet.id)
       return pet
     },
-    [tutorId],
+    [tutorId, recusaDoPlano],
   )
 
   const atualizarPet = useCallback(async (id: string, form: PetForm) => {
@@ -103,17 +152,17 @@ export function PetsProvider({ children }: { children: ReactNode }) {
       .from('pets')
       .update(formParaRegistro(form, tutorId))
       .eq('id', id)
-      .select()
+      .select('*, somente_leitura')
       .single()
     setSalvando(false)
     if (error) {
-      setErro(mensagemDeErro(error.message))
+      if (!recusaDoPlano(error, id)) setErro(mensagemDeErro(error.message))
       return null
     }
     const pet = data as Pet
     setPets((atual) => atual.map((p) => (p.id === id ? pet : p)))
     return pet
-  }, [tutorId])
+  }, [tutorId, recusaDoPlano])
 
   const salvarFoto = useCallback(
     async (id: string, foto: { uri: string; mimeType?: string }) => {
@@ -135,18 +184,18 @@ export function PetsProvider({ children }: { children: ReactNode }) {
         .from('pets')
         .update({ foto_url: resultado.url })
         .eq('id', id)
-        .select()
+        .select('*, somente_leitura')
         .single()
       setSalvando(false)
       if (error) {
-        setErro(mensagemDeErro(error.message))
+        if (!recusaDoPlano(error, id)) setErro(mensagemDeErro(error.message))
         return null
       }
       const pet = data as Pet
       setPets((atual) => atual.map((p) => (p.id === id ? pet : p)))
       return resultado.url
     },
-    [tutorId],
+    [tutorId, recusaDoPlano],
   )
 
   const removerFoto = useCallback(
@@ -157,18 +206,18 @@ export function PetsProvider({ children }: { children: ReactNode }) {
         .from('pets')
         .update({ foto_url: null })
         .eq('id', id)
-        .select()
+        .select('*, somente_leitura')
         .single()
       setSalvando(false)
       if (error) {
-        setErro(mensagemDeErro(error.message))
+        if (!recusaDoPlano(error, id)) setErro(mensagemDeErro(error.message))
         return false
       }
       const pet = data as Pet
       setPets((atual) => atual.map((p) => (p.id === id ? pet : p)))
       return true
     },
-    [],
+    [recusaDoPlano],
   )
 
   const removerPet = useCallback(
@@ -182,10 +231,27 @@ export function PetsProvider({ children }: { children: ReactNode }) {
         return false
       }
       setPets((atual) => atual.filter((p) => p.id !== id))
+      // Sem ele, outro pet pode deixar de estar só para consulta.
+      recarregar()
       if (petAtivoId === id) setPetAtivoId(null)
       return true
     },
-    [petAtivoId],
+    [petAtivoId, recarregar],
+  )
+
+  const podeCadastrar = podeCadastrarPet(plano, pets.length)
+
+  const adicionarPet = useCallback(() => {
+    if (podeCadastrar) router.push('/pet/novo')
+    else abrirConvitePremium('limite_pets')
+  }, [podeCadastrar])
+
+  const editarPet = useCallback(
+    (id: string, acao: () => void) => {
+      if (todos.find((p) => p.id === id)?.somente_leitura) abrirConvitePremium('somente_leitura', id)
+      else acao()
+    },
+    [todos],
   )
 
   // Sem escolha do tutor, o primeiro pet é o ativo (título do Início,
@@ -202,6 +268,10 @@ export function PetsProvider({ children }: { children: ReactNode }) {
       seniores,
       marcarSenior,
       petAtivo,
+      plano,
+      podeCadastrar,
+      adicionarPet,
+      editarPet,
       carregando,
       salvando,
       erro,
@@ -214,7 +284,7 @@ export function PetsProvider({ children }: { children: ReactNode }) {
       recarregar,
       FORM_VAZIO,
     }),
-    [pets, petsMemoria, seniores, marcarSenior, petAtivo, carregando, salvando, erro, criarPet, atualizarPet, salvarFoto, removerFoto, removerPet, recarregar],
+    [pets, petsMemoria, seniores, marcarSenior, petAtivo, plano, podeCadastrar, adicionarPet, editarPet, carregando, salvando, erro, criarPet, atualizarPet, salvarFoto, removerFoto, removerPet, recarregar],
   )
 
   return <PetsContext.Provider value={value}>{children}</PetsContext.Provider>

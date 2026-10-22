@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Alert, KeyboardAvoidingView, Platform, StyleSheet, Text, View } from 'react-native'
-import { router, useLocalSearchParams } from 'expo-router'
+import { Redirect, router, useLocalSearchParams } from 'expo-router'
 import { BotaoPrimario } from '../../src/components/BotaoPrimario'
 import { MarcaPata } from '../../src/components/MarcaPata'
 import { FormularioPet } from '../../src/pets/FormularioPet'
@@ -19,7 +19,9 @@ import { fontFamily } from '../../src/theme/typography'
 export default function NovoPet() {
   // Primeiro acesso: veio de Permissões e segue para o Início (BUSINESS.md 5.43).
   const { primeiroAcesso } = useLocalSearchParams<{ primeiroAcesso?: string }>()
-  const { criarPet, salvarFoto, salvando } = usePets()
+  const { criarPet, salvarFoto, salvando, podeCadastrar } = usePets()
+  // Só na abertura: depois de salvar, o limite cheio não tira o tutor daqui.
+  const [semVaga] = useState(!podeCadastrar)
   const [form, setForm] = useState<PetForm>(FORM_VAZIO)
   const [passo, setPasso] = useState<1 | 2>(1)
   // A foto só vai para o Storage depois que o pet existe (precisa do id).
@@ -52,6 +54,9 @@ export default function NovoPet() {
     if (primeiroAcesso === '1') router.replace('/inicio')
     else router.back()
   }
+
+  // Chegou por um link com o limite já cheio: o convite Premium no lugar do cadastro.
+  if (semVaga) return <Redirect href={{ pathname: '/premium', params: { motivo: 'limite_pets' } }} />
 
   return (
     <KeyboardAvoidingView style={estilos.tela} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>

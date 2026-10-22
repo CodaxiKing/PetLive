@@ -75,10 +75,14 @@ function PetChip({ pet, onPress }: { pet: Pet | null; onPress: () => void }) {
  */
 export default function NovoLembrete() {
   const { criarLembrete, salvando } = useLembretes()
-  const { pets, petAtivo } = usePets()
+  const { pets, petAtivo, editarPet } = usePets()
   const [etapa, setEtapa] = useState<'tipo' | 'detalhes'>('tipo')
   const [escolha, setEscolha] = useState<Escolha | null>(null)
-  const [form, setForm] = useState({ ...LEMBRETE_FORM_VAZIO, pet_id: petAtivo?.id ?? null })
+  // Com o pet do Início só para consulta, começa em "Todos os pets".
+  const [form, setForm] = useState({
+    ...LEMBRETE_FORM_VAZIO,
+    pet_id: petAtivo && !petAtivo.somente_leitura ? petAtivo.id : null,
+  })
   const [escolhendoPet, setEscolhendoPet] = useState(false)
   const horaEditada = useRef(false)
 
@@ -131,8 +135,13 @@ export default function NovoLembrete() {
       Alert.alert('Falta o intervalo', 'Informe a cada quantos dias repete.')
       return
     }
-    const lembrete = await criarLembrete(form)
-    if (lembrete) router.back()
+    // Pet só para consulta não ganha lembrete: abre o convite Premium.
+    const gravar = async () => {
+      const lembrete = await criarLembrete(form)
+      if (lembrete) router.back()
+    }
+    if (form.pet_id) editarPet(form.pet_id, gravar)
+    else gravar()
   }
 
   const seletorPet = (
@@ -145,12 +154,15 @@ export default function NovoLembrete() {
               key={p?.id ?? 'todos'}
               accessibilityRole="button"
               onPress={() => {
-                alterar('pet_id', p?.id ?? null)
                 setEscolhendoPet(false)
+                const escolher = () => alterar('pet_id', p?.id ?? null)
+                if (p) editarPet(p.id, escolher)
+                else escolher()
               }}
               style={[estilos.opcaoPet, form.pet_id === (p?.id ?? null) && estilos.opcaoPetAtiva]}
             >
               <Text style={estilos.opcaoPetTexto}>{p?.nome ?? 'Todos os pets'}</Text>
+              {p?.somente_leitura ? <Text style={estilos.opcaoPetNota}>Só para consulta</Text> : null}
             </Pressable>
           ))}
         </View>
@@ -467,4 +479,5 @@ const estilos = StyleSheet.create({
   opcaoPet: { backgroundColor: colors.background, borderRadius: 20, paddingVertical: 14, paddingHorizontal: 18 },
   opcaoPetAtiva: { backgroundColor: colors.primarySurface },
   opcaoPetTexto: { fontSize: 15, fontFamily: fontFamily.semiBold, color: colors.black },
+  opcaoPetNota: { fontSize: 12, fontFamily: fontFamily.medium, color: colors.premiumText },
 })

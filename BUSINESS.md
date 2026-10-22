@@ -359,7 +359,9 @@ O PetLive organiza informações e não substitui o atendimento veterinário. Es
 - **A validar:** a Apple e o Google costumam exigir a compra da própria loja para recursos digitais vendidos dentro do app, e essas regras mudaram no Brasil. Confirmar a política vigente antes de lançar o Premium. A regra vale só para o Premium: pedidos de produtos e serviços físicos não são afetados.
 - Falha de cobrança: novas tentativas por `[3]` dias. Sem sucesso, o plano volta a Grátis no fim do período já pago.
 - Cancelar mantém o Premium até o fim do período pago.
-- Pets além do limite do plano grátis ficam **somente leitura**, sem serem apagados.
+- Pets além do limite do plano grátis ficam **somente leitura**, sem serem apagados nem escondidos: continuam no seletor, com perfil, vacinas, histórico e carteirinha, e uma faixa "Só para consulta". Fica editável o pet ativo há mais tempo (o pet que volta do modo memorial entra no fim da fila). Toda tentativa de edição abre o convite Premium, e a regra vale no servidor. Ao voltar ao Premium, todos voltam a ser editáveis na hora.
+  - Edição, nesse caso, é tudo que grava algo do pet: cadastro e foto, vacinas, vermífugo, peso, consultas, remédios e o Feito das doses, lembretes (criar, Feito, ligar, desligar ou apagar, inclusive rotina de cuidados e rotina sênior), linha do tempo, escala de qualidade de vida, checklist de viagem, despesas do pet e acesso de cuidador temporário (o cuidador marca doses, então o acesso só inclui pets editáveis).
+  - Continua liberado o que só consulta ou protege o pet: ver tudo, gerar o PDF, compartilhar a carteirinha e a ficha de emergência por link, revogar acessos e cancelar links, registrar a partida (modo memorial) e as despesas de todos os pets.
 - O que é grátis e o que é Premium, recurso por recurso, está na tabela da seção 10 (proposta a validar).
 
 ### 5.14 Disputas e estornos (Fase 3)
@@ -785,7 +787,7 @@ A divisão abaixo é uma **proposta para validar**. Regra geral: tudo que proteg
 
 | Recurso | Grátis | Premium |
 | --- | --- | --- |
-| Pets | 1 pet. Pets a mais ficam só em leitura (seção 5.13) | Vários pets |
+| Pets | 1 pet ativo, com todas as funções. Pets a mais ficam só em leitura (seção 5.13). Pets em memória não contam | Vários pets, até `[20]` ativos, todos editáveis |
 | Saúde: vacinas, peso, consultas, lembretes, remédios, rotina | Sim | Sim |
 | Mapa de lugares, pet friendly, SOS, primeiros socorros, intoxicação, calculadoras | Sim | Sim |
 | Botão Feito na notificação | Sim | Sim |

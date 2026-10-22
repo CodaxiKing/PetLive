@@ -65,7 +65,7 @@ function dataPorExtenso(iso: string): string {
 export default function Lembretes() {
   const { width } = useWindowDimensions()
   const { lembretes, carregando, concluirLembrete, removerLembrete, recarregar } = useLembretes()
-  const { pets } = usePets()
+  const { pets, editarPet } = usePets()
   const [remedios, setRemedios] = useState<RemedioDoTutor[]>([])
   const [diaEscolhido, setDiaEscolhido] = useState<string | null>(null)
   const [atualizando, setAtualizando] = useState(false)
@@ -154,6 +154,20 @@ export default function Lembretes() {
     return indice >= 0 ? { pet: pets[indice], cores: coresDoPet(pets[indice], indice) } : null
   }
 
+  // Lembrete de pet só para consulta: Feito e apagar abrem o convite Premium
+  // (BUSINESS.md 5.13). Sem pet (todos os pets), segue direto.
+  const doPetEditavel = (lembrete: Lembrete, acao: () => void) => {
+    if (lembrete.pet_id) editarPet(lembrete.pet_id, acao)
+    else acao()
+  }
+
+  const concluir = (lembrete: Lembrete) => {
+    animarLista()
+    concluirLembrete(lembrete).then((ok) => {
+      if (ok === false) Alert.alert('Não deu para salvar', AVISO_SEM_SALVAR)
+    })
+  }
+
   const confirmarRemocao = (lembrete: Lembrete) => {
     Alert.alert('Remover lembrete?', `"${lembrete.titulo}" será apagado.`, [
       { text: 'Cancelar', style: 'cancel' },
@@ -162,7 +176,7 @@ export default function Lembretes() {
         style: 'destructive',
         onPress: () => {
           animarLista()
-          removerLembrete(lembrete.id)
+          removerLembrete(lembrete)
         },
       },
     ])
@@ -302,7 +316,7 @@ export default function Lembretes() {
                     <Tocavel
                       accessibilityRole="button"
                       accessibilityHint="Segure para apagar"
-                      onLongPress={() => confirmarRemocao(lembrete)}
+                      onLongPress={() => doPetEditavel(lembrete, () => confirmarRemocao(lembrete))}
                       escala={0.98}
                       style={[estilos.cartao, { backgroundColor: cores.fundo, borderColor: cores.borda }]}
                     >
@@ -321,12 +335,7 @@ export default function Lembretes() {
                         accessibilityRole="button"
                         accessibilityLabel={`Marcar ${lembrete.titulo} como feito`}
                         hitSlop={6}
-                        onPress={() => {
-                          animarLista()
-                          concluirLembrete(lembrete).then((ok) => {
-                            if (!ok) Alert.alert('Não deu para salvar', AVISO_SEM_SALVAR)
-                          })
-                        }}
+                        onPress={() => doPetEditavel(lembrete, () => concluir(lembrete))}
                         style={estilos.feito}
                       >
                         <Text style={estilos.feitoSinal}>✓</Text>

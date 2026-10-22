@@ -1,5 +1,6 @@
 import { diaNoMes } from '../lib/datas'
 import { supabase } from '../lib/supabase'
+import { erroDoServidor } from '../pets/limite'
 import type { Pet } from '../pets/types'
 import type { Lembrete, Repeticao, TipoLembrete } from './types'
 
@@ -238,6 +239,6 @@ export async function salvarRotina(pet: Pet, estado: EstadoRotina): Promise<Lemb
     .from('reminders')
     .upsert(linhas, { onConflict: 'pet_id,rotina_item' })
     .select()
-  if (error) throw new Error(error.message)
+  if (error) throw erroDoServidor(error)
   return (data ?? []) as Lembrete[]
 }

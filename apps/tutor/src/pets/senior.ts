@@ -1,5 +1,6 @@
 import { supabase } from '../lib/supabase'
 import { escaparHtml } from '../lib/pdf'
+import { erroDoServidor } from './limite'
 import type { Lembrete } from '../lembretes/types'
 import type { Pet } from './types'
 
@@ -49,7 +50,7 @@ export async function rotinaSenior(petId: string): Promise<Lembrete[]> {
 
 export async function ligarLembrete(id: string, ativo: boolean): Promise<void> {
   const { error } = await supabase.from('reminders').update({ ativo }).eq('id', id)
-  if (error) throw new Error(error.message)
+  if (error) throw erroDoServidor(error)
 }
 
 export async function carregarEscala(petId: string): Promise<RegistroEscala[]> {
@@ -69,7 +70,7 @@ export async function salvarEscala(petId: string, notas: Record<ItemEscala, numb
   const { error } = await supabase
     .from('qualidade_vida')
     .insert({ pet_id: petId, notas, total, observacao: observacao.trim() || null })
-  if (error) throw new Error(error.message)
+  if (error) throw erroDoServidor(error)
 }
 
 const dataCurta = (iso: string) => `${iso.slice(8, 10)}/${iso.slice(5, 7)}/${iso.slice(0, 4)}`

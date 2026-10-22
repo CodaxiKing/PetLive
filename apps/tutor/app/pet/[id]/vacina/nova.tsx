@@ -19,6 +19,7 @@ import { Mascote } from '../../../../src/components/Mascote'
 import { useLembretes } from '../../../../src/lembretes/LembretesProvider'
 import { LEMBRETE_FORM_VAZIO } from '../../../../src/lembretes/types'
 import { usePets } from '../../../../src/pets/PetsProvider'
+import { somenteParaEditavel } from '../../../../src/pets/SomenteLeitura'
 import { useVacinas } from '../../../../src/saude/VacinasProvider'
 import type { VacinaForm } from '../../../../src/saude/types'
 import { VACINA_FORM_VAZIO, dataParaExibicao, dataParaIso, hojeComoCampo } from '../../../../src/saude/types'
@@ -56,7 +57,7 @@ function Atalho({ rotulo, ativo, onPress }: { rotulo: string; ativo: boolean; on
  * com atalhos (hoje, ontem, em 1 ano, em 3 semanas), observação e o
  * lembrete da próxima dose.
  */
-export default function NovaVacina() {
+function NovaVacina() {
   const { id } = useLocalSearchParams<{ id: string }>()
   const { pets } = usePets()
   const { sugeridas, registrarVacina, salvando, sugerirProximaDose } = useVacinas()
@@ -313,3 +314,5 @@ const estilos = StyleSheet.create({
     backgroundColor: colors.surface,
   },
 })
+
+export default somenteParaEditavel(NovaVacina)
