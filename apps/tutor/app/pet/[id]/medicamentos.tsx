@@ -72,7 +72,7 @@ async function carregarTudo(petId: string): Promise<Dados> {
  */
 export default function TelaMedicamentos() {
   const { id } = useLocalSearchParams<{ id: string }>()
-  const { pets } = usePets()
+  const { pets, editarPet } = usePets()
   const pet = pets.find((p) => p.id === id) ?? null
 
   const [lista, setLista] = useState<Remedio[]>([])
@@ -97,12 +97,17 @@ export default function TelaMedicamentos() {
     }, [id]),
   )
 
+  // Pet só para consulta: adicionar remédio e marcar Feito abrem o convite Premium.
   const abrirNovo = () => {
     if (!id) return
-    router.push({ pathname: '/pet/[id]/remedio/novo', params: { id } })
+    editarPet(id, () => router.push({ pathname: '/pet/[id]/remedio/novo', params: { id } }))
   }
 
-  const confirmar = async (dose: DoseHoje) => {
+  const confirmar = (dose: DoseHoje) => {
+    if (id) editarPet(id, () => darDose(dose))
+  }
+
+  const darDose = async (dose: DoseHoje) => {
     setSalvandoDose(dose.id)
     try {
       await confirmarDose(dose.id)

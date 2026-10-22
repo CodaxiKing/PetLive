@@ -4,6 +4,7 @@ import { router, useLocalSearchParams } from 'expo-router'
 import { BotaoPrimario } from '../../../src/components/BotaoPrimario'
 import { HeroiOnda } from '../../../src/components/HeroiOnda'
 import { Icone } from '../../../src/components/Icone'
+import { reativaSomenteLeitura } from '../../../src/pets/limite'
 import { reativarPet } from '../../../src/pets/memorial'
 import { usePets } from '../../../src/pets/PetsProvider'
 import { colors } from '../../../src/theme/colors'
@@ -12,13 +13,15 @@ import { fontFamily } from '../../../src/theme/typography'
 /** Reativar o pet (protótipo ReativarPet): diz o que volta e o que não volta. */
 export default function TelaReativar() {
   const { id } = useLocalSearchParams<{ id: string }>()
-  const { petsMemoria, recarregar } = usePets()
+  const { pets, petsMemoria, plano, recarregar } = usePets()
   const pet = petsMemoria.find((p) => p.id === id) ?? null
   const [salvando, setSalvando] = useState(false)
 
   if (!pet) return <View style={estilos.tela} />
   const o = pet.sexo === 'femea' ? 'a' : 'o'
   const nome = pet.nome
+  // Grátis com outro pet ativo: volta só para consulta (BUSINESS.md 5.39).
+  const soConsulta = reativaSomenteLeitura(plano, pets.length)
 
   async function reativar() {
     if (!pet) return
@@ -53,6 +56,15 @@ export default function TelaReativar() {
         <Text style={estilos.intro}>
           Se você registrou por engano, está tudo certo. Ao reativar, {o} {nome} volta para o app como antes.
         </Text>
+        {soConsulta ? (
+          <View style={estilos.aviso}>
+            <Text style={estilos.avisoTitulo}>Volta só para consulta</Text>
+            <Text style={estilos.avisoTexto}>
+              No plano Grátis é 1 pet ativo editável, e você já tem um. {o === 'a' ? 'A' : 'O'} {nome} volta com perfil,
+              vacinas, histórico e carteirinha visíveis, mas sem edição. Com o Premium, todos ficam editáveis.
+            </Text>
+          </View>
+        ) : null}
         <Text style={estilos.secao}>O que volta</Text>
         {volta.map((t) => (
           <View key={t} style={estilos.item}>
@@ -87,6 +99,9 @@ const estilos = StyleSheet.create({
   flex: { flex: 1, minWidth: 0 },
   conteudo: { paddingHorizontal: 24, paddingBottom: 24, gap: 12 },
   intro: { fontFamily: fontFamily.regular, fontSize: 16, lineHeight: 24, color: '#5E6878' },
+  aviso: { backgroundColor: colors.premiumSurface, borderRadius: 22, padding: 16, gap: 4 },
+  avisoTitulo: { fontFamily: fontFamily.bold, fontSize: 15, color: colors.premiumText },
+  avisoTexto: { fontFamily: fontFamily.regular, fontSize: 14, lineHeight: 20, color: colors.premiumText },
   secao: { fontFamily: fontFamily.bold, fontSize: 15, color: colors.black, marginTop: 6 },
   item: { flexDirection: 'row', alignItems: 'center', gap: 14 },
   check: { width: 34, height: 34, borderRadius: 10, backgroundColor: colors.black, alignItems: 'center', justifyContent: 'center' },

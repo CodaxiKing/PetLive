@@ -93,7 +93,7 @@ function quandoHoje(iso: string): string {
 export default function Inicio() {
   const router = useRouter();
   const { width } = useWindowDimensions();
-  const { pets, petAtivo, definirPetAtivo, seniores } = usePets();
+  const { pets, petAtivo, definirPetAtivo, seniores, adicionarPet, editarPet } = usePets();
   const { lembretes, concluirLembrete } = useLembretes();
   const { remedios } = useRemedios();
   const [doses, setDoses] = useState<DoseHoje[]>([]);
@@ -155,7 +155,14 @@ export default function Inicio() {
   const proxima = proximaVacina(vacinas);
   const nomePet = petAtivo?.nome ?? 'seu pet';
 
+  // Pet só para consulta não marca Feito: abre o convite Premium (BUSINESS.md 5.13).
   function feito(item: ItemHoje) {
+    const petDoItem = item.tipo === 'lembrete' ? item.lembrete.pet_id : petAtivo?.id;
+    if (petDoItem) editarPet(petDoItem, () => concluir(item));
+    else concluir(item);
+  }
+
+  function concluir(item: ItemHoje) {
     if (concluindo) return;
     setConcluindo(item.chave);
     const salvar =
@@ -242,7 +249,7 @@ export default function Inicio() {
           <Tocavel
             accessibilityRole="button"
             accessibilityLabel="Adicionar pet"
-            onPress={() => router.push('/pet/novo')}
+            onPress={adicionarPet}
             style={estilos.petMais}
           >
             <Icone nome="cruz" size={16} espessura={2.6} />

@@ -17,6 +17,7 @@ import { Campo } from '../../../../src/components/Campo'
 import { HeroiOnda } from '../../../../src/components/HeroiOnda'
 import { Icone } from '../../../../src/components/Icone'
 import { usePets } from '../../../../src/pets/PetsProvider'
+import { somenteParaEditavel } from '../../../../src/pets/SomenteLeitura'
 import { useRemedios } from '../../../../src/remedios/RemediosProvider'
 import { REMEDIO_FORM_VAZIO, hojeComoCampo, parseHorarios } from '../../../../src/remedios/types'
 import { mascaraHora } from '../../../../src/lib/mascaras'
@@ -53,7 +54,7 @@ function fimDoTratamento(dias: number): string {
  * frequência, horários e duração"): nome, dose e forma, frequência que
  * sugere os horários, horários editáveis e duração. Começa hoje.
  */
-export default function NovoRemedio() {
+function NovoRemedio() {
   const { id } = useLocalSearchParams<{ id: string }>()
   const { pets } = usePets()
   const { criarRemedio, salvando } = useRemedios()
@@ -337,3 +338,5 @@ const estilos = StyleSheet.create({
   },
   cancelar: { fontSize: 14, fontFamily: fontFamily.medium, color: colors.textMuted, textAlign: 'center' },
 })
+
+export default somenteParaEditavel(NovoRemedio)

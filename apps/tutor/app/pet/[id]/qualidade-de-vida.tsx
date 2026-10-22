@@ -9,6 +9,7 @@ import { mensagemDeErro } from '../../../src/lib/cacheOffline'
 import { abrirPdf } from '../../../src/lib/pdf'
 import { usePlano } from '../../../src/lib/plano'
 import { usePets } from '../../../src/pets/PetsProvider'
+import { somenteParaEditavel } from '../../../src/pets/SomenteLeitura'
 import { AVISO_ESCALA, carregarEscala, htmlResumo, ITENS_ESCALA, salvarEscala, type ItemEscala, type RegistroEscala } from '../../../src/pets/senior'
 import { idadeEmAnos } from '../../../src/pets/types'
 import { colors } from '../../../src/theme/colors'
@@ -49,7 +50,7 @@ function Barra({ rotulo, ajuda, valor, onMudar }: { rotulo: string; ajuda: strin
  * 70, histórico e resumo em PDF para o veterinário (Premium). Sempre com o
  * aviso de que a escala não faz diagnóstico nem decide pelo tutor.
  */
-export default function TelaQualidadeVida() {
+function TelaQualidadeVida() {
   const { id } = useLocalSearchParams<{ id: string }>()
   const { pets } = usePets()
   const plano = usePlano()
@@ -181,3 +182,5 @@ const estilos = StyleSheet.create({
   resumoTexto: { fontFamily: fontFamily.bold, fontSize: 15, color: colors.black },
   rodape: { paddingHorizontal: 24, paddingTop: 12, paddingBottom: 28 },
 })
+
+export default somenteParaEditavel(TelaQualidadeVida)

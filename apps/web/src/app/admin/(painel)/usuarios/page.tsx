@@ -10,13 +10,15 @@ type Linha = {
   email: string;
   plano: string;
   pets: string;
+  pets_total: number;
+  pets_somente_leitura: number;
   criado_em: string;
   ultimo_acesso: string | null;
   suspenso: boolean;
 };
 
-type Ficha = Omit<Linha, "pets"> & {
-  pets: { nome: string; especie: string; raca: string | null }[];
+type Ficha = Omit<Linha, "pets" | "pets_total" | "pets_somente_leitura"> & {
+  pets: { nome: string; especie: string; raca: string | null; em_memoria?: boolean; somente_leitura?: boolean }[];
   vacinas: number;
   lembretes_ativos: number;
   remedios: number;
@@ -29,9 +31,9 @@ const CORES_AVATAR = ["bg-roxo-fundo", "bg-azul-fundo", "bg-amarelo-fundo", "bg-
 
 function csv(linhas: Linha[]): string {
   const campo = (v: string) => `"${v.replace(/"/g, '""')}"`;
-  const cabecalho = ["Nome", "E-mail", "Plano", "Pets", "Desde", "Último acesso", "Suspenso"];
+  const cabecalho = ["Nome", "E-mail", "Plano", "Qtd. pets", "Pets", "Desde", "Último acesso", "Suspenso"];
   const corpo = linhas.map((l) =>
-    [l.nome, l.email, l.plano, l.pets, new Date(l.criado_em).toLocaleDateString("pt-BR"), l.ultimo_acesso ? new Date(l.ultimo_acesso).toLocaleDateString("pt-BR") : "", l.suspenso ? "sim" : "não"]
+    [l.nome, l.email, l.plano, l.pets_total ?? 0, l.pets, new Date(l.criado_em).toLocaleDateString("pt-BR"), l.ultimo_acesso ? new Date(l.ultimo_acesso).toLocaleDateString("pt-BR") : "", l.suspenso ? "sim" : "não"]
       .map((v) => campo(String(v)))
       .join(";"),
   );
@@ -161,7 +163,10 @@ export default function Usuarios() {
                         </div>
                       </div>
                     </td>
-                    <td className="max-w-40 truncate px-3 py-3">{l.pets || "—"}</td>
+                    <td className="max-w-40 truncate px-3 py-3" title={l.pets}>
+                      {l.pets_total ? `${numero(l.pets_total)} · ${l.pets}` : "—"}
+                      {l.pets_somente_leitura ? <span className="ml-1 text-[11px] text-cinza">({numero(l.pets_somente_leitura)} só consulta)</span> : null}
+                    </td>
                     <td className="px-3 py-3">
                       <span className={`rounded-full px-2.5 py-1 text-[11px] font-bold ${l.plano === "premium" ? "bg-roxo-fundo text-roxo-texto" : "bg-suave"}`}>
                         {l.plano === "premium" ? "Premium" : "Grátis"}
@@ -192,7 +197,7 @@ export default function Usuarios() {
               </div>
               <dl className="mt-4 space-y-2 text-[13px]">
                 {[
-                  ["Pets", ficha.pets.map((p) => `${p.nome} (${p.especie === "gato" ? "gato" : "cão"})`).join(", ") || "—"],
+                  ["Pets", ficha.pets.map((p) => `${p.nome} (${[p.especie === "gato" ? "gato" : "cão", p.em_memoria ? "em memória" : null, p.somente_leitura ? "só consulta" : null].filter(Boolean).join(", ")})`).join(", ") || "—"],
                   ["Vacinas registradas", numero(ficha.vacinas)],
                   ["Lembretes ativos", numero(ficha.lembretes_ativos)],
                   ["Remédios", numero(ficha.remedios)],

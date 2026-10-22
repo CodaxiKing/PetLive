@@ -5,11 +5,12 @@ import { BotaoPrimario } from '../../../src/components/BotaoPrimario'
 import { FormularioPet } from '../../../src/pets/FormularioPet'
 import type { AtivoFoto } from '../../../src/pets/CampoFoto'
 import { usePets } from '../../../src/pets/PetsProvider'
+import { somenteParaEditavel } from '../../../src/pets/SomenteLeitura'
 import type { Pet, PetForm } from '../../../src/pets/types'
 import { registroParaForm } from '../../../src/pets/types'
 import { colors } from '../../../src/theme/colors'
 
-export default function EditarPet() {
+function EditarPet() {
   const { id } = useLocalSearchParams<{ id: string }>()
   const { pets } = usePets()
 
@@ -97,3 +98,5 @@ const estilos = StyleSheet.create({
     backgroundColor: colors.surface,
   },
 })
+
+export default somenteParaEditavel(EditarPet)

@@ -10,6 +10,7 @@ import { router, useLocalSearchParams } from 'expo-router'
 import { BotaoPrimario } from '../../../../src/components/BotaoPrimario'
 import { CabecalhoTela } from '../../../../src/components/CabecalhoTela'
 import { Campo } from '../../../../src/components/Campo'
+import { somenteParaEditavel } from '../../../../src/pets/SomenteLeitura'
 import {
   CONSULTA_FORM_VAZIO,
   registrarConsulta,
@@ -23,7 +24,7 @@ import { spacing } from '../../../../src/theme/tokens'
  * Registrar consulta (board: [APP-CLIENTE] "Saúde: Registrar consulta").
  * Data futura vale: a consulta aparece como "agendada" na tela de consultas.
  */
-export default function NovaConsulta() {
+function NovaConsulta() {
   const { id } = useLocalSearchParams<{ id: string }>()
   const [form, setForm] = useState<ConsultaForm>({
     ...CONSULTA_FORM_VAZIO,
@@ -138,3 +139,5 @@ const estilos = StyleSheet.create({
   },
   botao: { marginHorizontal: spacing.xl, marginBottom: 32 },
 })
+
+export default somenteParaEditavel(NovaConsulta)

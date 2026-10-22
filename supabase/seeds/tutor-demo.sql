@@ -35,8 +35,9 @@ values (
 );
 
 -- O perfil vem do gatilho handle_new_user; marca o aceite do cadastro.
+-- Premium: no grátis o segundo pet ficaria só para consulta (BUSINESS.md 10).
 update public.profiles
-  set aceite_termos = true, aceite_termos_em = now()
+  set aceite_termos = true, aceite_termos_em = now(), plano = 'premium'
   where id = '0d0d0d0d-0000-4000-8000-000000000001';
 
 insert into public.pets (id, tutor_id, nome, especie, raca, nascimento, sexo, peso_atual, castrado, cor_etiqueta) values

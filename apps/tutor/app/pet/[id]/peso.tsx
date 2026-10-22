@@ -37,7 +37,7 @@ import { spacing } from '../../../src/theme/tokens'
  */
 export default function TelaPeso() {
   const { id } = useLocalSearchParams<{ id: string }>()
-  const { pets, recarregar } = usePets()
+  const { pets, recarregar, editarPet } = usePets()
   const pet = pets.find((p) => p.id === id) ?? null
 
   const [registros, setRegistros] = useState<RegistroPeso[]>([])
@@ -166,7 +166,7 @@ export default function TelaPeso() {
         <BotaoPrimario
           titulo="Registrar peso"
           icone={<Text style={estilos.maisCta}>+</Text>}
-          onPress={salvar}
+          onPress={() => id && editarPet(id, salvar)}
           carregando={salvando}
           desabilitado={carregando}
         />

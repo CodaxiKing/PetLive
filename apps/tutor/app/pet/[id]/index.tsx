@@ -21,6 +21,7 @@ import { Mascote } from '../../../src/components/Mascote'
 import { AbaCalendario } from '../../../src/pets/AbaCalendario'
 import { conferirSelos, SELOS, type Selo } from '../../../src/pets/selos'
 import { conferirSenior } from '../../../src/pets/senior'
+import { FaixaSomenteLeitura } from '../../../src/pets/SomenteLeitura'
 import { usePets } from '../../../src/pets/PetsProvider'
 import { idadeEmAnos } from '../../../src/pets/types'
 import { carregarConsultas, type Consulta } from '../../../src/saude/consultas'
@@ -65,7 +66,7 @@ function BotaoRedondo({ rotulo, onPress, children }: { rotulo: string; onPress: 
 export default function PetDetalhe() {
   const { id } = useLocalSearchParams<{ id: string }>()
   const { width } = useWindowDimensions()
-  const { pets, petsMemoria, seniores, marcarSenior, definirPetAtivo, removerPet } = usePets()
+  const { pets, petsMemoria, seniores, marcarSenior, definirPetAtivo, removerPet, editarPet } = usePets()
   const { vacinas, removerVacina } = useVacinas()
   const [aba, setAba] = useState<Aba>('Vacinas')
   const [pesos, setPesos] = useState<RegistroPeso[]>([])
@@ -130,6 +131,12 @@ export default function PetDetalhe() {
     router.push({ pathname, params: { id: petAtual.id } })
   }
 
+  // Pet só para consulta (BUSINESS.md 5.13): editar abre o convite Premium.
+  function editar(pathname: '/pet/[id]/editar' | '/pet/[id]/vacina/nova' | '/pet/[id]/peso' | '/pet/[id]/consultas/nova') {
+    setMenuAberto(false)
+    editarPet(petAtual.id, () => ir(pathname))
+  }
+
   function confirmarExclusao() {
     setMenuAberto(false)
     Alert.alert(
@@ -152,16 +159,16 @@ export default function PetDetalhe() {
   function confirmarRemocaoVacina(vacinaId: string, nome: string) {
     Alert.alert(`Remover ${nome}?`, 'O registro de vacina será apagado.', [
       { text: 'Cancelar', style: 'cancel' },
-      { text: 'Remover', style: 'destructive', onPress: () => removerVacina(vacinaId) },
+      { text: 'Remover', style: 'destructive', onPress: () => editarPet(petAtual.id, () => removerVacina(vacinaId)) },
     ])
   }
 
   const cta =
     aba === 'Vacinas'
-      ? { titulo: 'Registrar vacina', acao: () => ir('/pet/[id]/vacina/nova') }
+      ? { titulo: 'Registrar vacina', acao: () => editar('/pet/[id]/vacina/nova') }
       : aba === 'Peso'
-        ? { titulo: 'Registrar peso', acao: () => ir('/pet/[id]/peso') }
-        : { titulo: 'Registrar consulta', acao: () => ir('/pet/[id]/consultas/nova') }
+        ? { titulo: 'Registrar peso', acao: () => editar('/pet/[id]/peso') }
+        : { titulo: 'Registrar consulta', acao: () => editar('/pet/[id]/consultas/nova') }
 
   return (
     <View style={estilos.tela}>
@@ -202,6 +209,7 @@ export default function PetDetalhe() {
 
         <View style={estilos.corpo}>
           <AvisoOffline />
+          <FaixaSomenteLeitura pet={petAtual} />
           <View style={estilos.linhaNome}>
             <Text style={estilos.nome} numberOfLines={1} accessibilityRole="header">
               {petAtual.nome}
@@ -407,7 +415,7 @@ export default function PetDetalhe() {
       <Modal visible={menuAberto} transparent animationType="fade" onRequestClose={() => setMenuAberto(false)}>
         <Pressable style={estilos.fundoModal} onPress={() => setMenuAberto(false)} accessibilityLabel="Fechar menu">
           <View style={estilos.folha}>
-            <Pressable accessibilityRole="button" onPress={() => ir('/pet/[id]/editar')} style={estilos.opcao}>
+            <Pressable accessibilityRole="button" onPress={() => editar('/pet/[id]/editar')} style={estilos.opcao}>
               <Text style={estilos.opcaoTexto}>Editar {petAtual.nome}</Text>
             </Pressable>
             <Pressable accessibilityRole="button" onPress={() => ir('/pet/[id]/medicamentos')} style={estilos.opcao}>

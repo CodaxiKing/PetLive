@@ -11,6 +11,7 @@ import { mensagemDeErro } from '../../../src/lib/cacheOffline'
 import { escolherFoto, type AtivoFoto } from '../../../src/pets/CampoFoto'
 import { apagarMarco, carregarMarco, enviarFotoMarco, removerFotoMarco, salvarMarco, urlsFotos, type Marco } from '../../../src/pets/linhaDoTempo'
 import { usePets } from '../../../src/pets/PetsProvider'
+import { somenteParaEditavel } from '../../../src/pets/SomenteLeitura'
 import { dataParaExibicao, dataParaIso, hojeComoCampo } from '../../../src/saude/types'
 import { colors } from '../../../src/theme/colors'
 import { fontFamily } from '../../../src/theme/typography'
@@ -18,7 +19,7 @@ import { fontFamily } from '../../../src/theme/typography'
 const SUGESTOES = ['Chegou em casa', 'Primeiro passeio', 'Primeiro banho', 'Aprendeu um truque', 'Viagem', 'Castração']
 
 /** Novo marco da linha do tempo (ou edição, com ?marco=): data, título, texto e foto. */
-export default function TelaMarco() {
+function TelaMarco() {
   const { id, marco: marcoId } = useLocalSearchParams<{ id: string; marco?: string }>()
   const { user } = useAuth()
   const { pets, petsMemoria } = usePets()
@@ -164,3 +165,5 @@ const estilos = StyleSheet.create({
   apagarTexto: { fontFamily: fontFamily.bold, fontSize: 14, color: '#B3173A' },
   rodape: { paddingHorizontal: 24, paddingTop: 12, paddingBottom: 28 },
 })
+
+export default somenteParaEditavel(TelaMarco)
