@@ -76,6 +76,42 @@ const auditoria = (await rpc('admin_auditoria', aal2)).corpo;
 ok(auditoria.some((a) => a.acao === 'suspendeu a conta') && auditoria.some((a) => a.acao === 'reativou a conta'), 'auditoria registra as duas ações');
 ok((await rpc('admin_suspender', aal2, { p_id: (await rpc('admin_eu', aal2)).corpo && (await pedir('/auth/v1/user', { token: aal2, metodo: 'GET' })).corpo.id, p_suspender: true })).status >= 400, 'não suspende a si mesmo');
 
+// 6) Suporte: mensagem do site vira chamado; responder e fechar.
+const email = `cliente-${Date.now()}@teste.dev`;
+await rpc('registrar_contato_site', null, { p_tipo: 'contato', p_nome: 'Cliente Teste', p_email: email, p_mensagem: 'O app não abre no meu celular' });
+let suporte = (await rpc('admin_suporte', aal2)).corpo;
+const chamado = suporte.chamados.find((c) => c.email === email);
+ok(chamado?.status === 'aberto', 'mensagem do site aparece como chamado aberto');
+ok((await rpc('admin_suporte_acao', aal2, { p_contato: chamado.id, p_acao: 'responder', p_texto: 'Oi! Atualize o app.' })).status < 300, 'registra a resposta');
+ok((await rpc('admin_suporte_acao', aal2, { p_contato: chamado.id, p_acao: 'nota', p_texto: 'Versão antiga.' })).status < 300, 'nota interna');
+const notas = (await rpc('admin_suporte_notas', aal2, { p_contato: chamado.id })).corpo;
+ok(notas.length === 2 && notas[0].tipo === 'resposta', 'histórico do chamado com resposta e nota');
+suporte = (await rpc('admin_suporte', aal2)).corpo;
+ok(suporte.chamados.find((c) => c.id === chamado.id).status === 'respondido', 'chamado fica respondido');
+ok((await rpc('admin_suporte_acao', aal2, { p_contato: chamado.id, p_acao: 'fechar' })).status < 300, 'fecha o chamado');
+
+// 7) LGPD: a exclusão não é feita à mão pelo painel.
+await rpc('solicitar_exclusao_conta', tutor);
+const lgpd = (await rpc('admin_lgpd', aal2)).corpo;
+const pedido = lgpd.pedidos.find((p) => p.email === 'demo@petlive.dev' && p.tipo === 'apagar' && p.status === 'novo');
+ok(Boolean(pedido) && lgpd.abertos >= 1, 'pedido de exclusão aparece em aberto');
+ok((await rpc('admin_lgpd_concluir', aal2, { p_pedido: pedido.id })).status >= 400, 'exclusão não é concluída à mão');
+await rpc('cancelar_exclusao_conta', tutor);
+
+// 8) Moderação: indicação recusada exige motivo; aprovada vai para o mapa.
+const nova = (await pedir('/rest/v1/sugestoes_lugar', {
+  token: tutor,
+  corpo: { nome: `Café Teste ${Date.now()}`, categoria: 'restaurante', aceita: 'caes', lat: -22.95, lng: -43.18 },
+})).status;
+ok(nova === 201, 'tutor indica um lugar');
+let mod = (await rpc('admin_moderacao', aal2)).corpo;
+const item = mod.itens.find((i) => i.status === 'em_analise' && i.nome.startsWith('Café Teste'));
+ok(Boolean(item), 'indicação aparece para revisar');
+ok((await rpc('admin_moderar_indicacao', aal2, { p_id: item.id, p_aprovar: false, p_motivo: '' })).status >= 400, 'recusar sem motivo é barrado');
+ok((await rpc('admin_moderar_indicacao', aal2, { p_id: item.id, p_aprovar: true })).status < 300, 'aprova a indicação');
+const noMapa = (await rpc('lugares_por_perto', tutor, { p_lat: -22.95, p_lng: -43.18, p_grupo: 'pet_friendly', p_raio_km: 1 })).corpo;
+ok(noMapa.some((l) => l.nome === item.nome), 'lugar aprovado aparece no mapa');
+
 // 5) Ninguém lê as tabelas direto.
 ok((await pedir('/rest/v1/audit_log?select=*', { token: aal2, metodo: 'GET' })).status >= 400, 'audit_log não é lido direto pela API');
 

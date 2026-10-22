@@ -175,7 +175,7 @@ export default function Usuarios() {
           </table>
         </section>
 
-        <section className="h-fit rounded-[28px] bg-fundo p-6">
+        <section className="h-fit min-w-0 rounded-[28px] bg-fundo p-6">
           {!ficha ? (
             <p className="text-sm text-cinza">Escolha um tutor na lista para ver a ficha.</p>
           ) : (
