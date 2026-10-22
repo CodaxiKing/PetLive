@@ -35,6 +35,7 @@ function TelaAnexo() {
   const [urlOriginal, setUrlOriginal] = useState<string | null>(null)
   const [carregando, setCarregando] = useState(Boolean(anexoId))
   const [salvando, setSalvando] = useState(false)
+  const [progresso, setProgresso] = useState(0)
   const [falha, setFalha] = useState<ErroAnexo | null>(null)
 
   useEffect(() => {
@@ -74,10 +75,11 @@ function TelaAnexo() {
     }
     const dados = { tipo: TIPOS_ANEXO[tipoIndice].valor, titulo: titulo.trim() || null, data: dataIso }
     setSalvando(true)
+    setProgresso(0)
     setFalha(null)
     try {
       if (original) await atualizarAnexo(original.id, dados)
-      else if (foto) await enviarAnexo(user.id, id, foto, dados)
+      else if (foto) await enviarAnexo(user.id, id, foto, dados, setProgresso)
       else return
       router.back()
     } catch (e) {
@@ -150,7 +152,21 @@ function TelaAnexo() {
         ) : null}
       </ScrollView>
       <View style={estilos.rodape}>
-        {salvando ? <Text style={estilos.enviando}>{editando ? 'Salvando…' : 'Enviando a foto…'}</Text> : null}
+        {salvando && editando ? <Text style={estilos.enviando}>Salvando…</Text> : null}
+        {salvando && !editando ? (
+          <View
+            accessibilityRole="progressbar"
+            accessibilityValue={{ min: 0, max: 100, now: Math.round(progresso * 100) }}
+            style={estilos.progresso}
+          >
+            <View style={estilos.progressoTrilho}>
+              <View style={[estilos.progressoBarra, { width: `${Math.round(progresso * 100)}%` as const }]} />
+            </View>
+            <Text style={estilos.enviando}>
+              {progresso < 1 ? `Enviando a foto… ${Math.round(progresso * 100)}%` : 'Salvando o anexo…'}
+            </Text>
+          </View>
+        ) : null}
         <BotaoPrimario
           titulo={editando ? 'Salvar alterações' : 'Salvar anexo'}
           carregando={salvando}
@@ -183,6 +199,9 @@ const estilos = StyleSheet.create({
   erroBotaoTexto: { fontFamily: fontFamily.bold, fontSize: 13, color: colors.white },
   rodape: { paddingHorizontal: 24, paddingTop: 12, paddingBottom: 28, gap: 8 },
   enviando: { fontFamily: fontFamily.semiBold, fontSize: 13, color: '#6A7484', textAlign: 'center' },
+  progresso: { gap: 6 },
+  progressoTrilho: { height: 6, borderRadius: 999, backgroundColor: '#E1E6EE', overflow: 'hidden' },
+  progressoBarra: { height: '100%', borderRadius: 999, backgroundColor: colors.primaryDeep },
 })
 
 export default somenteParaEditavel(TelaAnexo)

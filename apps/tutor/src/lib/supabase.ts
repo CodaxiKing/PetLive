@@ -23,7 +23,10 @@ if (!supabaseConfigurado) {
  * Criado mesmo sem chaves para que a tela de login possa ser aberta e
  * mostrar o aviso de configuração, em vez de quebrar com null.
  */
-export const supabase = createClient(supabaseUrl ?? 'https://invalid.supabase.co', supabaseAnonKey ?? 'anon-placeholder', {
+export const urlSupabase = supabaseUrl ?? 'https://invalid.supabase.co';
+export const chaveAnonSupabase = supabaseAnonKey ?? 'anon-placeholder';
+
+export const supabase = createClient(urlSupabase, chaveAnonSupabase, {
   auth: {
     storage: AsyncStorage,
     autoRefreshToken: true,

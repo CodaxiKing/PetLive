@@ -1,5 +1,6 @@
-import { supabase } from '../lib/supabase'
+import { chaveAnonSupabase, supabase, urlSupabase } from '../lib/supabase'
 import type { AtivoFoto } from '../pets/CampoFoto'
+import { subirComProgresso } from './envioComProgresso'
 import {
   arquivosSemRegistro,
   caminhoAnexo,
@@ -53,8 +54,15 @@ export async function urlsAnexos(caminhos: string[]): Promise<Record<string, str
  * Sobe a foto e cria o registro. Se o registro falhar, o arquivo enviado é
  * apagado: nada fica pela metade. Se apagar também falhar (rede caiu),
  * `limparAnexosOrfaos` leva o arquivo numa abertura do app depois de 24 h.
+ * `aoProgresso` recebe a fração já enviada da foto (0 a 1).
  */
-export async function enviarAnexo(tutorId: string, petId: string, foto: AtivoFoto, dados: DadosAnexo): Promise<Anexo> {
+export async function enviarAnexo(
+  tutorId: string,
+  petId: string,
+  foto: AtivoFoto,
+  dados: DadosAnexo,
+  aoProgresso?: (fracao: number) => void,
+): Promise<Anexo> {
   const mime = mimeAceito(foto.mimeType, foto.uri)
   const recusa = validarArquivo(mime, foto.tamanho)
   if (recusa || !mime) throw new ErroAnexo(recusa ?? 'Arquivo não aceito.')
@@ -68,9 +76,17 @@ export async function enviarAnexo(tutorId: string, petId: string, foto: AtivoFot
   if (bytes.byteLength > TAMANHO_MAXIMO) throw new ErroAnexo(validarArquivo(mime, bytes.byteLength) ?? '')
 
   const caminho = caminhoAnexo(tutorId, petId, mime)
-  const envio = await supabase.storage.from(BUCKET).upload(caminho, bytes, { contentType: mime }).catch((e: unknown) => ({
-    error: { message: e instanceof Error ? e.message : String(e) },
-  }))
+  const { data: sessao } = await supabase.auth.getSession()
+  const envio = await subirComProgresso({
+    base: urlSupabase.replace(/\/+$/, ''),
+    apikey: chaveAnonSupabase,
+    token: sessao.session?.access_token ?? chaveAnonSupabase,
+    bucket: BUCKET,
+    caminho,
+    bytes,
+    mime,
+    aoProgresso,
+  })
   if (envio.error) throw erroDeEnvio(envio.error.message)
 
   const { data, error } = await supabase

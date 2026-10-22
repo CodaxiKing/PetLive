@@ -37,8 +37,19 @@ const bucket = {
 // Como o PostgREST: no máximo 1000 linhas por consulta.
 const linhas = <T>(dados: T[]) => ({ data: dados.slice(0, 1000), error: null })
 
+// O envio com progresso (XMLHttpRequest) grava no mesmo storage falso.
+vi.mock('../saude/envioComProgresso', () => ({
+  subirComProgresso: async ({ caminho }: { caminho: string }) => {
+    await bucket.upload(caminho)
+    return { error: null }
+  },
+}))
+
 vi.mock('../lib/supabase', () => ({
+  urlSupabase: 'http://supabase.local',
+  chaveAnonSupabase: 'anon',
   supabase: {
+    auth: { getSession: async () => ({ data: { session: { access_token: 'token-do-tutor' } } }) },
     storage: { from: () => bucket },
     from: (tabela: string) => ({
       select: () =>
