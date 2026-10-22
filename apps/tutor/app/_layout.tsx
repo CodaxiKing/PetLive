@@ -23,6 +23,7 @@ import { atualizarPacoteEmergencia } from '../src/sos/pacote';
 import { colors } from '../src/theme/colors';
 import { useConfigApp } from '../src/lib/configApp';
 import { registrarAberturaDiaria } from '../src/lib/eventos';
+import { marcarLido } from '../src/notificacoes/caixa';
 import { TelaAtualizar } from '../src/components/TelaAtualizar';
 
 /**
@@ -56,7 +57,10 @@ function useObservadorNotificacoes() {
       Notifications.clearLastNotificationResponse();
       const eraBotaoDose = await tratarRespostaDose(resposta).catch(() => true);
       if (eraBotaoDose) return;
-      const url = resposta.notification.request.content.data?.url;
+      const dados = resposta.notification.request.content.data;
+      // Abriu pela notificação: conta como lida (taxa de abertura das campanhas).
+      if (typeof dados?.aviso_id === 'string') marcarLido(dados.aviso_id).catch(() => undefined);
+      const url = dados?.url;
       if (typeof url === 'string') router.push(url as never);
     }
 

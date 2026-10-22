@@ -143,6 +143,16 @@ await rpc('admin_definir_versao_minima', aal2, { p_plataforma: 'android', p_vers
 await rpc('admin_definir_recurso', aal2, { p_chave: 'indicar_lugar', p_ligado: true });
 ok((await rpc('admin_definir_recurso', tutor, { p_chave: 'indicar_lugar', p_ligado: false })).status >= 400, 'tutor comum não mexe nos recursos');
 
+// Campanhas: só marketing ou super, horário no futuro, rascunho e cancelar.
+ok((await rpc('admin_campanhas', tutor)).status >= 400, 'tutor comum não vê campanhas');
+ok((await rpc('admin_campanha_salvar', aal2, { p_id: null, p_titulo: 'Teste', p_mensagem: 'Mensagem', p_publico: 'todos', p_link: '/inicio', p_agendar_para: '2000-01-01T09:00:00Z' })).status >= 400, 'campanha no passado é barrada');
+ok((await rpc('admin_campanha_salvar', aal2, { p_id: null, p_titulo: 'Teste', p_mensagem: 'Mensagem', p_publico: 'todos', p_link: '/fora-do-app', p_agendar_para: null })).status >= 400, 'link fora da lista é barrado');
+const rascunho2 = (await rpc('admin_campanha_salvar', aal2, { p_id: null, p_titulo: `Rascunho ${Date.now()}`, p_mensagem: 'Mensagem', p_publico: 'caes', p_link: '/mapa', p_agendar_para: null })).corpo;
+const campanhas = (await rpc('admin_campanhas', aal2)).corpo;
+ok(campanhas.campanhas.find((c) => c.id === rascunho2)?.status === 'rascunho', 'salva rascunho');
+ok((await rpc('admin_campanha_cancelar', aal2, { p_id: rascunho2 })).status < 300, 'cancela a campanha');
+ok(typeof (await rpc('admin_campanha_publico', aal2, { p_publico: 'todos' })).corpo === 'number', 'mostra o alcance do público');
+
 // 5) Ninguém lê as tabelas direto.
 ok((await pedir('/rest/v1/audit_log?select=*', { token: aal2, metodo: 'GET' })).status >= 400, 'audit_log não é lido direto pela API');
 

@@ -14,6 +14,7 @@ const VISUAL: Record<Aviso['type'], { icone: NomeIcone; fundo: string }> = {
   dose: { icone: 'capsula', fundo: colors.warningSurface },
   peso: { icone: 'balanca', fundo: colors.primarySurface },
   sistema: { icone: 'escudo', fundo: colors.successSurface },
+  campanha: { icone: 'sino', fundo: colors.premiumSurface },
 };
 
 function grupo(iso: string): string {
