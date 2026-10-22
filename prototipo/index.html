@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Canvas do protótipo</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap">
+<style>
+:root{--fundo:#ECEEF2;--painel:#fff;--texto:#111;--suave:#5B6270;--linha:#DADDE3;--destaque:#2F6F93}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:var(--fundo);color:var(--texto);font-family:'Plus Jakarta Sans',system-ui,sans-serif}
+#palco{position:fixed;inset:0;cursor:grab;touch-action:none}
+#palco.arrastando{cursor:grabbing}
+#mundo{position:absolute;left:0;top:0;transform-origin:0 0}
+.nota{position:absolute;font-weight:700;letter-spacing:-0.02em;font-size:56px;line-height:1.1;white-space:normal;pointer-events:none}
+.nota.xxl{font-size:150px;font-weight:800;letter-spacing:-0.04em}
+.quadro{position:absolute}
+.quadro .rotulo{position:absolute;left:0;bottom:100%;margin-bottom:10px;font-size:22px;font-weight:600;color:var(--suave);white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis;cursor:pointer}
+.quadro .rotulo:hover{color:var(--destaque)}
+.quadro .tela{position:absolute;inset:0;background:#fff;border-radius:6px;overflow:hidden;box-shadow:0 1px 2px rgba(0,0,0,.06),0 8px 24px rgba(0,0,0,.08)}
+.quadro .tela::after{content:attr(data-titulo);position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:24px;text-align:center;font-size:28px;font-weight:600;color:#A0A6B1}
+.quadro .tela.carregada::after{display:none}
+.quadro iframe{position:absolute;left:0;top:0;border:0;width:100%;height:100%;pointer-events:none;background:#fff}
+.quadro.ativo .tela{outline:6px solid var(--destaque);outline-offset:4px}
+.quadro.ativo iframe{pointer-events:auto}
+#barra{position:fixed;left:16px;top:16px;display:flex;gap:8px;align-items:center;flex-wrap:wrap;max-width:calc(100% - 32px);z-index:2}
+#barra>*{height:40px;border-radius:20px;border:1px solid var(--linha);background:var(--painel);font:inherit;font-size:14px;font-weight:600;padding:0 14px;color:var(--texto)}
+#barra button{cursor:pointer}
+#barra select{max-width:320px}
+#zoom{display:flex;align-items:center;min-width:64px;justify-content:center}
+#dica{position:fixed;left:50%;bottom:16px;translate:-50% 0;background:#111;color:#fff;border-radius:20px;padding:10px 16px;font-size:13px;font-weight:500;z-index:2;max-width:calc(100% - 32px);text-align:center}
+#dica a{color:#A9DCF6}
+</style>
+</head>
+<body>
+<div id="palco"><div id="mundo"></div></div>
+<div id="barra">
+  <select id="secoes" aria-label="Ir para uma seção"><option value="">Ir para…</option></select>
+  <input id="busca" type="search" placeholder="Buscar tela" aria-label="Buscar tela" list="telas">
+  <datalist id="telas"></datalist>
+  <button type="button" id="menos" aria-label="Diminuir zoom">−</button>
+  <span id="zoom">100%</span>
+  <button type="button" id="mais" aria-label="Aumentar zoom">+</button>
+  <button type="button" id="tudo">Ver tudo</button>
+</div>
+<div id="dica">Arraste ou role para mover · Ctrl + roda para zoom · Duplo clique numa tela para usá-la</div>
+<script>
+(async function () {
+  const palco = document.getElementById('palco');
+  const mundo = document.getElementById('mundo');
+  const dica = document.getElementById('dica');
+  const textoDica = dica.innerHTML;
+  const canvas = await fetch('canvas.json').then(r => r.json());
+  document.title = canvas.title || document.title;
+
+  const vista = { x: 0, y: 0, z: 0.1 };
+  const quadros = [];
+  let ativo = null;
+
+  for (const n of Object.values(canvas.notes || {})) {
+    const el = document.createElement('div');
+    el.className = 'nota' + (n.size ? ' ' + n.size : '');
+    el.style.left = n.x + 'px';
+    el.style.top = n.y + 'px';
+    if (n.maxW) el.style.width = n.maxW + 'px';
+    el.textContent = n.text;
+    mundo.appendChild(el);
+  }
+
+  const ordem = canvas.order && canvas.order.length ? canvas.order : Object.keys(canvas.boards);
+  for (const arquivo of ordem) {
+    const b = canvas.boards[arquivo];
+    if (!b) continue;
+    const el = document.createElement('div');
+    el.className = 'quadro';
+    Object.assign(el.style, { left: b.x + 'px', top: b.y + 'px', width: b.w + 'px', height: b.h + 'px' });
+    const rotulo = document.createElement('div');
+    rotulo.className = 'rotulo';
+    rotulo.textContent = b.title || arquivo;
+    rotulo.title = 'Abrir ' + arquivo + ' sozinha';
+    rotulo.addEventListener('click', () => window.open(arquivo, '_blank'));
+    const tela = document.createElement('div');
+    tela.className = 'tela';
+    tela.dataset.titulo = b.title || arquivo;
+    el.append(rotulo, tela);
+    mundo.appendChild(el);
+    const q = { arquivo, b, el, tela, iframe: null };
+    el.addEventListener('dblclick', (e) => { e.stopPropagation(); ativar(q); });
+    quadros.push(q);
+  }
+
+  // Seções e busca
+  const secoes = document.getElementById('secoes');
+  Object.values(canvas.notes || {}).sort((a, b) => a.y - b.y || a.x - b.x).forEach((n, i) => {
+    const o = document.createElement('option');
+    o.value = i;
+    o.textContent = (n.size === 'xxl' ? '' : '— ') + n.text;
+    o._nota = n;
+    secoes.appendChild(o);
+  });
+  secoes.addEventListener('change', () => {
+    const o = secoes.selectedOptions[0];
+    if (o && o._nota) {
+      const n = o._nota;
+      const larg = Math.min(n.maxW || 2000, 8200);
+      enquadrar(n.x, n.y, larg, larg * 0.6);
+    }
+    secoes.value = '';
+  });
+  const lista = document.getElementById('telas');
+  for (const q of quadros) {
+    const o = document.createElement('option');
+    o.value = q.b.title || q.arquivo;
+    lista.appendChild(o);
+  }
+  const busca = document.getElementById('busca');
+  busca.addEventListener('change', () => {
+    const t = busca.value.trim().toLowerCase();
+    if (!t) return;
+    const q = quadros.find(q => (q.b.title || '').toLowerCase() === t)
+      || quadros.find(q => ((q.b.title || '') + ' ' + q.arquivo).toLowerCase().includes(t));
+    if (q) ativar(q);
+  });
+
+  // Vista
+  function aplicar() {
+    mundo.style.transform = `translate(${vista.x}px,${vista.y}px) scale(${vista.z})`;
+    document.getElementById('zoom').textContent = Math.round(vista.z * 100) + '%';
+    agendarCarga();
+  }
+  function zoomEm(px, py, novo) {
+    novo = Math.min(4, Math.max(0.02, novo));
+    vista.x = px - (px - vista.x) * (novo / vista.z);
+    vista.y = py - (py - vista.y) * (novo / vista.z);
+    vista.z = novo;
+    aplicar();
+  }
+  function enquadrar(x, y, w, h, margem = 60) {
+    const W = palco.clientWidth, H = palco.clientHeight;
+    vista.z = Math.min(4, Math.max(0.02, Math.min((W - margem * 2) / w, (H - margem * 2) / h)));
+    vista.x = (W - w * vista.z) / 2 - x * vista.z;
+    vista.y = (H - h * vista.z) / 2 - y * vista.z;
+    aplicar();
+  }
+  function verTudo() {
+    let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+    for (const q of quadros) {
+      x0 = Math.min(x0, q.b.x); y0 = Math.min(y0, q.b.y);
+      x1 = Math.max(x1, q.b.x + q.b.w); y1 = Math.max(y1, q.b.y + q.b.h);
+    }
+    x0 = Math.min(x0, 0); y0 = Math.min(y0, 0);
+    enquadrar(x0, y0, x1 - x0, y1 - y0, 24);
+  }
+
+  function ativar(q) {
+    if (ativo) ativo.el.classList.remove('ativo');
+    ativo = q;
+    if (!q) { dica.innerHTML = textoDica; return; }
+    q.el.classList.add('ativo');
+    enquadrar(q.b.x, q.b.y - 40, q.b.w, Math.min(q.b.h, 1400) + 40, 40);
+    carregar(q);
+    dica.innerHTML = `Usando <b>${q.b.title || q.arquivo}</b> · Esc para sair · <a href="${q.arquivo}" target="_blank">abrir sozinha</a>`;
+  }
+
+  // Só carrega as telas que estão à vista e com zoom suficiente para ler.
+  function carregar(q) {
+    if (q.iframe) return;
+    const f = document.createElement('iframe');
+    f.src = q.arquivo;
+    f.title = q.b.title || q.arquivo;
+    f.loading = 'lazy';
+    f.addEventListener('load', () => q.tela.classList.add('carregada'));
+    q.tela.appendChild(f);
+    q.iframe = f;
+  }
+  function descarregar(q) {
+    if (!q.iframe || q === ativo) return;
+    q.iframe.remove();
+    q.iframe = null;
+    q.tela.classList.remove('carregada');
+  }
+  let timer = null;
+  function agendarCarga() {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      const W = palco.clientWidth, H = palco.clientHeight;
+      const folga = 400;
+      const vx0 = -vista.x / vista.z - folga, vy0 = -vista.y / vista.z - folga;
+      const vx1 = (W - vista.x) / vista.z + folga, vy1 = (H - vista.y) / vista.z + folga;
+      const visiveis = quadros.filter(q => q.b.x < vx1 && q.b.x + q.b.w > vx0 && q.b.y < vy1 && q.b.y + q.b.h > vy0);
+      const pode = vista.z >= 0.12 && visiveis.length <= 40;
+      for (const q of quadros) {
+        if (pode && visiveis.includes(q)) carregar(q); else descarregar(q);
+      }
+    }, 150);
+  }
+
+  // Interação
+  palco.addEventListener('wheel', (e) => {
+    e.preventDefault();
+    if (e.ctrlKey || e.metaKey) {
+      zoomEm(e.clientX, e.clientY, vista.z * Math.exp(-e.deltaY * 0.01));
+    } else {
+      vista.x -= e.shiftKey ? e.deltaY : e.deltaX;
+      vista.y -= e.shiftKey ? 0 : e.deltaY;
+      aplicar();
+    }
+  }, { passive: false });
+
+  let arraste = null;
+  palco.addEventListener('pointerdown', (e) => {
+    if (e.button !== 0 || e.target.closest('.quadro.ativo .tela')) return;
+    arraste = { x: e.clientX, y: e.clientY, vx: vista.x, vy: vista.y, moveu: false };
+    palco.setPointerCapture(e.pointerId);
+    palco.classList.add('arrastando');
+  });
+  palco.addEventListener('pointermove', (e) => {
+    if (!arraste) return;
+    const dx = e.clientX - arraste.x, dy = e.clientY - arraste.y;
+    if (Math.abs(dx) + Math.abs(dy) > 3) arraste.moveu = true;
+    vista.x = arraste.vx + dx;
+    vista.y = arraste.vy + dy;
+    aplicar();
+  });
+  palco.addEventListener('pointerup', (e) => {
+    if (arraste && !arraste.moveu && !e.target.closest('.quadro')) ativar(null);
+    arraste = null;
+    palco.classList.remove('arrastando');
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.target.closest('input,select')) return;
+    if (e.key === 'Escape') ativar(null);
+    if (e.key === '0') verTudo();
+    if (e.key === '+' || e.key === '=') zoomEm(palco.clientWidth / 2, palco.clientHeight / 2, vista.z * 1.25);
+    if (e.key === '-') zoomEm(palco.clientWidth / 2, palco.clientHeight / 2, vista.z / 1.25);
+  });
+  document.getElementById('mais').onclick = () => zoomEm(palco.clientWidth / 2, palco.clientHeight / 2, vista.z * 1.25);
+  document.getElementById('menos').onclick = () => zoomEm(palco.clientWidth / 2, palco.clientHeight / 2, vista.z / 1.25);
+  document.getElementById('tudo').onclick = verTudo;
+  window.addEventListener('resize', agendarCarga);
+
+  // Começa na largura toda, a partir do topo (o canvas é muito mais alto que largo).
+  const larguraTotal = Math.max(...quadros.map(q => q.b.x + q.b.w));
+  vista.z = Math.max(0.02, (palco.clientWidth - 48) / larguraTotal);
+  vista.x = 24;
+  vista.y = 72;
+  aplicar();
+})();
+</script>
+</body>
+</html>

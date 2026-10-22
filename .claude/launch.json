@@ -1,0 +1,1 @@
+{"version":"0.0.1","configurations":[{"name":"remotion-studio","runtimeExecutable":"npm","runtimeArgs":["--prefix","marketing/video","run","dev"],"port":3020},{"name":"prototipo-canvas","runtimeExecutable":"python","runtimeArgs":["-m","http.server","3030","--directory","prototipo"],"port":3030}]}
