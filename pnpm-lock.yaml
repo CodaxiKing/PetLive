@@ -113,6 +113,9 @@ importers:
 
   apps/web:
     dependencies:
+      '@supabase/supabase-js':
+        specifier: ^2.118.0
+        version: 2.118.0
       next:
         specifier: 16.4.2
         version: 16.4.2(@babel/core@7.29.7)(@types/node@20.19.43)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
