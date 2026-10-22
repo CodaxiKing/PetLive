@@ -114,7 +114,7 @@ export default function PetDetalhe() {
   const pesoAtual = pesos.length ? pesos[pesos.length - 1].peso : petAtual.peso_atual
   const idade = idadeEmAnos(petAtual.nascimento)
 
-  function ir(pathname: '/pet/[id]/carteirinha' | '/pet/[id]/editar' | '/pet/[id]/medicamentos' | '/pet/[id]/peso' | '/pet/[id]/consultas' | '/pet/[id]/vacina/nova' | '/pet/[id]/consultas/nova') {
+  function ir(pathname: '/pet/[id]/carteirinha' | '/pet/[id]/editar' | '/pet/[id]/medicamentos' | '/pet/[id]/peso' | '/pet/[id]/consultas' | '/pet/[id]/vacina/nova' | '/pet/[id]/consultas/nova' | '/pet/[id]/linha-do-tempo') {
     setMenuAberto(false)
     router.push({ pathname, params: { id: petAtual.id } })
   }
@@ -373,6 +373,9 @@ export default function PetDetalhe() {
             </Pressable>
             <Pressable accessibilityRole="button" onPress={() => ir('/pet/[id]/medicamentos')} style={estilos.opcao}>
               <Text style={estilos.opcaoTexto}>Remédios e doses</Text>
+            </Pressable>
+            <Pressable accessibilityRole="button" onPress={() => ir('/pet/[id]/linha-do-tempo')} style={estilos.opcao}>
+              <Text style={estilos.opcaoTexto}>Linha do tempo</Text>
             </Pressable>
             <Pressable
               accessibilityRole="button"
