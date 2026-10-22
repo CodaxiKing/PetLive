@@ -159,6 +159,12 @@ ok(fat.por_mes?.length === 12 && typeof fat.mes_atual === 'number', 'financeiro:
 ok((await rpc('admin_faturamento', tutor)).status >= 400, 'tutor comum não vê o faturamento');
 ok((await pedir('/rest/v1/receitas', { token: tutor, corpo: { origem: 'premium', valor_centavos: 100 } })).status >= 400, 'ninguém lança receita pela API');
 
+// Datas com fogos: o app lê, só marketing ou super edita.
+ok(Array.isArray((await rpc('admin_fogos', aal2)).corpo), 'conteúdo: lista as datas com fogos');
+ok((await rpc('admin_fogos_salvar', tutor, { p_id: null, p_nome: 'Intruso', p_data: '2030-01-01', p_regiao: 'Rio', p_dica: '', p_revisado: false })).status >= 400, 'tutor comum não cadastra data com fogos');
+ok((await pedir('/rest/v1/datas_fogos?select=nome', { token: tutor, metodo: 'GET' })).corpo.some((d) => d.nome === 'Réveillon'), 'o app do tutor lê as datas com fogos');
+ok((await pedir('/rest/v1/fogos_prefs?select=tutor_id', { token: aal2, metodo: 'GET' })).corpo.every((f) => f.tutor_id !== null), 'cada tutor só vê as próprias preferências de fogos');
+
 // 5) Ninguém lê as tabelas direto.
 ok((await pedir('/rest/v1/audit_log?select=*', { token: aal2, metodo: 'GET' })).status >= 400, 'audit_log não é lido direto pela API');
 

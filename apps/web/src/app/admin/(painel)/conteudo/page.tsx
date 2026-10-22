@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { Cabecalho, CartaoNumero, haQuanto, numero, useAdmin } from "@/components/admin/Painel";
+import { DatasFogos } from "./DatasFogos";
 import { rpcAdmin } from "@/lib/admin/supabase";
 
 type Vacina = {
@@ -28,11 +29,12 @@ type Pacote = {
 };
 type Conteudo = { vacinas: Vacina[]; versoes: Versao[]; pacotes: Pacote[] };
 
-type Aba = "vacinas" | "versoes" | "pacotes";
+type Aba = "vacinas" | "versoes" | "pacotes" | "fogos";
 const ABAS: { valor: Aba; rotulo: string }[] = [
   { valor: "vacinas", rotulo: "Vacinas" },
   { valor: "versoes", rotulo: "Versões publicadas" },
   { valor: "pacotes", rotulo: "Pacotes offline" },
+  { valor: "fogos", rotulo: "Datas com fogos" },
 ];
 const TIPO_PACOTE: Record<Pacote["tipo"], string> = { emergencia: "Emergência (SOS)", calculadoras: "Calculadoras" };
 
@@ -239,6 +241,8 @@ export default function ConteudoPagina() {
                 </li>
               ))}
             </ul>
+          ) : aba === "fogos" ? (
+            <DatasFogos pode={admin.papel === "super" || admin.papel === "marketing"} onErro={setErro} />
           ) : (
             <div className="mt-4">
               <table className="w-full text-left text-[13px]">
