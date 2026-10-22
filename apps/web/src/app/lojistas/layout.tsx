@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { BotaoPreferenciasCookies } from "@/components/ConsentimentoCookies";
+import { BotaoPreferenciasCookies, ConsentimentoCookies } from "@/components/ConsentimentoCookies";
 
 export const metadata: Metadata = {
   title: "Para lojistas",
@@ -94,6 +94,7 @@ export default function LayoutLojistas({ children }: LayoutProps<"/lojistas">) {
           </nav>
         </div>
       </footer>
+      <ConsentimentoCookies />
     </>
   );
 }

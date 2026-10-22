@@ -134,3 +134,23 @@ página de retorno. Para ligar em produção:
 
 O botão só aparece no iPhone; a Apple manda o nome só no primeiro login, e o
 app guarda nessa hora.
+
+## Painel admin (`/admin` no site)
+
+Acesso só da equipe, com o código do app autenticador (2FA) em toda entrada.
+As regras ficam no banco: as funções `admin_*` exigem um membro ativo de
+`admin_members` e o token com `aal2`; o que altera dados vai para `audit_log`.
+
+1. **2FA ligado:** Authentication › Multi-Factor (TOTP habilitado — no
+   hosted já vem ligado; local: `[auth.mfa.totp]` no `config.toml`).
+2. **Primeiro super admin** (a pessoa já precisa ter conta), no SQL Editor:
+   ```sql
+   insert into admin_members (user_id, papel)
+   select id, 'super' from auth.users where email = '<e-mail>';
+   ```
+3. Entrar em `https://<site>/admin`: no primeiro acesso aparece o QR para
+   cadastrar o app autenticador. As outras pessoas o super admin põe pela
+   tela **Equipe**.
+
+Teste das regras: `node supabase/tests/testar-admin.mjs <ANON_KEY>` (precisa
+de `admin@petlive.dev` como super, sem 2FA, e do `demo@petlive.dev`).
