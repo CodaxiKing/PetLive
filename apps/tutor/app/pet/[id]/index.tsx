@@ -127,7 +127,7 @@ export default function PetDetalhe() {
   const pesoAtual = pesos.length ? pesos[pesos.length - 1].peso : petAtual.peso_atual
   const idade = idadeEmAnos(petAtual.nascimento)
 
-  function ir(pathname: '/pet/[id]/carteirinha' | '/pet/[id]/editar' | '/pet/[id]/medicamentos' | '/pet/[id]/peso' | '/pet/[id]/consultas' | '/pet/[id]/vacina/nova' | '/pet/[id]/consultas/nova' | '/pet/[id]/linha-do-tempo' | '/pet/[id]/partida' | '/pet/[id]/senior' | '/pet/[id]/viagem' | '/pet/[id]/selos') {
+  function ir(pathname: '/pet/[id]/carteirinha' | '/pet/[id]/editar' | '/pet/[id]/medicamentos' | '/pet/[id]/peso' | '/pet/[id]/consultas' | '/pet/[id]/vacina/nova' | '/pet/[id]/consultas/nova' | '/pet/[id]/linha-do-tempo' | '/pet/[id]/partida' | '/pet/[id]/senior' | '/pet/[id]/viagem' | '/pet/[id]/selos' | '/pet/[id]/qr') {
     setMenuAberto(false)
     router.push({ pathname, params: { id: petAtual.id } })
   }
@@ -438,6 +438,9 @@ export default function PetDetalhe() {
             </Pressable>
             <Pressable accessibilityRole="button" onPress={() => ir('/pet/[id]/viagem')} style={estilos.opcao}>
               <Text style={estilos.opcaoTexto}>Checklist de viagem</Text>
+            </Pressable>
+            <Pressable accessibilityRole="button" onPress={() => ir('/pet/[id]/qr')} style={estilos.opcao}>
+              <Text style={estilos.opcaoTexto}>QR da coleira</Text>
             </Pressable>
             <Pressable
               accessibilityRole="button"
