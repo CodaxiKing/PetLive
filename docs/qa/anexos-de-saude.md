@@ -9,10 +9,23 @@ Em cada push no PR, o workflow **verify** do GitHub Actions sobe o Supabase loca
 1. **Comentário no PR** "pnpm verify:supabase: ✅ passou / ❌ falhou". Existe um só comentário, atualizado a cada push, com o commit verificado e a saída completa em "Saída completa".
 2. **Resumo do run**, na aba Actions › verify › Summary.
 3. **Artefato** `verify-saida`.
+4. **Arquivo `docs/qa/verify-saida.txt` na própria branch**, para quem só lê o repositório (ver abaixo).
 
-Para aprovar, o commit do comentário precisa ser o último commit do PR. O workflow faz o checkout do próprio commit do PR, e não do merge com a main, então o hash da primeira linha da saída é o mesmo da lista de commits do PR.
+Para aprovar, o commit do comentário precisa ser o último commit de código do PR. O workflow faz o checkout do próprio commit do PR, e não do merge com a main, então o hash da primeira linha da saída é o mesmo da lista de commits do PR.
 
-**Sem shell e sem acesso ao PR:** o `docs/qa/verify-saida.txt` também fica versionado no repositório, com a saída de um `pnpm verify:supabase` rodado no Windows pelo dev antes de mandar para o QA. A primeira linha registra o commit em que rodou. O arquivo vai no commit seguinte a esse, junto só com documentação (`.gitignore` e este roteiro), então o código verificado é o mesmo do PR. Se o PR tiver commits de código depois desse, vale o comentário do workflow. Com shell, `pnpm verify:supabase` local regenera o arquivo. Já o `pnpm verify` sem `:supabase` pula o teste do bucket quando o Supabase local está fora do ar, então **não** serve para comprovar o critério C.
+**Sem shell e sem acesso ao PR:** depois de cada run, o workflow faz um commit do `github-actions[bot]` na branch do PR, com a mensagem `docs(qa): saída do pnpm verify:supabase em <commit>` e só o arquivo `docs/qa/verify-saida.txt`. Para conferir:
+
+- O último commit da branch é esse commit do bot, e o anterior a ele é o commit citado na mensagem. Se vier algum commit de código depois do commit do bot, a saída está velha e é preciso esperar o próximo run.
+- A primeira linha do arquivo traz o mesmo commit (`PetLive verify — … — commit <hash> — …`).
+- A última linha é `Tudo certo: install, typecheck, testes e testes do Supabase passaram.` Nunca aparece `PULADO`, porque o `:supabase` torna o teste do bucket obrigatório.
+
+Se o arquivo ainda não existir na branch, o workflow não rodou depois do último push. Nesse caso é bloqueio de ambiente, e não reprovação.
+
+Quem tiver shell também pode gerar o arquivo localmente (`supabase start` e depois `pnpm verify:supabase`) e versionar. O commit do bot substitui esse arquivo no run seguinte. Quem empurra para a branch precisa dar `git pull` antes, por causa do commit do bot. Já o `pnpm verify` sem `:supabase` pula o teste do bucket quando o Supabase local está fora do ar, então **não** serve para comprovar o critério C.
+
+## Situação do critério 13 (Android e iOS)
+
+Pendente: o roteiro abaixo precisa ser feito num aparelho Android e num iPhone, ou em emuladores com development build. Não dá para fazer isso numa sessão sem aparelho. Quem rodar marca ✅ ou ❌ em cada coluna, com a data, o modelo do aparelho e a versão do sistema, e anexa no PR os prints ou vídeos dos passos 3, 6 e 8.
 
 ## Decisões sobre os critérios
 

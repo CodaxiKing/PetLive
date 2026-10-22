@@ -1,6 +1,7 @@
 # Roda o `pnpm verify:supabase` (critérios A e C) em cada PR, para o QA ter a
 # saída sem precisar de shell: o docs/qa/verify-saida.txt vai como comentário
-# no PR (atualizado a cada push), no resumo do run e como artefato.
+# no PR (atualizado a cada push), no resumo do run, como artefato e versionado
+# na própria branch do PR (para quem só lê o repositório).
 name: verify
 
 on:
@@ -10,7 +11,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write # commit do docs/qa/verify-saida.txt na branch do PR
   pull-requests: write
 
 jobs:
@@ -72,6 +73,23 @@ jobs:
             const anterior = comentarios.find((c) => c.body?.includes(marca))
             if (anterior) await github.rest.issues.updateComment({ owner, repo, comment_id: anterior.id, body: corpo })
             else await github.rest.issues.createComment({ owner, repo, issue_number, body: corpo })
+      # Commit só com o verify-saida.txt, em cima do commit verificado. Push com o
+      # GITHUB_TOKEN não dispara outro workflow, então não entra em loop. Se a
+      # branch andou durante o run, o push é recusado e vale o run seguinte.
+      - name: Versionar a saída do verify na branch do PR
+        if: always() && github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
+        continue-on-error: true
+        env:
+          BRANCH: ${{ github.head_ref }}
+          VERIFICADO: ${{ github.event.pull_request.head.sha }}
+        run: |
+          test -f docs/qa/verify-saida.txt || exit 0
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -f docs/qa/verify-saida.txt
+          git diff --cached --quiet && exit 0
+          git commit -m "docs(qa): saída do pnpm verify:supabase em ${VERIFICADO::7}"
+          git push origin "HEAD:refs/heads/$BRANCH"
       - name: Anexar a saída do verify
         if: always()
         uses: actions/upload-artifact@v4
