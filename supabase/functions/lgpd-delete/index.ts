@@ -27,18 +27,10 @@ Deno.serve(async (req) => {
 
   for (const pedido of (pedidos ?? []) as { id: string; user_id: string }[]) {
     try {
-      // Arquivos ficam em <bucket>/<user_id>/<arquivo> (mesma regra das policies).
+      // Arquivos ficam em <bucket>/<user_id>/... (mesma regra das policies),
+      // inclusive em subpastas (anexos/<pet>, marcos, despesas).
       for (const bucket of BUCKETS) {
-        for (;;) {
-          const { data: arquivos, error: erroLista } = await supabase.storage
-            .from(bucket)
-            .list(pedido.user_id, { limit: 1000 });
-          if (erroLista) throw erroLista;
-          const caminhos = (arquivos ?? []).filter((a) => a.name).map((a) => `${pedido.user_id}/${a.name}`);
-          if (caminhos.length === 0) break;
-          const { error: erroRemover } = await supabase.storage.from(bucket).remove(caminhos);
-          if (erroRemover) throw erroRemover;
-        }
+        await apagarPasta(supabase, bucket, pedido.user_id);
       }
 
       const { error: erroConcluir } = await supabase.rpc('lgpd_concluir_exclusao', { p_pedido: pedido.id });
@@ -51,3 +43,20 @@ Deno.serve(async (req) => {
 
   return Response.json({ processados: resultado.length, resultado });
 });
+
+type Cliente = ReturnType<typeof createClient>;
+
+/** Apaga tudo dentro da pasta, descendo nas subpastas (o list do Storage não é recursivo). */
+async function apagarPasta(supabase: Cliente, bucket: string, pasta: string): Promise<void> {
+  for (;;) {
+    const { data: itens, error: erroLista } = await supabase.storage.from(bucket).list(pasta, { limit: 1000 });
+    if (erroLista) throw erroLista;
+    // Subpasta vem sem id; arquivo vem com id.
+    const subpastas = (itens ?? []).filter((i) => i.name && !i.id).map((i) => `${pasta}/${i.name}`);
+    const arquivos = (itens ?? []).filter((i) => i.name && i.id).map((i) => `${pasta}/${i.name}`);
+    for (const sub of subpastas) await apagarPasta(supabase, bucket, sub);
+    if (arquivos.length === 0) return;
+    const { error: erroRemover } = await supabase.storage.from(bucket).remove(arquivos);
+    if (erroRemover) throw erroRemover;
+  }
+}

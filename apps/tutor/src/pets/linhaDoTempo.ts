@@ -1,4 +1,5 @@
 import { supabase } from '../lib/supabase'
+import { extensaoDoMime, mimeAceito } from '../saude/anexosRegras'
 
 /** Item da linha do tempo (função linha_do_tempo): marco manual ou automático. */
 export type ItemLinha = {
@@ -50,12 +51,12 @@ export async function apagarMarco(marco: Marco): Promise<void> {
 
 /** Foto do marco na pasta do tutor no bucket privado (envia os bytes). */
 export async function enviarFotoMarco(tutorId: string, uri: string, mimeType?: string): Promise<string> {
-  const extensao = mimeType?.includes('png') ? 'png' : 'jpg'
-  const caminho = `${tutorId}/marcos/${Date.now()}.${extensao}`
+  // O bucket só aceita JPG, PNG e HEIC.
+  const mime = mimeAceito(mimeType, uri)
+  if (!mime) throw new Error('Só dá para enviar fotos em JPG, PNG ou HEIC.')
+  const caminho = `${tutorId}/marcos/${Date.now()}.${extensaoDoMime(mime)}`
   const bytes = await (await fetch(uri)).arrayBuffer()
-  const { error } = await supabase.storage
-    .from('anexos')
-    .upload(caminho, bytes, { contentType: mimeType ?? `image/${extensao === 'jpg' ? 'jpeg' : extensao}` })
+  const { error } = await supabase.storage.from('anexos').upload(caminho, bytes, { contentType: mime })
   if (error) throw new Error('Não deu para enviar a foto.')
   return caminho
 }

@@ -1,5 +1,6 @@
 import { supabase } from '../lib/supabase'
 import { erroDoServidor } from '../pets/limite'
+import { extensaoDoMime, mimeAceito } from '../saude/anexosRegras'
 
 /** Despesas do pet (BUSINESS.md 5.32): só registro, privado do tutor. */
 export type Categoria = 'racao' | 'veterinario' | 'banho_tosa' | 'remedios' | 'acessorios' | 'hotel_creche' | 'outros'
@@ -80,12 +81,12 @@ export async function apagarDespesa(despesa: Despesa): Promise<void> {
  * exigem a primeira pasta = uid). Envia os bytes, como a foto do pet.
  */
 export async function enviarRecibo(tutorId: string, uri: string, mimeType?: string): Promise<string> {
-  const extensao = mimeType?.includes('png') ? 'png' : 'jpg'
-  const caminho = `${tutorId}/despesas/${Date.now()}.${extensao}`
+  // O bucket só aceita JPG, PNG e HEIC.
+  const mime = mimeAceito(mimeType, uri)
+  if (!mime) throw new Error('Só dá para enviar fotos em JPG, PNG ou HEIC.')
+  const caminho = `${tutorId}/despesas/${Date.now()}.${extensaoDoMime(mime)}`
   const bytes = await (await fetch(uri)).arrayBuffer()
-  const { error } = await supabase.storage
-    .from('anexos')
-    .upload(caminho, bytes, { contentType: mimeType ?? `image/${extensao === 'jpg' ? 'jpeg' : extensao}` })
+  const { error } = await supabase.storage.from('anexos').upload(caminho, bytes, { contentType: mime })
   if (error) throw new Error('Não deu para enviar a foto do recibo.')
   return caminho
 }

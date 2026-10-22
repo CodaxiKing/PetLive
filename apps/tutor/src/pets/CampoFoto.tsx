@@ -1,7 +1,7 @@
-import { Alert } from 'react-native'
+import { Alert, Linking } from 'react-native'
 import * as ImagePicker from 'expo-image-picker'
 
-export type AtivoFoto = { uri: string; mimeType?: string }
+export type AtivoFoto = { uri: string; mimeType?: string; /** Bytes, quando o sistema informa. */ tamanho?: number }
 
 /** Abre a galeria ou a câmera e devolve a foto, ou null. Recorte quadrado por padrão (foto do pet). */
 export async function escolherFoto(origem: 'galeria' | 'camera', quadrado = true): Promise<AtivoFoto | null> {
@@ -10,11 +10,16 @@ export async function escolherFoto(origem: 'galeria' | 'camera', quadrado = true
       ? await ImagePicker.requestMediaLibraryPermissionsAsync()
       : await ImagePicker.requestCameraPermissionsAsync()
   if (!permissao.granted) {
+    // Negada: explica o motivo e leva às configurações (o sistema não pergunta de novo).
     Alert.alert(
       'Permissão necessária',
       origem === 'galeria'
-        ? 'Autorize o acesso às fotos nas configurações do aparelho.'
-        : 'Autorize o acesso à câmera nas configurações do aparelho.',
+        ? 'Para escolher uma foto, o PetLive precisa de acesso às suas fotos. Autorize nas configurações do aparelho.'
+        : 'Para tirar a foto, o PetLive precisa de acesso à câmera. Autorize nas configurações do aparelho.',
+      [
+        { text: 'Agora não', style: 'cancel' },
+        { text: 'Abrir configurações', onPress: () => Linking.openSettings().catch(() => undefined) },
+      ],
     )
     return null
   }
@@ -25,7 +30,7 @@ export async function escolherFoto(origem: 'galeria' | 'camera', quadrado = true
       : await ImagePicker.launchCameraAsync(opcoes)
   if (resultado.canceled) return null
   const ativo = resultado.assets[0]
-  return ativo ? { uri: ativo.uri, mimeType: ativo.mimeType ?? undefined } : null
+  return ativo ? { uri: ativo.uri, mimeType: ativo.mimeType ?? undefined, tamanho: ativo.fileSize ?? undefined } : null
 }
 
 /**

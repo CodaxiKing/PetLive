@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 
 const SITE = "https://petlive.app.br";
 
-/** Páginas públicas do site; a página do QR (/p/[codigo]) não entra (Fase 2, privada por link). */
+/** Páginas públicas do site; a página do QR (/r/[codigo]) e da ficha (/ficha/[codigo]) não entram (Fase 2, privadas por link). */
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
     { url: SITE, changeFrequency: "weekly", priority: 1 },

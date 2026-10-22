@@ -119,7 +119,8 @@ function RaizProtegida() {
               <Stack.Protected guard={Boolean(session)}>
                 <Stack.Screen name="(app)" options={{ animation: 'fade' }} />
                 <Stack.Screen name="pet/novo" options={{ presentation: 'modal', animation: 'slide_from_bottom' }} />
-                <Stack.Screen name="premium" options={{ presentation: 'modal', animation: 'slide_from_bottom' }} />
+                <Stack.Screen name="premium/index" options={{ presentation: 'modal', animation: 'slide_from_bottom' }} />
+                <Stack.Screen name="premium/assinatura" />
                 <Stack.Screen name="pet/[id]/index" />
                 <Stack.Screen name="pet/[id]/carteirinha" />
                 <Stack.Screen name="pet/[id]/compartilhar" />

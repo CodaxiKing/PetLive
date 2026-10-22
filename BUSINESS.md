@@ -352,12 +352,13 @@ O PetLive organiza informações e não substitui o atendimento veterinário. Es
 
 ### 5.13 Premium e assinaturas (Fase 2)
 
-> **Minha assinatura (tela 100):** mostra o plano, a renovação, a forma de pagamento, **mudar para mensal**, **atualizar pagamento** e **cancelar**. Ao cancelar, o app diz que o Premium vale até o fim do período pago e o que muda depois.
+> **Minha assinatura (tela 100):** mostra o plano, a renovação e a loja onde foi assinado (App Store ou Google Play). **Mudar plano**, **atualizar pagamento** e **cancelar** abrem a tela de assinaturas da própria loja. Ao cancelar, o app diz que o Premium vale até o fim do período pago e o que muda depois.
 
 - Teste grátis de `[7]` dias para quem nunca assinou. Cobrança avisada `[2]` dias antes.
-- Planos mensal e anual, pagos por Pix ou cartão pelo Asaas.
-- **A validar:** a Apple e o Google costumam exigir a compra da própria loja para recursos digitais vendidos dentro do app, e essas regras mudaram no Brasil. Confirmar a política vigente antes de lançar o Premium. A regra vale só para o Premium: pedidos de produtos e serviços físicos não são afetados.
-- Falha de cobrança: novas tentativas por `[3]` dias. Sem sucesso, o plano volta a Grátis no fim do período já pago.
+- Planos mensal e anual, comprados pela **loja de apps** (App Store no iOS, Google Play no Android), na folha de pagamento nativa. O app não pede cartão nem Pix. O preço mostrado é o que a loja devolve, na moeda do usuário; nada fica fixo no app (task P-B7DO8).
+- O servidor confirma cada compra com a loja (Edge Function `validar-compra-loja`) antes de marcar `plano = 'premium'`, e os avisos de renovação, cancelamento e falha chegam pela `notificacoes-loja`. Existe o botão "Restaurar compras", exigido pela Apple.
+- **A confirmar:** a compra pela loja de apps foi a escolha da task P-B7DO8, porque a Apple e o Google costumam exigir a compra da própria loja para recursos digitais vendidos dentro do app. Falta a confirmação formal (seção 15), e também decidir como o preço de "Planos e cupons" no admin se relaciona com o preço cadastrado na loja e como os cupons de dias de Premium grátis funcionam (por exemplo, com os códigos de oferta da loja). Pedidos de produtos e serviços físicos não são afetados: continuam pelo Asaas.
+- Falha de cobrança: as novas tentativas são as da loja (com a carência configurada nela). Sem sucesso, o plano volta a Grátis no fim do período já pago.
 - Cancelar mantém o Premium até o fim do período pago.
 - Pets além do limite do plano grátis ficam **somente leitura**, sem serem apagados nem escondidos: continuam no seletor, com perfil, vacinas, histórico e carteirinha, e uma faixa "Só para consulta". Fica editável o pet ativo há mais tempo (o pet que volta do modo memorial entra no fim da fila). Toda tentativa de edição abre o convite Premium, e a regra vale no servidor. Ao voltar ao Premium, todos voltam a ser editáveis na hora.
   - Edição, nesse caso, é tudo que grava algo do pet: cadastro e foto, vacinas, vermífugo, peso, consultas, remédios e o Feito das doses, lembretes (criar, Feito, ligar, desligar ou apagar, inclusive rotina de cuidados e rotina sênior), linha do tempo, escala de qualidade de vida, checklist de viagem, despesas do pet e acesso de cuidador temporário (o cuidador marca doses, então o acesso só inclui pets editáveis).
@@ -942,7 +943,7 @@ A divisão abaixo é uma **proposta para validar**. Regra geral: tudo que proteg
 
 - Nome do domínio e endereço da página pública do QR.
 - Percentual de comissão `[x]%`, depois de conferir as taxas atuais do Asaas.
-- Como cobrar o Premium dentro do app: pagamento do Asaas ou compra pela loja do app (seção 5.13).
+- Confirmar a compra do Premium pela loja do app, já implementada (seção 5.13), a relação do preço do admin com o preço da loja e os cupons de Premium com os códigos de oferta da loja.
 - Preço do Premium `[valor]`.
 - App do lojista como PWA ou nativo.
 - Framework web dos painéis e do site.

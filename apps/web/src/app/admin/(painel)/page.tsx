@@ -37,13 +37,16 @@ export default function VisaoGeral() {
   // Receita só para quem vê o financeiro (super, financeiro e leitura).
   const veFinanceiro = ["super", "financeiro", "leitura"].includes(admin.papel);
   const [receita, setReceita] = useState<{ mes_atual: number; mes_anterior: number } | null>(null);
+  const [assinaturas, setAssinaturas] = useState<{ app_store: number; google_play: number; em_teste: number; novas_30d: number } | null>(null);
 
   useEffect(() => {
     rpcAdmin<Visao>("admin_visao").then(setVisao, (e: Error) => setErro(e.message));
   }, []);
 
   useEffect(() => {
-    if (veFinanceiro) rpcAdmin<{ mes_atual: number; mes_anterior: number }>("admin_receita_resumo").then(setReceita, () => undefined);
+    if (!veFinanceiro) return;
+    rpcAdmin<{ mes_atual: number; mes_anterior: number }>("admin_receita_resumo").then(setReceita, () => undefined);
+    rpcAdmin<{ app_store: number; google_play: number; em_teste: number; novas_30d: number }>("admin_assinaturas_resumo").then(setAssinaturas, () => undefined);
   }, [veFinanceiro]);
 
   if (erro) return <p className="text-perigo">{erro}</p>;
@@ -69,6 +72,15 @@ export default function VisaoGeral() {
               {(receita.mes_atual / 100).toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}
             </p>
           </div>
+          {assinaturas ? (
+            <div>
+              <p className="text-[13px] font-bold text-roxo-texto">Assinantes Premium</p>
+              <p className="text-[13px] text-cinza">
+                App Store {numero(assinaturas.app_store)} · Google Play {numero(assinaturas.google_play)} · em teste {numero(assinaturas.em_teste)} · +
+                {numero(assinaturas.novas_30d)} no mês
+              </p>
+            </div>
+          ) : null}
           <p className="text-[13px] text-cinza">
             Mês anterior: {(receita.mes_anterior / 100).toLocaleString("pt-BR", { style: "currency", currency: "BRL" })} · ver o gráfico por mês ›
           </p>
