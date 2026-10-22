@@ -158,6 +158,17 @@ export default function TelaCompartilhar() {
           </View>
           <Icone nome="seta" size={18} espessura={2} />
         </Tocavel>
+        <Tocavel
+          accessibilityRole="button"
+          onPress={() => router.push(`/pet/${pet.id}/cuidador`)}
+          style={[estilos.emergencia, estilos.cuidador]}
+        >
+          <View style={estilos.flex}>
+            <Text style={estilos.emergenciaTitulo}>Cuidador temporário</Text>
+            <Text style={[estilos.emergenciaSub, estilos.cuidadorSub]}>Acesso com prazo para quem vai cuidar, com os remédios do dia</Text>
+          </View>
+          <Icone nome="seta" size={18} espessura={2} />
+        </Tocavel>
         <Text style={estilos.intro}>
           Escolha o que vai na carteirinha de {pet.nome}. Quem receber vê só isto. Incluídos: {ligadas.size} de {SECOES.length}.
         </Text>
@@ -248,6 +259,8 @@ const estilos = StyleSheet.create({
   },
   emergencia: { flexDirection: 'row', alignItems: 'center', gap: 12, backgroundColor: '#FDE0E6', borderRadius: 24, paddingVertical: 14, paddingHorizontal: 18 },
   emergenciaTitulo: { fontFamily: fontFamily.bold, fontSize: 16, color: colors.black },
+  cuidador: { backgroundColor: colors.primarySurface },
+  cuidadorSub: { color: colors.primaryDeep },
   emergenciaSub: { fontFamily: fontFamily.regular, fontSize: 13, color: '#A3324F' },
   intro: { fontFamily: fontFamily.regular, fontSize: 15, lineHeight: 22, color: '#5E6878', marginBottom: 2 },
   item: { backgroundColor: colors.background, borderRadius: 24, paddingVertical: 12, paddingHorizontal: 16, gap: 10 },
