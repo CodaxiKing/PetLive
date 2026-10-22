@@ -1,13 +1,15 @@
-# Roda o `pnpm verify:supabase` (critérios A e C) em cada PR, para o QA ter a
-# saída sem precisar de shell: o docs/qa/verify-saida.txt vai como comentário
-# no PR (atualizado a cada push), no resumo do run, como artefato e versionado
-# na própria branch do PR (para quem só lê o repositório).
+# Roda o `pnpm verify:supabase` (critérios A e C) em cada push e em cada PR,
+# para o QA ter a saída sem precisar de shell: o docs/qa/verify-saida.txt vai
+# como comentário no PR (atualizado a cada push), no resumo do run, como
+# artefato e versionado na própria branch (para quem só lê o repositório). O
+# push em qualquer branch também versiona: a branch recebe a saída mesmo
+# antes de o PR existir.
 name: verify
 
 on:
   pull_request:
   push:
-    branches: [main]
+    branches: ['**']
   workflow_dispatch:
 
 permissions:
@@ -75,13 +77,18 @@ jobs:
             else await github.rest.issues.createComment({ owner, repo, issue_number, body: corpo })
       # Commit só com o verify-saida.txt, em cima do commit verificado. Push com o
       # GITHUB_TOKEN não dispara outro workflow, então não entra em loop. Se a
-      # branch andou durante o run, o push é recusado e vale o run seguinte.
-      - name: Versionar a saída do verify na branch do PR
-        if: always() && github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
+      # branch andou durante o run (inclusive pelo run gêmeo push/pull_request),
+      # o push é recusado e vale o commit que já entrou. A main não recebe.
+      - name: Versionar a saída do verify na branch
+        if: >-
+          always() && (
+            (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository) ||
+            ((github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.ref_type == 'branch' && github.ref_name != 'main')
+          )
         continue-on-error: true
         env:
-          BRANCH: ${{ github.head_ref }}
-          VERIFICADO: ${{ github.event.pull_request.head.sha }}
+          BRANCH: ${{ github.head_ref || github.ref_name }}
+          VERIFICADO: ${{ github.event.pull_request.head.sha || github.sha }}
         run: |
           test -f docs/qa/verify-saida.txt || exit 0
           git config user.name 'github-actions[bot]'

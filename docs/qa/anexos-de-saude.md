@@ -4,7 +4,7 @@ Roteiro manual para o critério 13. Faça uma vez no **Android** e outra no **iO
 
 ## Verificação automática (critérios A e C), sem shell
 
-Em cada push no PR, o workflow **verify** do GitHub Actions sobe o Supabase local (`supabase start`) e roda `pnpm verify:supabase`. Isso inclui install com lockfile congelado, typecheck, testes e o `supabase/tests/testar-anexos.mjs`, que testa o bucket e por isso nunca sai como PULADO nesse modo. O resultado aparece em três lugares:
+Em cada push na branch, com ou sem PR aberto, e em cada atualização do PR, o workflow **verify** do GitHub Actions sobe o Supabase local (`supabase start`) e roda `pnpm verify:supabase`. Isso inclui install com lockfile congelado, typecheck, testes e o `supabase/tests/testar-anexos.mjs`, que testa o bucket e por isso nunca sai como PULADO nesse modo. O resultado aparece em três lugares:
 
 1. **Comentário no PR** "pnpm verify:supabase: ✅ passou / ❌ falhou". Existe um só comentário, atualizado a cada push, com o commit verificado e a saída completa em "Saída completa".
 2. **Resumo do run**, na aba Actions › verify › Summary.
@@ -13,7 +13,7 @@ Em cada push no PR, o workflow **verify** do GitHub Actions sobe o Supabase loca
 
 Para aprovar, o commit do comentário precisa ser o último commit de código do PR. O workflow faz o checkout do próprio commit do PR, e não do merge com a main, então o hash da primeira linha da saída é o mesmo da lista de commits do PR.
 
-**Sem shell e sem acesso ao PR:** depois de cada run, o workflow faz um commit do `github-actions[bot]` na branch do PR, com a mensagem `docs(qa): saída do pnpm verify:supabase em <commit>` e só o arquivo `docs/qa/verify-saida.txt`. Para conferir:
+**Sem shell e sem acesso ao PR:** depois de cada run, o workflow faz um commit do `github-actions[bot]` na branch (também quando o PR ainda não foi aberto), com a mensagem `docs(qa): saída do pnpm verify:supabase em <commit>` e só o arquivo `docs/qa/verify-saida.txt`. Para conferir:
 
 - O último commit da branch é esse commit do bot, e o anterior a ele é o commit citado na mensagem. Se vier algum commit de código depois do commit do bot, a saída está velha e é preciso esperar o próximo run.
 - A primeira linha do arquivo traz o mesmo commit (`PetLive verify — … — commit <hash> — …`).
