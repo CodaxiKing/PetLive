@@ -15,6 +15,9 @@ import {
 
 const BUCKET = 'anexos'
 const CAMPOS = 'id, pet_id, tipo, titulo, data, arquivo_path, mime, criado_em'
+const PAGINA = 1000
+// Caminhos por consulta `in`: mantém a URL do PostgREST curta.
+const LOTE_CONFERENCIA = 100
 
 export type DadosAnexo = { tipo: TipoAnexo; titulo: string | null; data: string }
 
@@ -109,10 +112,10 @@ export async function apagarAnexo(anexo: Anexo): Promise<void> {
  */
 export async function limparAnexosOrfaos(tutorId: string): Promise<void> {
   const raiz = `${tutorId}/anexos`
-  const { data: itens, error: erroLista } = await supabase.storage.from(BUCKET).list(raiz, { limit: 1000 })
-  if (erroLista) return
+  const itens = await listarTudo(raiz)
+  if (!itens) return
   // Subpasta vem sem id; arquivo vem com id.
-  const pastas = (itens ?? []).filter((i) => i.name && !i.id).map((i) => i.name)
+  const pastas = itens.filter((i) => i.name && !i.id).map((i) => i.name)
   if (pastas.length === 0) return
 
   const { data: pets, error: erroPets } = await supabase.from('pets').select('id')
@@ -133,22 +136,42 @@ export async function limparAnexosOrfaos(tutorId: string): Promise<void> {
   }
 }
 
-/** Arquivos sem registro nas pastas de pets que existem (melhor esforço). */
+/**
+ * Arquivos sem registro nas pastas de pets que existem (melhor esforço). As
+ * pastas são lidas página a página; os candidatos (antigos o bastante) são
+ * conferidos na tabela em lotes, então nenhum limite de linhas faz um arquivo
+ * registrado parecer sobra.
+ */
 async function limparSemRegistro(raiz: string, pastas: string[]): Promise<void> {
-  if (pastas.length === 0) return
-  const porPasta: { pasta: string; arquivos: { name: string; created_at?: string | null }[] }[] = []
+  const candidatos: string[] = []
   for (const pasta of pastas) {
-    const { data: arquivos, error } = await supabase.storage.from(BUCKET).list(`${raiz}/${pasta}`, { limit: 1000 })
-    if (error) return
-    porPasta.push({ pasta: `${raiz}/${pasta}`, arquivos: (arquivos ?? []).filter((a) => a.name && a.id) })
+    const itens = await listarTudo(`${raiz}/${pasta}`)
+    if (!itens) return
+    candidatos.push(...arquivosSemRegistro(`${raiz}/${pasta}`, itens.filter((a) => a.name && a.id), []))
   }
 
-  const { data: registros, error: erroRegistros } = await supabase.from('anexos').select('arquivo_path')
-  if (erroRegistros || !registros) return
-  const registrados = registros.map((r) => (r as { arquivo_path: string }).arquivo_path)
+  for (let i = 0; i < candidatos.length; i += LOTE_CONFERENCIA) {
+    const lote = candidatos.slice(i, i + LOTE_CONFERENCIA)
+    const { data: registros, error } = await supabase.from('anexos').select('arquivo_path').in('arquivo_path', lote)
+    if (error || !registros) return
+    const registrados = new Set(registros.map((r) => (r as { arquivo_path: string }).arquivo_path))
+    const sobras = lote.filter((c) => !registrados.has(c))
+    if (sobras.length > 0) {
+      const { error: erroRemover } = await supabase.storage.from(BUCKET).remove(sobras)
+      if (erroRemover) return
+    }
+  }
+}
 
-  const sobras = porPasta.flatMap(({ pasta, arquivos }) => arquivosSemRegistro(pasta, arquivos, registrados))
-  if (sobras.length > 0) await supabase.storage.from(BUCKET).remove(sobras)
+/** Itens de uma pasta do bucket, página a página (o Storage devolve no máximo `PAGINA` por vez). */
+async function listarTudo(pasta: string): Promise<{ name: string; id: string | null; created_at?: string | null }[] | null> {
+  const itens: { name: string; id: string | null; created_at?: string | null }[] = []
+  for (let offset = 0; ; offset += PAGINA) {
+    const { data, error } = await supabase.storage.from(BUCKET).list(pasta, { limit: PAGINA, offset })
+    if (error) return null
+    itens.push(...(data ?? []))
+    if (!data || data.length < PAGINA) return itens
+  }
 }
 
 function erroDeEnvio(mensagem: string): ErroAnexo {

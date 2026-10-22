@@ -14,7 +14,7 @@ function listar(prefixo: string) {
     const [nome, ...resto] = caminho.slice(prefixo.length + 1).split('/')
     nomes.set(nome, resto.length ? { name: nome, id: null } : { name: nome, id: caminho, created_at: criado })
   }
-  return [...nomes.values()]
+  return [...nomes.values()].sort((a, b) => a.name.localeCompare(b.name))
 }
 
 const bucket = {
@@ -27,14 +27,24 @@ const bucket = {
     for (const c of caminhos) arquivos.delete(c)
     return { data: [], error: null }
   },
-  list: async (prefixo: string) => ({ data: listar(prefixo), error: null }),
+  // Como o Storage: no máximo `limit` itens por chamada (padrão 100), a partir de `offset`.
+  list: async (prefixo: string, opcoes: { limit?: number; offset?: number } = {}) => {
+    const inicio = opcoes.offset ?? 0
+    return { data: listar(prefixo).slice(inicio, inicio + Math.min(opcoes.limit ?? 100, 1000)), error: null }
+  },
 }
+
+// Como o PostgREST: no máximo 1000 linhas por consulta.
+const linhas = <T>(dados: T[]) => ({ data: dados.slice(0, 1000), error: null })
 
 vi.mock('../lib/supabase', () => ({
   supabase: {
     storage: { from: () => bucket },
     from: (tabela: string) => ({
-      select: async () => ({ data: tabela === 'pets' ? pets : registros, error: null }),
+      select: () =>
+        Object.assign(Promise.resolve(linhas(tabela === 'pets' ? pets : registros)), {
+          in: async (_coluna: string, valores: string[]) => linhas(registros.filter((r) => valores.includes(r.arquivo_path))),
+        }),
       insert: () => ({
         select: () => ({
           single: async () => (falhas.insert ? { data: null, error: { message: 'TypeError: Network request failed' } } : { data: {}, error: null }),
@@ -88,5 +98,17 @@ describe('foto órfã no storage', () => {
     vi.setSystemTime(Date.now() + 2 * FOLGA_ARQUIVO_SEM_REGISTRO)
     await limparAnexosOrfaos('u')
     expect(arquivos.size).toBe(1)
+  })
+
+  it('pasta com mais de 1000 arquivos: limpa todas as sobras e poupa os registrados', async () => {
+    const antigo = new Date(Date.now() - 2 * FOLGA_ARQUIVO_SEM_REGISTRO).toISOString()
+    for (let i = 0; i < 2500; i++) {
+      const caminho = `u/anexos/p1/${String(i).padStart(4, '0')}.jpg`
+      arquivos.set(caminho, antigo)
+      if (i % 2 === 0) registros.push({ arquivo_path: caminho })
+    }
+    await limparAnexosOrfaos('u')
+    expect(arquivos.size).toBe(1250)
+    expect([...arquivos.keys()].every((c) => registros.some((r) => r.arquivo_path === c))).toBe(true)
   })
 })
