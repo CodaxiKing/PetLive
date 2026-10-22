@@ -158,6 +158,11 @@ declare
   v_token text;
   v_existente boolean;
 begin
+  -- Validação de coordenadas: latitude entre -90 e 90, longitude entre -180 e 180.
+  if p_lat < -90 or p_lat > 90 or p_lng < -180 or p_lng > 180 then
+    return jsonb_build_object('sucesso', false, 'erro', 'Coordenadas inválidas.');
+  end if;
+
   -- Busca configuração do QR ativa pelo código.
   select * into v_qr from pet_qr_settings where code = p_codigo and active;
   if v_qr.pet_id is null then
