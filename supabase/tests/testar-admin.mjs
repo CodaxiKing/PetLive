@@ -112,6 +112,25 @@ ok((await rpc('admin_moderar_indicacao', aal2, { p_id: item.id, p_aprovar: true 
 const noMapa = (await rpc('lugares_por_perto', tutor, { p_lat: -22.95, p_lng: -43.18, p_grupo: 'pet_friendly', p_raio_km: 1 })).corpo;
 ok(noMapa.some((l) => l.nome === item.nome), 'lugar aprovado aparece no mapa');
 
+// Relatórios e conteúdo mestre.
+const rel = (await rpc('admin_relatorios', aal2, { p_dias: 365 })).corpo;
+ok(rel.funil?.contas >= rel.funil?.com_pet && rel.retencao?.length === 6, 'relatórios: funil e 6 meses de retenção');
+ok((await rpc('admin_relatorios', tutor)).status >= 400, 'tutor comum não vê relatórios');
+const antes = (await rpc('admin_conteudo', aal2)).corpo;
+const versao = (await rpc('admin_vacina_salvar', aal2, {
+  p_id: null, p_especie: 'cao', p_nome: `Vacina teste ${Date.now()}`, p_primeira_dias: 180, p_reforco_dias: 365, p_descricao: 'teste', p_obrigatoria: false,
+})).corpo;
+const depois = (await rpc('admin_conteudo', aal2)).corpo;
+ok(versao === antes.versoes[0].versao + 1 && depois.vacinas.length === antes.vacinas.length + 1, 'salvar vacina publica nova versão do calendário');
+const vacinaTeste = depois.vacinas.find((v) => v.nome.startsWith('Vacina teste'));
+ok((await pedir('/rest/v1/vaccine_schedule?select=nome', { token: tutor, metodo: 'GET' })).corpo.some((v) => v.nome === vacinaTeste.nome), 'o app do tutor já lê a vacina nova');
+ok((await rpc('admin_vacina_salvar', aal2, { p_id: null, p_especie: 'peixe', p_nome: 'X', p_primeira_dias: 1, p_reforco_dias: null, p_descricao: '', p_obrigatoria: false })).status >= 400, 'vacina inválida é barrada');
+ok((await rpc('admin_vacina_remover', aal2, { p_id: vacinaTeste.id })).status < 300, 'remove a vacina (e publica outra versão)');
+const rascunho = (await rpc('admin_pacote_rascunho', aal2, { p_tipo: 'emergencia', p_conteudo: { teste: true } })).corpo;
+const pacote = (await rpc('admin_conteudo', aal2)).corpo.pacotes.find((p) => p.tipo === 'emergencia' && p.versao === rascunho);
+ok(pacote && !pacote.publicado, 'cria rascunho do pacote de emergência');
+ok((await rpc('admin_pacote_publicar', aal2, { p_id: pacote.id })).status >= 400, 'emergência não publica sem veterinário e CRMV');
+
 // 5) Ninguém lê as tabelas direto.
 ok((await pedir('/rest/v1/audit_log?select=*', { token: aal2, metodo: 'GET' })).status >= 400, 'audit_log não é lido direto pela API');
 

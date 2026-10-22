@@ -24,7 +24,9 @@ const PERMISSOES: { acao: string; papeis: Papel[] }[] = [
   { acao: "Aprovar loja", papeis: ["moderacao"] },
   { acao: "Enviar campanha", papeis: ["marketing"] },
   { acao: "Responder avaliações", papeis: ["suporte", "marketing"] },
-  { acao: "Editar conteúdo e planos", papeis: ["financeiro"] },
+  { acao: "Ver relatórios", papeis: ["financeiro", "marketing", "leitura"] },
+  { acao: "Editar planos", papeis: ["financeiro"] },
+  { acao: "Editar vacinas e conteúdo de saúde", papeis: [] },
 ];
 const COLUNAS: Papel[] = ["suporte", "financeiro", "moderacao", "marketing", "leitura"];
 const ROTULO_CURTO: Partial<Record<Papel, string>> = { leitura: "Leitura" };
