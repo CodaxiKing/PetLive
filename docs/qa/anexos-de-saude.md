@@ -6,6 +6,8 @@ Antes, rode `pnpm verify:supabase` e anexe `docs/qa/verify-saida.txt` (critério
 
 Caminho dos arquivos (critério 5): o texto do critério diz `anexos/{uid}/...`. Na prática, os arquivos ficam no bucket `anexos`, no caminho `{uid}/anexos/{pet}/...`. O código, as policies de RLS, a limpeza de órfãos e o `testar-anexos.mjs` seguem esse mesmo padrão. O primeiro segmento do caminho é o `uid`, e é nele que a RLS se apoia. Falta o autor do critério confirmar.
 
+Restrição de tipo no bucket inteiro (critério C): o bucket `anexos` também guarda os recibos de despesas (`{uid}/despesas/...`) e as fotos da linha do tempo (`{uid}/marcos/...`). Esses envios usam a mesma regra (`mimeAceito`): HEIC/HEIF do iPhone sobe como `image/heic`, e WebP, GIF ou outro formato é recusado no app, antes do envio, com a mensagem "Só dá para enviar fotos em JPG, PNG ou HEIC." Ou seja, o storage nunca chega a devolver erro. O app não converte para JPEG, porque isso exigiria uma dependência nativa nova (`expo-image-manipulator`) e um novo development build. O `src/__testes__/fotosBucketAnexos.test.ts` cobre esse comportamento, e o passo 14 confere no aparelho.
+
 Pendente de decisão do PO (critério 6): durante o envio, o progresso aparece como um indicador com "Enviando a foto…", sem percentual.
 
 | # | Passo | Esperado | Android | iOS |
@@ -23,3 +25,4 @@ Pendente de decisão do PO (critério 6): durante o envio, o progresso aparece c
 | 11 | Excluir e confirmar | Some da lista; no Studio, o arquivo some de `anexos/{uid}/anexos/{pet}` | | |
 | 12 | Foto HEIC do iPhone / foto grande (> 10 MB) | HEIC entra; a foto grande é comprimida ou recusada com uma mensagem clara | | |
 | 13 | Carteirinha pública do pet | Nenhum anexo aparece | | |
+| 14 | Despesa com recibo e marco da linha do tempo com foto (JPG e HEIC; no Android, também uma imagem WebP baixada) | JPG e HEIC salvam e abrem; o WebP é recusado com "Só dá para enviar fotos em JPG, PNG ou HEIC." e nada é salvo pela metade | | |
