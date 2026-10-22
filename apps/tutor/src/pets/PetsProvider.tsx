@@ -5,6 +5,7 @@ import { mensagemDeErro } from '../lib/cacheOffline'
 import type { Plano } from '../lib/plano'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../auth/AuthProvider'
+import { caminhosAnexosDoPet, removerArquivosAnexos } from '../saude/anexos'
 import { abrirConvitePremium } from './convitePremium'
 import { enviarFotoPet } from './foto'
 import { motivoPremiumDoErro, podeCadastrarPet } from './limite'
@@ -224,12 +225,15 @@ export function PetsProvider({ children }: { children: ReactNode }) {
     async (id: string) => {
       setSalvando(true)
       setErro(null)
+      // A cascata apaga os registros dos anexos; os arquivos saem do Storage depois.
+      const arquivos = await caminhosAnexosDoPet(id).catch(() => [])
       const { error } = await supabase.from('pets').delete().eq('id', id)
       setSalvando(false)
       if (error) {
         setErro(mensagemDeErro(error.message))
         return false
       }
+      await removerArquivosAnexos(arquivos)
       setPets((atual) => atual.filter((p) => p.id !== id))
       // Sem ele, outro pet pode deixar de estar só para consulta.
       recarregar()

@@ -50,8 +50,8 @@
       [
         "expo-image-picker",
         {
-          "photosPermission": "O PetLive acessa suas fotos para você colocar uma imagem no seu pet.",
-          "cameraPermission": "O PetLive usa a câmera para você fotografar o seu pet.",
+          "photosPermission": "O PetLive acessa suas fotos para você colocar uma imagem no seu pet ou anexar o cartão de vacina e exames.",
+          "cameraPermission": "O PetLive usa a câmera para você fotografar o seu pet, o cartão de vacina e exames.",
           "microphonePermission": false
         }
       ],

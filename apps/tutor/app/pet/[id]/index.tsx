@@ -24,6 +24,7 @@ import { conferirSenior } from '../../../src/pets/senior'
 import { FaixaSomenteLeitura } from '../../../src/pets/SomenteLeitura'
 import { usePets } from '../../../src/pets/PetsProvider'
 import { idadeEmAnos } from '../../../src/pets/types'
+import { AbaAnexos } from '../../../src/saude/AbaAnexos'
 import { carregarConsultas, type Consulta } from '../../../src/saude/consultas'
 import { GraficoPeso } from '../../../src/saude/GraficoPeso'
 import { carregarPesos, formatarKg, type RegistroPeso } from '../../../src/saude/peso'
@@ -32,7 +33,7 @@ import { useVacinas } from '../../../src/saude/VacinasProvider'
 import { colors } from '../../../src/theme/colors'
 import { fontFamily, typography } from '../../../src/theme/typography'
 
-const ABAS = ['Vacinas', 'Peso', 'Consultas'] as const
+const ABAS = ['Vacinas', 'Peso', 'Consultas', 'Anexos'] as const
 type Aba = (typeof ABAS)[number]
 
 const CIRCULOS = ['#A9DCF6', '#EADCFB']
@@ -137,11 +138,18 @@ export default function PetDetalhe() {
     editarPet(petAtual.id, () => ir(pathname))
   }
 
+  // Anexar (ou editar, com o id do anexo); pet só para consulta abre o convite.
+  function anexar(anexoId?: string) {
+    editarPet(petAtual.id, () =>
+      router.push({ pathname: '/pet/[id]/anexo', params: anexoId ? { id: petAtual.id, anexo: anexoId } : { id: petAtual.id } }),
+    )
+  }
+
   function confirmarExclusao() {
     setMenuAberto(false)
     Alert.alert(
       `Excluir ${petAtual.nome}?`,
-      'Isso apaga também as vacinas, remédios e compromissos deste pet. Não dá para desfazer.',
+      'Isso apaga também as vacinas, remédios, anexos e compromissos deste pet. Não dá para desfazer.',
       [
         { text: 'Cancelar', style: 'cancel' },
         {
@@ -168,7 +176,9 @@ export default function PetDetalhe() {
       ? { titulo: 'Registrar vacina', acao: () => editar('/pet/[id]/vacina/nova') }
       : aba === 'Peso'
         ? { titulo: 'Registrar peso', acao: () => editar('/pet/[id]/peso') }
-        : { titulo: 'Registrar consulta', acao: () => editar('/pet/[id]/consultas/nova') }
+        : aba === 'Consultas'
+          ? { titulo: 'Registrar consulta', acao: () => editar('/pet/[id]/consultas/nova') }
+          : { titulo: 'Anexar', acao: () => anexar() }
 
   return (
     <View style={estilos.tela}>
@@ -377,6 +387,8 @@ export default function PetDetalhe() {
               ) : null}
             </View>
           ) : null}
+
+          {aba === 'Anexos' ? <AbaAnexos petId={petAtual.id} onAnexar={anexar} /> : null}
           </Surgir>
 
           {/* Atalhos do pet (protótipo Pet): remédios, carteirinha e compartilhar. */}
@@ -528,7 +540,7 @@ const estilos = StyleSheet.create({
   seniorTitulo: { fontFamily: fontFamily.bold, fontSize: 16, color: '#4A3800' },
   seniorSub: { fontFamily: fontFamily.regular, fontSize: 13, color: '#7A5A00' },
   seniorSeta: { fontFamily: fontFamily.bold, fontSize: 24, color: '#4A3800', paddingRight: 6 },
-  abas: { flexDirection: 'row', gap: 22, borderBottomWidth: 1.5, borderBottomColor: colors.border },
+  abas: { flexDirection: 'row', gap: 18, borderBottomWidth: 1.5, borderBottomColor: colors.border },
   aba: { paddingVertical: 8, borderBottomWidth: 3, borderBottomColor: 'transparent', marginBottom: -1.5 },
   abaAtiva: { borderBottomColor: colors.primary },
   abaTexto: { fontSize: 16, fontFamily: fontFamily.medium, color: colors.textMuted },
