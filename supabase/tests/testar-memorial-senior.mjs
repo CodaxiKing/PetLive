@@ -61,5 +61,13 @@ ok((await pedir('/rest/v1/qualidade_vida', { token: tutor, corpo: { pet_id: mia.
 ok((await pedir('/rest/v1/qualidade_vida', { token: outro, corpo: { pet_id: mia.id, notas, total: 47 } })).status >= 400, 'outro usuário não registra no pet');
 ok((await pedir('/rest/v1/qualidade_vida?select=id', { token: outro, metodo: 'GET' })).corpo.length === 0, 'outro usuário não vê a escala');
 
+// Selos de cuidado
+const rex = (await pedir('/rest/v1/pets?select=id&nome=eq.Rex', { token: tutor, metodo: 'GET' })).corpo[0];
+const selos = (await rpc('conferir_selos', tutor, { p_pet: rex.id })).corpo;
+ok(Array.isArray(selos) && selos.includes('peso'), 'selos calculados (Rex tem Peso em dia)');
+ok((await rpc('conferir_selos', outro, { p_pet: rex.id })).status >= 400, 'outro usuário não calcula selos do pet');
+ok((await pedir(`/rest/v1/pet_selos?select=selo&pet_id=eq.${rex.id}`, { token: outro, metodo: 'GET' })).corpo.length === 0, 'outro usuário não vê os selos');
+ok((await pedir('/rest/v1/pet_selos', { token: tutor, corpo: { pet_id: rex.id, selo: 'um_ano' } })).status >= 400, 'ninguém se dá um selo pela API');
+
 console.log(falhas ? `\n${falhas} falha(s)` : '\nTudo certo');
 process.exit(falhas ? 1 : 0);

@@ -19,6 +19,7 @@ import { Icone } from '../../../src/components/Icone'
 import { MarcaPata } from '../../../src/components/MarcaPata'
 import { Mascote } from '../../../src/components/Mascote'
 import { AbaCalendario } from '../../../src/pets/AbaCalendario'
+import { conferirSelos, SELOS, type Selo } from '../../../src/pets/selos'
 import { conferirSenior } from '../../../src/pets/senior'
 import { usePets } from '../../../src/pets/PetsProvider'
 import { idadeEmAnos } from '../../../src/pets/types'
@@ -71,6 +72,7 @@ export default function PetDetalhe() {
   const [consultas, setConsultas] = useState<Consulta[]>([])
   const [menuAberto, setMenuAberto] = useState(false)
   const [calendarioAberto, setCalendarioAberto] = useState(false)
+  const [selos, setSelos] = useState<Set<Selo>>(new Set())
 
   const pet = pets.find((p) => p.id === id) ?? null
 
@@ -87,6 +89,7 @@ export default function PetDetalhe() {
       carregarConsultas(id).then(setConsultas, () => undefined)
       // Pode ter virado sênior desde o último job: o servidor confere e cria a rotina.
       conferirSenior(id).then((senior) => senior && marcarSenior(id), () => undefined)
+      conferirSelos(id).then(setSelos, () => undefined)
     }, [id, marcarSenior]),
   )
 
@@ -122,7 +125,7 @@ export default function PetDetalhe() {
   const pesoAtual = pesos.length ? pesos[pesos.length - 1].peso : petAtual.peso_atual
   const idade = idadeEmAnos(petAtual.nascimento)
 
-  function ir(pathname: '/pet/[id]/carteirinha' | '/pet/[id]/editar' | '/pet/[id]/medicamentos' | '/pet/[id]/peso' | '/pet/[id]/consultas' | '/pet/[id]/vacina/nova' | '/pet/[id]/consultas/nova' | '/pet/[id]/linha-do-tempo' | '/pet/[id]/partida' | '/pet/[id]/senior' | '/pet/[id]/viagem') {
+  function ir(pathname: '/pet/[id]/carteirinha' | '/pet/[id]/editar' | '/pet/[id]/medicamentos' | '/pet/[id]/peso' | '/pet/[id]/consultas' | '/pet/[id]/vacina/nova' | '/pet/[id]/consultas/nova' | '/pet/[id]/linha-do-tempo' | '/pet/[id]/partida' | '/pet/[id]/senior' | '/pet/[id]/viagem' | '/pet/[id]/selos') {
     setMenuAberto(false)
     router.push({ pathname, params: { id: petAtual.id } })
   }
@@ -229,6 +232,17 @@ export default function PetDetalhe() {
               <Text style={[estilos.resumoRotulo, { color: '#25683F' }]}>Peso</Text>
             </Pressable>
           </View>
+
+          {/* Selos de cuidado (BUSINESS.md 5.27): só os conquistados, sem pontos. */}
+          <Tocavel accessibilityRole="button" accessibilityLabel={`Selos de cuidado: ${selos.size} de ${SELOS.length}`} onPress={() => ir('/pet/[id]/selos')} style={estilos.selos}>
+            {SELOS.filter((s) => selos.has(s.chave)).map((s) => (
+              <View key={s.chave} style={[estilos.selo, { backgroundColor: s.fundo }]}>
+                <Icone nome="escudo" size={14} espessura={2} />
+                <Text style={estilos.seloTexto}>{s.rotulo}</Text>
+              </View>
+            ))}
+            {selos.size === 0 ? <Text style={estilos.selosVazio}>Selos de cuidado ›</Text> : <Text style={estilos.selosMais}>›</Text>}
+          </Tocavel>
 
           {seniores.has(petAtual.id) ? (
             <Tocavel
@@ -496,6 +510,11 @@ const estilos = StyleSheet.create({
   resumoItem: { flex: 1, borderRadius: 24, paddingVertical: 12, alignItems: 'center' },
   resumoValor: { fontSize: 16, fontFamily: fontFamily.bold, color: colors.black },
   resumoRotulo: { fontSize: 12, fontFamily: fontFamily.medium },
+  selos: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', gap: 6, marginTop: 14 },
+  selo: { flexDirection: 'row', alignItems: 'center', gap: 5, borderRadius: 999, paddingVertical: 6, paddingHorizontal: 10 },
+  seloTexto: { fontFamily: fontFamily.bold, fontSize: 12, color: colors.black },
+  selosVazio: { fontFamily: fontFamily.bold, fontSize: 13, color: '#6A7484' },
+  selosMais: { fontFamily: fontFamily.bold, fontSize: 18, color: '#6A7484', paddingHorizontal: 4 },
   senior: { flexDirection: 'row', alignItems: 'center', gap: 12, backgroundColor: '#FFF0C9', borderRadius: 26, padding: 12, marginTop: 14 },
   seniorIcone: { width: 44, height: 44, borderRadius: 22, backgroundColor: colors.white, alignItems: 'center', justifyContent: 'center' },
   seniorTitulo: { fontFamily: fontFamily.bold, fontSize: 16, color: '#4A3800' },
