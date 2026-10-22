@@ -6,8 +6,7 @@ import { Mascote } from "@/components/Mascote";
 import Image from "next/image";
 import Link from "next/link";
 
-const URL_SUPABASE = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
-const CHAVE_ANON = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "";
+const URL_BASE = process.env.NEXT_PUBLIC_SITE_URL ?? "";
 
 type PetConteudo = {
   nome: string;
@@ -182,25 +181,25 @@ export default function QRPublica() {
   const [sucessoLocal, setSucessoLocal] = useState(false);
 
   useEffect(() => {
-    const ipHash = ""; // O backend calcula o hash do IP (não enviamos IP bruto).
-    const userAgent = navigator.userAgent;
-
-    const pedido: Promise<Resposta> =
-      URL_SUPABASE && CHAVE_ANON
-        ? fetch(`${URL_SUPABASE}/rest/v1/rpc/qr_publica`, {
-            method: "POST",
-            headers: { apikey: CHAVE_ANON, "Content-Type": "application/json" },
-            body: JSON.stringify({ p_codigo: codigo, p_ip_hash: ipHash, p_user_agent: userAgent }),
-          }).then((r) => (r.ok ? r.json() : { valido: false }))
-        : Promise.resolve({ valido: false });
-
-    pedido.then(
-      (r) => {
-        setResposta(r);
+    const fetchData = async () => {
+      if (!URL_BASE) {
+        setResposta({ valido: false });
+        return;
+      }
+      try {
+        const r = await fetch(`${URL_BASE}/api/qr/publica?codigo=${encodeURIComponent(codigo ?? '')}`);
+        if (!r.ok) {
+          setResposta({ valido: false });
+          return;
+        }
+        const data = await r.json();
+        setResposta(data);
         setAgora(Date.now());
-      },
-      () => setResposta({ valido: false }),
-    );
+      } catch {
+        setResposta({ valido: false });
+      }
+    };
+    fetchData();
   }, [codigo]);
 
   async function enviarLocalizacao() {
@@ -222,18 +221,19 @@ export default function QRPublica() {
       });
 
       const { latitude, longitude } = posicao.coords;
-      const ipHash = ""; // Backend calcula.
 
-      const r = await fetch(`${URL_SUPABASE}/rest/v1/rpc/qr_enviar_localizacao`, {
+      if (!URL_BASE) throw new Error("Configuração de URL ausente.");
+
+      const r = await fetch(`${URL_BASE}/api/qr/localizacao`, {
         method: "POST",
-        headers: { apikey: CHAVE_ANON, "Content-Type": "application/json" },
-        body: JSON.stringify({ p_codigo: codigo, p_lat: latitude, p_lng: longitude, p_ip_hash: ipHash }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ codigo, lat: latitude, lng: longitude }),
       });
 
       const texto = await r.text();
       if (!r.ok) {
-        const err = JSON.parse(texto) as { message?: string };
-        throw new Error(err.message ?? "Não foi possível enviar a localização.");
+        const err = JSON.parse(texto) as { mensagem?: string; erro?: string };
+        throw new Error(err.mensagem ?? "Não foi possível enviar a localização.");
       }
 
       setSucessoLocal(true);
