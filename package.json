@@ -10,6 +10,7 @@
     "tutor:typecheck": "pnpm --filter petlive-tutor typecheck",
     "typecheck": "pnpm -r typecheck",
     "verify": "node scripts/verify.mjs",
+    "verify:supabase": "node scripts/verify.mjs --supabase",
     "backup": "node scripts/backup-db.mjs",
     "monitor": "node scripts/monitorar.mjs"
   },

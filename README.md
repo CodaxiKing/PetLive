@@ -94,6 +94,17 @@ pnpm verify
 
 Roda, um passo de cada vez, `pnpm install --frozen-lockfile`, o typecheck e os testes de todos os apps. Sai com erro no primeiro passo que falhar.
 
+Depois roda os testes do Supabase (`supabase/tests/testar-anexos.mjs`: o bucket `anexos` recusa GIF, WEBP, PDF e arquivo acima de 10 MB). Eles precisam do Supabase local no ar (`supabase start`). Se o Supabase não estiver no ar, o passo aparece como **PULADO**. Para que o passo seja obrigatório:
+
+```powershell
+supabase start
+pnpm verify:supabase
+```
+
+A chave vem do `supabase status`, ou de `SUPABASE_ANON_KEY` e `SUPABASE_URL` no ambiente. O teste cria os próprios usuários e não depende do seed.
+
+A saída completa fica em `docs/qa/verify-saida.txt`, para anexar ao PR. O roteiro manual de QA no Android e no iOS está em [docs/qa/anexos-de-saude.md](docs/qa/anexos-de-saude.md).
+
 ## Roadmap resumido
 
 | Fase | Entrega | Situação |
