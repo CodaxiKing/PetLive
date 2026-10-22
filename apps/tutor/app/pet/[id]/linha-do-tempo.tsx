@@ -34,8 +34,8 @@ function dataCurta(iso: string): string {
  */
 export default function TelaLinhaDoTempo() {
   const { id } = useLocalSearchParams<{ id: string }>()
-  const { pets } = usePets()
-  const pet = pets.find((p) => p.id === id) ?? null
+  const { pets, petsMemoria } = usePets()
+  const pet = [...pets, ...petsMemoria].find((p) => p.id === id) ?? null
   const [itens, setItens] = useState<ItemLinha[] | null>(null)
   const [fotos, setFotos] = useState<Record<string, string>>({})
   const [soMarcos, setSoMarcos] = useState(false)

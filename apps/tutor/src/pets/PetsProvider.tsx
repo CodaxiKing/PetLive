@@ -7,7 +7,10 @@ import type { Pet, PetForm } from './types'
 import { FORM_VAZIO, formParaRegistro } from './types'
 
 interface PetsContextValue {
+  /** Pets ativos (sem os que estão em memória). */
   pets: Pet[]
+  /** Pets com a partida registrada (modo memorial). */
+  petsMemoria: Pet[]
   petAtivo: Pet | null
   carregando: boolean
   salvando: boolean
@@ -30,7 +33,9 @@ export function PetsProvider({ children }: { children: ReactNode }) {
   const { session } = useAuth()
   const tutorId = session?.user.id ?? null
 
-  const [pets, setPets] = useState<Pet[]>([])
+  const [todos, setPets] = useState<Pet[]>([])
+  const pets = useMemo(() => todos.filter((p) => !p.em_memoria), [todos])
+  const petsMemoria = useMemo(() => todos.filter((p) => p.em_memoria), [todos])
   const [petAtivoId, setPetAtivoId] = useState<string | null>(null)
   const [carregando, setCarregando] = useState(true)
   const [salvando, setSalvando] = useState(false)
@@ -184,6 +189,7 @@ export function PetsProvider({ children }: { children: ReactNode }) {
   const value = useMemo<PetsContextValue>(
     () => ({
       pets,
+      petsMemoria,
       petAtivo,
       carregando,
       salvando,
@@ -197,7 +203,7 @@ export function PetsProvider({ children }: { children: ReactNode }) {
       recarregar,
       FORM_VAZIO,
     }),
-    [pets, petAtivo, carregando, salvando, erro, criarPet, atualizarPet, salvarFoto, removerFoto, removerPet, recarregar],
+    [pets, petsMemoria, petAtivo, carregando, salvando, erro, criarPet, atualizarPet, salvarFoto, removerFoto, removerPet, recarregar],
   )
 
   return <PetsContext.Provider value={value}>{children}</PetsContext.Provider>

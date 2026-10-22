@@ -38,7 +38,7 @@ function tituloSemPet(titulo: string, nome: string): string {
  * idade, o próximo lembrete e o mascote (ou a foto), e "Adicionar pet".
  */
 export default function Pets() {
-  const { pets, carregando, definirPetAtivo, recarregar } = usePets()
+  const { pets, petsMemoria, carregando, definirPetAtivo, recarregar } = usePets()
   const { lembretes } = useLembretes()
   const [atualizando, setAtualizando] = useState(false)
 
@@ -137,6 +137,29 @@ export default function Pets() {
             )
           })}
 
+          {/* Em memória (BUSINESS.md 5.39): fora da lista ativa, com o cartão discreto. */}
+          {petsMemoria.map((pet) => (
+            <Tocavel
+              key={pet.id}
+              accessibilityRole="button"
+              accessibilityLabel={`${pet.nome}, em memória`}
+              onPress={() => router.push({ pathname: '/pet/[id]/memorial', params: { id: pet.id } })}
+              style={estilos.memoria}
+            >
+              <View style={estilos.memoriaRetrato}>
+                {pet.foto_url ? (
+                  <Image source={{ uri: pet.foto_url }} style={estilos.memoriaFoto} />
+                ) : (
+                  <Mascote especie={pet.especie} size={56} />
+                )}
+              </View>
+              <View style={estilos.cartaoTexto}>
+                <Text style={estilos.memoriaNome}>{pet.nome}</Text>
+                <Text style={estilos.memoriaRotulo}>Em memória</Text>
+              </View>
+            </Tocavel>
+          ))}
+
           <Pressable
             accessibilityRole="button"
             onPress={() => router.push('/pet/novo')}
@@ -151,6 +174,11 @@ export default function Pets() {
 }
 
 const estilos = StyleSheet.create({
+  memoria: { flexDirection: 'row', alignItems: 'center', gap: 14, backgroundColor: colors.premiumSurface, borderRadius: 28, padding: 14, marginTop: 12 },
+  memoriaRetrato: { width: 56, height: 56, borderRadius: 28, overflow: 'hidden', backgroundColor: colors.white, alignItems: 'center', justifyContent: 'center' },
+  memoriaFoto: { width: 56, height: 56 },
+  memoriaNome: { fontFamily: fontFamily.bold, fontSize: 20, color: colors.black },
+  memoriaRotulo: { fontFamily: fontFamily.medium, fontSize: 13, color: colors.premiumText },
   tela: { flex: 1, backgroundColor: colors.surface },
   pata: { position: 'absolute', right: 70, top: 96 },
   mais: {

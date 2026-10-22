@@ -18,6 +18,8 @@ export interface Pet {
   alergias?: string | null
   veterinario?: string | null
   observacoes?: string | null
+  /** Partida registrada (modo memorial): fora da lista ativa, nada apagado. */
+  em_memoria?: boolean
   ativo: boolean
   criado_em: string
 }

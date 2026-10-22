@@ -11,7 +11,7 @@ import {
   View,
 } from 'react-native'
 import Svg, { Path } from 'react-native-svg'
-import { router, useFocusEffect, useLocalSearchParams } from 'expo-router'
+import { Redirect, router, useFocusEffect, useLocalSearchParams } from 'expo-router'
 import { Surgir, Tocavel } from '../../../src/components/Animacoes'
 import { AvisoOffline } from '../../../src/components/AvisoOffline'
 import { BotaoPrimario } from '../../../src/components/BotaoPrimario'
@@ -63,7 +63,7 @@ function BotaoRedondo({ rotulo, onPress, children }: { rotulo: string; onPress: 
 export default function PetDetalhe() {
   const { id } = useLocalSearchParams<{ id: string }>()
   const { width } = useWindowDimensions()
-  const { pets, definirPetAtivo, removerPet } = usePets()
+  const { pets, petsMemoria, definirPetAtivo, removerPet } = usePets()
   const { vacinas, removerVacina } = useVacinas()
   const [aba, setAba] = useState<Aba>('Vacinas')
   const [pesos, setPesos] = useState<RegistroPeso[]>([])
@@ -86,6 +86,11 @@ export default function PetDetalhe() {
       carregarConsultas(id).then(setConsultas, () => undefined)
     }, [id]),
   )
+
+  // Pet em memória abre a tela Em memória (o pet sai da lista ativa).
+  if (!pet && petsMemoria.some((p) => p.id === id)) {
+    return <Redirect href={{ pathname: '/pet/[id]/memorial', params: { id: id ?? '' } }} />
+  }
 
   if (!pet) {
     return (
@@ -114,7 +119,7 @@ export default function PetDetalhe() {
   const pesoAtual = pesos.length ? pesos[pesos.length - 1].peso : petAtual.peso_atual
   const idade = idadeEmAnos(petAtual.nascimento)
 
-  function ir(pathname: '/pet/[id]/carteirinha' | '/pet/[id]/editar' | '/pet/[id]/medicamentos' | '/pet/[id]/peso' | '/pet/[id]/consultas' | '/pet/[id]/vacina/nova' | '/pet/[id]/consultas/nova' | '/pet/[id]/linha-do-tempo') {
+  function ir(pathname: '/pet/[id]/carteirinha' | '/pet/[id]/editar' | '/pet/[id]/medicamentos' | '/pet/[id]/peso' | '/pet/[id]/consultas' | '/pet/[id]/vacina/nova' | '/pet/[id]/consultas/nova' | '/pet/[id]/linha-do-tempo' | '/pet/[id]/partida') {
     setMenuAberto(false)
     router.push({ pathname, params: { id: petAtual.id } })
   }
@@ -386,6 +391,9 @@ export default function PetDetalhe() {
               style={estilos.opcao}
             >
               <Text style={estilos.opcaoTexto}>Calendário sugerido de vacinas</Text>
+            </Pressable>
+            <Pressable accessibilityRole="button" onPress={() => ir('/pet/[id]/partida')} style={estilos.opcao}>
+              <Text style={estilos.opcaoTexto}>Registrar a partida</Text>
             </Pressable>
             <Pressable accessibilityRole="button" onPress={confirmarExclusao} style={estilos.opcao}>
               <Text style={[estilos.opcaoTexto, estilos.opcaoPerigo]}>Excluir {petAtual.nome}</Text>

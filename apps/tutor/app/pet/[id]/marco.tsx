@@ -21,8 +21,8 @@ const SUGESTOES = ['Chegou em casa', 'Primeiro passeio', 'Primeiro banho', 'Apre
 export default function TelaMarco() {
   const { id, marco: marcoId } = useLocalSearchParams<{ id: string; marco?: string }>()
   const { user } = useAuth()
-  const { pets } = usePets()
-  const pet = pets.find((p) => p.id === id) ?? null
+  const { pets, petsMemoria } = usePets()
+  const pet = [...pets, ...petsMemoria].find((p) => p.id === id) ?? null
   const [titulo, setTitulo] = useState('')
   const [descricao, setDescricao] = useState('')
   const [data, setData] = useState(hojeComoCampo())
