@@ -40,11 +40,14 @@ create policy "anexos: tutor edita os seus" on public.anexos
 create policy "anexos: tutor apaga os seus" on public.anexos
   for delete to authenticated using (tutor_id = auth.uid());
 
--- O bucket recusa arquivo acima de 10 MB e fora de JPG, PNG e HEIC (o mesmo
--- bucket guarda recibos e fotos da linha do tempo, que já são JPG ou PNG).
+-- O bucket recusa arquivo acima de 10 MB e o que não for imagem. Fica em
+-- `image/*` porque o mesmo bucket guarda recibos e fotos da linha do tempo,
+-- que sobem com o mime do seletor (pode vir HEIF ou WebP da galeria). A regra
+-- de só JPG, PNG e HEIC dos anexos de saúde fica no check de `anexos.mime`
+-- e no app, que normaliza o tipo antes de subir.
 update storage.buckets
 set file_size_limit = 10485760,
-    allowed_mime_types = array['image/jpeg', 'image/png', 'image/heic']
+    allowed_mime_types = array['image/*']
 where id = 'anexos';
 
 -- Exportação LGPD: inclui os anexos de saúde (metadados e o caminho do arquivo).

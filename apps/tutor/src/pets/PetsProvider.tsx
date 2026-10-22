@@ -5,7 +5,7 @@ import { mensagemDeErro } from '../lib/cacheOffline'
 import type { Plano } from '../lib/plano'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../auth/AuthProvider'
-import { caminhosAnexosDoPet, removerArquivosAnexos } from '../saude/anexos'
+import { limparAnexosOrfaos } from '../saude/anexos'
 import { abrirConvitePremium } from './convitePremium'
 import { enviarFotoPet } from './foto'
 import { motivoPremiumDoErro, podeCadastrarPet } from './limite'
@@ -100,6 +100,11 @@ export function PetsProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     recarregar()
   }, [recarregar])
+
+  // Arquivos de anexos que ficaram de um pet excluído sem rede (melhor esforço).
+  useEffect(() => {
+    if (tutorId) limparAnexosOrfaos(tutorId).catch(() => undefined)
+  }, [tutorId])
 
   // O plano pode ter mudado fora do app (assinatura, cobrança): ao voltar
   // para o app, relê e os pets voltam a ser editáveis na hora.
@@ -225,22 +230,22 @@ export function PetsProvider({ children }: { children: ReactNode }) {
     async (id: string) => {
       setSalvando(true)
       setErro(null)
-      // A cascata apaga os registros dos anexos; os arquivos saem do Storage depois.
-      const arquivos = await caminhosAnexosDoPet(id).catch(() => [])
       const { error } = await supabase.from('pets').delete().eq('id', id)
       setSalvando(false)
       if (error) {
         setErro(mensagemDeErro(error.message))
         return false
       }
-      await removerArquivosAnexos(arquivos)
+      // A cascata apaga os registros dos anexos; os arquivos saem do Storage
+      // aqui ou, se a rede cair, na próxima abertura do app.
+      if (tutorId) limparAnexosOrfaos(tutorId).catch(() => undefined)
       setPets((atual) => atual.filter((p) => p.id !== id))
       // Sem ele, outro pet pode deixar de estar só para consulta.
       recarregar()
       if (petAtivoId === id) setPetAtivoId(null)
       return true
     },
-    [petAtivoId, recarregar],
+    [petAtivoId, recarregar, tutorId],
   )
 
   const podeCadastrar = podeCadastrarPet(plano, pets.length)

@@ -5,6 +5,7 @@ import {
   ehErroDeRede,
   mimeAceito,
   ordenarAnexos,
+  pastasOrfas,
   TAMANHO_MAXIMO,
   validarArquivo,
   type Anexo,
@@ -95,14 +96,33 @@ export async function apagarAnexo(anexo: Anexo): Promise<void> {
   if (error) throw erroDeEnvio(error.message)
 }
 
-/** Caminhos dos arquivos do pet, lidos antes de excluí-lo (a cascata leva só os registros). */
-export async function caminhosAnexosDoPet(petId: string): Promise<string[]> {
-  const { data } = await supabase.from('anexos').select('arquivo_path').eq('pet_id', petId)
-  return (data ?? []).map((a) => (a as { arquivo_path: string }).arquivo_path)
-}
+/**
+ * Apaga do Storage os arquivos de pets que já foram excluídos (a cascata leva
+ * só os registros). Roda logo depois de excluir um pet e de novo ao abrir o
+ * app: se a rede cair no meio, os arquivos saem na próxima vez. As pastas são
+ * listadas antes dos pets, para não pegar a de um pet criado nesse meio-tempo.
+ */
+export async function limparAnexosOrfaos(tutorId: string): Promise<void> {
+  const raiz = `${tutorId}/anexos`
+  const { data: itens, error: erroLista } = await supabase.storage.from(BUCKET).list(raiz, { limit: 1000 })
+  if (erroLista) return
+  // Subpasta vem sem id; arquivo vem com id.
+  const pastas = (itens ?? []).filter((i) => i.name && !i.id).map((i) => i.name)
+  if (pastas.length === 0) return
 
-export async function removerArquivosAnexos(caminhos: string[]): Promise<void> {
-  if (caminhos.length) await supabase.storage.from(BUCKET).remove(caminhos).catch(() => undefined)
+  const { data: pets, error: erroPets } = await supabase.from('pets').select('id')
+  if (erroPets || !pets) return
+
+  for (const pasta of pastasOrfas(pastas, pets.map((p) => (p as { id: string }).id))) {
+    for (;;) {
+      const { data: arquivos, error } = await supabase.storage.from(BUCKET).list(`${raiz}/${pasta}`, { limit: 1000 })
+      if (error || !arquivos?.length) break
+      const caminhos = arquivos.filter((a) => a.name && a.id).map((a) => `${raiz}/${pasta}/${a.name}`)
+      if (caminhos.length === 0) break
+      const { error: erroRemover } = await supabase.storage.from(BUCKET).remove(caminhos)
+      if (erroRemover) return
+    }
+  }
 }
 
 function erroDeEnvio(mensagem: string): ErroAnexo {

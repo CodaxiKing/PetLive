@@ -5,6 +5,7 @@ import {
   filtrarAnexos,
   mimeAceito,
   ordenarAnexos,
+  pastasOrfas,
   TAMANHO_MAXIMO,
   tituloAnexo,
   validarArquivo,
@@ -67,6 +68,16 @@ describe('ordenarAnexos e filtrarAnexos', () => {
   it('filtra por tipo e sem filtro devolve todos', () => {
     expect(filtrarAnexos(lista, 'vacina').map((a) => a.id)).toEqual(['a'])
     expect(filtrarAnexos(lista, null)).toHaveLength(3)
+  })
+})
+
+describe('pastasOrfas', () => {
+  it('devolve só as pastas de pets que não existem mais', () => {
+    expect(pastasOrfas(['p1', 'p2', 'p3'], ['p2'])).toEqual(['p1', 'p3'])
+  })
+  it('não apaga nada quando todos os pets existem', () => {
+    expect(pastasOrfas(['p1'], ['p1', 'p9'])).toEqual([])
+    expect(pastasOrfas([], ['p1'])).toEqual([])
   })
 })
 

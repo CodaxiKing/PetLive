@@ -63,6 +63,15 @@ export function caminhoAnexo(tutorId: string, petId: string, mime: MimeAnexo, ag
   return `${tutorId}/anexos/${petId}/${agora}.${extensaoDoMime(mime)}`
 }
 
+/**
+ * Pastas `<uid>/anexos/<pet>` cujo pet não existe mais (o nome da pasta é o
+ * id do pet). Os registros saem em cascata com o pet; os arquivos não.
+ */
+export function pastasOrfas(pastas: string[], petIds: string[]): string[] {
+  const existentes = new Set(petIds)
+  return pastas.filter((p) => !existentes.has(p))
+}
+
 /** Do mais recente para o mais antigo (data e, no empate, envio). */
 export function ordenarAnexos(anexos: Anexo[]): Anexo[] {
   return [...anexos].sort((a, b) => b.data.localeCompare(a.data) || b.criado_em.localeCompare(a.criado_em))
