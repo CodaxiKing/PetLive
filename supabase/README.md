@@ -154,3 +154,34 @@ As regras ficam no banco: as funções `admin_*` exigem um membro ativo de
 
 Teste das regras: `node supabase/tests/testar-admin.mjs <ANON_KEY>` (precisa
 de `admin@petlive.dev` como super, sem 2FA, e do `demo@petlive.dev`).
+
+## Premium pela loja de apps (App Store e Google Play)
+
+A compra acontece na folha nativa da loja. O app manda o comprovante para a
+Edge Function `validar-compra-loja`, que consulta a loja com as credenciais do
+servidor e grava `subscriptions`; o plano (`profiles.plano`) é recalculado no
+banco. Os avisos das lojas chegam na `notificacoes-loja`, que reconsulta a loja
+antes de mudar qualquer coisa. O `pg_cron` (`petlive-assinaturas-vencidas`)
+devolve ao Grátis quem passou do fim do período pago se um aviso atrasar.
+
+Produtos nas duas lojas: `petlive_premium_mensal` e `petlive_premium_anual`
+(teste grátis de 7 dias como oferta introdutória / oferta da Google Play).
+
+Uma vez por ambiente remoto:
+
+```powershell
+npx supabase secrets set APPLE_IAP_KEY_ID=<id> APPLE_IAP_ISSUER_ID=<issuer> APPLE_BUNDLE_ID=app.petlive.tutor
+npx supabase secrets set APPLE_IAP_PRIVATE_KEY="$(Get-Content SubscriptionKey.p8 -Raw)"
+npx supabase secrets set GOOGLE_PLAY_PACKAGE=app.petlive.tutor GOOGLE_PLAY_SERVICE_ACCOUNT="$(Get-Content conta-servico.json -Raw)"
+npx supabase secrets set NOTIFICACOES_LOJA_SEGREDO=<texto aleatório>
+npx supabase functions deploy validar-compra-loja
+npx supabase functions deploy notificacoes-loja --no-verify-jwt
+```
+
+- App Store Connect > App > App Store Server Notifications (V2, produção e
+  sandbox): `https://<ref>.supabase.co/functions/v1/notificacoes-loja?loja=app_store`
+- Play Console > Monetização > Notificações em tempo real: tópico do Pub/Sub
+  com assinatura push para
+  `https://<ref>.supabase.co/functions/v1/notificacoes-loja?loja=google_play&segredo=<NOTIFICACOES_LOJA_SEGREDO>`
+
+Teste da tradução dos estados das lojas: `node --test supabase/tests/assinatura-estado.test.mjs`.

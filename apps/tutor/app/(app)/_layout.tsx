@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { router } from 'expo-router';
 import { Tabs } from 'expo-router/js-tabs';
 import { useAuth } from '../../src/auth/AuthProvider';
+import { iniciarLoja } from '../../src/premium/loja';
 import { precisaAceitarTermos } from '../../src/privacidade/consentimentos';
 import { MenuInferior } from '../../src/components/MenuInferior';
 import { colors } from '../../src/theme/colors';
@@ -31,8 +32,20 @@ function useConferirTermos() {
   }, [user]);
 }
 
+/**
+ * Liga a loja de apps ao entrar: compras que ficaram sem confirmar (app
+ * fechado no meio, aprovação pendente) chegam aqui e vão para o servidor.
+ */
+function useLojaDeApps() {
+  const { user } = useAuth();
+  useEffect(() => {
+    if (user) iniciarLoja(user.id).catch(() => undefined);
+  }, [user]);
+}
+
 export default function AppLayout() {
   useConferirTermos();
+  useLojaDeApps();
 
   return (
     <Tabs

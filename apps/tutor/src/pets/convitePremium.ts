@@ -1,8 +1,16 @@
 import { router } from 'expo-router'
-import { motivoPremiumDoErro, type MotivoPremium } from './limite'
+import type { MotivoConvite } from '../premium/planos'
+import { motivoPremiumDoErro } from './limite'
 
-/** Abre o convite Premium (tela premium) explicando o limite de pets. */
-export function abrirConvitePremium(motivo: MotivoPremium, petId?: string) {
+/**
+ * Abre a Tela Premium explicando o recurso bloqueado: limite de pets, pet só
+ * para consulta, leitura do cartão de vacina por foto ou PDF da linha do tempo.
+ */
+export function abrirConvitePremium(motivo?: MotivoConvite, petId?: string) {
+  if (!motivo) {
+    router.push('/premium')
+    return
+  }
   router.push({ pathname: '/premium', params: petId ? { motivo, pet: petId } : { motivo } })
 }
 

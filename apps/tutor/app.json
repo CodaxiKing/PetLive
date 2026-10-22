@@ -59,7 +59,8 @@
       "@sentry/react-native",
       "expo-web-browser",
       "expo-apple-authentication",
-      "./plugins/apps-de-mapa"
+      "./plugins/apps-de-mapa",
+      "expo-iap"
     ],
     "experiments": {
       "typedRoutes": true

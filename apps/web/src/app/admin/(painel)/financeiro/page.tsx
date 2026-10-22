@@ -13,8 +13,12 @@ type Faturamento = {
   ultimos_30d: number;
   estornos_30d: number;
   assinantes: number;
-  ultimas: { origem: Origem; valor: number; status: "pago" | "estornado"; pago_em: string; descricao: string | null; tutor: string | null }[];
+  ultimas: { origem: Origem; valor: number; status: "pago" | "estornado"; pago_em: string; descricao: string | null; tutor: string | null; provedor: string | null }[];
 };
+type Assinaturas = { app_store: number; google_play: number; em_teste: number; cancelando: number; pagamento_falhou: number; novas_30d: number };
+
+/** Origem da assinatura Premium: a loja onde o tutor assinou. */
+const NOME_LOJA: Record<string, string> = { app_store: "App Store", google_play: "Google Play" };
 
 const ORIGENS: { chave: Origem; rotulo: string; cor: string; chip: string }[] = [
   { chave: "premium", rotulo: "Premium", cor: "bg-azul", chip: "bg-roxo-fundo text-roxo-texto" },
@@ -47,6 +51,11 @@ export default function FinanceiroPagina() {
   const [dados, setDados] = useState<Faturamento | null>(null);
   const [selecionado, setSelecionado] = useState<string | null>(null);
   const [erro, setErro] = useState<string | null>(null);
+  const [assinaturas, setAssinaturas] = useState<Assinaturas | null>(null);
+
+  useEffect(() => {
+    rpcAdmin<Assinaturas>("admin_assinaturas_resumo").then(setAssinaturas, () => undefined);
+  }, []);
 
   useEffect(() => {
     rpcAdmin<Faturamento>("admin_faturamento", { p_meses: meses }).then(setDados, (e: Error) => setErro(e.message));
@@ -97,7 +106,13 @@ export default function FinanceiroPagina() {
         <CartaoNumero
           rotulo="Assinantes Premium"
           valor={numero(dados.assinantes)}
-          apoio={dados.estornos_30d ? `${reais(dados.estornos_30d)} estornados em 30 dias` : "Sem estornos em 30 dias"}
+          apoio={
+            assinaturas
+              ? `App Store ${numero(assinaturas.app_store)} · Google Play ${numero(assinaturas.google_play)}`
+              : dados.estornos_30d
+                ? `${reais(dados.estornos_30d)} estornados em 30 dias`
+                : "Sem estornos em 30 dias"
+          }
           fundo="bg-amarelo-fundo"
           cor="text-amarelo-texto"
         />
@@ -182,7 +197,8 @@ export default function FinanceiroPagina() {
                     <div className="min-w-0">
                       <p className="truncate font-semibold">{u.descricao ?? ORIGENS.find((o) => o.chave === u.origem)?.rotulo}</p>
                       <p className="truncate text-xs text-cinza">
-                        {u.tutor ?? "—"} · {haQuanto(u.pago_em)}
+                        {u.tutor ?? "—"} · {u.provedor && NOME_LOJA[u.provedor] ? `${NOME_LOJA[u.provedor]} · ` : ""}
+                        {haQuanto(u.pago_em)}
                       </p>
                     </div>
                     <span className={`flex-none font-semibold ${u.status === "estornado" ? "text-perigo" : ""}`}>{reais(u.valor)}</span>
