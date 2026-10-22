@@ -1,9 +1,9 @@
-PetLive verify — 2026-10-22T18:48:58.065Z — commit 76edbe7 — node v22.23.3 — linux
+PetLive verify — 2026-10-22T20:55:16.322Z — commit e99af56 — node v22.23.3 — linux
 
 === Instalar (lockfile congelado): pnpm install --frozen-lockfile
 Scope: all 3 workspace projects
 Already up to date
-Done in 391ms using pnpm v11.5.2
+Done in 330ms using pnpm v11.5.2
 
 === Typecheck: pnpm -r typecheck
 Scope: 2 of 3 workspace projects
