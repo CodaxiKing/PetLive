@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
+import { ehCelular, limparTelefoneParaLink } from "@/lib/telefone";
 
 const URL_SUPABASE = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
 const CHAVE_ANON = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "";
@@ -212,12 +213,32 @@ export default function Cuidador() {
 
       {telefone ? (
         <div className="fixed inset-x-0 bottom-0 bg-gradient-to-t from-fundo via-fundo to-transparent px-5 pb-5 pt-6">
-          <a href={`tel:${telefone.replace(/[^\d+]/g, "")}`} className="mx-auto flex h-14 max-w-xl items-center justify-center gap-2 rounded-full bg-tinta text-[15px] font-bold text-white">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z" />
-            </svg>
-            Ligar para o tutor
-          </a>
+          <div className="mx-auto max-w-xl flex gap-3">
+            <a
+              href={`tel:${limparTelefoneParaLink(telefone, false)}`}
+              className="flex-1 flex h-14 items-center justify-center gap-2 rounded-full bg-tinta text-[15px] font-bold text-white focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-tinta"
+              aria-label="Ligar para o tutor"
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z" />
+              </svg>
+              Ligar para o tutor
+            </a>
+            {ehCelular(telefone) && (
+              <a
+                href={`https://wa.me/${limparTelefoneParaLink(telefone, true)}`}
+                className="flex-1 flex h-14 items-center justify-center gap-2 rounded-full bg-[#25D366] text-[15px] font-bold text-white focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#25D366]"
+                aria-label="Chamar no WhatsApp"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.48-1.653-1.653-.173-.172-.227-.347-.075-.644.198-.173.868-.744 1.164-.941.32-.198.37-.397.15-.671-.098-.273-.816-1.733-.967-2.03-.15-.297-.045-.397.102-.492.297-.149 1.012-.492 2.438-1.208.748-.372 1.475-.68 1.874-.822.53-.183 1.17-.244 1.473-.197.475.068.733.33.898.573.124.181.223.415.27.576l.014.049c.078.296.012.642-.23.993l-.173.244c-.212.32-.637.92-.85 1.133-.227.213-.462.372-.706.506-.273.149-.56.223-.838.21-.227-.013-.597-.102-.93-.325l-.067-.041-.163-.133c-.273-.244-.52-.415-.799-.56-.254-.124-.471-.23-.705-.287-.234-.046-.486-.046-.751-.046-.272 0-.531.029-.78.067-.455.068-.86.21-.992.372l-.014.02-.027.027c-.18.198-.27.446-.254.692.015.273.15.546.397.773.297.273 1.052 1.013 1.734 1.732.373.397.644.68.898.872.273.213.547.372.839.53.266.149.471.212.725.067.325-.18.688-.61.733-.774.057-.198.124-.38.163-.572a2.294 2.294 0 0 0-.02-.492c-.027-.198-.123-.373-.244-.55-.212-.287-.62-.774-.86-.993-.253-.234-.462-.433-.68-.588-.272-.18-.573-.288-.89-.347-.347-.068-.68-.123-.968-.123-.254 0-.52.029-.78.098-.253.081-.462.213-.627.389l-.034.034c-.149.149-.254.33-.287.516l-.007.103c-.034.227-.04.433-.027.667.02.272.123.462.346.7.32.347.91.958 1.51 1.733.705.865 1.208 1.573 1.472 1.89.33.347.54.603.838.68.372.08.718.027 1.06-.082.357-.11.688-.297.933-.53.26-.247.47-.493.637-.75.18-.272.32-.57.36-.875.034-.357.02-.71-.047-1.043-.06-.287-.173-.546-.346-.78-.212-.287-.493-.527-.827-.67-.357-.18-.733-.32-1.114-.415z" />
+                </svg>
+                Chamar no WhatsApp
+              </a>
+            )}
+          </div>
         </div>
       ) : null}
     </main>
