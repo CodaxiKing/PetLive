@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { Cabecalho, CartaoNumero, haQuanto, numero, useAdmin } from "@/components/admin/Painel";
 import { DatasFogos } from "./DatasFogos";
+import { Viagem } from "./Viagem";
 import { rpcAdmin } from "@/lib/admin/supabase";
 
 type Vacina = {
@@ -29,12 +30,13 @@ type Pacote = {
 };
 type Conteudo = { vacinas: Vacina[]; versoes: Versao[]; pacotes: Pacote[] };
 
-type Aba = "vacinas" | "versoes" | "pacotes" | "fogos";
+type Aba = "vacinas" | "versoes" | "pacotes" | "fogos" | "viagem";
 const ABAS: { valor: Aba; rotulo: string }[] = [
   { valor: "vacinas", rotulo: "Vacinas" },
   { valor: "versoes", rotulo: "Versões publicadas" },
   { valor: "pacotes", rotulo: "Pacotes offline" },
   { valor: "fogos", rotulo: "Datas com fogos" },
+  { valor: "viagem", rotulo: "Viagem" },
 ];
 const TIPO_PACOTE: Record<Pacote["tipo"], string> = { emergencia: "Emergência (SOS)", calculadoras: "Calculadoras" };
 
@@ -241,6 +243,8 @@ export default function ConteudoPagina() {
                 </li>
               ))}
             </ul>
+          ) : aba === "viagem" ? (
+            <Viagem pode={admin.papel === "super" || admin.papel === "marketing"} onErro={setErro} />
           ) : aba === "fogos" ? (
             <DatasFogos pode={admin.papel === "super" || admin.papel === "marketing"} onErro={setErro} />
           ) : (

@@ -34,6 +34,13 @@ const ATALHOS: Atalho[] = [
     icone: 'carteirinha',
     destino: (petId) => (petId ? { pathname: '/pet/[id]/carteirinha', params: { id: petId } } : '/pet/novo'),
   },
+  {
+    nome: 'Viagem',
+    descricao: 'Checklist de carro ou avião',
+    fundo: '#E3F3FC',
+    icone: 'carro',
+    destino: (petId) => (petId ? { pathname: '/pet/[id]/viagem', params: { id: petId } } : '/pet/novo'),
+  },
   { nome: 'Fogos e trovão', descricao: 'Dicas e modo calmo', fundo: '#EBDDFB', icone: 'alerta', destino: () => '/cuidados/fogos' },
   { nome: 'Despesas', descricao: 'Quanto você gasta por mês', fundo: '#DDF3E6', icone: 'sacola', destino: () => '/despesas' },
 ];

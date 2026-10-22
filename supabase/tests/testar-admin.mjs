@@ -165,6 +165,12 @@ ok((await rpc('admin_fogos_salvar', tutor, { p_id: null, p_nome: 'Intruso', p_da
 ok((await pedir('/rest/v1/datas_fogos?select=nome', { token: tutor, metodo: 'GET' })).corpo.some((d) => d.nome === 'Réveillon'), 'o app do tutor lê as datas com fogos');
 ok((await pedir('/rest/v1/fogos_prefs?select=tutor_id', { token: aal2, metodo: 'GET' })).corpo.every((f) => f.tutor_id !== null), 'cada tutor só vê as próprias preferências de fogos');
 
+// Viagem: o app lê os itens; só marketing ou super revisa as companhias; listas são do tutor.
+ok((await pedir('/rest/v1/viagem_itens?select=titulo', { token: tutor, metodo: 'GET' })).corpo.length > 0, 'o app lê os itens do checklist de viagem');
+ok((await rpc('admin_companhia_salvar', tutor, { p_id: null, p_nome: 'X', p_regras: '', p_link: 'https://x.com' })).status >= 400, 'tutor comum não edita companhias');
+ok((await rpc('admin_companhia_salvar', aal2, { p_id: null, p_nome: 'Teste Air', p_regras: '', p_link: 'http://inseguro' })).status >= 400, 'link sem https é barrado');
+ok((await pedir('/rest/v1/viagens?select=id', { token: aal2, metodo: 'GET' })).corpo.length === 0, 'listas de viagem de outro tutor não aparecem');
+
 // 5) Ninguém lê as tabelas direto.
 ok((await pedir('/rest/v1/audit_log?select=*', { token: aal2, metodo: 'GET' })).status >= 400, 'audit_log não é lido direto pela API');
 
