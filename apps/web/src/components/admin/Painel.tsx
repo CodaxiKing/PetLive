@@ -25,6 +25,7 @@ const ICONES: Record<string, string[]> = {
   relatorios: ["M4 20h16", "M7 16v-4", "M12 16V7", "M17 16v-7"],
   conteudo: ["M6 4h12v16H6z", "M9 8h6", "M9 12h6", "M9 16h3"],
   sistema: ["M3 12h4l2-6 4 12 2-6h6"],
+  financeiro: ["M3 7h18v12H3z", "M12 10a3 3 0 1 0 0 6 3 3 0 0 0 0-6z", "M6 10v.01M18 16v.01"],
   campanhas: ["M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9", "M10.3 21a1.94 1.94 0 0 0 3.4 0"],
   breve: ["M12 4a8 8 0 1 0 0 16 8 8 0 0 0 0-16z", "M12 8v4l2.5 1.5"],
 };
@@ -35,6 +36,7 @@ const AREAS: { rotulo: string; href?: string; icone: keyof typeof ICONES; papeis
   { rotulo: "Relatórios", href: "/admin/relatorios", icone: "relatorios", papeis: ["financeiro", "marketing", "leitura"] },
   { rotulo: "Assinaturas", icone: "breve" },
   { rotulo: "Planos e cupons", icone: "breve" },
+  { rotulo: "Financeiro", href: "/admin/financeiro", icone: "financeiro", papeis: ["financeiro", "leitura"] },
   { rotulo: "Avaliações", icone: "breve" },
   { rotulo: "Usuários e pets", href: "/admin/usuarios", icone: "usuarios", papeis: ["suporte", "moderacao", "leitura"] },
   { rotulo: "Suporte", href: "/admin/suporte", icone: "suporte", papeis: ["suporte", "leitura"] },

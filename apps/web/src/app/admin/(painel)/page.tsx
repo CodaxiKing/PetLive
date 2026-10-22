@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { Cabecalho, CartaoNumero, numero } from "@/components/admin/Painel";
+import { Cabecalho, CartaoNumero, numero, useAdmin } from "@/components/admin/Painel";
 import { rpcAdmin } from "@/lib/admin/supabase";
 
 type Visao = {
@@ -33,10 +33,18 @@ const pct = (parte: number, todo: number) => (todo ? `${Math.round((parte / todo
 export default function VisaoGeral() {
   const [visao, setVisao] = useState<Visao | null>(null);
   const [erro, setErro] = useState<string | null>(null);
+  const admin = useAdmin();
+  // Receita só para quem vê o financeiro (super, financeiro e leitura).
+  const veFinanceiro = ["super", "financeiro", "leitura"].includes(admin.papel);
+  const [receita, setReceita] = useState<{ mes_atual: number; mes_anterior: number } | null>(null);
 
   useEffect(() => {
     rpcAdmin<Visao>("admin_visao").then(setVisao, (e: Error) => setErro(e.message));
   }, []);
+
+  useEffect(() => {
+    if (veFinanceiro) rpcAdmin<{ mes_atual: number; mes_anterior: number }>("admin_receita_resumo").then(setReceita, () => undefined);
+  }, [veFinanceiro]);
 
   if (erro) return <p className="text-perigo">{erro}</p>;
   if (!visao) return <p className="text-sm text-cinza">Carregando…</p>;
@@ -52,6 +60,20 @@ export default function VisaoGeral() {
   return (
     <>
       <Cabecalho titulo="Visão geral" subtitulo="Resumo do PetLive · últimos 30 dias" />
+
+      {receita ? (
+        <Link href="/admin/financeiro" className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-[28px] bg-fundo px-6 py-4 hover:bg-suave">
+          <div>
+            <p className="text-[13px] font-bold text-verde-texto">Faturamento do mês</p>
+            <p className="text-3xl font-medium tracking-tight">
+              {(receita.mes_atual / 100).toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}
+            </p>
+          </div>
+          <p className="text-[13px] text-cinza">
+            Mês anterior: {(receita.mes_anterior / 100).toLocaleString("pt-BR", { style: "currency", currency: "BRL" })} · ver o gráfico por mês ›
+          </p>
+        </Link>
+      ) : null}
 
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         <CartaoNumero rotulo="Tutores" valor={numero(visao.tutores)} apoio={`+${numero(visao.tutores_novos_30d)} no mês`} fundo="bg-roxo-fundo" cor="text-roxo-texto" />

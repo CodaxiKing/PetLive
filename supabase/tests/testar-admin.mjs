@@ -153,6 +153,12 @@ ok(campanhas.campanhas.find((c) => c.id === rascunho2)?.status === 'rascunho', '
 ok((await rpc('admin_campanha_cancelar', aal2, { p_id: rascunho2 })).status < 300, 'cancela a campanha');
 ok(typeof (await rpc('admin_campanha_publico', aal2, { p_publico: 'todos' })).corpo === 'number', 'mostra o alcance do público');
 
+// Financeiro: faturamento por mês, só para super, financeiro e leitura.
+const fat = (await rpc('admin_faturamento', aal2, { p_meses: 12 })).corpo;
+ok(fat.por_mes?.length === 12 && typeof fat.mes_atual === 'number', 'financeiro: 12 meses de faturamento');
+ok((await rpc('admin_faturamento', tutor)).status >= 400, 'tutor comum não vê o faturamento');
+ok((await pedir('/rest/v1/receitas', { token: tutor, corpo: { origem: 'premium', valor_centavos: 100 } })).status >= 400, 'ninguém lança receita pela API');
+
 // 5) Ninguém lê as tabelas direto.
 ok((await pedir('/rest/v1/audit_log?select=*', { token: aal2, metodo: 'GET' })).status >= 400, 'audit_log não é lido direto pela API');
 
