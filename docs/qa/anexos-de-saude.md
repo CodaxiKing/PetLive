@@ -10,7 +10,9 @@ Em cada push no PR, o workflow **verify** do GitHub Actions sobe o Supabase loca
 2. **Resumo do run**, na aba Actions › verify › Summary.
 3. **Artefato** `verify-saida`.
 
-Para aprovar, o commit do comentário precisa ser o último commit do PR. O workflow faz o checkout do próprio commit do PR, e não do merge com a main, então o hash da primeira linha da saída é o mesmo da lista de commits do PR. O `docs/qa/verify-saida.txt` não é versionado, porque uma cópia commitada já ficaria desatualizada no commit seguinte. Com shell, `pnpm verify:supabase` local gera o mesmo arquivo. Já o `pnpm verify` sem `:supabase` pula o teste do bucket quando o Supabase local está fora do ar, então **não** serve para comprovar o critério C.
+Para aprovar, o commit do comentário precisa ser o último commit do PR. O workflow faz o checkout do próprio commit do PR, e não do merge com a main, então o hash da primeira linha da saída é o mesmo da lista de commits do PR.
+
+**Sem shell e sem acesso ao PR:** o `docs/qa/verify-saida.txt` também fica versionado no repositório, com a saída de um `pnpm verify:supabase` rodado no Windows pelo dev antes de mandar para o QA. A primeira linha registra o commit em que rodou. O arquivo vai no commit seguinte a esse, junto só com documentação (`.gitignore` e este roteiro), então o código verificado é o mesmo do PR. Se o PR tiver commits de código depois desse, vale o comentário do workflow. Com shell, `pnpm verify:supabase` local regenera o arquivo. Já o `pnpm verify` sem `:supabase` pula o teste do bucket quando o Supabase local está fora do ar, então **não** serve para comprovar o critério C.
 
 ## Decisões sobre os critérios
 

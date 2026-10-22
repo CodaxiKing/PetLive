@@ -36,9 +36,6 @@ supabase/.env
 # Backups locais do banco (scripts/backup-db.mjs)
 backups/
 
-# Saída do `pnpm verify` (gerada a cada execução; vai como artefato do CI ou anexo do PR)
-docs/qa/verify-saida.txt
-
 # Logs
 npm-debug.log*
 yarn-debug.log*
