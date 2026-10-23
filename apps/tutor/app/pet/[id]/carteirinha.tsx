@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState, type ReactNode } from 'react'
-import { ActivityIndicator, ScrollView, StyleSheet, Text, View } from 'react-native'
+import { ActivityIndicator, Alert, ScrollView, StyleSheet, Text, View } from 'react-native'
 import { router, useFocusEffect, useLocalSearchParams } from 'expo-router'
 import { useAuth } from '../../../src/auth/AuthProvider'
 import { Surgir, Tocavel } from '../../../src/components/Animacoes'
@@ -8,7 +8,10 @@ import { Gradiente } from '../../../src/components/Gradiente'
 import { HeroiOnda } from '../../../src/components/HeroiOnda'
 import { Icone, type NomeIcone } from '../../../src/components/Icone'
 import { supabase } from '../../../src/lib/supabase'
+import { usePlano } from '../../../src/lib/plano'
+import { abrirPdf } from '../../../src/lib/pdf'
 import { AvatarPet } from '../../../src/pets/AvatarPet'
+import { htmlCarteirinha } from '../../../src/pets/carteirinhaPdf'
 import {
   proximaVacina,
   remediosEmUso,
@@ -38,12 +41,27 @@ export default function TelaCarteirinha() {
   const { id } = useLocalSearchParams<{ id: string }>()
   const { pets } = usePets()
   const { user } = useAuth()
+  const plano = usePlano()
   const pet = pets.find((p) => p.id === id) ?? null
 
   const [vacinas, setVacinas] = useState<Vacina[]>([])
   const [remedios, setRemedios] = useState<Remedio[]>([])
   const [carregando, setCarregando] = useState(true)
   const [tutor, setTutor] = useState<string | null>(null)
+
+  const gerarPdf = async () => {
+    if (!pet) return
+    if (plano !== 'premium') {
+      Alert.alert('Carteirinha em PDF', 'Salvar a carteirinha em PDF faz parte do Premium. A carteirinha continua disponível para compartilhar por link.')
+      return
+    }
+    try {
+      const resultado = await abrirPdf(htmlCarteirinha(pet, tutor, vacinas, remedios))
+      if (resultado === 'sem-modulo') Alert.alert('Atualize o app', 'O PDF precisa da versão mais nova do PetLive na loja de apps.')
+    } catch {
+      Alert.alert('Não deu para gerar o PDF', 'Tente de novo em instantes.')
+    }
+  }
 
   useFocusEffect(
     useCallback(() => {
@@ -233,6 +251,9 @@ export default function TelaCarteirinha() {
         )}
 
         <Text style={estilos.nota}>Dados informados pelo tutor. Ao compartilhar, você escolhe o que vai no link e por quanto tempo ele vale.</Text>
+        <Tocavel accessibilityRole="button" onPress={() => { void gerarPdf() }} style={estilos.botaoPdf}>
+          <Text style={estilos.textoPdf}>Salvar carteirinha em PDF{plano === 'premium' ? '' : ' · Premium'}</Text>
+        </Tocavel>
       </ScrollView>
 
       <View style={estilos.rodape}>
@@ -363,5 +384,7 @@ const estilos = StyleSheet.create({
   cuidadoValor: { fontFamily: fontFamily.bold, fontSize: 14, color: colors.black },
   textoLivre: { fontFamily: fontFamily.medium, fontSize: 14, lineHeight: 20, color: colors.black },
   nota: { fontFamily: fontFamily.regular, fontSize: 11, lineHeight: 16, color: '#6A7484', textAlign: 'center' },
+  botaoPdf: { minHeight: 48, borderRadius: 24, backgroundColor: colors.disabled, alignItems: 'center', justifyContent: 'center', marginBottom: 16 },
+  textoPdf: { fontFamily: fontFamily.bold, fontSize: 14, color: colors.black },
   rodape: { paddingHorizontal: 24, paddingTop: 12, paddingBottom: 28 },
 })

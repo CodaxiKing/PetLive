@@ -7,9 +7,16 @@ import { supabase } from '../lib/supabase';
  * exportação fica registrada em lgpd_requests.
  */
 export async function exportarMeusDados(): Promise<void> {
-  const { data, error } = await supabase.rpc('exportar_meus_dados');
+  const [{ data, error }, { data: documentos, error: erroDocumentos }] = await Promise.all([
+    supabase.rpc('exportar_meus_dados'),
+    supabase
+      .from('documentos_saude')
+      .select('pet_id, tipo, titulo, realizado_em, arquivo_path, criado_em')
+      .order('realizado_em', { ascending: false }),
+  ]);
   if (error) throw new Error(error.message);
-  const json = JSON.stringify(data, null, 2);
+  if (erroDocumentos) throw new Error(erroDocumentos.message);
+  const json = JSON.stringify({ ...data, documentos_saude: documentos ?? [] }, null, 2);
   await Share.share({ title: 'Meus dados — PetLive', message: json });
   await supabase.rpc('registrar_exportacao');
 }

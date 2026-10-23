@@ -416,6 +416,16 @@ export default function PetDetalhe() {
             <Pressable accessibilityRole="button" onPress={() => ir('/pet/[id]/linha-do-tempo')} style={estilos.opcao}>
               <Text style={estilos.opcaoTexto}>Linha do tempo</Text>
             </Pressable>
+            <Pressable
+              accessibilityRole="button"
+              onPress={() => {
+                setMenuAberto(false)
+                router.push({ pathname: '/pet/[id]/documentos-saude', params: { id: petAtual.id } })
+              }}
+              style={estilos.opcao}
+            >
+              <Text style={estilos.opcaoTexto}>Cartão de vacina e exames</Text>
+            </Pressable>
             <Pressable accessibilityRole="button" onPress={() => ir('/pet/[id]/viagem')} style={estilos.opcao}>
               <Text style={estilos.opcaoTexto}>Checklist de viagem</Text>
             </Pressable>

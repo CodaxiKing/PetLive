@@ -175,11 +175,27 @@ export function PetsProvider({ children }: { children: ReactNode }) {
     async (id: string) => {
       setSalvando(true)
       setErro(null)
+      // Salva os caminhos antes da cascata apagar os metadados. Se a tabela
+      // ainda não existir no ambiente, a exclusão do pet continua funcionando.
+      let caminhosDocumentos: string[] = []
+      try {
+        const { data: documentos, error: erroDocumentos } = await supabase
+          .from('documentos_saude')
+          .select('arquivo_path')
+          .eq('pet_id', id)
+        if (!erroDocumentos) caminhosDocumentos = (documentos ?? []).map((doc) => doc.arquivo_path)
+      } catch {
+        // A tabela pode não ter sido criada neste ambiente ainda.
+      }
       const { error } = await supabase.from('pets').delete().eq('id', id)
       setSalvando(false)
       if (error) {
         setErro(mensagemDeErro(error.message))
         return false
+      }
+      // Remover arquivos é best effort; não reverte a exclusão do pet.
+      if (caminhosDocumentos.length) {
+        await supabase.storage.from('anexos').remove(caminhosDocumentos).catch(() => undefined)
       }
       setPets((atual) => atual.filter((p) => p.id !== id))
       if (petAtivoId === id) setPetAtivoId(null)
