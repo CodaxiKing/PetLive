@@ -41,6 +41,7 @@ const AREAS: { rotulo: string; href?: string; icone: keyof typeof ICONES; papeis
   { rotulo: "Usuários e pets", href: "/admin/usuarios", icone: "usuarios", papeis: ["suporte", "moderacao", "leitura"] },
   { rotulo: "Suporte", href: "/admin/suporte", icone: "suporte", papeis: ["suporte", "leitura"] },
   { rotulo: "Moderação", href: "/admin/moderacao", icone: "moderacao", papeis: ["moderacao", "leitura"] },
+  { rotulo: "Eventos", href: "/admin/eventos", icone: "moderacao", papeis: ["moderacao", "leitura"] },
   { rotulo: "Campanhas", href: "/admin/campanhas", icone: "campanhas", papeis: ["marketing", "leitura"] },
   { rotulo: "Conteúdo mestre", href: "/admin/conteudo", icone: "conteudo" },
   { rotulo: "Integrações", icone: "breve" },

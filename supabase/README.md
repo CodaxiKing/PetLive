@@ -48,6 +48,12 @@ simulando `net.http_post` dentro da transação para não enviar push real.
 Usa o usuário administrativo do container local para simular o transporte;
 a função original é restaurada pelo rollback.
 
+A fila administrativa em `/admin/eventos` permite aprovar, pedir ajustes,
+recusar e tratar eventos ocultos. Cada estado oferece apenas suas decisões
+válidas. Moderação e super admin podem decidir com 2FA; o papel leitura
+apenas consulta. Os testes de eventos também cobrem essa autorização,
+motivos obrigatórios, transições e registro das decisões na auditoria.
+
 ## Rotina de backup
 
 - **Local** (`npx supabase start`): `pnpm backup` na raiz — gera
