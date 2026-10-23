@@ -95,25 +95,25 @@ export type EventoEditavel = Omit<EventoMapa, 'confirmados' | 'distancia_km'> & 
 
 export async function meusEventos(): Promise<EventoMeu[]> {
   const { data, error } = await supabase.rpc('meus_eventos');
-  if (error) throw error;
+  if (error) throw new Error(error.message);
   return (data ?? []) as EventoMeu[];
 }
 
 export async function cancelarEvento(eventoId: string): Promise<void> {
   const { error } = await supabase.rpc('evento_cancelar', { p_event_id: eventoId });
-  if (error) throw error;
+  if (error) throw new Error(error.message);
 }
 
 export async function carregarEventoEditavel(eventoId: string): Promise<EventoEditavel> {
   const { data, error } = await supabase.rpc('meu_evento_detalhe', { p_event_id: eventoId });
-  if (error) throw error;
+  if (error) throw new Error(error.message);
   if (!data) throw new Error('Evento não encontrado.');
   return data as EventoEditavel;
 }
 
 export async function atualizarEvento(eventoId: string, evento: Partial<EventoEditavel>): Promise<void> {
   const { error } = await supabase.rpc('evento_atualizar', { p_event_id: eventoId, p_evento: evento });
-  if (error) throw error;
+  if (error) throw new Error(error.message);
 }
 
 export async function denunciarEvento(eventoId: string, motivo: 'spam' | 'inadequado' | 'fraude' | 'local_privado' | 'informacao_falsa' | 'outro', detalhe?: string): Promise<void> {

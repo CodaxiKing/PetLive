@@ -96,6 +96,7 @@ export default function Perfil() {
   const linhas: { rotulo: string; icone: NomeIcone; fundo: string; acao: () => void; perigo?: boolean }[] = [
     { rotulo: 'Meus dados', icone: 'pessoas', fundo: '#FFF0C9', acao: () => router.push('/meus-dados') },
     { rotulo: 'Notificações', icone: 'sino', fundo: colors.hero, acao: () => router.push('/avisos') },
+    { rotulo: 'Meus eventos', icone: 'local', fundo: colors.hero, acao: () => router.push('/eventos/meus') },
     { rotulo: 'Privacidade e dados', icone: 'escudo', fundo: colors.successSurface, acao: () => router.push('/privacidade') },
     { rotulo: 'Sair', icone: 'sair', fundo: '#FBDADF', acao: sair, perigo: true },
   ];

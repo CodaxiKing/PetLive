@@ -71,6 +71,16 @@ O botão na ficha permite cancelar mesmo quando o evento está lotado.
 As preferências de avisos incluem a categoria Eventos, com lembretes de
 1 dia e 2 horas. Os testes cobrem repetição, lotação e retomada dos lembretes.
 
+O Perfil oferece **Meus eventos**, com os estados, motivos de moderação,
+edição e cancelamento. A migração `20261126000000_evento_edicao.sql` reenvia
+para análise alterações de data, horário ou local (incluindo coordenadas e
+Place ID), e correções de eventos com ajustes solicitados. As presenças
+são mantidas; mudanças de local ou horário geram avisos no histórico.
+O limite de vagas não pode cair abaixo da contagem de presenças.
+Cancelar pode ser repetido sem duplicar avisos e pushes. O formulário
+base também valida datas, duração, coordenadas, ingresso e vagas.
+A criação completa com seletor de local no mapa e foto ainda está pendente.
+
 ## Rotina de backup
 
 - **Local** (`npx supabase start`): `pnpm backup` na raiz — gera
