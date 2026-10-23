@@ -9,6 +9,27 @@ Banco de dados, regras de acesso (RLS), storage e funções do servidor.
 Tarefas: `[BACKEND]` no [board](https://github.com/users/CodaxiKing/projects/5).
 Modelo de dados: seção 7 do [BUSINESS.md](../BUSINESS.md).
 
+## Eventos pet
+
+A migração `20261122000000_eventos_pet.sql` cria eventos, organizadores,
+presenças e denúncias com RLS. A criação por RPC limita cada pessoa a três
+envios por mês (calendário de Brasília), incluindo os cancelados. A linha do
+perfil é bloqueada durante a criação para serializar requisições da mesma
+pessoa. Eventos de organizadores verificados publicam direto; os demais
+aguardam análise. A verificação só pode ser alterada pelo backend, nunca
+pelo próprio usuário via API. Eventos oficiais exigem permissão administrativa.
+
+Com o banco local e as migrações anteriores disponíveis, execute na raiz:
+
+```powershell
+./supabase/tests/testar-eventos.ps1
+```
+
+O teste aplica a migração e cria usuários temporários dentro de uma transação
+com rollback. Verifica limite mensal, cancelamento, mudança de mês,
+verificação e revogação, vagas, presença e privacidade entre usuários e
+visitantes. Não publica no ambiente remoto nem persiste dados de teste.
+
 ## Rotina de backup
 
 - **Local** (`npx supabase start`): `pnpm backup` na raiz — gera
