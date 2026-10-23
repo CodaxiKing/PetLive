@@ -7,9 +7,11 @@ $jobsMigration = Join-Path $PSScriptRoot '../migrations/20261123000000_eventos_j
 $jobsTests = Join-Path $PSScriptRoot 'eventos-jobs.sql'
 $sql = "begin;`n" + (Get-Content -Raw $migration) + "`n" + (Get-Content -Raw $jobsMigration) + "`n" +
   (Get-Content -Raw (Join-Path $PSScriptRoot '../migrations/20261124000000_evento_detalhe.sql')) + "`n" +
+  (Get-Content -Raw (Join-Path $PSScriptRoot '../migrations/20261125000000_evento_presenca.sql')) + "`n" +
   (Get-Content -Raw $tests) + "`n" + (Get-Content -Raw $jobsTests) + "`n" +
   (Get-Content -Raw (Join-Path $PSScriptRoot 'eventos-moderacao.sql')) + "`n" +
-  (Get-Content -Raw (Join-Path $PSScriptRoot 'evento-detalhe.sql')) + "`nrollback;"
+  (Get-Content -Raw (Join-Path $PSScriptRoot 'evento-detalhe.sql')) + "`n" +
+  (Get-Content -Raw (Join-Path $PSScriptRoot 'evento-presenca.sql')) + "`nrollback;"
 # supabase_admin permite simular net.http_post, pertencente à extensão.
 $sql | docker exec -i $Container psql -U supabase_admin -d postgres -v ON_ERROR_STOP=1
 if ($LASTEXITCODE -ne 0) { throw 'Falha nos testes de eventos.' }

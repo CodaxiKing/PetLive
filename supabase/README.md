@@ -61,6 +61,16 @@ Eventos não publicados ou vencidos ficam indisponíveis, inclusive antes
 do cron encerrar. Não retorna contatos, IDs de usuários ou participantes.
 O teste transacional também cobre esses campos e estados.
 
+A migração `20261125000000_evento_presenca.sql` acrescenta `eu_vou` à ficha
+(somente a presença da própria sessão) e a RPC `evento_definir_presenca`.
+Ela recebe o estado desejado, confirma ou cancela sem alternar em caso de
+repetição de requisição e devolve a ficha com a contagem atualizada. O bloqueio
+do evento serializa a disputa por vagas. Cancelar remove a presença; ao
+confirmar novamente, apenas lembretes ainda não enviados ficam pendentes.
+O botão na ficha permite cancelar mesmo quando o evento está lotado.
+As preferências de avisos incluem a categoria Eventos, com lembretes de
+1 dia e 2 horas. Os testes cobrem repetição, lotação e retomada dos lembretes.
+
 ## Rotina de backup
 
 - **Local** (`npx supabase start`): `pnpm backup` na raiz — gera

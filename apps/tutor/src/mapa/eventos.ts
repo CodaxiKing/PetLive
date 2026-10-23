@@ -23,7 +23,15 @@ export type EventoMapa = {
 export type EventoDetalhe = Omit<EventoMapa, 'distancia_km'> & {
   organizador: string;
   organizador_verificado: boolean;
+  eu_vou: boolean;
 };
+
+export async function definirPresenca(eventoId: string, confirmar: boolean): Promise<EventoDetalhe> {
+  const { data, error } = await supabase.rpc('evento_definir_presenca', { p_event_id: eventoId, p_confirmar: confirmar });
+  if (error) throw new Error(error.message);
+  if (!data) throw new Error('Evento indisponível. Atualize a ficha.');
+  return data as EventoDetalhe;
+}
 
 export async function carregarEvento(eventoId: string): Promise<EventoDetalhe | null> {
   const { data, error } = await supabase.rpc('evento_detalhe', { p_event_id: eventoId });

@@ -1,6 +1,6 @@
 import { supabase } from '../lib/supabase'
 
-export type TipoAviso = 'vacina' | 'vermifugo' | 'consulta' | 'banho_tosa' | 'remedio' | 'outro'
+export type TipoAviso = 'vacina' | 'vermifugo' | 'consulta' | 'banho_tosa' | 'remedio' | 'outro' | 'eventos'
 
 export type CartaoAviso = {
   tipo: TipoAviso
@@ -20,6 +20,7 @@ export const CARTOES_AVISO: CartaoAviso[] = [
   { tipo: 'consulta', rotulo: 'Consultas', quando: '1 dia antes', fundo: '#E3F3FC', icone: 'mais' },
   { tipo: 'banho_tosa', rotulo: 'Banho e tosa', quando: 'No dia do agendamento', fundo: '#FCE1EF', icone: 'gota' },
   { tipo: 'outro', rotulo: 'Outros avisos', quando: 'No dia do lembrete', fundo: '#EDEFF3', icone: 'sino' },
+  { tipo: 'eventos', rotulo: 'Eventos', quando: '1 dia antes e 2 horas antes', fundo: '#E3F3FC', icone: 'sino' },
 ]
 
 /** Janela padrão do "Não perturbe" (protótipo: das 22h às 7h). */

@@ -1,8 +1,9 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { ActivityIndicator, Image, Linking, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { router, useFocusEffect, useLocalSearchParams } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { carregarEvento, TIPO_EVENTO, type EventoDetalhe } from '../../src/mapa/eventos';
+import { carregarEvento, definirPresenca, TIPO_EVENTO, type EventoDetalhe } from '../../src/mapa/eventos';
+import { BotaoPrimario } from '../../src/components/BotaoPrimario';
 import { colors } from '../../src/theme/colors';
 import { radius, spacing } from '../../src/theme/tokens';
 import { typography } from '../../src/theme/typography';
@@ -19,9 +20,16 @@ export default function FichaEvento() {
   const [erro, setErro] = useState<string | null>(null);
   const [tentativa, setTentativa] = useState(0);
   const [erroLink, setErroLink] = useState(false);
+  const [confirmando, setConfirmando] = useState(false);
+  const [erroPresenca, setErroPresenca] = useState<string | null>(null);
+  const [avisoPresenca, setAvisoPresenca] = useState<string | null>(null);
+  const operacaoEmCurso = useRef(false);
+  const geracao = useRef(0);
+  const invalidarOperacao = useCallback(() => { geracao.current++; operacaoEmCurso.current = false; }, []);
 
   useFocusEffect(useCallback(() => {
     let ativo = true;
+    setConfirmando(false); setErroPresenca(null); setAvisoPresenca(null);
     setCarregando(true); setEvento(null); setErro(null); setErroLink(false);
     if (typeof id !== 'string' || !/^[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}$/i.test(id)) {
       setCarregando(false);
@@ -30,10 +38,27 @@ export default function FichaEvento() {
     carregarEvento(id).then((dados) => { if (ativo) setEvento(dados); })
       .catch((e: unknown) => { if (ativo) setErro(e instanceof Error ? e.message : 'Tente novamente.'); })
       .finally(() => { if (ativo) setCarregando(false); });
-    return () => { ativo = false; };
+    return () => { ativo = false; invalidarOperacao(); };
   // A tentativa precisa recriar o efeito de foco para refazer a consulta.
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id, tentativa]));
+  }, [id, tentativa, invalidarOperacao]));
+
+  async function alternarPresenca() {
+    if (!evento || operacaoEmCurso.current) return;
+    operacaoEmCurso.current = true;
+    const versao = geracao.current;
+    setConfirmando(true); setErroPresenca(null); setAvisoPresenca(null);
+    try {
+      const atualizado = await definirPresenca(evento.id, !evento.eu_vou);
+      if (versao !== geracao.current) return;
+      setEvento(atualizado);
+      setAvisoPresenca(atualizado.eu_vou ? 'Presença confirmada.' : 'Presença cancelada.');
+    } catch (e: unknown) {
+      if (versao === geracao.current) setErroPresenca(e instanceof Error ? e.message : 'Não foi possível atualizar sua presença. Tente novamente.');
+    } finally {
+      if (versao === geracao.current) { operacaoEmCurso.current = false; setConfirmando(false); }
+    }
+  }
 
   async function abrirIngresso() {
     if (!evento?.ingresso_url) return;
@@ -69,6 +94,18 @@ export default function FichaEvento() {
         <Text style={estilos.rotulo}>Entrada</Text><Text style={estilos.texto}>{evento.gratuito ? 'Gratuita' : new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format((evento.preco_centavos ?? 0) / 100)}</Text>
         <Text style={estilos.rotulo}>Vagas</Text><Text style={estilos.texto}>{evento.vagas === null ? 'Sem limite informado' : Math.max(0, evento.vagas - evento.confirmados) === 0 ? 'Vagas esgotadas' : `${Math.max(0, evento.vagas - evento.confirmados)} disponíveis de ${evento.vagas}`}</Text>
         <Text style={estilos.ajuda}>{evento.confirmados} presenças confirmadas</Text>
+      </View>
+      <View style={estilos.card}>
+        <BotaoPrimario
+          titulo={evento.eu_vou ? 'Cancelar minha presença' : evento.vagas !== null && evento.confirmados >= evento.vagas ? 'Vagas esgotadas' : 'Eu vou'}
+          onPress={() => void alternarPresenca()} carregando={confirmando}
+          desabilitado={!evento.eu_vou && evento.vagas !== null && evento.confirmados >= evento.vagas}
+        />
+        {avisoPresenca ? <Text accessibilityLiveRegion="polite" style={estilos.texto}>{avisoPresenca}</Text> : null}
+        {erroPresenca ? <Text accessibilityRole="alert" style={estilos.erro}>{erroPresenca}</Text> : null}
+        <Text style={estilos.ajuda}>{evento.eu_vou ? 'Você confirmou presença. Lembretes de 1 dia e 2 horas dependem da permissão de notificações e das suas preferências.' : 'Confirme para receber lembretes de 1 dia e 2 horas antes, conforme suas preferências de avisos.'}</Text>
+        <Pressable accessibilityRole="button" onPress={() => router.push('/avisos')} style={estilos.botao}><Text style={estilos.link}>Configurar avisos</Text></Pressable>
+        {erroPresenca ? <Pressable accessibilityRole="button" onPress={() => setTentativa((valor) => valor + 1)} style={estilos.botao}><Text style={estilos.link}>Atualizar ficha</Text></Pressable> : null}
       </View>
       <View style={estilos.card}><Text style={estilos.rotulo}>Sobre o evento</Text><Text style={estilos.texto}>{evento.descricao}</Text></View>
       {!evento.gratuito && evento.ingresso_url ? <View style={estilos.card}>
