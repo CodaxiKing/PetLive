@@ -68,11 +68,24 @@ export default function FinanceiroPagina() {
     URL.revokeObjectURL(url);
   }
 
-  if (!dados) return <p className="text-sm text-cinza">{erro ?? "Carregando…"}</p>;
-  const maior = Math.max(...dados.por_mes.map((m) => m.total), 1);
-  const totalPeriodo = dados.por_mes.reduce((s, m) => s + m.total, 0);
-  const atual = dados.por_mes[dados.por_mes.length - 1];
-  const foco = dados.por_mes.find((m) => m.mes === selecionado) ?? atual;
+  if (!dados) {
+    return (
+      <>
+        <Cabecalho titulo="Financeiro" subtitulo="Faturamento do PetLive mês a mês, por origem" />
+        <p role={erro ? "alert" : "status"} className={erro ? "rounded-2xl bg-perigo-fundo p-3 text-sm text-perigo" : "text-sm text-cinza"}>
+          {erro ?? "Carregando…"}
+        </p>
+        {erro ? <p className="mt-2 text-sm text-cinza">Confira se as migrations financeiras do Supabase foram aplicadas neste ambiente.</p> : null}
+      </>
+    );
+  }
+  const porMes = Array.isArray(dados.por_mes) ? dados.por_mes : [];
+  const ultimas = Array.isArray(dados.ultimas) ? dados.ultimas : [];
+  const maior = Math.max(...porMes.map((m) => m.total), 1);
+  const totalPeriodo = porMes.reduce((s, m) => s + m.total, 0);
+  const atual = porMes[porMes.length - 1];
+  const foco = porMes.find((m) => m.mes === selecionado) ?? atual;
+  if (!foco) return <p role="alert" className="text-sm text-perigo">O Supabase retornou um resumo financeiro incompleto. Verifique as migrations financeiras.</p>;
   const semReceita = totalPeriodo === 0;
 
   return (
@@ -92,7 +105,7 @@ export default function FinanceiroPagina() {
 
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         <CartaoNumero rotulo="Faturamento do mês" valor={reais(dados.mes_atual, true)} apoio={variacao(dados.mes_atual, dados.mes_anterior)} fundo="bg-verde-fundo" cor="text-verde-texto" />
-        <CartaoNumero rotulo="Mês anterior" valor={reais(dados.mes_anterior, true)} apoio={atual ? mesLongo(dados.por_mes[dados.por_mes.length - 2]?.mes ?? atual.mes) : ""} fundo="bg-azul-fundo" cor="text-azul-escuro" />
+        <CartaoNumero rotulo="Mês anterior" valor={reais(dados.mes_anterior, true)} apoio={atual ? mesLongo(porMes[porMes.length - 2]?.mes ?? atual.mes) : ""} fundo="bg-azul-fundo" cor="text-azul-escuro" />
         <CartaoNumero rotulo={`Total (${meses} meses)`} valor={reais(totalPeriodo, true)} apoio={`Média ${reais(Math.round(totalPeriodo / meses), true)} por mês`} fundo="bg-roxo-fundo" cor="text-roxo-texto" />
         <CartaoNumero
           rotulo="Assinantes Premium"
@@ -115,7 +128,7 @@ export default function FinanceiroPagina() {
             </p>
           ) : null}
           <div className="mt-4 flex h-64 items-end gap-2" role="img" aria-label={`Faturamento dos últimos ${meses} meses`}>
-            {dados.por_mes.map((m) => {
+            {porMes.map((m) => {
               const ativo = m.mes === foco.mes;
               return (
                 <button
@@ -143,7 +156,7 @@ export default function FinanceiroPagina() {
           </div>
           <div className="mt-4 flex flex-wrap gap-2">
             {ORIGENS.map((o) => {
-              const valor = dados.por_mes.reduce((s, m) => s + m[o.chave], 0);
+              const valor = porMes.reduce((s, m) => s + m[o.chave], 0);
               return (
                 <span key={o.chave} className={`rounded-full px-3 py-1 text-[11px] font-bold ${o.chip}`}>
                   {o.rotulo} {totalPeriodo ? `${Math.round((valor / totalPeriodo) * 100)}%` : "0%"}
@@ -173,11 +186,11 @@ export default function FinanceiroPagina() {
 
           <section className="rounded-[28px] bg-fundo p-6">
             <h2 className="font-bold">Últimos pagamentos</h2>
-            {dados.ultimas.length === 0 ? (
+            {ultimas.length === 0 ? (
               <p className="mt-2 text-sm text-cinza">Nenhum pagamento ainda.</p>
             ) : (
               <ul className="mt-3 space-y-2">
-                {dados.ultimas.slice(0, 8).map((u, i) => (
+                {ultimas.slice(0, 8).map((u, i) => (
                   <li key={i} className="flex items-center justify-between gap-3 text-[13px]">
                     <div className="min-w-0">
                       <p className="truncate font-semibold">{u.descricao ?? ORIGENS.find((o) => o.chave === u.origem)?.rotulo}</p>
