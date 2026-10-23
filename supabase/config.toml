@@ -69,6 +69,9 @@ schema_paths = []
 enabled = true
 # Specifies an ordered list of seed files to load during db reset.
 # Supports glob patterns relative to supabase directory: "./seeds/*.sql"
+# Seeds compartilhados (ex.: places-rio.sql) carregam em qualquer ambiente.
+# Os dados de demonstracao do tutor ficam em supabase/seeds/dev/ e carregam
+# APENAS em desenvolvimento (nunca em produção) via --sql-paths explícito.
 sql_paths = ["./seeds/*.sql"]
 
 [db.network_restrictions]
@@ -157,13 +160,20 @@ max_indexes = 5
 enabled = true
 # The base URL of your website. Used as an allow-list for redirects and for constructing URLs used
 # in emails.
-site_url = "http://127.0.0.1:3000"
-# The public URL that Auth serves on. Defaults to the API external URL with `/auth/v1` appended.
+# URL base do site. Usada como allow-list de redirects e para montar URLs em e-mails.
+# Desenvolvimento local: http://127.0.0.1:3000
+# Produção (VPS): https://petlive.app.br (ou o domínio do seu site)
+site_url = "https://petlive.app.br"
+
+# A URL pública do Auth. Padrão: API externa com /auth/v1 anexado.
 # external_url = ""
-# A list of *exact* URLs that auth providers are permitted to redirect to post authentication.
-additional_redirect_urls = ["https://127.0.0.1:3000", "petlive://**", "exp://**"]
+
+# URLs exatas permitidas para redirect após autenticação.
+# App do tutor (Expo): petlive://auth/callback (Google) e petlive://auth/nova-senha (esqueci senha).
+# Web (Next.js): http://localhost:3000/auth/callback em dev; domínio de produção em https.
+additional_redirect_urls = ["http://127.0.0.1:3000", "http://localhost:3000", "https://petlive.app.br", "petlive://**", "exp://**"]
 # How long tokens are valid for, in seconds. Defaults to 3600 (1 hour), maximum 604,800 (1 week).
-jwt_expiry = 3600
+jwt_expiry = 900
 # JWT issuer URL. If not set, defaults to auth.external_url.
 # jwt_issuer = ""
 # Path to JWT signing key. DO NOT commit your signing keys file to git.
@@ -180,10 +190,10 @@ enable_anonymous_sign_ins = false
 # Allow/disallow testing manual linking of accounts
 enable_manual_linking = false
 # Passwords shorter than this value will be rejected as weak. Minimum 6, recommended 8 or more.
-minimum_password_length = 6
+minimum_password_length = 8
 # Passwords that do not meet the following requirements will be rejected as weak. Supported values
 # are: `letters_digits`, `lower_upper_letters_digits`, `lower_upper_letters_digits_symbols`
-password_requirements = ""
+password_requirements = "lower_upper_letters_digits_symbols"
 
 # Configure passkey sign-ins.
 # [auth.passkey]
@@ -224,11 +234,11 @@ enable_signup = true
 # addresses. If disabled, only the new email is required to confirm.
 double_confirm_changes = true
 # If enabled, users need to confirm their email address before signing in.
-enable_confirmations = false
+enable_confirmations = true
 # If enabled, users will need to reauthenticate or have logged in recently to change their password.
-secure_password_change = false
+secure_password_change = true
 # Controls the minimum amount of time that must pass before sending another signup confirmation or password reset email.
-max_frequency = "1s"
+max_frequency = "1m"
 # Number of characters used in the email OTP.
 otp_length = 6
 # Number of seconds before the email OTP expires (defaults to 1 hour).
@@ -327,7 +337,7 @@ max_frequency = "5s"
 # https://<ref>.supabase.co/auth/v1/callback (remoto), exporte as duas
 # variaveis abaixo e troque enabled para true.
 [auth.external.google]
-enabled = false
+enabled = true
 client_id = "env(SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_ID)"
 secret = "env(SUPABASE_AUTH_EXTERNAL_GOOGLE_SECRET)"
 skip_nonce_check = false

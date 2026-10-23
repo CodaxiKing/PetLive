@@ -28,17 +28,37 @@ Variáveis do EAS (`production`):
 
 ```bash
 cd apps/tutor
-eas build -p android --profile production   # .aab para o Play
-eas build -p ios --profile production       # .ipa para a App Store
-eas submit -p android --latest               # pede a chave da conta de serviço do Play
-eas submit -p ios --latest                   # pede o login Apple / App Store Connect
-eas update --channel production -m "..."     # correções só de JS, sem nova revisão das lojas
+eas build --platform ios --profile production     # .ipa para a App Store
+eas build --platform android --profile production # .aab para o Google Play
+eas submit --platform ios --latest                # envia o .ipa para o App Store Connect
+eas submit --platform android --latest            # envia o .aab para o Google Play Console
 ```
 
-- `runtimeVersion` segue a versão nativa: mudou módulo nativo (ex.: react-native-maps),
-  precisa de build novo; o resto vai por `eas update`.
-- O primeiro envio ao Play é manual (faixa **Teste interno**); depois o `eas submit` assume.
-- Comece pela faixa de **teste fechado** do Play (exigência para contas novas: 12 testadores por 14 dias).
+- **Assinatura:** os builds de produção são assinados com o certificado de distribuição do Apple Developer (iOS) e com a chave de upload do Google Play Console (Android), configurados e gerenciados pelo EAS na primeira build (automaticamente ou com `eas credentials`). As credenciais ficam guardadas nos servidores do EAS; **nada de certificado, chave privada ou provisioning profile é commitado no repositório** (`.p12`, `.p8`, `.mobileprovision`, `.jks`, `.pem` já estão no `.gitignore`).
+- **Variáveis de ambiente do build** (ambiente `production`): crie com `eas env:create` usando os valores da tabela da seção 1 (`EXPO_PUBLIC_SUPABASE_URL`, `EXPO_PUBLIC_SUPABASE_ANON_KEY`, etc.). Chaves secretas (ex.: `GOOGLE_MAPS_ANDROID_KEY`, `GOOGLE_MAPS_IOS_KEY`) vão como segredos do EAS, lidas pelo `app.config.js` no build — nunca no repositório.
+- O primeiro envio ao Play é manual (faixa **Teste interno**); depois o `eas submit` assume. Comece pela faixa de **teste fechado** do Play (exigência para contas novas: 12 testadores por 14 dias).
+
+## 3. EAS Update: atualizações OTA e rollback
+
+**Configuração:** `expo-updates` está instalado, `runtimeVersion` segue a política `appVersion` (a `version` do `app.json`) e o canal de produção é o branch `production` do projeto EAS (`updates.url` em `app.json`). O app busca e aplica a atualização na inicialização (`src/lib/atualizacao.ts`), sem necessidade de nova aprovação nas lojas para mudanças cobertas pelo expo-updates (JS, assets e fontes). Mudanças em módulos nativos exigem build novo nas lojas.
+
+Publicar uma correção OTA (entregue apenas a builds com `runtimeVersion` compatível):
+
+```bash
+cd apps/tutor
+eas update --branch production -m "Correção: lembretes de vacina"
+```
+
+**Rollback da atualização OTA:**
+
+- **Expo Dashboard:** abra o projeto > Updates > selecione a atualização problemática do branch `production` > "Roll back". O branch volta para a atualização anterior imediatamente.
+- **CLI:**
+
+```bash
+eas update:rollback --branch production   # veja `eas update:rollback --help`
+```
+
+Builds já instalados continuam na versão anterior até receberem a próxima atualização compatível.
 
 ## 3. Ficha da loja
 

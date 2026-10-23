@@ -1,12 +1,25 @@
 -- Dados de exemplo da Fase 1 (BUSINESS.md 26): 1 tutor com 2 pets (cão e
 -- gato), vacinas, peso, consulta, lembretes, rotina e um remédio em curso.
--- Só para desenvolvimento local; nunca aplicar em produção.
+-- Carrega APENAS em desenvolvimento (projeto de dev / local). Nunca em produção.
 --
 -- Login no app: demo@petlive.dev / petlive123
--- Aplicar sem resetar o banco:
---   docker exec -i supabase_db_PetLive psql -U postgres < supabase/seeds/tutor-demo.sql
+-- Guard abaixo aborta a execução se petlive.app_env = 'producao'.
+--
 -- Idempotente: apaga o tutor demo (cascata) e cria de novo, com datas
 -- relativas a hoje.
+--
+-- Carregar somente este seed depois de aplicar as migrações:
+--   npx supabase db reset --linked --no-seed
+--   npx supabase db reset --linked --sql-paths ./seeds/dev/tutor-demo.sql
+-- (ou, com os seeds compartilhados: --sql-paths ./seeds/*.sql --sql-paths ./seeds/dev/tutor-demo.sql)
+
+-- Nunca carregar dados de demonstração em produção.
+do $$
+begin
+  if current_setting('petlive.app_env', true) = 'producao' then
+    raise exception 'tutor-demo.sql só carrega em ambiente de desenvolvimento';
+  end if;
+end $$;
 
 delete from auth.users where id = '0d0d0d0d-0000-4000-8000-000000000001';
 

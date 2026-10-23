@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Stack, router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { ActivityIndicator, AppState, StyleSheet, View } from 'react-native';
@@ -25,6 +25,7 @@ import { useConfigApp } from '../src/lib/configApp';
 import { registrarAberturaDiaria } from '../src/lib/eventos';
 import { marcarLido } from '../src/notificacoes/caixa';
 import { TelaAtualizar } from '../src/components/TelaAtualizar';
+import { verificarEAplicarAtualizacao } from '../src/lib/atualizacao';
 
 /**
  * Sentry: só liga quando há DSN (sem conta/DSN o app segue normal,
@@ -183,9 +184,16 @@ function RootLayout() {
     PlusJakartaSans_800ExtraBold,
   });
 
-  // Espera as fontes: sem isso as telas piscam com a fonte do sistema.
-  // Se falharem, segue com a fonte do sistema em vez de travar.
-  if (!fontesCarregadas && !erroFontes) {
+  // Atualização OTA na inicialização: busca e aplica a nova versão, se houver.
+  const [atualizacaoVerificada, setAtualizacaoVerificada] = useState(false);
+  useEffect(() => {
+    void verificarEAplicarAtualizacao().finally(() => setAtualizacaoVerificada(true));
+  }, []);
+
+  // Espera as fontes e a verificação de atualização: sem isso as telas
+  // piscam com a fonte do sistema ou com uma versão antiga. Se as fontes
+  // falharem, segue com a fonte do sistema em vez de travar.
+  if ((!fontesCarregadas && !erroFontes) || !atualizacaoVerificada) {
     return (
       <View style={estilos.carregando}>
         <ActivityIndicator size="large" color={colors.primaryDark} />

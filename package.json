@@ -10,6 +10,7 @@
     "tutor:typecheck": "pnpm --filter petlive-tutor typecheck",
     "typecheck": "pnpm -r typecheck",
     "backup": "node scripts/backup-db.mjs",
+    "guard:chaves-google": "node scripts/verificar-sem-chaves-commitadas.mjs",
     "monitor": "node scripts/monitorar.mjs"
   },
   "packageManager": "pnpm@11.5.2"
