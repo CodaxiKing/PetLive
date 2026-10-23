@@ -42,9 +42,8 @@ export async function carregarEvento(eventoId: string): Promise<EventoDetalhe | 
 /** Eventos publicados em pontos próprios, ordenados por proximidade/data. */
 export async function eventosPorPerto(posicao: { lat: number; lng: number }, raioKm: number, filtro: 'hoje' | 'semana' | 'mes', tipo: EventoMapa['tipo'] | null): Promise<EventoMapa[]> {
   const inicio = new Date();
-  const fim = new Date(inicio);
-  if (filtro === 'hoje') fim.setHours(23, 59, 59, 999);
-  else fim.setDate(fim.getDate() + (filtro === 'semana' ? 7 : 30));
+  const fim = new Date(inicio.getTime() + 30 * 86400000);
+  // O banco aplica Hoje e Esta semana em Brasília, sem depender do fuso do aparelho.
   const { data, error } = await supabase.rpc('eventos_por_perto', {
     p_lat: posicao.lat,
     p_lng: posicao.lng,
@@ -55,7 +54,7 @@ export async function eventosPorPerto(posicao: { lat: number; lng: number }, rai
     p_periodo: filtro,
     p_limite: 100,
   });
-  if (error) throw error;
+  if (error) throw new Error(error.message);
   return (data ?? []) as EventoMapa[];
 }
 
@@ -68,10 +67,12 @@ export async function confirmarPresenca(eventoId: string): Promise<boolean> {
 export function dataHoraEvento(inicio: string, fim: string): string {
   const dataInicio = new Date(inicio);
   const dataFim = new Date(fim);
-  const dia = new Intl.DateTimeFormat('pt-BR', { weekday: 'short', day: 'numeric', month: 'short' }).format(dataInicio);
-  const horaInicio = new Intl.DateTimeFormat('pt-BR', { hour: '2-digit', minute: '2-digit' }).format(dataInicio);
-  const horaFim = new Intl.DateTimeFormat('pt-BR', { hour: '2-digit', minute: '2-digit' }).format(dataFim);
-  return `${dia} · ${horaInicio}–${horaFim}`;
+  const dias = new Intl.DateTimeFormat('pt-BR', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'America/Sao_Paulo' });
+  const horas = new Intl.DateTimeFormat('pt-BR', { hour: '2-digit', minute: '2-digit', timeZone: 'America/Sao_Paulo' });
+  const dia = dias.format(dataInicio);
+  const diaFim = dias.format(dataFim);
+  return dia === diaFim ? `${dia} · ${horas.format(dataInicio)}–${horas.format(dataFim)}`
+    : `${dia} · ${horas.format(dataInicio)} até ${diaFim} · ${horas.format(dataFim)}`;
 }
 
 export const TIPO_EVENTO: Record<EventoMapa['tipo'], string> = {

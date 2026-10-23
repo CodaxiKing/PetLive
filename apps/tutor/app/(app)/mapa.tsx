@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   ActivityIndicator,
   Alert,
@@ -11,7 +11,7 @@ import {
   type TextInputInstance,
   View,
 } from 'react-native';
-import { router, useLocalSearchParams } from 'expo-router';
+import { router, useFocusEffect, useLocalSearchParams } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Location from 'expo-location';
 import Svg, { Path } from 'react-native-svg';
@@ -36,6 +36,7 @@ import {
   type Lugar,
 } from '../../src/mapa/lugares';
 import { useLocalizacao } from '../../src/mapa/useLocalizacao';
+import { dataHoraEvento, eventosPorPerto, TIPO_EVENTO, type EventoMapa } from '../../src/mapa/eventos';
 import { colors } from '../../src/theme/colors';
 import { radius, shadow, spacing } from '../../src/theme/tokens';
 import { fontFamily, typography } from '../../src/theme/typography';
@@ -97,7 +98,7 @@ function haQuanto(data: Date): string {
 export default function Mapa() {
   // Atalhos do Início chegam como ?filtro=clinica|banho_tosa|petshop|24h; a escolha manual
   // dos chips passa a valer assim que o toque um.
-  const { filtro } = useLocalSearchParams<{ filtro?: string }>();
+  const { filtro, aba: abaInicial } = useLocalSearchParams<{ filtro?: string; aba?: string }>();
   const [categoriaManual, setCategoriaManual] = useState<Filtro | null>(null);
   const filtroDoAtalho = FILTROS_DE_ATALHO.find((valor) => valor === filtro) ?? 'todos';
   const categoria: Filtro = categoriaManual ?? filtroDoAtalho;
@@ -117,6 +118,12 @@ export default function Mapa() {
   // Busca por bairro (sem GPS): o campo passa a mover o mapa até a região.
   const [modoRegiao, setModoRegiao] = useState(false);
   const [regiao, setRegiao] = useState<{ lat: number; lng: number } | null>(null);
+  const [aba, setAba] = useState<'lugares' | 'eventos'>(abaInicial === 'eventos' ? 'eventos' : 'lugares');
+  const [eventos, setEventos] = useState<EventoMapa[]>([]);
+  const [carregandoEventos, setCarregandoEventos] = useState(false);
+  const [erroEventos, setErroEventos] = useState<string | null>(null);
+  const [filtroEvento, setFiltroEvento] = useState<'hoje' | 'semana' | 'mes'>('mes');
+  const [tipoEvento, setTipoEvento] = useState<EventoMapa['tipo'] | null>(null);
   const campoBusca = useRef<TextInputInstance>(null);
   const mapaRef = useRef<ControleMapa>(null);
   // O toque no pin também chega ao mapa logo depois; sem isto o cartão
@@ -128,6 +135,7 @@ export default function Mapa() {
 
   // Consulta por perto muda com a posição, o filtro e a busca.
   useEffect(() => {
+    if (aba !== 'lugares') return;
     let vivo = true;
     const consulta =
       categoria === 'salvos'
@@ -169,7 +177,20 @@ export default function Mapa() {
     return () => {
       vivo = false;
     };
-  }, [centro.lat, centro.lng, categoria, buscaAtiva, so24h, raioKm, tentativa]);
+  }, [aba, centro.lat, centro.lng, categoria, buscaAtiva, so24h, raioKm, tentativa]);
+
+  useFocusEffect(useCallback(() => {
+    if (aba !== 'eventos') return;
+    let vivo = true;
+    setCarregandoEventos(true); setErroEventos(null); setEventos([]);
+    eventosPorPerto({ lat: centro.lat, lng: centro.lng }, raioKm, filtroEvento, tipoEvento)
+      .then((lista) => { if (vivo) setEventos(lista); })
+      .catch((erro: unknown) => { if (vivo) setErroEventos(erro instanceof Error ? erro.message : 'Tente novamente.'); })
+      .finally(() => { if (vivo) setCarregandoEventos(false); });
+    return () => { vivo = false; };
+  // Recria a consulta ao tocar em Tentar novamente.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [aba, centro.lat, centro.lng, raioKm, tentativa, filtroEvento, tipoEvento]));
 
   // Chegou a localização real: centraliza o mapa nela.
   useEffect(() => {
@@ -186,7 +207,7 @@ export default function Mapa() {
 
   // O texto vem do próprio envio: o estado do campo pode ainda não ter chegado.
   async function aplicarBusca(enviado: string = busca) {
-    if (modoRegiao) {
+    if (modoRegiao || aba === 'eventos') {
       // Bairro ou região: o mapa vai até lá e a busca por perto usa esse ponto.
       const texto = enviado.trim();
       if (!texto) return;
@@ -245,29 +266,24 @@ export default function Mapa() {
     }
   }
 
-  const lugar = selecionado;
+  const lugar = aba === 'lugares' ? selecionado : null;
   // Algum cartão de estado (sem internet, sem localização, sem resultados) na tela.
-  const comEstado = !lugar && (Boolean(semRede) || (permissao === 'negada' && !regiao) || (!carregando && lugares.length === 0));
+  const comEstado = aba === 'lugares' && !lugar && (Boolean(semRede) || (permissao === 'negada' && !regiao) || (!carregando && lugares.length === 0));
 
   return (
     <View style={estilos.tela}>
-      <MapaLugares
-        ref={mapaRef}
-        centro={CENTRO_PADRAO}
-        zoom={13}
-        pins={lugares}
-        selecionado={lugar?.id}
-        mostrarUsuario={permissao === 'concedida'}
-        posicaoCredito={estilos.creditoMapa}
-        onPin={(id) => {
-          const escolhido = lugares.find((l) => l.id === id);
-          if (escolhido) selecionar(escolhido);
-        }}
-        onToqueMapa={() => {
-          if (tocouPin.current) return;
-          setSelecionado(null);
-        }}
-      />
+      <View style={aba === 'eventos' ? estilos.mapaEventos : StyleSheet.absoluteFill}>
+        <MapaLugares ref={mapaRef} centro={centro} zoom={13}
+          pins={aba === 'lugares' ? lugares : eventos.flatMap((e) => e.lat === null || e.lng === null ? [] : [{ id: e.id, lat: e.lat, lng: e.lng, categoria: 'parque' as const, evento: true }])}
+          selecionado={aba === 'lugares' ? lugar?.id : null} mostrarUsuario={permissao === 'concedida'} posicaoCredito={estilos.creditoMapa}
+          onPin={(id) => {
+            if (aba === 'eventos') { router.push({ pathname: '/eventos/[id]', params: { id } }); return; }
+            const escolhido = lugares.find((l) => l.id === id);
+            if (escolhido) selecionar(escolhido);
+          }}
+          onToqueMapa={() => { if (!tocouPin.current) setSelecionado(null); }}
+        />
+      </View>
 
       {/* Topo: busca e filtros flutuando sobre o mapa (protótipo Mapa). */}
       <View style={estilos.topo} pointerEvents="box-none">
@@ -300,7 +316,7 @@ export default function Mapa() {
           <TextInput
             style={estilos.buscaEntrada}
             ref={campoBusca}
-            placeholder={modoRegiao ? 'Bairro ou região' : 'Buscar lugares pet'}
+            placeholder={modoRegiao || aba === 'eventos' ? 'Bairro ou região' : 'Buscar lugares pet'}
             placeholderTextColor={colors.textMuted}
             value={busca}
             onChangeText={setBusca}
@@ -313,7 +329,18 @@ export default function Mapa() {
         </View>
         </View>
 
-        <ScrollView
+        <View style={estilos.abasMapa}>
+          {(['lugares', 'eventos'] as const).map((item) => {
+            const ativo = aba === item;
+            return (
+              <Pressable key={item} onPress={() => { setAba(item); setBusca(''); if (item === 'lugares') setCarregando(true); }} accessibilityRole="button"
+                accessibilityState={{ selected: ativo }} style={[estilos.abaMapa, ativo && estilos.abaMapaAtiva]}>
+                <Text style={[estilos.abaMapaTexto, ativo && estilos.abaMapaTextoAtiva]}>{item === 'lugares' ? 'Lugares' : 'Eventos'}</Text>
+              </Pressable>
+            );
+          })}
+        </View>
+        {aba === 'lugares' ? <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
           style={estilos.filtrosRolagem}
@@ -354,10 +381,65 @@ export default function Mapa() {
           >
             <Text style={[estilos.pilulaTexto, estilos.pilulaTextoSos]}>SOS</Text>
           </Pressable>
-        </ScrollView>
+        </ScrollView> : null}
       </View>
 
-      {carregando && (
+      {aba === 'eventos' ? (
+        <View style={estilos.listaEventos}>
+          <View style={estilos.eventosCabecalho}>
+            <View style={{ flex: 1 }}>
+              <Text style={estilos.eventosTitulo}>Eventos por perto</Text>
+              {permissao !== 'concedida' && !regiao ? <Text style={estilos.eventosSub}>Rio de Janeiro · busque um bairro para mudar</Text> : null}
+              <Text style={estilos.eventosSub}>{filtroEvento === 'hoje' ? 'Hoje' : filtroEvento === 'semana' ? 'Esta semana' : 'Próximos 30 dias'} · até {raioKm} km</Text>
+            </View>
+            <View style={estilos.acoesEventosTopo}>
+              <Pressable accessibilityRole="button" onPress={() => router.push('/eventos/meus')} style={estilos.meusEventosBotao}>
+                <Text style={estilos.meusEventosTexto}>Meus</Text>
+              </Pressable>
+              <Pressable accessibilityRole="button" onPress={() => router.push('/eventos/novo')} style={estilos.criarEvento}>
+                <Text style={estilos.criarEventoTexto}>Criar</Text>
+              </Pressable>
+            </View>
+          </View>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={estilos.filtrosEvento}>
+            {([{ valor: 'hoje', rotulo: 'Hoje' }, { valor: 'semana', rotulo: 'Esta semana' }, { valor: 'mes', rotulo: '30 dias' }] as const).map((item) => <Pressable key={item.valor} accessibilityRole="button" accessibilityState={{ selected: filtroEvento === item.valor }} onPress={() => setFiltroEvento(item.valor)} style={[estilos.filtroEvento, filtroEvento === item.valor && estilos.filtroEventoAtivo]}><Text style={[estilos.filtroEventoTexto, filtroEvento === item.valor && estilos.filtroEventoTextoAtivo]}>{item.rotulo}</Text></Pressable>)}
+            <View style={estilos.separadorFiltro} />
+            {([null, ...Object.keys(TIPO_EVENTO)] as (EventoMapa['tipo'] | null)[]).map((valor) => <Pressable key={valor ?? 'todos'} accessibilityRole="button" accessibilityState={{ selected: tipoEvento === valor }} onPress={() => setTipoEvento(valor)} style={[estilos.filtroEvento, (tipoEvento === valor) && estilos.filtroEventoAtivo]}><Text style={[estilos.filtroEventoTexto, tipoEvento === valor && estilos.filtroEventoTextoAtivo]}>{valor ? TIPO_EVENTO[valor] : 'Todos os tipos'}</Text></Pressable>)}
+          </ScrollView>
+          {carregandoEventos ? <ActivityIndicator accessibilityLabel="Carregando eventos" color={colors.primaryDeep} /> : erroEventos ? <View style={estilos.eventosVazio}><Text accessibilityRole="alert" style={estilos.eventosVazioTexto}>{erroEventos}</Text><Pressable accessibilityRole="button" onPress={() => setTentativa((n) => n + 1)}><Text style={estilos.eventosVazioAcao}>Tentar novamente</Text></Pressable></View> : eventos.length === 0 ? (
+            <View style={estilos.eventosVazio}>
+              <Text style={estilos.eventosVazioTitulo}>Nenhum evento por perto</Text>
+              <Text style={estilos.eventosVazioTexto}>Você pode criar um evento pet. Ele passa por análise antes de aparecer no mapa.</Text>
+              <Pressable accessibilityRole="button" onPress={() => router.push('/eventos/novo')}>
+                <Text style={estilos.eventosVazioAcao}>Criar evento</Text>
+              </Pressable>
+            </View>
+          ) : <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={estilos.eventosListaInterna}>
+            {eventos.map((evento) => {
+              return (
+                <View key={evento.id} style={estilos.eventoCard}>
+                  <View style={estilos.eventoEtiquetas}>
+                    <Text style={estilos.eventoTipo}>{TIPO_EVENTO[evento.tipo]}</Text>
+                    <Text style={estilos.eventoPreco}>{evento.gratuito ? 'Gratuito' : `R$ ${((evento.preco_centavos ?? 0) / 100).toFixed(2).replace('.', ',')}`}</Text>
+                  </View>
+                  <Text style={estilos.eventoTitulo}>{evento.titulo}</Text>
+                  <Text style={estilos.eventoData}>{dataHoraEvento(evento.inicio_em, evento.fim_em)}</Text>
+                  <Text style={estilos.eventoLocal}>{evento.local_nome}{evento.distancia_km === null ? '' : ` · ${evento.distancia_km.toFixed(1).replace('.', ',')} km`}</Text>
+                  <Text style={estilos.eventoDescricao} numberOfLines={3}>{evento.descricao}</Text>
+                  <View style={estilos.eventoRodape}>
+                    <Text style={estilos.eventoConfirmados}>{evento.confirmados} confirmados{evento.vagas === null ? '' : ` · ${Math.max(0, evento.vagas - evento.confirmados)} vagas`}</Text>
+                    <Pressable accessibilityRole="button" onPress={() => router.push({ pathname: '/eventos/[id]', params: { id: evento.id } })} style={estilos.presencaBotao}>
+                      <Text style={estilos.presencaTexto}>Ver evento</Text>
+                    </Pressable>
+                  </View>
+                </View>
+              );
+            })}
+          </ScrollView>}
+        </View>
+      ) : null}
+
+      {aba === 'lugares' && carregando && (
         <ActivityIndicator
           style={estilos.indicador}
           size="large"
@@ -367,14 +449,14 @@ export default function Mapa() {
       )}
 
       {/* Estados do mapa (BUSINESS.md 5.43): sem internet, sem localização, sem resultados. */}
-      {semRede ? (
+      {aba === 'lugares' && semRede ? (
         <View style={estilos.faixaSemRede} pointerEvents="none">
           <Icone nome="semRede" size={18} cor={colors.warningText} espessura={2} />
           <Text style={estilos.faixaSemRedeTexto}>Sem internet. Mostrando os últimos lugares vistos.</Text>
         </View>
       ) : null}
 
-      {!lugar && !carregando && semRede ? (
+      {aba !== 'lugares' ? null : !lugar && !carregando && semRede ? (
         <CartaoEstadoMapa
           icone="semRede"
           fundoIcone={colors.warningSurface}
@@ -452,7 +534,7 @@ export default function Mapa() {
       ) : null}
 
       {/* Botão "meu local" (some enquanto o card do lugar está aberto). */}
-      {!lugar && !comEstado && (
+      {aba === 'lugares' && !lugar && !comEstado && (
         <Pressable
           style={estilos.fab}
           onPress={meuLocal}
@@ -596,6 +678,72 @@ const estilos = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.background,
   },
+  mapaEventos: { ...StyleSheet.absoluteFill, bottom: '43%' },
+  abasMapa: {
+    flexDirection: 'row',
+    alignSelf: 'flex-start',
+    marginTop: 62,
+    marginLeft: 64,
+    padding: 4,
+    borderRadius: radius.pill,
+    backgroundColor: colors.surface,
+    ...shadow.card,
+  },
+  abaMapa: { paddingHorizontal: spacing.lg, paddingVertical: spacing.sm, borderRadius: radius.pill },
+  abaMapaAtiva: { backgroundColor: colors.black },
+  abaMapaTexto: { ...typography.captionMedium, color: colors.textMuted },
+  abaMapaTextoAtiva: { color: colors.white },
+  listaEventos: {
+    position: 'absolute',
+    top: '53%',
+    bottom: 96,
+    left: spacing.lg,
+    right: spacing.lg,
+    backgroundColor: colors.background,
+    borderRadius: radius.xl, padding: spacing.sm,
+  },
+  filtrosEvento: { gap: spacing.sm, paddingBottom: spacing.md },
+  filtroEvento: { borderRadius: radius.pill, backgroundColor: colors.surface, paddingHorizontal: spacing.md, paddingVertical: spacing.xs },
+  filtroEventoAtivo: { backgroundColor: colors.primarySurface },
+  filtroEventoTexto: { ...typography.caption, color: colors.textMuted },
+  filtroEventoTextoAtivo: { color: colors.primaryDeep, fontFamily: fontFamily.bold },
+  separadorFiltro: { width: 1, height: 24, backgroundColor: colors.border, marginHorizontal: spacing.xs },
+  eventosCabecalho: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.md,
+    marginBottom: spacing.md,
+  },
+  eventosTitulo: { ...typography.h3, fontFamily: fontFamily.bold, color: colors.black },
+  eventosSub: { ...typography.caption, color: colors.textMuted },
+  criarEvento: { backgroundColor: colors.black, borderRadius: radius.pill, paddingHorizontal: spacing.lg, paddingVertical: spacing.sm },
+  criarEventoTexto: { ...typography.captionMedium, color: colors.white },
+  acoesEventosTopo: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
+  meusEventosBotao: { borderWidth: 1, borderColor: colors.borderStrong, borderRadius: radius.pill, paddingHorizontal: spacing.md, paddingVertical: spacing.sm },
+  meusEventosTexto: { ...typography.captionMedium, color: colors.text },
+  eventosVazio: { backgroundColor: colors.surface, padding: spacing.xl, borderRadius: radius.xl, gap: spacing.sm, ...shadow.card },
+  eventosVazioTitulo: { ...typography.bodyMedium, fontFamily: fontFamily.bold, color: colors.black },
+  eventosVazioTexto: { ...typography.caption, color: colors.textMuted },
+  eventosVazioAcao: { ...typography.captionMedium, color: colors.primaryDeep, paddingTop: spacing.xs },
+  eventosListaInterna: { gap: spacing.md, paddingBottom: spacing.xxxl },
+  eventoCard: { backgroundColor: colors.surface, padding: spacing.lg, borderRadius: radius.xl, gap: spacing.sm, ...shadow.card },
+  eventoEtiquetas: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+  eventoTipo: { ...typography.captionMedium, color: colors.primaryDeep },
+  eventoPreco: { ...typography.captionMedium, color: colors.successText },
+  eventoTitulo: { ...typography.bodyMedium, fontFamily: fontFamily.bold, color: colors.black },
+  eventoData: { ...typography.captionMedium, color: colors.text },
+  eventoLocal: { ...typography.caption, color: colors.textMuted },
+  eventoDescricao: { ...typography.caption, color: colors.text },
+  eventoRodape: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: spacing.sm, marginTop: spacing.xs },
+  eventoConfirmados: { ...typography.caption, color: colors.textMuted, flex: 1 },
+  presencaBotao: { backgroundColor: colors.black, borderRadius: radius.pill, paddingHorizontal: spacing.lg, paddingVertical: spacing.sm },
+  presencaBotaoAtivo: { backgroundColor: colors.successSurface },
+  presencaBotaoDesativado: { backgroundColor: colors.disabled },
+  presencaTexto: { ...typography.captionMedium, color: colors.white },
+  presencaTextoAtivo: { color: colors.successText },
+  ingressoLink: { ...typography.captionMedium, color: colors.primaryDeep, paddingTop: spacing.xs },
+  denunciarEvento: { alignSelf: 'flex-start', paddingTop: spacing.xs },
+  denunciarEventoTexto: { ...typography.caption, color: colors.danger },
   topo: {
     position: 'absolute',
     top: 0,

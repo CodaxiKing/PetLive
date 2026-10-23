@@ -26,3 +26,16 @@ compartilhamento, confirmação de denúncia e inclusão na agenda.
 
 Os testes de `src/__testes__/acoesEvento.test.ts` cobrem link, campos públicos,
 horários em Brasília, duração e resultado do formulário da agenda.
+
+## Eventos no mapa
+
+A aba Eventos mostra pins próprios de calendário e uma lista com acesso à
+ficha. Hoje e Esta semana usam o horário de Brasília; a semana termina no
+domingo. Eventos em andamento continuam nos resultados. A busca por bairro
+muda o centro da consulta. A lista é atualizada ao voltar à tela e distingue
+falha de rede de ausência de resultados.
+
+A consulta atual cobre eventos com ponto próprio. A resolução de locais
+do Google por Place ID pertence à tarefa de backend de busca de eventos;
+esses eventos ainda não entram nesta consulta. Valide o toque nos pins,
+a alternância das abas e a disposição do painel em aparelho.

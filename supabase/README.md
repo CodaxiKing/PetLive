@@ -101,6 +101,13 @@ concorrência real, execute `./supabase/tests/testar-denuncias-concorrentes.ps1`
 ele cria um banco descartável no container local, usa três conexões
 simultâneas e remove o banco ao terminar, sem tocar nos dados do app.
 
+A migração `20261129000000_eventos_filtros.sql` ajusta a busca do mapa para
+incluir eventos em andamento. Hoje termina à meia-noite de Brasília e
+Esta semana termina no início da segunda-feira seguinte. Tipo, raio e
+estado publicado continuam filtrados no servidor. Os testes transacionais
+cobrem essas combinações. Eventos com Place ID continuam dependendo da
+resolução do Google, pendente na tarefa de backend.
+
 ## Rotina de backup
 
 - **Local** (`npx supabase start`): `pnpm backup` na raiz — gera

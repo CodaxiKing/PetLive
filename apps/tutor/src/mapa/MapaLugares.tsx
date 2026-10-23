@@ -6,6 +6,7 @@ import { Camera, Map, Marker, type CameraRef } from '@maplibre/maplibre-react-na
 import type MapView from 'react-native-maps';
 import { FONTE_LUGARES, type CategoriaLugar } from './lugares';
 import { PinLugar } from './PinLugar';
+import { PinEvento } from './PinEvento';
 import { PontoUsuario } from './PontoUsuario';
 
 /** Estilo de mapa gratuito (OpenFreeMap: tiles OSM, sem chave). */
@@ -27,7 +28,7 @@ const Google = MAPA_GOOGLE
     (require('react-native-maps') as typeof import('react-native-maps'))
   : null;
 
-export type PinMapa = { id: string; lat: number; lng: number; categoria: CategoriaLugar };
+export type PinMapa = { id: string; lat: number; lng: number; categoria: CategoriaLugar; evento?: boolean };
 
 export type ControleMapa = {
   /** Move a câmera até o ponto, com animação. */
@@ -170,7 +171,7 @@ export function MapaLugares({
               tracksViewChanges={redesenhar || ativo}
               zIndex={ativo ? 2 : 1}
             >
-              <PinLugar categoria={pin.categoria} selecionado={ativo} />
+              {pin.evento ? <PinEvento /> : <PinLugar categoria={pin.categoria} selecionado={ativo} />}
             </MarcadorGoogle>
           );
         })}
@@ -201,7 +202,7 @@ export function MapaLugares({
         <Camera ref={camera} initialViewState={{ center: [centro.lng, centro.lat], zoom }} />
         {pins.map((pin) => (
           <Marker key={pin.id} id={pin.id} lngLat={[pin.lng, pin.lat]} anchor="bottom" onPress={() => onPin?.(pin.id)}>
-            <PinLugar categoria={pin.categoria} selecionado={pin.id === selecionado} />
+            {pin.evento ? <PinEvento /> : <PinLugar categoria={pin.categoria} selecionado={pin.id === selecionado} />}
           </Marker>
         ))}
         {/* O MapLibre empilha na ordem em que os marcadores entram: a chave
