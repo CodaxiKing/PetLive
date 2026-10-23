@@ -30,3 +30,14 @@ export async function abrirPdf(html: string): Promise<'ok' | 'sem-modulo'> {
 export function escaparHtml(texto: string): string {
   return texto.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
 }
+
+/** Gera o arquivo local antes de abrir o menu de envio do aparelho. */
+export async function compartilharPdf(html: string): Promise<'ok' | 'sem-modulo' | 'indisponivel'> {
+  if (!requireOptionalNativeModule('ExpoPrint') || !requireOptionalNativeModule('ExpoSharing')) return 'sem-modulo'
+  const Print = await import('expo-print')
+  const Sharing = await import('expo-sharing')
+  if (!await Sharing.isAvailableAsync()) return 'indisponivel'
+  const { uri } = await Print.printToFileAsync({ html })
+  await Sharing.shareAsync(uri, { mimeType: 'application/pdf', UTI: 'com.adobe.pdf', dialogTitle: 'Enviar carteirinha em PDF' })
+  return 'ok'
+}

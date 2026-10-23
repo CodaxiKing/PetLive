@@ -14,7 +14,16 @@ function linha(rotulo: string, valor: string | null | undefined): string {
 }
 
 /** Gera uma versão para impressão da carteirinha sem compartilhar campos vazios. */
-export function htmlCarteirinha(pet: Pet, tutor: string | null, vacinas: Vacina[], remedios: Remedio[]): string {
+export const camposPdf = {
+  tutor: 'Nome do tutor', vacinas: 'Vacinas', remedios: 'Remédios em uso',
+  veterinario: 'Veterinário', alergias: 'Alergias e condições', observacoes: 'Observações',
+} as const
+export type CamposPdf = Record<keyof typeof camposPdf, boolean>
+export const camposPdfIniciais: CamposPdf = {
+  tutor: false, vacinas: true, remedios: true, veterinario: false, alergias: true, observacoes: false,
+}
+
+export function htmlCarteirinha(pet: Pet, tutor: string | null, vacinas: Vacina[], remedios: Remedio[], campos: CamposPdf = camposPdfIniciais): string {
   const especie = pet.especie === 'gato' ? 'Gato' : 'Cão'
   const identidade = [especie, pet.raca].filter(Boolean).join(' · ')
   const listaVacinas = vacinas.length
@@ -28,10 +37,10 @@ export function htmlCarteirinha(pet: Pet, tutor: string | null, vacinas: Vacina[
     linha('Sexo', pet.sexo ? (pet.sexo === 'femea' ? 'Fêmea' : 'Macho') : null),
     linha('Peso', pet.peso_atual ? `${String(pet.peso_atual).replace('.', ',')} kg` : null),
     linha('Castrado', pet.castrado === null ? 'Não informado' : pet.castrado ? 'Sim' : 'Não'),
-    linha('Tutor', tutor),
-    linha('Veterinário', pet.veterinario),
-    linha('Alergias e condições', pet.alergias),
-    linha('Observações', pet.observacoes),
+    campos.tutor ? linha('Tutor', tutor) : '',
+    campos.veterinario ? linha('Veterinário', pet.veterinario) : '',
+    campos.alergias ? linha('Alergias e condições', pet.alergias) : '',
+    campos.observacoes ? linha('Observações', pet.observacoes) : '',
   ].join('')
 
   return `<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>
@@ -46,8 +55,8 @@ export function htmlCarteirinha(pet: Pet, tutor: string | null, vacinas: Vacina[
   </style></head><body>
     <header><h1>${escaparHtml(pet.nome)}</h1><div class="sub">${escaparHtml(identidade)} · Carteirinha de saúde PetLive · ${dataCurta(new Date().toISOString().slice(0, 10))}</div></header>
     <h2>Dados do pet</h2><div class="grid">${dados}</div>
-    <h2>Vacinas</h2><table><thead><tr><th>Vacina</th><th>Aplicada</th><th>Próxima dose</th></tr></thead><tbody>${listaVacinas}</tbody></table>
-    <h2>Remédios em uso</h2><ul>${listaRemedios}</ul>
+    ${campos.vacinas ? `<h2>Vacinas</h2><table><thead><tr><th>Vacina</th><th>Aplicada</th><th>Próxima dose</th></tr></thead><tbody>${listaVacinas}</tbody></table>` : ''}
+    ${campos.remedios ? `<h2>Remédios em uso</h2><ul>${listaRemedios}</ul>` : ''}
     <p class="aviso">Dados informados pelo tutor. Esta carteirinha não substitui orientação veterinária.</p>
   </body></html>`
 }

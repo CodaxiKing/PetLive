@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useState, type ReactNode } from 'react'
-import { ActivityIndicator, Alert, ScrollView, StyleSheet, Text, View } from 'react-native'
+import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react'
+import { ActivityIndicator, Alert, ScrollView, StyleSheet, Switch, Text, View } from 'react-native'
 import { router, useFocusEffect, useLocalSearchParams } from 'expo-router'
 import { useAuth } from '../../../src/auth/AuthProvider'
 import { Surgir, Tocavel } from '../../../src/components/Animacoes'
@@ -9,9 +9,9 @@ import { HeroiOnda } from '../../../src/components/HeroiOnda'
 import { Icone, type NomeIcone } from '../../../src/components/Icone'
 import { supabase } from '../../../src/lib/supabase'
 import { usePlano } from '../../../src/lib/plano'
-import { abrirPdf } from '../../../src/lib/pdf'
+import { abrirPdf, compartilharPdf } from '../../../src/lib/pdf'
 import { AvatarPet } from '../../../src/pets/AvatarPet'
-import { htmlCarteirinha } from '../../../src/pets/carteirinhaPdf'
+import { camposPdf, camposPdfIniciais, htmlCarteirinha } from '../../../src/pets/carteirinhaPdf'
 import {
   proximaVacina,
   remediosEmUso,
@@ -47,19 +47,32 @@ export default function TelaCarteirinha() {
   const [vacinas, setVacinas] = useState<Vacina[]>([])
   const [remedios, setRemedios] = useState<Remedio[]>([])
   const [carregando, setCarregando] = useState(true)
-  const [tutor, setTutor] = useState<string | null>(null)
+  const [perfilTutor, setPerfilTutor] = useState<{ id: string; nome: string | null } | null>(null)
+  const tutor = perfilTutor?.id === user?.id ? perfilTutor?.nome ?? null : null
+  const [campos, setCampos] = useState({ ...camposPdfIniciais })
+  const [opcoesPdf, setOpcoesPdf] = useState(false)
+  const [erroDados, setErroDados] = useState(false)
+  const [gerando, setGerando] = useState(false)
+  const ocupado = useRef(false)
 
-  const gerarPdf = async () => {
-    if (!pet) return
+  const gerarPdf = async (enviar = false) => {
+    if (!pet || carregando || erroDados || ocupado.current) return
     if (plano !== 'premium') {
       Alert.alert('Carteirinha em PDF', 'Salvar a carteirinha em PDF faz parte do Premium. A carteirinha continua disponível para compartilhar por link.')
       return
     }
+    ocupado.current = true
+    setGerando(true)
     try {
-      const resultado = await abrirPdf(htmlCarteirinha(pet, tutor, vacinas, remedios))
+      const html = htmlCarteirinha(pet, tutor, vacinas, remedios, campos)
+      const resultado = await (enviar ? compartilharPdf(html) : abrirPdf(html))
       if (resultado === 'sem-modulo') Alert.alert('Atualize o app', 'O PDF precisa da versão mais nova do PetLive na loja de apps.')
+      if (resultado === 'indisponivel') Alert.alert('Envio indisponível', 'Use a prévia para imprimir ou salvar o PDF neste aparelho.')
     } catch {
       Alert.alert('Não deu para gerar o PDF', 'Tente de novo em instantes.')
+    } finally {
+      ocupado.current = false
+      setGerando(false)
     }
   }
 
@@ -67,29 +80,39 @@ export default function TelaCarteirinha() {
     useCallback(() => {
       if (!id) return
       let vivo = true
+      setCarregando(true)
+      setErroDados(false)
+      setOpcoesPdf(false)
       Promise.all([
         supabase.from('vaccinations').select('*').eq('pet_id', id).order('aplicada_em', { ascending: false }),
-        remediosEmUso(id).catch(() => [] as Remedio[]),
+        remediosEmUso(id),
       ]).then(([resVacinas, emUso]) => {
         if (!vivo) return
+        if (resVacinas.error) throw resVacinas.error
         setVacinas((resVacinas.data ?? []) as Vacina[])
         setRemedios(emUso)
+        setCarregando(false)
+      }).catch(() => {
+        if (!vivo) return
+        setErroDados(true)
         setCarregando(false)
       })
       return () => {
         vivo = false
       }
-    }, [id]),
+    }, [id, setOpcoesPdf]),
   )
 
   useEffect(() => {
     if (!user) return
+    let vivo = true
     supabase
       .from('profiles')
       .select('nome')
       .eq('id', user.id)
       .maybeSingle()
-      .then(({ data }) => setTutor(data?.nome?.trim() || null))
+      .then(({ data }) => { if (vivo) setPerfilTutor({ id: user.id, nome: data?.nome?.trim() || null }) })
+    return () => { vivo = false }
   }, [user])
 
   if (!pet) {
@@ -251,9 +274,21 @@ export default function TelaCarteirinha() {
         )}
 
         <Text style={estilos.nota}>Dados informados pelo tutor. Ao compartilhar, você escolhe o que vai no link e por quanto tempo ele vale.</Text>
-        <Tocavel accessibilityRole="button" onPress={() => { void gerarPdf() }} style={estilos.botaoPdf}>
+        {erroDados ? <Text accessibilityRole="alert" style={estilos.aviso}>Não foi possível carregar todos os dados. Volte e abra a carteirinha novamente antes de gerar o PDF.</Text> : null}
+        <Tocavel accessibilityRole="button" onPress={() => setOpcoesPdf(!opcoesPdf)} style={estilos.botaoPdf}>
           <Text style={estilos.textoPdf}>Salvar carteirinha em PDF{plano === 'premium' ? '' : ' · Premium'}</Text>
         </Tocavel>
+        {opcoesPdf ? <View style={estilos.bloco}>
+          <Text style={estilos.blocoTitulo}>O que incluir no PDF</Text>
+          <Text style={estilos.nota}>Nome e dados básicos do pet sempre aparecem. Escolha os demais campos e confira a prévia antes de enviar.</Text>
+          {(Object.keys(camposPdf) as (keyof typeof camposPdf)[]).map((campo) => <View key={campo} style={estilos.remedio}>
+            <Text style={[estilos.textoLivre, estilos.flex]}>{camposPdf[campo]}</Text>
+            <Switch accessibilityLabel={camposPdf[campo]} value={campos[campo]} disabled={gerando} onValueChange={(valor) => setCampos((atual) => ({ ...atual, [campo]: valor }))} />
+          </View>)}
+          <BotaoPrimario titulo={gerando ? 'Preparando PDF…' : 'Prévia / imprimir'} desabilitado={gerando || carregando || erroDados} onPress={() => { void gerarPdf() }} />
+          <BotaoPrimario titulo="Gerar e enviar PDF" desabilitado={gerando || carregando || erroDados} onPress={() => { void gerarPdf(true) }} />
+          <Text style={estilos.nota}>O arquivo enviado não expira. Quem receber poderá guardar uma cópia.</Text>
+        </View> : null}
         <Tocavel accessibilityRole="button" onPress={() => router.push({ pathname: '/pet/[id]/cartao', params: { id: pet.id } })} style={estilos.botaoPdf}>
           <Text style={estilos.textoPdf}>Gerar imagem do cartão do pet</Text>
         </Tocavel>

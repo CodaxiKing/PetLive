@@ -7,6 +7,21 @@ Referência de telas: `../../prototipo/` (Welcome, Login, Main, Inicio, MeusPets
 
 Status: em desenvolvimento.
 
+## Carteirinha em PDF
+
+Na carteirinha, **Salvar carteirinha em PDF** abre as opções de inclusão:
+vacinas, remédios, alergias, nome do tutor, veterinário e observações.
+Nome e dados básicos do pet permanecem no documento. Contatos e notas
+ficam desmarcados inicialmente. A seleção controla tanto a prévia de impressão
+quanto o arquivo enviado. O PDF é um recurso Premium.
+
+**Prévia / imprimir** abre a impressão do sistema; **Gerar e enviar PDF**
+gera um arquivo local com `expo-print` e abre o compartilhamento com
+`expo-sharing`. Não é criado um link público. O arquivo enviado não expira.
+Falha ao carregar vacinas ou remédios impede a exportação para evitar um
+documento incompleto. Valide impressão e envio em aparelho Android e iOS
+com os módulos nativos disponíveis.
+
 ## Ações na ficha de eventos
 
 Em `/eventos/[id]`, o tutor pode enviar uma denúncia com motivo e detalhe
