@@ -54,6 +54,13 @@ válidas. Moderação e super admin podem decidir com 2FA; o papel leitura
 apenas consulta. Os testes de eventos também cobrem essa autorização,
 motivos obrigatórios, transições e registro das decisões na auditoria.
 
+A ficha do app em `/eventos/[id]` usa `evento_detalhe`, criada pela migração
+`20261124000000_evento_detalhe.sql`. Retorna dados públicos do evento,
+nome público da organização, verificação e quantidade de presenças.
+Eventos não publicados ou vencidos ficam indisponíveis, inclusive antes
+do cron encerrar. Não retorna contatos, IDs de usuários ou participantes.
+O teste transacional também cobre esses campos e estados.
+
 ## Rotina de backup
 
 - **Local** (`npx supabase start`): `pnpm backup` na raiz — gera
