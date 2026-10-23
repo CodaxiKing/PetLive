@@ -363,7 +363,7 @@ export default function CriarConta() {
 
           <Pressable
             accessibilityRole="link"
-            onPress={() => Linking.openURL('https://petlive.app.br/lojistas').catch(() => undefined)}
+            onPress={() => Linking.openURL('https://petlive.app/lojistas').catch(() => undefined)}
             hitSlop={8}
           >
             <Text style={estilos.linkLojista}>Tenho uma loja ou clínica →</Text>

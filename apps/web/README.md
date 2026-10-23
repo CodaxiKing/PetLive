@@ -60,7 +60,7 @@ O site sobe como imagem Docker (`apps/web/Dockerfile`, saída `standalone` do Ne
    - **Base Directory:** `/` (a raiz: é um monorepo pnpm)
    - **Dockerfile Location:** `/apps/web/Dockerfile`
 3. **Ports Exposes:** `3000`.
-4. **Domains:** `https://petlive.app.br` (e `https://www.petlive.app.br`, se usar).
+4. **Domains:** `https://petlive.app` (e `https://www.petlive.app`, se usar).
    No DNS, aponte um registro `A` para o IP do servidor do Coolify; o
    certificado HTTPS sai sozinho.
 5. **Environment Variables** — marque **Build Variable** em todas (o Next

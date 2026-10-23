@@ -21,7 +21,7 @@ describe('eas.json (publicação nas lojas)', () => {
     expect(producao.channel).toBe('production');
     expect(producao.autoIncrement).toBe(true);
     // O Android deve gerar o .aab (app bundle) no perfil de produção.
-    expect(producao.android.buildType).toBe('aab');
+    expect(producao.android.buildType).toBe('app-bundle');
   });
 
   it('tem perfil de submit production (App Store Connect e Google Play Console)', () => {

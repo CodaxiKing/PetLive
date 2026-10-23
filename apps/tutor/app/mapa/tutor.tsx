@@ -1,18 +1,15 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-native';
+import { useEffect, useRef, useState } from 'react';
+import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import * as Location from 'expo-location';
-import { MapView, Marker, PROVIDER_GOOGLE, type Region } from 'react-native-maps';
+import MapView, { Marker, PROVIDER_GOOGLE, type Region } from 'react-native-maps';
 import { useLocalizacao, type Posicao } from '../../src/mapa/useLocalizacao';
 import { PinTutor } from '../../src/mapa/PinTutor';
 import { CENTRO_PADRAO } from '../../src/mapa/lugares';
 import { CartaoEstadoMapa, AcaoEstado } from '../../src/mapa/CartaoEstadoMapa';
-import { Icone } from '../../src/components/Icone';
 import { colors } from '../../src/theme/colors';
-import { spacing } from '../../src/theme/tokens';
-import { typography } from '../../src/theme/typography';
 
 /** Delta de latitude/longitude para o marcador do tutor ficar bem visível ao centralizar. */
-const ZOOM_TUTOR: Region = {
+const ZOOM_TUTOR = {
   latitudeDelta: 0.012,
   longitudeDelta: 0.012,
 };
@@ -33,8 +30,10 @@ const TEMPO_POSICAO_MS = 8000;
  */
 export default function MapaTutor() {
   const { permissao, posicao: posicaoInicial, localizar } = useLocalizacao();
-  const [posicao, setPosicao] = useState<Posicao | null>(posicaoInicial ?? null);
-  const [carregando, setCarregando] = useState(permissao === 'desconhecida');
+  const [posicaoAoVivo, setPosicaoAoVivo] = useState<Posicao | null>(null);
+  const [tentandoNovamente, setTentandoNovamente] = useState(false);
+  const posicao = posicaoAoVivo ?? posicaoInicial ?? null;
+  const carregando = permissao === 'desconhecida' || (tentandoNovamente && permissao === 'negada');
   const mapa = useRef<MapView>(null);
   const primeiraCentralizacao = useRef(true);
 
@@ -48,7 +47,7 @@ export default function MapaTutor() {
         { accuracy: Location.Accuracy.High, distanceInterval: 5, timeInterval: 5000 },
         (p) => {
           if (!ativo) return;
-          setPosicao({ lat: p.coords.latitude, lng: p.coords.longitude });
+          setPosicaoAoVivo({ lat: p.coords.latitude, lng: p.coords.longitude });
         },
       );
     })();
@@ -59,20 +58,10 @@ export default function MapaTutor() {
   }, [permissao]);
 
   // A inicialização já pede a permissão e captura a posição via useLocalizacao.
-  // Apenas espelha a posição inicial no estado local e controla o carregamento.
-  useEffect(() => {
-    if (permissao !== 'desconhecida') {
-      setCarregando(false);
-    }
-    if (posicaoInicial && !posicao) {
-      setPosicao(posicaoInicial);
-    }
-  }, [permissao, posicaoInicial, posicao]);
-
   // Quando a posição chega (inicial ou ao vivo), centraliza o mapa nela.
   useEffect(() => {
     if (!posicao) return;
-    const centro = {
+    const centro: Region = {
       latitude: posicao.lat,
       longitude: posicao.lng,
       ...ZOOM_TUTOR,
@@ -86,11 +75,10 @@ export default function MapaTutor() {
   }, [posicao]);
 
   function permitirLocalizacao() {
-    setCarregando(true);
+    setTentandoNovamente(true);
     localizar();
-    // localizar() atualiza o estado de useLocalizacao; o loading sai quando a
-    // permissão deixa de ser 'desconhecida' (efeito acima) ou após o timeout.
-    setTimeout(() => setCarregando(false), TEMPO_POSICAO_MS);
+    // Se o sistema não responder à solicitação, libera o mapa após 8 segundos.
+    setTimeout(() => setTentandoNovamente(false), TEMPO_POSICAO_MS);
   }
 
   const centro = posicao ?? CENTRO_PADRAO;
@@ -111,7 +99,7 @@ export default function MapaTutor() {
         }}
         showsUserLocation={false}
         showsMyLocationButton={false}
-        showsPointsOfInterest={false}
+        showsPointsOfInterests={false}
         rotateEnabled={false}
         pitchEnabled={false}
       >
@@ -156,7 +144,7 @@ export default function MapaTutor() {
             <AcaoEstado
               rotulo="Seguir sem localização"
               tipo="secundaria"
-              onPress={() => setCarregando(false)}
+              onPress={() => setTentandoNovamente(false)}
             />
           )}
         </CartaoEstadoMapa>

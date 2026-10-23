@@ -139,7 +139,7 @@ Critério de aceite: **os preços do Premium nas lojas são compatíveis com os 
 
 Conforme BUSINESS.md seção 10, os preços do Premium estão como `[valor]` (mensal) e `[valor]` (anual) — ainda a definir. Quando definidos:
 
-- O preço mensal e anual na App Store e no Google Play deve ser **o mesmo** (ou equivalente, considerando conversão de moeda e comissões) ao divulgado no site do PetLive (`petlive.app.br`) e no painel admin (seção 4.4 — "Planos e cupons: Preço do Premium").
+- O preço mensal e anual na App Store e no Google Play deve ser **o mesmo** (ou equivalente, considerando conversão de moeda e comissões) ao divulgado no site do PetLive (`petlive.app`) e no painel admin (seção 4.4 — "Planos e cupons: Preço do Premium").
 - Não pode haver preço significativamente mais caro nas lojas para induzir o usuário a pagar fora delas (proibido pela Apple e pelo Google).
 - O desconto do plano anual deve ser coerente entre lojas e site.
 

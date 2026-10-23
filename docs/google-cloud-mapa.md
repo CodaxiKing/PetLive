@@ -38,7 +38,7 @@ Crie **uma chave por plataforma e, quando possível, por ambiente**. Nunca crie 
 
 | Chave | Restrição de aplicação | Restrição de API | Usada por |
 |---|---|---|---|
-| Web | Referrers HTTP de domínio: `*.petlive.app.br` (produção), `localhost` (desenvolvimento) | Somente Maps JavaScript API | `apps/web` |
+| Web | Referrers HTTP de domínio: `*.petlive.app` (produção), `localhost` (desenvolvimento) | Somente Maps JavaScript API | `apps/web` |
 | Android | Apps Android: SHA-1 do certificado de assinatura + package name `app.petlive.tutor` | Somente Maps SDK for Android | `apps/tutor` |
 | iOS | Apps iOS: bundle ID `app.petlive.tutor` | Somente Maps SDK for iOS | `apps/tutor` |
 | Places (servidor) | IPs de saída do servidor (Supabase Edge Functions), quando fixos; caso contrário sem restrição de aplicação | Somente Places API (New) | `supabase/functions` |

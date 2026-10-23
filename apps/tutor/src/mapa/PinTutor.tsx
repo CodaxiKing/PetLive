@@ -12,7 +12,7 @@ export function PinTutor() {
   return (
     <View style={estilos.container} accessible accessibilityLabel="Sua localização">
       <View style={estilos.pin} />
-      <Text style={estilos.rotulo} accessibilityElements={['rotulo']} importantForAccessibility="no-hide-descendants">
+      <Text style={estilos.rotulo} importantForAccessibility="no-hide-descendants">
         Você
       </Text>
     </View>

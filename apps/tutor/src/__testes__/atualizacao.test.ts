@@ -5,6 +5,9 @@ import { verificarEAplicarAtualizacao } from '../lib/atualizacao';
 
 vi.mock('expo-updates', () => ({
   isEnabled: true,
+  UpdateCheckResultNotAvailableReason: {
+    NO_UPDATE_AVAILABLE_ON_SERVER: 'noUpdateAvailableOnServer',
+  },
   checkForUpdateAsync: vi.fn(),
   fetchUpdateAsync: vi.fn(),
   reloadAsync: vi.fn(),
@@ -23,17 +26,17 @@ const atualizacaoNaoDisponivel: UpdateCheckResult = {
 
 beforeEach(() => {
   vi.clearAllMocks();
-  (Updates as Record<string, unknown>).isEnabled = true;
+  (Updates as unknown as Record<string, unknown>).isEnabled = true;
   checkForUpdateAsync.mockResolvedValue(atualizacaoNaoDisponivel);
 });
 
 afterEach(() => {
-  (Updates as Record<string, unknown>).isEnabled = true;
+  (Updates as unknown as Record<string, unknown>).isEnabled = true;
 });
 
 describe('verificarEAplicarAtualizacao', () => {
   it('não busca nem recarrega quando expo-updates está desligado (Expo Go / build de desenvolvimento)', async () => {
-    (Updates as Record<string, unknown>).isEnabled = false;
+    (Updates as unknown as Record<string, unknown>).isEnabled = false;
 
     await verificarEAplicarAtualizacao();
 

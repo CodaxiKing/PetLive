@@ -22,7 +22,7 @@ export const SECOES: { chave: Secao; titulo: string; descricao: string; padrao: 
 export const PRAZOS = [6, 24, 72] as const
 
 /** Endereço do site. Sem domínio próprio ainda, o build informa o do Coolify. */
-const SITE = (process.env.EXPO_PUBLIC_SITE_URL || 'https://petlive.app.br').replace(/\/$/, '')
+const SITE = (process.env.EXPO_PUBLIC_SITE_URL || 'https://petlive.app').replace(/\/$/, '')
 
 export function urlFicha(codigo: string): string {
   return `${SITE}/ficha/${codigo}`

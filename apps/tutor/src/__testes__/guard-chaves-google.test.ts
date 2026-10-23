@@ -11,12 +11,13 @@ const carregar = async () => {
 describe('verificar-sem-chaves-commitadas', () => {
   it('detecta uma chave do Google Maps/Places (AIza...) no texto de um arquivo', async () => {
     const { analisarArquivo } = await carregar();
+    const chaveDeTeste = `AIza${'SyBCDEFGhIjklmnopQRSTuvwxyZ1234567890'}`;
     const problemas = analisarArquivo(
       'apps/tutor/src/mapa/algo.tsx',
-      'const CHAVE = "AIzaSyBCDEFGhIjklmnopQRSTuvwxyZ1234567890";',
+      `const CHAVE = "${chaveDeTeste}";`,
     );
     expect(problemas).toHaveLength(1);
-    expect(problemas[0]).toContain('AIza');
+    expect(problemas[0]).toContain(chaveDeTeste);
     expect(problemas[0]).toContain('apps/tutor/src/mapa/algo.tsx');
   });
 

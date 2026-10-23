@@ -9,7 +9,7 @@ const jakarta = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://petlive.app.br"),
+  metadataBase: new URL("https://petlive.app"),
   title: {
     default: "PetLive — a saúde do seu pet, sempre em dia",
     template: "%s · PetLive",

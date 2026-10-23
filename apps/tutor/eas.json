@@ -22,9 +22,9 @@
       },
       "channel": "preview",
       "env": {
-        "EXPO_PUBLIC_SUPABASE_URL": "https://svvguhlhjurxgscvfrvc.supabase.co",
-        "EXPO_PUBLIC_SUPABASE_ANON_KEY": "sb_publishable_Rd_JkYzAuzx2gMmRwcEf1g_guJDmQXu",
-        "EXPO_PUBLIC_SITE_URL": "http://nea67e6gbvk6kc25l5dct9qk.191.96.225.192.sslip.io",
+        "EXPO_PUBLIC_SUPABASE_URL": "https://qurdqbhjtgapyksrilyk.supabase.co",
+        "EXPO_PUBLIC_SUPABASE_ANON_KEY": "sb_publishable_neSZyZSJ4tPMxDSplFdVfg_R3rjr8Uj",
+        "EXPO_PUBLIC_SITE_URL": "https://petlive.app",
         "SENTRY_DISABLE_AUTO_UPLOAD": "true"
       }
     },
@@ -33,9 +33,9 @@
       "autoIncrement": true,
       "env": {
         "SENTRY_DISABLE_AUTO_UPLOAD": "true",
-        "EXPO_PUBLIC_SUPABASE_URL": "https://svvguhlhjurxgscvfrvc.supabase.co",
-        "EXPO_PUBLIC_SUPABASE_ANON_KEY": "sb_publishable_Rd_JkYzAuzx2gMmRwcEf1g_guJDmQXu",
-        "EXPO_PUBLIC_SITE_URL": "http://nea67e6gbvk6kc25l5dct9qk.191.96.225.192.sslip.io"
+        "EXPO_PUBLIC_SUPABASE_URL": "https://qurdqbhjtgapyksrilyk.supabase.co",
+        "EXPO_PUBLIC_SUPABASE_ANON_KEY": "sb_publishable_neSZyZSJ4tPMxDSplFdVfg_R3rjr8Uj",
+        "EXPO_PUBLIC_SITE_URL": "https://petlive.app"
       },
       "android": {
         "buildType": "app-bundle"

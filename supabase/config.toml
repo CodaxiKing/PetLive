@@ -162,8 +162,8 @@ enabled = true
 # in emails.
 # URL base do site. Usada como allow-list de redirects e para montar URLs em e-mails.
 # Desenvolvimento local: http://127.0.0.1:3000
-# Produção (VPS): https://petlive.app.br (ou o domínio do seu site)
-site_url = "https://petlive.app.br"
+# Produção (VPS): https://petlive.app (ou o domínio do seu site)
+site_url = "https://petlive.app"
 
 # A URL pública do Auth. Padrão: API externa com /auth/v1 anexado.
 # external_url = ""
@@ -171,7 +171,7 @@ site_url = "https://petlive.app.br"
 # URLs exatas permitidas para redirect após autenticação.
 # App do tutor (Expo): petlive://auth/callback (Google) e petlive://auth/nova-senha (esqueci senha).
 # Web (Next.js): http://localhost:3000/auth/callback em dev; domínio de produção em https.
-additional_redirect_urls = ["http://127.0.0.1:3000", "http://localhost:3000", "https://petlive.app.br", "petlive://**", "exp://**"]
+additional_redirect_urls = ["http://127.0.0.1:3000", "http://localhost:3000", "https://petlive.app", "petlive://**", "exp://**"]
 # How long tokens are valid for, in seconds. Defaults to 3600 (1 hour), maximum 604,800 (1 week).
 jwt_expiry = 900
 # JWT issuer URL. If not set, defaults to auth.external_url.

@@ -10,7 +10,7 @@ fontes abertas por `scripts/importar-lugares.py`.
 | Overture Maps (places) | CDLA-Permissive-2.0 (com Foursquare, Apache-2.0) | clínicas, petshops, banho e tosa, creches, hotelzinhos, parques para cães |
 
 Os créditos que as licenças pedem estão no mapa ("© OpenStreetMap"), na ficha do
-lugar (fonte) e na página `https://petlive.app.br/creditos` (com o aviso da
+lugar (fonte) e na página `https://petlive.app/creditos` (com o aviso da
 Foursquare na íntegra), aberta em Perfil › Privacidade e dados.
 
 ## Atualizar os dados (a cada release do Overture, mais ou menos por mês)

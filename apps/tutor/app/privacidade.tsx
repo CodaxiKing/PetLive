@@ -158,7 +158,7 @@ export default function Privacidade() {
           icone={<Icone nome="local" />}
           rotulo="Créditos dos mapas"
           valor="OpenStreetMap, Overture Maps e Foursquare"
-          onPress={() => Linking.openURL('https://petlive.app.br/creditos').catch(() => undefined)}
+          onPress={() => Linking.openURL('https://petlive.app/creditos').catch(() => undefined)}
           direita={seta}
         />
 

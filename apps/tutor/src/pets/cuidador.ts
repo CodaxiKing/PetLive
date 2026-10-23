@@ -20,7 +20,7 @@ export type AcessoCuidador = {
   ultima_abertura_em: string | null
 }
 
-const SITE = (process.env.EXPO_PUBLIC_SITE_URL || 'https://petlive.app.br').replace(/\/$/, '')
+const SITE = (process.env.EXPO_PUBLIC_SITE_URL || 'https://petlive.app').replace(/\/$/, '')
 
 export function urlCuidador(codigo: string): string {
   return `${SITE}/cuidador/${codigo}`

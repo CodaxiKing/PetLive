@@ -109,7 +109,7 @@ Respostas conforme o que o app faz hoje (conferir se algo mudar):
 
 - **Criptografia em trânsito:** sim (HTTPS).
 - **Exclusão da conta:** sim, no app (Perfil › Privacidade e dados) e pela web em
-  `https://petlive.app.br/lgpd` (o Play exige o link da web).
+  `https://petlive.app/lgpd` (o Play exige o link da web).
 - **Apple:** nenhum dado é usado para rastreamento (sem ATT); "Dados vinculados a você":
   contato, ID do usuário, fotos, conteúdo do usuário; "Não vinculados": diagnóstico.
 
