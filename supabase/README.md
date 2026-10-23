@@ -79,7 +79,18 @@ são mantidas; mudanças de local ou horário geram avisos no histórico.
 O limite de vagas não pode cair abaixo da contagem de presenças.
 Cancelar pode ser repetido sem duplicar avisos e pushes. O formulário
 base também valida datas, duração, coordenadas, ingresso e vagas.
-A criação completa com seletor de local no mapa e foto ainda está pendente.
+A criação inclui seletor de ponto no mapa com busca por endereço. Quando
+o mapa do Google está configurado, também permite escolher lugares por
+perto, persistindo apenas o Place ID e o nome de local escrito pela pessoa.
+A foto de divulgação é opcional, com seleção na galeria e prévia.
+
+A migração `20261127000000_evento_foto.sql` cria o bucket público `eventos`
+com limite de 5 MB e formatos JPEG, PNG e WebP. Cada usuário envia arquivos
+novos apenas em sua própria pasta, sem sobrescrever os anteriores. O app
+reutiliza um upload bem-sucedido ao repetir o salvamento. Alterar ou remover
+a foto volta o evento para análise. As URLs das fotos precisam usar HTTPS.
+Os testes de eventos verificam o bucket, as políticas, a criação com foto,
+a edição e a reanálise; os testes do app cobrem limites e falhas de upload.
 
 ## Rotina de backup
 

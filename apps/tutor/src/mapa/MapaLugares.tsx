@@ -79,6 +79,7 @@ type Props = {
   onPin?: (id: string) => void;
   /** Toque no mapa fora dos pins. */
   onToqueMapa?: () => void;
+  onSelecionarPonto?: (ponto: { lat: number; lng: number }) => void;
   /** Falso na ficha do lugar: mapa parado, só para mostrar o ponto. */
   interativo?: boolean;
   mostrarUsuario?: boolean;
@@ -95,6 +96,7 @@ export function MapaLugares({
   selecionado,
   onPin,
   onToqueMapa,
+  onSelecionarPonto,
   interativo = true,
   mostrarUsuario = false,
   posicaoCredito,
@@ -144,6 +146,7 @@ export function MapaLugares({
         onPress={(e) => {
           // No Google o toque no pin também chega ao mapa, marcado.
           if (e.nativeEvent.action === 'marker-press') return;
+          onSelecionarPonto?.({ lat: e.nativeEvent.coordinate.latitude, lng: e.nativeEvent.coordinate.longitude });
           onToqueMapa?.();
         }}
         scrollEnabled={interativo}
@@ -189,7 +192,11 @@ export function MapaLugares({
         doubleTapHoldZoom={interativo}
         touchRotate={false}
         touchPitch={false}
-        onPress={() => onToqueMapa?.()}
+        onPress={(e) => {
+          const [lng, lat] = e.nativeEvent.lngLat;
+          onSelecionarPonto?.({ lat, lng });
+          onToqueMapa?.();
+        }}
       >
         <Camera ref={camera} initialViewState={{ center: [centro.lng, centro.lat], zoom }} />
         {pins.map((pin) => (

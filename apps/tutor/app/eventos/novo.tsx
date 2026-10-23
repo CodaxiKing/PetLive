@@ -1,6 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
-import { ActivityIndicator, Alert, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { ActivityIndicator, Alert, Image, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
+import * as ImagePicker from 'expo-image-picker';
+import { useAuth } from '../../src/auth/AuthProvider';
+import { SeletorLocalEvento } from '../../src/mapa/SeletorLocalEvento';
+import { enviarFotoEvento } from '../../src/mapa/fotoEvento';
 import { BotaoPrimario } from '../../src/components/BotaoPrimario';
 import { Icone } from '../../src/components/Icone';
 import { supabase } from '../../src/lib/supabase';
@@ -14,6 +18,11 @@ import { isoLocal, validarFormularioEvento } from '../../src/mapa/formularioEven
 type Tipo = EventoMapa['tipo'];
 const TIPOS: Tipo[] = ['adocao', 'vacinacao', 'passeio', 'encontro', 'palestra', 'outro'];
 export default function NovoEvento() {
+  const { user } = useAuth();
+  const [seletorAberto, setSeletorAberto] = useState(false);
+  const [foto, setFoto] = useState<ImagePicker.ImagePickerAsset | null>(null);
+  const [fotoAtual, setFotoAtual] = useState<string | null>(null);
+  const fotoEnviada = useRef<{ uri: string; url: string } | null>(null);
   const { id } = useLocalSearchParams<{ id?: string }>();
   const editando = typeof id === 'string';
   const [inicio, setInicio] = useState(() => isoLocal(new Date(Date.now() + 86400000)));
@@ -43,6 +52,7 @@ export default function NovoEvento() {
     carregarEventoEditavel(id).then((evento) => {
       if (!ativo) return;
       if (!['em_analise', 'publicado', 'ajuste_solicitado'].includes(evento.status)) throw new Error('Este evento não pode mais ser editado.');
+      setFotoAtual(evento.foto_url);
       setTitulo(evento.titulo); setTipo(evento.tipo); setDescricao(evento.descricao);
       setInicio(isoLocal(new Date(evento.inicio_em))); setFim(isoLocal(new Date(evento.fim_em)));
       setLocal(evento.local_nome); setModoLocal(evento.place_id ? 'google' : 'ponto');
@@ -54,6 +64,17 @@ export default function NovoEvento() {
     return () => { ativo = false; };
   }, [id, tentativa]);
 
+  async function escolherFoto() {
+    if (enviandoRef.current) return;
+    try {
+      const resultado = await ImagePicker.launchImageLibraryAsync({ mediaTypes: ['images'], allowsEditing: true, aspect: [4, 3], quality: 0.8 });
+      if (resultado.canceled) return;
+      const escolhida = resultado.assets[0];
+      if (escolhida.fileSize && escolhida.fileSize > 5 * 1024 * 1024) throw new Error('A foto deve ter até 5 MB.');
+      setFoto(escolhida);
+    } catch (e) { Alert.alert('Não foi possível selecionar a foto', e instanceof Error ? e.message : 'Tente novamente.'); }
+  }
+
   async function enviar() {
     if (enviandoRef.current || (editando && idCarregado !== id)) return;
     enviandoRef.current = true;
@@ -63,12 +84,21 @@ export default function NovoEvento() {
       const { dataInicio, dataFim, latitude, longitude, precoCentavos, numeroVagas } = validarFormularioEvento({
         titulo, descricao, local, inicio, fim, modoLocal, placeId, lat, lng, gratuito, preco, ingresso, vagas,
       });
+      let fotoUrl = fotoAtual;
+      if (foto) {
+        if (!user) throw new Error('Entre novamente para enviar a foto.');
+        if (fotoEnviada.current?.uri !== foto.uri) {
+          const enviada = await enviarFotoEvento(user.id, foto);
+          fotoEnviada.current = { uri: foto.uri, url: enviada.url };
+        }
+        fotoUrl = fotoEnviada.current.url;
+      }
       const payload = {
         p_titulo: titulo.trim(), p_tipo: tipo, p_descricao: descricao.trim(),
         p_inicio_em: dataInicio.toISOString(), p_fim_em: dataFim.toISOString(), p_local_nome: local.trim(),
         p_place_id: modoLocal === 'google' ? placeId.trim() : null,
         p_lat: modoLocal === 'ponto' ? latitude : null, p_lng: modoLocal === 'ponto' ? longitude : null,
-        p_foto_url: null, p_gratuito: gratuito,
+        p_foto_url: fotoUrl, p_gratuito: gratuito,
         p_preco_centavos: gratuito ? null : precoCentavos, p_ingresso_url: gratuito ? null : ingresso.trim(),
         p_vagas: numeroVagas,
       };
@@ -76,7 +106,7 @@ export default function NovoEvento() {
         await atualizarEvento(id, {
           titulo: titulo.trim(), tipo, descricao: descricao.trim(), inicio_em: dataInicio.toISOString(), fim_em: dataFim.toISOString(), local_nome: local.trim(),
           place_id: modoLocal === 'google' ? placeId.trim() : null, lat: modoLocal === 'ponto' ? latitude : null, lng: modoLocal === 'ponto' ? longitude : null,
-          gratuito, preco_centavos: gratuito ? null : precoCentavos, ingresso_url: gratuito ? null : ingresso.trim(), vagas: numeroVagas,
+          foto_url: fotoUrl, gratuito, preco_centavos: gratuito ? null : precoCentavos, ingresso_url: gratuito ? null : ingresso.trim(), vagas: numeroVagas,
         });
       } else {
         const { error } = await supabase.rpc('evento_criar', payload);
@@ -127,15 +157,16 @@ export default function NovoEvento() {
 
         <Text style={estilos.rotulo}>Local</Text>
         <TextInput style={estilos.campo} value={local} onChangeText={setLocal} maxLength={160} placeholder="Nome do parque ou estabelecimento público" />
-        <View style={estilos.opcoes}>
-          {(['ponto', 'google'] as const).filter((item) => item !== 'google' || Boolean(placeId)).map((item) => <Pressable key={item} accessibilityRole="button" accessibilityState={{ selected: modoLocal === item }} onPress={() => setModoLocal(item)} style={[estilos.opcao, modoLocal === item && estilos.opcaoAtiva]}>
-            <Text style={[estilos.opcaoTexto, modoLocal === item && estilos.opcaoTextoAtiva]}>{item === 'ponto' ? 'Ponto no mapa' : 'Lugar do Google'}</Text>
-          </Pressable>)}
-        </View>
-        {modoLocal === 'google' ? <Text style={estilos.dica}>O lugar do Google já vinculado será mantido. Para mudar o local, informe um ponto próprio.</Text> : <View style={estilos.linhaCampos}>
-          <TextInput style={[estilos.campo, estilos.campoMetade]} value={lat} onChangeText={setLat} keyboardType="decimal-pad" placeholder="Latitude" />
-          <TextInput style={[estilos.campo, estilos.campoMetade]} value={lng} onChangeText={setLng} keyboardType="decimal-pad" placeholder="Longitude" />
-        </View>}
+        <Pressable accessibilityRole="button" disabled={enviando} onPress={() => setSeletorAberto(true)} style={estilos.opcao}>
+          <Text style={estilos.opcaoTexto}>{modoLocal === 'google' && placeId ? 'Lugar do Google selecionado · Alterar' : lat && lng ? 'Ponto marcado no mapa · Alterar' : 'Escolher local no mapa'}</Text>
+        </Pressable>
+        <Text style={estilos.dica}>O nome acima é a descrição do local que você deseja divulgar.</Text>
+
+        <Text style={estilos.rotulo}>Foto de divulgação (opcional)</Text>
+        {foto?.uri || fotoAtual ? <Image source={{ uri: foto?.uri ?? fotoAtual! }} style={{ height: 190, width: '100%', borderRadius: radius.lg }} accessibilityLabel="Prévia da foto do evento" /> : null}
+        <Pressable accessibilityRole="button" disabled={enviando} onPress={() => void escolherFoto()} style={estilos.opcao}><Text style={estilos.opcaoTexto}>Escolher foto</Text></Pressable>
+        {foto || fotoAtual ? <Pressable accessibilityRole="button" disabled={enviando} onPress={() => { setFoto(null); setFotoAtual(null); }}><Text style={estilos.voltarTexto}>Remover foto</Text></Pressable> : null}
+        <Text style={estilos.dica}>JPEG, PNG ou WebP, até 5 MB. A foto de divulgação será pública. Evite documentos e dados pessoais.</Text>
 
         <Text style={estilos.rotulo}>Entrada</Text>
         <View style={estilos.opcoes}>
@@ -154,6 +185,12 @@ export default function NovoEvento() {
         <View style={estilos.responsabilidade}><Text style={estilos.responsabilidadeTitulo}>Evento em local público</Text><Text style={estilos.dica}>O organizador é responsável pelo evento. Não divulgue telefone ou endereço residencial de pessoas.</Text></View>
         <BotaoPrimario titulo={editando ? 'Salvar alterações' : 'Enviar para análise'} onPress={enviar} carregando={enviando} estilo={estilos.botaoEnviar} />
       </ScrollView>
+      {seletorAberto ? <SeletorLocalEvento inicial={lat && lng ? { lat: Number(lat), lng: Number(lng) } : null} onFechar={() => setSeletorAberto(false)} onEscolher={(escolha) => {
+        setModoLocal(escolha.modo);
+        if (escolha.modo === 'google') { setPlaceId(escolha.placeId); setLat(''); setLng(''); }
+        else { setPlaceId(''); setLat(String(escolha.ponto.lat)); setLng(String(escolha.ponto.lng)); }
+        setSeletorAberto(false);
+      }} /> : null}
     </KeyboardAvoidingView>
   );
 }
