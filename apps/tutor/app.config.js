@@ -7,6 +7,7 @@ module.exports = ({ config }) => ({
   ...config,
   plugins: [
     ...(config.plugins ?? []),
+    ['expo-sharing', { ios: { enabled: false }, android: { enabled: false } }],
     [
       'react-native-maps',
       {

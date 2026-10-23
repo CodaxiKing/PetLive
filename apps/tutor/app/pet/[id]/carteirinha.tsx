@@ -254,6 +254,9 @@ export default function TelaCarteirinha() {
         <Tocavel accessibilityRole="button" onPress={() => { void gerarPdf() }} style={estilos.botaoPdf}>
           <Text style={estilos.textoPdf}>Salvar carteirinha em PDF{plano === 'premium' ? '' : ' · Premium'}</Text>
         </Tocavel>
+        <Tocavel accessibilityRole="button" onPress={() => router.push({ pathname: '/pet/[id]/cartao', params: { id: pet.id } })} style={estilos.botaoPdf}>
+          <Text style={estilos.textoPdf}>Gerar imagem do cartão do pet</Text>
+        </Tocavel>
       </ScrollView>
 
       <View style={estilos.rodape}>

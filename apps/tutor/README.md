@@ -39,3 +39,19 @@ A consulta atual cobre eventos com ponto próprio. A resolução de locais
 do Google por Place ID pertence à tarefa de backend de busca de eventos;
 esses eventos ainda não entram nesta consulta. Valide o toque nos pins,
 a alternância das abas e a disposição do painel em aparelho.
+
+## Cartão do pet em imagem
+
+Na carteirinha, **Gerar imagem do cartão do pet** abre a prévia de foto,
+nome, espécie, raça e selos. O cartão é capturado em PNG e enviado ao menu
+de compartilhamento do aparelho. A geração aguarda a foto e os selos;
+erros de carregamento oferecem nova tentativa. Pets em memória usam uma
+apresentação discreta, sem selos ou metas. Contatos do tutor, IDs e dados
+de saúde não são incluídos no modelo da imagem.
+
+Usa `react-native-view-shot` e `expo-sharing` nas versões do SDK 58. Builds
+próprios anteriores à inclusão desses módulos precisam ser recompilados.
+O compartilhamento é de saída; o plugin mantém desabilitadas as extensões
+de recebimento. A geração de arquivo é para Android e iOS. Valide a imagem
+final e o menu de compartilhamento em aparelho. Temas e formatos Stories
+e Post permanecem em sua tarefa própria no board.
