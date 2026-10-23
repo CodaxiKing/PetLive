@@ -30,6 +30,24 @@ com rollback. Verifica limite mensal, cancelamento, mudança de mês,
 verificação e revogação, vagas, presença e privacidade entre usuários e
 visitantes. Não publica no ambiente remoto nem persiste dados de teste.
 
+A migração `20261123000000_eventos_jobs.sql` agenda os lembretes de 1 dia
+e 2 horas a cada 15 minutos, e encerra eventos publicados vencidos a cada
+hora. Requer `pg_cron` e `pg_net` no ambiente. Avisos globais, categoria
+Eventos, dispositivos ativos e Não perturbe são respeitados. O horário
+final da janela de silêncio é exclusivo; horários iguais desativam a janela.
+Fuso inválido usa Brasília. Cada lembrete gera um aviso no histórico e um
+push por dispositivo ativo, com link para a ficha do evento.
+
+O registro de entrega indica que o envio foi colocado na fila HTTP, sem
+confirmar recebimento pelo aparelho. A chave por evento, pessoa e
+antecedência impede duplicidade na fila. Uma falha HTTP posterior ao
+enfileiramento não tem retentativa automática nesta versão.
+
+O mesmo comando de teste também verifica os jobs e seus agendamentos,
+simulando `net.http_post` dentro da transação para não enviar push real.
+Usa o usuário administrativo do container local para simular o transporte;
+a função original é restaurada pelo rollback.
+
 ## Rotina de backup
 
 - **Local** (`npx supabase start`): `pnpm backup` na raiz — gera
