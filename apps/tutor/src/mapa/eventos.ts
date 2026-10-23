@@ -118,7 +118,7 @@ export async function atualizarEvento(eventoId: string, evento: Partial<EventoEd
 
 export async function denunciarEvento(eventoId: string, motivo: 'spam' | 'inadequado' | 'fraude' | 'local_privado' | 'informacao_falsa' | 'outro', detalhe?: string): Promise<void> {
   const { error } = await supabase.rpc('evento_denunciar', { p_event_id: eventoId, p_motivo: motivo, p_detalhe: detalhe ?? null });
-  if (error) throw error;
+  if (error) throw new Error(error.message);
 }
 
 export const STATUS_EVENTO: Record<EventoMeu['status'], string> = {

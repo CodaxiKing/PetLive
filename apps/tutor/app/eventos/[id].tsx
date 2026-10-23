@@ -1,9 +1,11 @@
 import { useCallback, useRef, useState } from 'react';
-import { ActivityIndicator, Image, Linking, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Image, Linking, Platform, Pressable, ScrollView, Share, StyleSheet, Text, View } from 'react-native';
 import { router, useFocusEffect, useLocalSearchParams } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { carregarEvento, definirPresenca, TIPO_EVENTO, type EventoDetalhe } from '../../src/mapa/eventos';
 import { BotaoPrimario } from '../../src/components/BotaoPrimario';
+import { dadosAgendaEvento, mensagemCompartilharEvento, mensagemResultadoAgenda } from '../../src/mapa/acoesEvento';
+import { DenunciaEvento } from '../../src/mapa/DenunciaEvento';
 import { colors } from '../../src/theme/colors';
 import { radius, spacing } from '../../src/theme/tokens';
 import { typography } from '../../src/theme/typography';
@@ -23,12 +25,18 @@ export default function FichaEvento() {
   const [confirmando, setConfirmando] = useState(false);
   const [erroPresenca, setErroPresenca] = useState<string | null>(null);
   const [avisoPresenca, setAvisoPresenca] = useState<string | null>(null);
+  const [acao, setAcao] = useState<'compartilhar' | 'agenda' | null>(null);
+  const [erroAcao, setErroAcao] = useState<string | null>(null);
+  const [avisoAgenda, setAvisoAgenda] = useState<string | null>(null);
+  const [denunciaRecebida, setDenunciaRecebida] = useState<string | null>(null);
+  const acaoEmCurso = useRef(false);
   const operacaoEmCurso = useRef(false);
   const geracao = useRef(0);
   const invalidarOperacao = useCallback(() => { geracao.current++; operacaoEmCurso.current = false; }, []);
 
   useFocusEffect(useCallback(() => {
     let ativo = true;
+    acaoEmCurso.current = false; setAcao(null); setErroAcao(null); setAvisoAgenda(null);
     setConfirmando(false); setErroPresenca(null); setAvisoPresenca(null);
     setCarregando(true); setEvento(null); setErro(null); setErroLink(false);
     if (typeof id !== 'string' || !/^[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}$/i.test(id)) {
@@ -70,10 +78,32 @@ export default function FichaEvento() {
     } catch { setErroLink(true); }
   }
 
+  async function executarAcao(tipo: 'compartilhar' | 'agenda') {
+    if (!evento || acaoEmCurso.current) return;
+    acaoEmCurso.current = true;
+    const versao = geracao.current;
+    setAcao(tipo); setErroAcao(null); setAvisoAgenda(null);
+    try {
+      if (tipo === 'compartilhar') {
+        await Share.share({ title: evento.titulo, message: mensagemCompartilharEvento(evento) });
+      } else {
+        if (Platform.OS === 'web') throw new Error('Agenda indisponível');
+        // O formulário nativo deixa a pessoa revisar e salvar, sem ler a agenda.
+        const Calendar = await import('expo-calendar/legacy');
+        if (!await Calendar.isAvailableAsync()) throw new Error('Agenda indisponível');
+        const resultado = await Calendar.createEventInCalendarAsync(dadosAgendaEvento(evento));
+        if (versao === geracao.current) setAvisoAgenda(mensagemResultadoAgenda(resultado.action));
+      }
+    } catch {
+      if (versao === geracao.current) setErroAcao(tipo === 'agenda' ? 'Não foi possível abrir a agenda neste aparelho. Confira se há um aplicativo de agenda instalado e se o PetLive está atualizado.' : 'Não foi possível abrir o compartilhamento. Tente novamente.');
+    } finally { if (versao === geracao.current) { acaoEmCurso.current = false; setAcao(null); } }
+  }
+
   return <ScrollView style={estilos.tela} contentContainerStyle={[estilos.conteudo, { paddingTop: insets.top + spacing.lg, paddingBottom: insets.bottom + spacing.xl }]}>
     <Pressable accessibilityRole="button" onPress={() => router.canGoBack() ? router.back() : router.replace({ pathname: '/(app)/mapa', params: { aba: 'eventos' } })} style={estilos.botao}>
       <Text style={estilos.link}>Voltar ao mapa</Text>
     </Pressable>
+    {denunciaRecebida === id ? <Text accessibilityLiveRegion="polite" style={estilos.texto}>Denúncia recebida. Obrigado por avisar.</Text> : null}
     {carregando ? <ActivityIndicator accessibilityLabel="Carregando evento" color={colors.primaryDeep} /> : erro ? <View style={estilos.card}>
       <Text accessibilityRole="header" style={estilos.titulo}>Não foi possível carregar</Text>
       <Text style={estilos.texto}>{erro}</Text>
@@ -108,6 +138,13 @@ export default function FichaEvento() {
         {erroPresenca ? <Pressable accessibilityRole="button" onPress={() => setTentativa((valor) => valor + 1)} style={estilos.botao}><Text style={estilos.link}>Atualizar ficha</Text></Pressable> : null}
       </View>
       <View style={estilos.card}><Text style={estilos.rotulo}>Sobre o evento</Text><Text style={estilos.texto}>{evento.descricao}</Text></View>
+      <View style={estilos.card}>
+        <Pressable accessibilityRole="button" disabled={acao !== null} onPress={() => void executarAcao('compartilhar')} style={estilos.botao}><Text style={estilos.link}>{acao === 'compartilhar' ? 'Abrindo…' : 'Compartilhar evento'}</Text></Pressable>
+        <Pressable accessibilityRole="button" disabled={acao !== null} onPress={() => void executarAcao('agenda')} style={estilos.botao}><Text style={estilos.link}>{acao === 'agenda' ? 'Abrindo agenda…' : 'Adicionar à agenda'}</Text></Pressable>
+        {avisoAgenda ? <Text accessibilityLiveRegion="polite" style={estilos.ajuda}>{avisoAgenda}</Text> : null}
+        {erroAcao ? <Text accessibilityRole="alert" style={estilos.erro}>{erroAcao}</Text> : null}
+        {denunciaRecebida !== evento.id ? <DenunciaEvento key={evento.id} eventoId={evento.id} onConcluido={() => { setDenunciaRecebida(evento.id); setTentativa((n) => n + 1); }} /> : null}
+      </View>
       {!evento.gratuito && evento.ingresso_url ? <View style={estilos.card}>
         <Text style={estilos.texto}>Ingressos no site do organizador. O PetLive não vende ingressos.</Text>
         <Pressable accessibilityRole="link" onPress={() => void abrirIngresso()} style={estilos.botao}><Text style={estilos.link}>Ver ingresso no site externo</Text></Pressable>
