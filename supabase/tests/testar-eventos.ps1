@@ -10,12 +10,14 @@ $sql = "begin;`n" + (Get-Content -Raw $migration) + "`n" + (Get-Content -Raw $jo
   (Get-Content -Raw (Join-Path $PSScriptRoot '../migrations/20261125000000_evento_presenca.sql')) + "`n" +
   (Get-Content -Raw (Join-Path $PSScriptRoot '../migrations/20261126000000_evento_edicao.sql')) + "`n" +
   (Get-Content -Raw (Join-Path $PSScriptRoot '../migrations/20261127000000_evento_foto.sql')) + "`n" +
+  (Get-Content -Raw (Join-Path $PSScriptRoot '../migrations/20261128000000_evento_denuncias.sql')) + "`n" +
   (Get-Content -Raw $tests) + "`n" + (Get-Content -Raw $jobsTests) + "`n" +
   (Get-Content -Raw (Join-Path $PSScriptRoot 'eventos-moderacao.sql')) + "`n" +
   (Get-Content -Raw (Join-Path $PSScriptRoot 'evento-detalhe.sql')) + "`n" +
   (Get-Content -Raw (Join-Path $PSScriptRoot 'evento-presenca.sql')) + "`n" +
   (Get-Content -Raw (Join-Path $PSScriptRoot 'evento-edicao.sql')) + "`n" +
-  (Get-Content -Raw (Join-Path $PSScriptRoot 'evento-foto.sql')) + "`nrollback;"
+  (Get-Content -Raw (Join-Path $PSScriptRoot 'evento-foto.sql')) + "`n" +
+  (Get-Content -Raw (Join-Path $PSScriptRoot 'evento-denuncias.sql')) + "`nrollback;"
 # supabase_admin permite simular net.http_post, pertencente à extensão.
 $sql | docker exec -i $Container psql -U supabase_admin -d postgres -v ON_ERROR_STOP=1
 if ($LASTEXITCODE -ne 0) { throw 'Falha nos testes de eventos.' }

@@ -92,6 +92,15 @@ a foto volta o evento para análise. As URLs das fotos precisam usar HTTPS.
 Os testes de eventos verificam o bucket, as políticas, a criação com foto,
 a edição e a reanálise; os testes do app cobrem limites e falhas de upload.
 
+A migração `20261128000000_evento_denuncias.sql` serializa denúncias do
+mesmo evento e o oculta após três pessoas distintas. Repetir uma denúncia
+não conta novamente, inclusive após a ocultação. A ficha fica indisponível,
+o organizador recebe um aviso no histórico e a moderação pode revisar.
+O teste transacional cobre contagem, repetição e privacidade. Para testar
+concorrência real, execute `./supabase/tests/testar-denuncias-concorrentes.ps1`:
+ele cria um banco descartável no container local, usa três conexões
+simultâneas e remove o banco ao terminar, sem tocar nos dados do app.
+
 ## Rotina de backup
 
 - **Local** (`npx supabase start`): `pnpm backup` na raiz — gera
