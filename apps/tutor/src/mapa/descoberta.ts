@@ -17,7 +17,14 @@ export function descobrirLugares(posicao: { lat: number; lng: number }, raioKm: 
     const { data, error } = await supabase.functions.invoke<{ lugares: Lugar[] }>('discover-places', {
       body: { lat, lng, raioKm: raio },
     });
-    if (error || !Array.isArray(data?.lugares)) throw new Error('Não foi possível descobrir os lugares desta região. Tente novamente.');
+    if (error) {
+      // Mantém a falha de transporte reconhecível para a cópia offline do mapa.
+      if (error.name === 'FunctionsFetchError' || /network request failed|failed to fetch|fetch failed/i.test(error.message)) {
+        throw new Error('Network request failed: não foi possível consultar os lugares.');
+      }
+      throw new Error('Não foi possível descobrir os lugares desta região. Tente novamente.');
+    }
+    if (!Array.isArray(data?.lugares)) throw new Error('Não foi possível descobrir os lugares desta região. Tente novamente.');
     return data.lugares;
   })();
   if (regioes.size >= 30) regioes.delete(regioes.keys().next().value!);

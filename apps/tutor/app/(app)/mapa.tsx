@@ -12,7 +12,6 @@ import {
   View,
 } from 'react-native';
 import { router, useFocusEffect, useLocalSearchParams } from 'expo-router';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as Location from 'expo-location';
 import Svg, { Path } from 'react-native-svg';
@@ -20,6 +19,8 @@ import { ligarPara } from '../../src/mapa/acoes';
 import { Deslizar } from '../../src/components/Animacoes';
 import { Icone } from '../../src/components/Icone';
 import { ehErroDeRede } from '../../src/lib/cacheOffline';
+import { useAuth } from '../../src/auth/AuthProvider';
+import { guardarMapa, lerMapa } from '../../src/mapa/cacheMapa';
 import { acharEndereco } from '../../src/mapa/geocodificar';
 import { AcaoEstado, CartaoEstadoMapa } from '../../src/mapa/CartaoEstadoMapa';
 import { lugaresSalvos } from '../../src/mapa/favoritos';
@@ -81,8 +82,6 @@ const NOME_NO_PLURAL: Record<Filtro, string> = {
 const RAIO_PADRAO_KM = 3;
 const RAIO_AMPLO_KM = 10;
 
-/** Últimos lugares vistos, para o mapa sem internet (BUSINESS.md 5.43). */
-const ULTIMOS_VISTOS = 'petlive-cache:mapa-ultimos';
 
 /** "hoje", "ontem" ou "há 3 dias". */
 function haQuanto(data: Date): string {
@@ -98,6 +97,7 @@ function haQuanto(data: Date): string {
  * card do lugar selecionado com ligar, rota e atalho para a ficha.
  */
 export default function Mapa() {
+  const { user } = useAuth();
   const insets = useSafeAreaInsets();
   const [alturaTopo, setAlturaTopo] = useState(200);
   const [alturaTela, setAlturaTela] = useState(700);
@@ -146,6 +146,7 @@ export default function Mapa() {
     if (aba !== 'lugares') return;
     if (!posicao && !regiao && categoria !== 'salvos') return;
     let vivo = true;
+    const consultaCache = { usuario: user?.id ?? '', lat: centro.lat, lng: centro.lng, raioKm, categoria, busca: buscaAtiva };
     let parciais: Lugar[] = [];
     const aoCarregar = (lista: Lugar[]) => {
       if (!vivo) return;
@@ -153,6 +154,7 @@ export default function Mapa() {
       setLugares(parciais);
       setSelecionado(null);
       setErroLugares(null);
+      setSemRede(null);
       setCarregando(false);
     };
     const consulta =
@@ -178,22 +180,16 @@ export default function Mapa() {
         setSemRede(null);
         setErroLugares(null);
         setCarregando(false);
-        if (lista.length > 0) {
-          AsyncStorage.setItem(ULTIMOS_VISTOS, JSON.stringify({ quando: new Date().toISOString(), lugares: lista })).catch(
-            () => undefined,
-          );
-        }
+        void guardarMapa(consultaCache, lista);
       })
       .catch(async (e: Error) => {
         if (!vivo) return;
         setSelecionado(null);
         if (ehErroDeRede(e.message)) {
-          const guardado = await AsyncStorage.getItem(ULTIMOS_VISTOS).catch(() => null);
-          let ultimos: { quando: string; lugares: Lugar[] } | null = null;
-          try { const dados = guardado ? JSON.parse(guardado) : null; if (Array.isArray(dados?.lugares)) ultimos = dados; } catch { /* Cache corrompido não impede tentar novamente. */ }
+          const ultimos = await lerMapa(consultaCache);
           if (!vivo) return;
           setLugares(ultimos?.lugares ?? []);
-          setSemRede({ desde: ultimos ? new Date(ultimos.quando) : null });
+          setSemRede({ desde: ultimos?.quando ?? null });
           setErroLugares(null);
         } else {
           setLugares([]);
@@ -205,7 +201,7 @@ export default function Mapa() {
     return () => {
       vivo = false;
     };
-  }, [aba, centro.lat, centro.lng, posicao, regiao, categoria, buscaAtiva, so24h, raioKm, tentativa]);
+  }, [aba, centro.lat, centro.lng, posicao, regiao, categoria, buscaAtiva, so24h, raioKm, tentativa, user?.id]);
 
   useFocusEffect(useCallback(() => {
     if (aba !== 'eventos') return;
@@ -497,7 +493,7 @@ export default function Mapa() {
       {aba === 'lugares' && semRede ? (
         <View style={[estilos.faixaSemRede, { top: alturaTopo + 30 }]} pointerEvents="none">
           <Icone nome="semRede" size={18} cor={colors.warningText} espessura={2} />
-          <Text style={estilos.faixaSemRedeTexto}>Sem internet. Mostrando os últimos lugares vistos.</Text>
+          <Text style={estilos.faixaSemRedeTexto}>{semRede.desde ? 'Sem internet. Mostrando a cópia desta região.' : 'Sem internet. Nenhuma cópia desta consulta.'}</Text>
         </View>
       ) : null}
 
@@ -513,7 +509,7 @@ export default function Mapa() {
           fundoIcone={colors.warningSurface}
           titulo="Você está sem internet"
           sub={semRede.desde ? `Atualizado ${haQuanto(semRede.desde)}` : 'Nenhum lugar guardado ainda'}
-          texto="Os lugares salvos continuam na lista, mas telefone, horário e fotos podem estar desatualizados. A busca e a rota precisam de internet."
+          texto={semRede.desde ? 'Exibindo a consulta guardada desta região e destes filtros. Os dados podem estar desatualizados. Busca e rotas precisam de internet.' : 'Ainda não há uma cópia desta região com estes filtros. Conecte-se à internet para carregar os lugares. Favoritos não são substituídos por outros resultados.'}
         >
           <Pressable
             accessibilityRole="button"

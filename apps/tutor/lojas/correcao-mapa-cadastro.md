@@ -91,3 +91,21 @@ runtime `1264fb8e8b1374172a594db4c6ebbf26fe172e0c`. Na cópia limpa passaram
 102 testes, TypeScript e lint. O APK compatível continua sendo o build
 `a387fe10-ae05-406a-aeba-5e372b75689a`.
 
+## Continuidade offline — 24/10/2026
+
+A lista global de últimos lugares foi substituída por cópias por conta,
+região aproximada, raio, categoria e busca. O cache anterior não é reutilizado.
+Uma falha de transporte da Edge Function continua reconhecível como falta
+de rede; HTTP 503 não é apresentado como se o aparelho estivesse offline.
+
+As cópias duram até sete dias, com no máximo 12 consultas e 200 lugares por
+consulta. Na leitura, as distâncias são recalculadas e pins fora do raio são
+retirados. Resultados vazios substituem cópias antigas. Dados inválidos ou
+corrompidos e falhas do armazenamento não impedem usar o mapa. O cache segue
+o prefixo apagado no logout; favoritos e conteúdo do Google são excluídos.
+
+Validação: 111 testes passaram, incluindo isolamento de consultas/contas,
+expiração, concorrência, limite de armazenamento e distinção entre falha de
+transporte e indisponibilidade do provedor. O teste em Android com modo avião
+permanece pendente, junto às demais verificações do mapa no aparelho.
+

@@ -6,6 +6,13 @@ vi.mock('../lib/supabase', () => ({ supabase: { functions: { invoke } } }));
 beforeEach(() => { vi.resetModules(); vi.clearAllMocks(); });
 
 describe('descoberta regional sem cadastro de lojas', () => {
+  it('preserva falha de transporte e distingue indisponibilidade HTTP do provedor', async () => {
+    const { descobrirLugares } = await import('../mapa/descoberta');
+    invoke.mockResolvedValueOnce({ error: Object.assign(new Error('Falha ao enviar'), { name: 'FunctionsFetchError' }) });
+    await expect(descobrirLugares({ lat: 0, lng: 0 }, 3)).rejects.toThrow('Network request failed');
+    invoke.mockResolvedValueOnce({ error: Object.assign(new Error('HTTP 503'), { name: 'FunctionsHttpError' }) });
+    await expect(descobrirLugares({ lat: 0, lng: 0 }, 3)).rejects.not.toThrow('Network request failed');
+  });
   it('reutiliza a consulta entre filtros e pessoas próximas, sem enviar dados pessoais', async () => {
     const { descobrirLugares } = await import('../mapa/descoberta');
     invoke.mockResolvedValue({ data: { lugares: [] }, error: null });
