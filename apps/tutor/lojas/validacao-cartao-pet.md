@@ -56,6 +56,25 @@ Isso não substitui a captura nativa ou uma leitura pela câmera.
 Não requer migration, nova dependência ou novo módulo nativo. Task permanece
 In Progress até conferir exportação, layout e convite em aparelho.
 
+## Preview publicado — 24/10/2026
+
+Código cb9395c enviado para main e publicado em cópia limpa, após 131 testes,
+TypeScript e lint aprovados. [Atualização Android preview](https://expo.dev/accounts/codaxi/projects/petlive-tutor/updates/e978a0f2-8d24-458f-85d3-ffb6df2a6d63).
+Runtime 1264fb8e8b1374172a594db4c6ebbf26fe172e0c, compatível com o
+[APK a387fe10](https://expo.dev/accounts/codaxi/projects/petlive-tutor/builds/a387fe10-ae05-406a-aeba-5e372b75689a).
+O endereço público do convite respondeu HTTP 200 nesta entrega.
+
+Conferir a compatibilidade com
+`npx eas-cli@latest fingerprint:generate --build-profile preview --platform android --json --non-interactive`.
+O cálculo local sem o perfil completo retornou 7ab8864e0a0ec045ef994e3d4f71402b91e21545
+tanto para o código novo quanto para o commit anterior 490df32. O cálculo EAS
+com o perfil e a publicação confirmaram 1264fb8e8b1374172a594db4c6ebbf26fe172e0c.
+Não foi alterada a configuração nativa para forçar compatibilidade.
+
+No APK compatível, fechar e abrir o app com internet para receber a atualização;
+se necessário, abrir novamente após o download. Depois seguir o roteiro acima.
+Publicar a OTA não confirma que o aparelho a recebeu ou que o teste nativo passou.
+
 Referências consultadas: [Expo SDK 58 Sharing](https://docs.expo.dev/versions/v58.0.0/sdk/sharing/),
 [Expo SDK 58 view-shot](https://docs.expo.dev/versions/v58.0.0/sdk/captureRef/)
 e [React Native Share](https://reactnative.dev/docs/share).
