@@ -92,3 +92,16 @@ validação da integração no Android. Sem novas dependências/configuração n
 Referências: [Expo Location SDK 58](https://docs.expo.dev/versions/v58.0.0/sdk/location/),
 [Expo Notifications SDK 58](https://docs.expo.dev/versions/v58.0.0/sdk/notifications/)
 e [pg_net](https://github.com/supabase/pg_net).
+
+## Preview publicado — 24/10/2026
+
+Commit 207dd33 enviado à main. Cópia limpa aprovada em 201 testes (34 arquivos),
+TypeScript, lint, teste PostgreSQL/PGlite e export Metro Android.
+[Atualização Android preview 88ae0569](https://expo.dev/accounts/codaxi/projects/petlive-tutor/updates/88ae0569-a2ac-46e6-b4d0-14b2f4ef2adb).
+Runtime 1264fb8e8b1374172a594db4c6ebbf26fe172e0c confirmado na publicação,
+compatível com o [APK a387fe10](https://expo.dev/accounts/codaxi/projects/petlive-tutor/builds/a387fe10-ae05-406a-aeba-5e372b75689a).
+Abrir com internet e reabrir após baixar. Não exige novo APK ou Redeploy do site.
+Para ativar, aplicar a
+[migration de eventos por região](https://raw.githubusercontent.com/CodaxiKing/PetLive/main/supabase/migrations/20261204000000_eventos_por_regiao.sql)
+e conferir o job conforme o roteiro acima. Implantação e entrega real de push
+ainda não confirmadas. Task mantida In Progress.
