@@ -28,9 +28,10 @@ Antes de disponibilizar a etiqueta, aplique a migration
 do PNG exportado e o menu de salvar/compartilhar. Builds devem incluir
 `react-native-view-shot` e `expo-sharing`. Testes SQL em
 `supabase/tests/qr-coleira.sql` rodam em transação e terminam com rollback.
-TypeScript e lint da página passaram. O build web completo nesta máquina
-falhou no subprocesso de CSS do Turbopack (`globals.css.css`); a publicação
-continua dependendo da resolução desse erro e de um build aprovado.
+TypeScript, lint e build de produção da página passaram. O Tailwind usa
+PostCSS e a leitura do código fica dentro de Suspense para permitir a
+pré-renderização. Publicação e leitura da etiqueta em aparelho continuam
+pendentes; o build aprovado por si só não publica o site nem aplica migrations.
 
 ## Carteirinha em PDF
 
