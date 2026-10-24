@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from 'react'
 import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native'
-import { router, useFocusEffect } from 'expo-router'
+import { router, useFocusEffect, useLocalSearchParams } from 'expo-router'
 import { Tocavel } from '../../src/components/Animacoes'
 import { BotaoPrimario } from '../../src/components/BotaoPrimario'
 import { HeroiOnda } from '../../src/components/HeroiOnda'
@@ -10,6 +10,9 @@ import { usePlano } from '../../src/lib/plano'
 import { usePets } from '../../src/pets/PetsProvider'
 import { colors } from '../../src/theme/colors'
 import { fontFamily } from '../../src/theme/typography'
+import { AcoesDespesas } from '../../src/despesas/AcoesDespesas'
+import { mesValido } from '../../src/despesas/relatorio'
+import { useAuth } from '../../src/auth/AuthProvider'
 
 const MESES = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez']
 const MESES_LONGOS = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro']
@@ -34,17 +37,29 @@ function mesAtual(): string {
  * por pet. Só registro: o PetLive não paga nem cobra nada aqui.
  */
 export default function TelaDespesas() {
+  const { user } = useAuth()
+  return user ? <DespesasDaConta key={user.id} /> : null
+}
+
+function DespesasDaConta() {
+  const parametros = useLocalSearchParams<{ mes?: string }>()
   const { pets } = usePets()
   const plano = usePlano()
   const [hoje] = useState(mesAtual)
-  const [mes, setMes] = useState(hoje)
+  const [mes, setMes] = useState(() => typeof parametros.mes === 'string' && mesValido(parametros.mes) && parametros.mes <= hoje && parametros.mes >= somarMes(hoje, -11) ? parametros.mes : hoje)
   const [filtro, setFiltro] = useState<string | null>(null)
   const [despesas, setDespesas] = useState<Despesa[] | null>(null)
+  const [erroCarga, setErroCarga] = useState<string | null>(null)
+  const [tentativa, setTentativa] = useState(0)
 
   useFocusEffect(
     useCallback(() => {
-      carregarDespesas(`${somarMes(hoje, -11)}-01`).then(setDespesas, () => setDespesas([]))
-    }, [hoje]),
+      let atual = true
+      carregarDespesas(`${somarMes(hoje, -11)}-01`).then((dados) => { if (atual) { setDespesas(dados); setErroCarga(null) } }, () => { if (atual) setErroCarga('Não foi possível carregar suas despesas. Verifique a conexão e tente novamente.') })
+      return () => { atual = false }
+    // A tentativa força uma nova consulta após falha de conexão.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [hoje, tentativa]),
   )
 
   // Filtro por pet: a despesa de "todos" entra em qualquer pet.
@@ -89,7 +104,7 @@ export default function TelaDespesas() {
   return (
     <View style={estilos.tela}>
       <HeroiOnda subtitulo={pets.map((p) => p.nome).join(' e ') || 'Seus pets'} titulo="Despesas" altura={200} />
-      {despesas === null ? (
+      {erroCarga ? <View style={estilos.conteudo}><Text accessibilityRole="alert" style={estilos.nota}>{erroCarga}</Text><BotaoPrimario titulo="Tentar carregar despesas" onPress={() => { setErroCarga(null); setDespesas(null); setTentativa((n) => n + 1) }} /></View> : despesas === null ? (
         <ActivityIndicator color={colors.primaryDeep} style={estilos.carregando} />
       ) : (
         <ScrollView style={estilos.flex} contentContainerStyle={estilos.conteudo} showsVerticalScrollIndicator={false}>
@@ -183,6 +198,7 @@ export default function TelaDespesas() {
             </>
           ) : null}
           <Text style={estilos.nota}>Só registro: o PetLive não paga nem cobra nada por aqui. Seus gastos ficam só na sua conta.</Text>
+          <AcoesDespesas mes={mostrado} petId={filtro} />
         </ScrollView>
       )}
 
