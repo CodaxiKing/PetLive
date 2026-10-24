@@ -103,3 +103,9 @@ com internet, ativar modo avião e sair/retornar à tela Premium; deve apresenta
 falha de consulta. Reconectar e tocar em Consultar novamente deve confirmar o
 plano atual do servidor.
 Compras e restauração seguem indisponíveis nesta versão.
+
+Proteção adicional no backend: preparada a migration
+`20261202000000_proteger_plano_e_papel_perfil.sql` para impedir edição direta de
+plano e papel pela API, mantendo os dados pessoais editáveis. Testes SQL e
+instruções de aplicação estão em `supabase/tests/protecao-perfil.md`. A aplicação
+em produção está pendente; a correção da interface não substitui essa etapa.
