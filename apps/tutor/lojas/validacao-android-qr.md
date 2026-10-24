@@ -12,7 +12,16 @@ antes de seguir o roteiro. Não foi submetido a nenhuma loja.
 
 Os commits foram enviados para `origin/main`. O responsável informou que
 o Redeploy no Coolify é manual e que aplicará a migration no Supabase.
-Isso ainda precisa de confirmação e nova verificação HTTP.
+Após a confirmação do responsável, a verificação remota passou:
+`qr_pet_publico` retornou HTTP 200 e `{"valido":false}` para código
+inexistente; a página `/p/[codigo]` retornou HTTP 200 com carregamento e
+`noindex`. O APK ainda estava em compilação na última consulta.
+
+O banco remoto precisou das dependências `public.is_pet_owner(uuid)` e
+das colunas `pets.em_memoria` e `pets.alergias` antes de aplicar a migration
+do QR. Esses pré-requisitos foram preparados pelo responsável no SQL Editor.
+Essa verificação confirma a disponibilidade das rotas; a geração autenticada,
+as permissões e a exportação em aparelho ainda precisam do roteiro abaixo.
 
 O build [62190dd8-779a-4e7a-a28b-f0c936d04c3f](https://expo.dev/accounts/codaxi/projects/petlive-tutor/builds/62190dd8-779a-4e7a-a28b-f0c936d04c3f)
 foi cancelado para substituir o domínio antigo pela URL informada pelo tutor.
