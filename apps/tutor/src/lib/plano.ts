@@ -3,7 +3,7 @@ import { useFocusEffect } from 'expo-router'
 import { useAuth } from '../auth/AuthProvider'
 import { supabase } from './supabase'
 
-import { estadoPlanoDaConta, type ConsultaPlano } from './estadoPlano'
+import { confirmarConsultaPlano, estadoPlanoDaConta, type ConsultaPlano } from './estadoPlano'
 export type { Plano } from './estadoPlano'
 
 /**
@@ -19,13 +19,14 @@ export function useEstadoPlano() {
   useFocusEffect(useCallback(() => {
     if (!tutorId) return
     let vivo = true
+    setConsulta({ tutorId, plano: 'gratis', erro: false, carregando: true })
     Promise.resolve(supabase
       .from('profiles')
       .select('plano')
       .eq('id', tutorId)
       .maybeSingle())
       .then(({ data, error }) => {
-        if (vivo) setConsulta({ tutorId, plano: data?.plano === 'premium' ? 'premium' : 'gratis', erro: Boolean(error) || !data })
+        if (vivo) setConsulta(confirmarConsultaPlano(tutorId, data?.plano, Boolean(error)))
       })
       .catch(() => { if (vivo) setConsulta({ tutorId, plano: 'gratis', erro: true }) })
     return () => {

@@ -62,6 +62,15 @@ function tabelaDaUrl(url: string): string | null {
   return m && TABELAS.has(m[1]) ? m[1] : null;
 }
 
+/** Benefícios exigem resposta atual: uma cópia antiga não confirma assinatura. */
+function consultaBeneficio(url: string): boolean {
+  if (tabelaDaUrl(url) !== 'profiles') return false;
+  try {
+    const selecao = new URL(url).searchParams.get('select');
+    return !selecao || /\*|\bplano\b/i.test(selecao);
+  } catch { return true; }
+}
+
 function chaveDe(dono: string, url: string): string {
   // Só o caminho e a consulta: o mesmo pedido em outra rede cai na mesma chave.
   // Horários (filtros "a partir de agora") viram só a data: senão cada leitura
@@ -86,7 +95,7 @@ export async function fetchComCache(entrada: RequestInfo | URL, init?: RequestIn
   const url = typeof entrada === 'string' ? entrada : entrada instanceof URL ? entrada.href : entrada.url;
   const metodo = (init?.method ?? (entrada instanceof Request ? entrada.method : 'GET')).toUpperCase();
   const headers = new Headers(init?.headers ?? (entrada instanceof Request ? entrada.headers : undefined));
-  const dono = metodo === 'GET' && tabelaDaUrl(url) ? donoDoPedido(headers) : null;
+  const dono = metodo === 'GET' && tabelaDaUrl(url) && !consultaBeneficio(url) ? donoDoPedido(headers) : null;
 
   if (!dono) {
     try {

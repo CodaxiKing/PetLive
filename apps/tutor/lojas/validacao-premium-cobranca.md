@@ -82,3 +82,24 @@ Esses são critérios futuros, não funcionalidades declaradas prontas.
 Revalidar as fontes quando o checkout for implementado ou território/canal mudar.
 A conclusão desta task é a análise das políticas, não o lançamento do Premium
 nem a homologação de uma integração ainda inexistente.
+
+## Consulta do benefício — 24/10/2026
+
+Leituras de `profiles` que pedem `plano` (incluindo alias ou seleção completa)
+não usam nem gravam autorização no cache offline. Uma resposta de perfil
+antiga não confirma o Premium. Campos comuns do perfil sem o plano e leituras
+de saúde continuam com o cache vinculado à conta.
+
+Ao entrar novamente na tela ou pedir nova consulta, o estado anterior passa a
+carregamento; a interface só confirma o plano após resposta atual reconhecida.
+Perfil ausente, plano inesperado, erro ou sessão inválida não concedem benefício.
+Essa proteção de interface não substitui autorização no backend nem validação
+de transações das lojas, que continuam nas tasks de assinatura.
+
+Validação automatizada: 126 testes passaram, incluindo falha de rede com cópia
+antiga de Premium, seleções com alias/asterisco, HTTP 401, preservação das
+vacinas offline e revalidação de estado. Roteiro no aparelho: consultar o plano
+com internet, ativar modo avião e sair/retornar à tela Premium; deve apresentar
+falha de consulta. Reconectar e tocar em Consultar novamente deve confirmar o
+plano atual do servidor.
+Compras e restauração seguem indisponíveis nesta versão.
