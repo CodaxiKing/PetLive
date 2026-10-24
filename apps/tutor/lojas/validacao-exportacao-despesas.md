@@ -35,6 +35,8 @@ Não executar o job com datas futuras em produção: isso criaria avisos e recib
 
 ## Validação pendente no Android e na produção
 
+Preview Android publicado em 24/10/2026: [atualização dc6bbbf5](https://expo.dev/accounts/codaxi/projects/petlive-tutor/updates/dc6bbbf5-055e-4305-befd-e13dc120a07b), código `d64f0ba`, runtime `b71630dbeb6ccaf42188e65c5351268044bbb4f9`. Compatível com o APK de câmera `3955a842-4c34-44c7-8be6-a6ca6d029df6`; abrir o app com internet e reabrir para carregar a atualização. Não requer novo APK. A publicação não aplica o SQL.
+
 - Com Premium, exportar mês vazio e mês com despesas de um pet e de todos; abrir CSV em planilha e PDF em visualizador, conferir centavos, acentos, total e paginação.
 - Confirmar que conta grátis vê convite e que o servidor rejeita exportação sem Premium. Testar falta de conexão e tentar novamente.
 - Trocar conta ou sair durante a preparação; nenhum relatório anterior deve ser compartilhado.
