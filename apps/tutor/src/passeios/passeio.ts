@@ -5,6 +5,7 @@ export type Passeio = {
   inicio: number; atualizadoEm: number; fim: number | null;
   ativoDesde: number | null; duracaoMs: number; distanciaM: number;
   trecho: number; pontos: PontoPasseio[];
+  anotacao?: string; fotoId?: string | null;
 };
 export type AmostraGps = Omit<PontoPasseio, 'trecho'>;
 

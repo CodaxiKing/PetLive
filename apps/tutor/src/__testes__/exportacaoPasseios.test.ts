@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { exportarMeusDados } from '../privacidade/conta';
 
 const mocks = vi.hoisted(() => ({ share: vi.fn(), getUser: vi.fn(), rpc: vi.fn(), carregar: vi.fn(), repositorio: vi.fn(), meta: vi.fn(), carregarMeta: vi.fn() }));
-vi.mock('react-native', () => ({ Share: { share: mocks.share } }));
+vi.mock('../privacidade/arquivoExportacao', () => ({ compartilharExportacao: mocks.share }));
 vi.mock('../lib/supabase', () => ({ supabase: {
   auth: { getUser: mocks.getUser }, rpc: mocks.rpc,
   from: () => ({ select: () => ({ order: () => Promise.resolve({ data: [], error: null }) }) }),
@@ -23,7 +23,8 @@ describe('exportação dos passeios locais', () => {
     await exportarMeusDados();
     expect(mocks.repositorio).toHaveBeenCalledWith('tutor-a');
     expect(mocks.meta).toHaveBeenCalledWith('tutor-a');
-    expect(JSON.parse(mocks.share.mock.calls[0][0].message)).toMatchObject({ passeios_locais: [{ id: 'passeio-local' }], meta_semanal_passeios_km: 5 });
+    expect(mocks.share.mock.calls[0][0]).toMatchObject({ passeios_locais: [{ id: 'passeio-local' }], meta_semanal_passeios_km: 5 });
+    expect(mocks.share.mock.calls[0][1]).toBe('tutor-a');
     expect(mocks.rpc).toHaveBeenCalledWith('registrar_exportacao');
   });
   it('interrompe antes de compartilhar se a conta mudou durante a consulta', async () => {

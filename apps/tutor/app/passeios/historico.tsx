@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import { ActivityIndicator, FlatList, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
-import { useFocusEffect } from 'expo-router';
+import { router, useFocusEffect } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useAuth } from '../../src/auth/AuthProvider';
 import { BotaoPrimario } from '../../src/components/BotaoPrimario';
@@ -129,6 +129,8 @@ function Historico({ tutorId }: { tutorId: string }) {
       <Text accessibilityRole="header" style={s.titulo}>{item.nomePet}</Text>
       <Text style={s.texto}>{new Date(item.fim!).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' })}</Text>
       <Text style={s.texto}>{km(item.distanciaM)} km · {formatarTempoPasseio(item.duracaoMs)}</Text>
+      {item.anotacao ? <Text numberOfLines={2} style={s.texto}>{item.anotacao}</Text> : null}
+      <Pressable accessibilityRole="button" onPress={() => router.push({ pathname: '/passeios/resumo', params: { id: item.id } })} style={s.acao}><Text style={s.link}>Ver resumo, foto e anotação</Text></Pressable>
       <Pressable accessibilityRole="button" accessibilityState={{ expanded: expandido === item.id }} onPress={() => setExpandido(expandido === item.id ? null : item.id)} style={s.acao}><Text style={s.link}>{expandido === item.id ? 'Ocultar trajeto' : 'Ver trajeto salvo'}</Text></Pressable>
       {expandido === item.id ? <TrajetoPasseio pontos={item.pontos} /> : null}
     </View>}

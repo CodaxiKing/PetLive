@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState, useSyncExternalStore } from 'react';
+import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import { ActivityIndicator, Alert, AppState, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { router, useFocusEffect } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -32,8 +32,9 @@ function GravarPasseio({ tutorId }: { tutorId: string }) {
   const atual = estado.passeios.find((p) => p.status !== 'concluido');
   const ultimo = atual ?? estado.passeios.at(-1);
   const podeRetomar = atual && meusPets.some((p) => p.id === atual.petId);
+  const vivo = useRef(false);
 
-  useEffect(() => { void gravador.carregar(); }, [gravador]);
+  useEffect(() => { vivo.current = true; void gravador.carregar(); return () => { vivo.current = false; }; }, [gravador]);
   useFocusEffect(useCallback(() => {
     const assinatura = AppState.addEventListener('change', (proximo) => {
       if (proximo !== 'active') void gravador.pausar('O app saiu do primeiro plano. Retome o passeio para voltar a gravar.');
@@ -47,9 +48,13 @@ function GravarPasseio({ tutorId }: { tutorId: string }) {
   }, [gravador]));
 
   function finalizar() {
-    Alert.alert('Finalizar passeio?', 'O trajeto e o tempo ativo serão salvos neste aparelho.', [
+    Alert.alert('Revisar passeio?', 'A gravação será pausada para você conferir o resumo, escolher uma foto e salvar.', [
       { text: 'Continuar passeio', style: 'cancel' },
-      { text: 'Finalizar', onPress: () => { void gravador.finalizar(); } },
+      { text: 'Revisar', onPress: async () => {
+        if (!atual) return;
+        await gravador.pausar('Confira o resumo antes de salvar o passeio.');
+        if (vivo.current) router.push({ pathname: '/passeios/resumo', params: { id: atual.id } });
+      } },
     ]);
   }
 
@@ -77,14 +82,14 @@ function GravarPasseio({ tutorId }: { tutorId: string }) {
           ? <BotaoPrimario titulo="Pausar passeio" carregando={estado.ocupado} onPress={() => { void gravador.pausar(); }} />
           : <BotaoPrimario titulo="Retomar passeio" desabilitado={!podeRetomar || carregandoPets} carregando={estado.ocupado} onPress={() => { void gravador.retomar(); }} />}
         {!podeRetomar && !carregandoPets ? <Text style={s.texto}>Este pet não está ativo nesta conta. Você ainda pode finalizar o passeio salvo.</Text> : null}
-        <Pressable accessibilityRole="button" disabled={estado.ocupado} onPress={finalizar} style={s.acao}><Text style={s.link}>Finalizar e salvar passeio</Text></Pressable>
+        <Pressable accessibilityRole="button" disabled={estado.ocupado} onPress={finalizar} style={s.acao}><Text style={s.link}>Finalizar e revisar passeio</Text></Pressable>
         {estado.erro ? <Pressable accessibilityRole="button" disabled={estado.ocupado} onPress={() => { void gravador.pausar(); }} style={s.acao}><Text style={s.link}>Tentar salvar os dados novamente</Text></Pressable> : null}
       </> : carregandoPets ? <ActivityIndicator accessibilityLabel="Carregando pets" /> : meusPets.length ? <>
         <Text accessibilityRole="header" style={s.titulo}>Quem vai passear?</Text>
         <View style={s.opcoes}>{meusPets.map((p) => <Pressable key={p.id} accessibilityRole="radio" accessibilityState={{ checked: pet?.id === p.id, disabled: estado.ocupado }} disabled={estado.ocupado} onPress={() => setPetId(p.id)} style={[s.opcao, pet?.id === p.id && s.selecionado]}><Text style={s.texto}>{p.nome}</Text></Pressable>)}</View>
         <BotaoPrimario titulo="Iniciar passeio" carregando={estado.ocupado} onPress={() => { if (pet) void gravador.iniciar(pet); }} />
       </> : <BotaoPrimario titulo="Cadastrar um pet" onPress={() => router.push('/pet/novo')} />}
-      {estado.passeios.length > 0 ? <Pressable accessibilityRole="button" disabled={estado.ocupado || atual?.status === 'gravando'} style={s.acao} onPress={() => Alert.alert('Apagar passeios deste aparelho?', 'Apaga todos os trajetos locais desta conta, incluindo o passeio pausado. Esta ação não pode ser desfeita.', [
+      {estado.passeios.length > 0 ? <Pressable accessibilityRole="button" disabled={estado.ocupado || atual?.status === 'gravando'} style={s.acao} onPress={() => Alert.alert('Apagar passeios deste aparelho?', 'Apaga os registros, fotos e anotações guardados pelo app nesta conta, incluindo o passeio pausado. Esta ação não pode ser desfeita.', [
         { text: 'Cancelar', style: 'cancel' }, { text: 'Apagar passeios', style: 'destructive', onPress: () => { void gravador.apagar(); } },
       ])}><Text style={s.erro}>Apagar passeios deste aparelho</Text></Pressable> : null}
     </>}

@@ -29,6 +29,8 @@ export class RepositorioPasseios {
       && [p.inicio, p.atualizadoEm, p.duracaoMs, p.distanciaM, p.trecho].every((n) => Number.isFinite(n) && n >= 0)
       && (p.fim === null || Number.isFinite(p.fim))
       && (p.status === 'gravando' ? Number.isFinite(p.ativoDesde) && p.ativoDesde !== null : p.ativoDesde === null)
+      && (p.anotacao === undefined || (typeof p.anotacao === 'string' && p.anotacao.length <= 1000))
+      && (p.fotoId === undefined || p.fotoId === null || (typeof p.fotoId === 'string' && /^[a-zA-Z0-9-]{1,80}$/.test(p.fotoId)))
       && Array.isArray(p.pontos) && p.pontos.length <= 10000
       && p.pontos.every((ponto) => amostraValida(ponto) && Number.isInteger(ponto.trecho) && ponto.trecho >= 0);
   }

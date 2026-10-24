@@ -1,5 +1,6 @@
 import { concluirPasseio, novoPasseio, pausarPasseio, registrarPonto, retomarPasseio, type AmostraGps, type Passeio } from './passeio';
 import type { RepositorioPasseios } from './repositorio';
+import { anotacaoPasseio, type FotosPasseio } from './resumo';
 
 export type GpsPasseio = { observar(ponto: (p: AmostraGps) => void, erro: (mensagem: string) => void): Promise<() => void> };
 type Estado = { carregando: boolean; ocupado: boolean; erro: string | null; aviso: string | null; passeios: Passeio[] };
@@ -12,7 +13,7 @@ export class GravadorPasseio {
   private removerGps: (() => void) | null = null;
   private geracao = 0;
   private bloqueado = false;
-  constructor(private repo: RepositorioPasseios, private gps: GpsPasseio, private agora: () => number, private id: () => string) {}
+  constructor(private repo: RepositorioPasseios, private gps: GpsPasseio, private agora: () => number, private id: () => string, private fotos?: FotosPasseio) {}
   snapshot = () => this.estado;
   assinar = (fn: () => void) => { this.ouvintes.add(fn); return () => { this.ouvintes.delete(fn); }; };
   private emitir(mudanca: Partial<Estado>) { this.estado = { ...this.estado, ...mudanca }; this.ouvintes.forEach((fn) => fn()); }
@@ -24,7 +25,8 @@ export class GravadorPasseio {
     return tarefa;
   }
   private async persistir(passeio: Passeio) {
-    const passeios = [...this.estado.passeios.filter((p) => p.id !== passeio.id), passeio];
+    const existe = this.estado.passeios.some((p) => p.id === passeio.id);
+    const passeios = existe ? this.estado.passeios.map((p) => p.id === passeio.id ? passeio : p) : [...this.estado.passeios, passeio];
     await this.repo.salvar(passeios);
     this.emitir({ passeios, erro: null });
   }
@@ -41,9 +43,9 @@ export class GravadorPasseio {
     });
   }
   private async comando(fn: () => Promise<void>) {
-    if (this.bloqueado || this.estado.carregando) return;
+    if (this.bloqueado || this.estado.carregando) return false;
     this.bloqueado = true; this.emitir({ ocupado: true, erro: null });
-    try { await this.enfileirar(fn); }
+    try { await this.enfileirar(fn); return true; }
     catch (e) {
       this.pararGps();
       this.emitir({ erro: e instanceof Error ? e.message : 'Não foi possível salvar o passeio.' });
@@ -52,6 +54,7 @@ export class GravadorPasseio {
         const pausado = pausarPasseio(p, this.agora());
         this.emitir({ passeios: this.estado.passeios.map((x) => x.id === p.id ? pausado : x) });
       }
+      return false;
     } finally { this.bloqueado = false; this.emitir({ ocupado: false }); }
   }
   private async ligarGps() {
@@ -114,8 +117,31 @@ export class GravadorPasseio {
   apagar() {
     return this.comando(async () => {
       if (this.atual()?.status === 'gravando') throw new Error('Pause o passeio antes de apagar os dados.');
+      await this.fotos?.apagarTodas();
       await this.repo.salvar([]);
       this.emitir({ passeios: [], aviso: 'Os passeios desta conta foram apagados deste aparelho.' });
+    });
+  }
+  salvarResumo(id: string, anotacao: string, foto: string | null | undefined) {
+    return this.comando(async () => {
+      const p = this.estado.passeios.find((p) => p.id === id);
+      if (!p || p.status === 'gravando') throw new Error('Pause o passeio antes de revisar e salvar.');
+      const nota = anotacaoPasseio(anotacao);
+      let novaFoto: string | null | undefined = p.fotoId;
+      if (foto !== undefined) {
+        if (!this.fotos) throw new Error('O armazenamento de fotos não está disponível.');
+        if (foto === '') throw new Error('Escolha uma foto válida ou remova a foto.');
+        novaFoto = foto === null ? null : this.id();
+        if (foto && novaFoto) await this.fotos.salvar(novaFoto, foto);
+      }
+      try {
+        await this.persistir({ ...concluirPasseio(p, p.atualizadoEm), anotacao: nota, fotoId: novaFoto });
+      } catch (e) {
+        if (novaFoto && novaFoto !== p.fotoId) await this.fotos?.remover(novaFoto).catch(() => undefined);
+        throw e;
+      }
+      if (p.fotoId && p.fotoId !== novaFoto) await this.fotos?.remover(p.fotoId).catch(() => undefined);
+      this.emitir({ aviso: 'Resumo do passeio salvo neste aparelho.' });
     });
   }
   checkpoint() {
