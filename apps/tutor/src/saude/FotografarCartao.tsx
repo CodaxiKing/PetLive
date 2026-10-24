@@ -33,16 +33,20 @@ function Captura({ tutorId, petId, titulo, data, onSalvo, onFechar }: Props & { 
   const insets = useSafeAreaInsets();
   const camera = useRef<CameraView>(null), viva = useRef(true), trava = useRef(false), temporaria = useRef<string | null>(null);
   const geracaoCamera = useRef(0);
-  const [permissao, pedirPermissao] = useCameraPermissions();
+  const [permissao, pedirPermissao, consultarPermissao] = useCameraPermissions();
   const [ativo, setAtivo] = useState(AppState.currentState === 'active');
   const [pronta, setPronta] = useState(false), [ocupada, setOcupada] = useState(false), [lanterna, setLanterna] = useState(false);
   const [tamanho, setTamanho] = useState<string | undefined>(undefined);
   const [foto, setFoto] = useState<FotoCartao | null>(null), [erro, setErro] = useState<string | null>(null);
   useEffect(() => {
     viva.current = true;
-    const sub = AppState.addEventListener('change', (estado) => { setAtivo(estado === 'active'); if (estado !== 'active') { geracaoCamera.current++; setPronta(false); } });
+    const sub = AppState.addEventListener('change', (estado) => {
+      setAtivo(estado === 'active');
+      if (estado !== 'active') { geracaoCamera.current++; setPronta(false); }
+      else void consultarPermissao().catch(() => { if (viva.current) setErro('Não foi possível consultar a câmera. Feche esta tela e tente novamente.'); });
+    });
     return () => { viva.current = false; sub.remove(); if (temporaria.current) descartarFotoCartao(temporaria.current); };
-  }, []);
+  }, [consultarPermissao]);
   function refazer() {
     geracaoCamera.current++;
     if (temporaria.current) descartarFotoCartao(temporaria.current);
@@ -92,7 +96,7 @@ function Captura({ tutorId, petId, titulo, data, onSalvo, onFechar }: Props & { 
       <BotaoPrimario titulo={permissao.canAskAgain ? 'Autorizar câmera' : 'Abrir configurações'} onPress={() => { void (permissao.canAskAgain ? pedirPermissao() : Linking.openSettings()).catch(() => setErro('Não foi possível abrir a permissão da câmera. Tente novamente.')); }} />
     </> : ativo ? <>
       <View style={s.camera}>
-        <CameraView ref={camera} style={StyleSheet.absoluteFill} facing="back" mode="picture" autofocus="on" pictureSize={tamanho} enableTorch={lanterna} onCameraReady={() => { void prepararCamera(); }} onMountError={() => { setPronta(false); setErro('Não foi possível abrir a câmera. Feche esta tela e tente novamente.'); }} />
+        <CameraView ref={camera} style={StyleSheet.absoluteFill} facing="back" mode="picture" autofocus="on" pictureSize={tamanho} enableTorch={lanterna} onCameraReady={() => { void prepararCamera(); }} onMountError={() => { geracaoCamera.current++; setPronta(false); setErro('Não foi possível abrir a câmera. Feche esta tela e tente novamente.'); }} />
         <View pointerEvents="none" style={s.guia}><View style={s.moldura} /><Text style={s.legenda}>Página inteira dentro da moldura</Text></View>
       </View>
       <BotaoPrimario titulo="Capturar foto" desabilitado={!pronta} carregando={ocupada} onPress={() => { void fotografar(); }} />
