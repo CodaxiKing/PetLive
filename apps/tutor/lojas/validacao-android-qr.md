@@ -4,6 +4,16 @@ O perfil `preview` gera um APK para instalação interna, usando uma cópia
 limpa dos commits. Alterações locais não commitadas não entram nesse build.
 TypeScript e 16 testes passaram na cópia do commit `ca1387d`.
 
+Preview com a URL corrigida: [a387fe10-ae05-406a-aeba-5e372b75689a](https://expo.dev/accounts/codaxi/projects/petlive-tutor/builds/a387fe10-ae05-406a-aeba-5e372b75689a).
+Código enviado: `32d0125`. Runtime:
+`1264fb8e8b1374172a594db4c6ebbf26fe172e0c`.
+Build enviado ao EAS; confirmar sucesso e baixar o APK na página do build
+antes de seguir o roteiro. Não foi submetido a nenhuma loja.
+
+Os commits foram enviados para `origin/main`. O responsável informou que
+o Redeploy no Coolify é manual e que aplicará a migration no Supabase.
+Isso ainda precisa de confirmação e nova verificação HTTP.
+
 O build [62190dd8-779a-4e7a-a28b-f0c936d04c3f](https://expo.dev/accounts/codaxi/projects/petlive-tutor/builds/62190dd8-779a-4e7a-a28b-f0c936d04c3f)
 foi cancelado para substituir o domínio antigo pela URL informada pelo tutor.
 Não usar esse build como evidência de validação concluída.
