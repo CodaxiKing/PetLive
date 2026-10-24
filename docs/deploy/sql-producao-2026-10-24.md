@@ -1,5 +1,9 @@
 # Atualização SQL de produção — 24/10/2026
 
+## Painel da ONG: interessados e adoção
+
+Migration `20261211000000_painel_ong_interessados.sql`, fonte `92151d4`, validada na produção em transação com ROLLBACK e depois aplicada com COMMIT. Lock timeout 5 s e statement timeout 60 s. Conferidas as funções de painel, interesses, e-mail revalidado e marcar adotado. Acesso anônimo bloqueado; RLS direta dos contatos exige ONG responsável aprovada (ou o próprio tutor remetente). Nenhum contato real foi enviado, pet real foi marcado adotado ou dado fictício foi inserido em produção. Testes funcionais com organizações reais continuam pendentes no aparelho; os testes com dados fictícios ocorreram apenas no PGlite isolado.
+
 ## Correção do cadastro de pet: perfil ausente
 
 Erro reportado no Android: `pets_tutor_id_fkey`. Auditoria encontrou uma conta Auth sem registro correspondente em profiles, embora o trigger de novos cadastros estivesse ativo. Migration `20261210000000_reparar_perfis_ausentes.sql` (commit `27bc2e2`) aplicada em produção: insere apenas perfis ausentes a partir do Auth, preserva existentes e defaults de plano/papel, não inventa aceite. Revoga DELETE direto de profiles pelo cliente para não deixar sessões válidas sem perfil; exclusão de conta pelo backend/Auth continua em cascata.

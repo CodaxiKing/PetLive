@@ -21,3 +21,9 @@ Cadastro/aprovação de ONGs, documentos e cadastro/edição de novos pets perma
 3. Tocar Responder por e-mail: conferir destinatário/assunto e cancelar sem enviar. Com aplicativo ausente, verificar mensagem de erro e seleção do e-mail. Enviar de fato somente com autorização do destinatário/testador.
 4. Em pet real de teste cuja adoção foi confirmada pela ONG, cancelar a confirmação primeiro. Depois confirmar a adoção: status Adotado no painel e indisponível no catálogo/ficha do tutor; os contatos continuam consultáveis pela ONG responsável.
 5. Validar ONG suspensa/pendente/recusada, pet oculto e ausência de organização; falha de rede; paginação; retorno do aplicativo de e-mail e fonte ampliada. Android/iOS ainda precisam de teste no aparelho.
+
+## Implantação — 24/10/2026
+
+Código `92151d4` enviado à main. Migration `20261211000000_painel_ong_interessados.sql` aplicada na produção (`qurdqbhjtgapyksrilyk`) após validação ROLLBACK; funções, grants e RLS conferidos após COMMIT. Sem mensagens reais, pets marcados adotados ou dados fictícios de teste em produção.
+
+Cópia limpa: 240 testes/40 arquivos, TypeScript, lint e export Metro Android aprovados. Preview publicado: https://expo.dev/accounts/codaxi/projects/petlive-tutor/updates/58c21174-421b-4fd9-9172-c638c10736d8 . Runtime `dff916ce37166d489949d7b3020e4ed90d1755dd`, compatível com APK `efb3cb3b-a260-427c-b501-21dde90e5dd0`. Sem novo APK ou Redeploy do site. Publicação confirmada; recebimento e homologação no aparelho ainda pendentes.
