@@ -25,9 +25,10 @@ const atualizacaoNaoDisponivel: UpdateCheckResult = {
 };
 
 beforeEach(() => {
-  vi.clearAllMocks();
+  vi.resetAllMocks();
   (Updates as unknown as Record<string, unknown>).isEnabled = true;
   checkForUpdateAsync.mockResolvedValue(atualizacaoNaoDisponivel);
+  fetchUpdateAsync.mockResolvedValue({ isNew: true, isRollBackToEmbedded: false, manifest: {} as Extract<Updates.UpdateFetchResult, { isNew: true }>['manifest'] });
 });
 
 afterEach(() => {
@@ -77,5 +78,48 @@ describe('verificarEAplicarAtualizacao', () => {
     expect(checkForUpdateAsync).toHaveBeenCalledTimes(1);
     expect(fetchUpdateAsync).not.toHaveBeenCalled();
     expect(reloadAsync).not.toHaveBeenCalled();
+  });
+  it('aplica a diretiva de rollback mesmo quando não existe update disponível', async () => {
+    checkForUpdateAsync.mockResolvedValueOnce({ isAvailable: false, isRollBackToEmbedded: true, manifest: undefined, reason: undefined });
+    fetchUpdateAsync.mockResolvedValueOnce({ isNew: false, isRollBackToEmbedded: true, manifest: undefined });
+    await verificarEAplicarAtualizacao();
+    expect(fetchUpdateAsync).toHaveBeenCalledTimes(1);
+    expect(reloadAsync).toHaveBeenCalledTimes(1);
+  });
+  it('não recarrega se o download não confirmou atualização nem rollback', async () => {
+    checkForUpdateAsync.mockResolvedValueOnce({ isAvailable: false, isRollBackToEmbedded: true, manifest: undefined, reason: undefined });
+    fetchUpdateAsync.mockResolvedValueOnce({ isNew: false, isRollBackToEmbedded: false, manifest: undefined });
+    await verificarEAplicarAtualizacao();
+    expect(reloadAsync).not.toHaveBeenCalled();
+  });
+  it('mantém o app atual quando o download falha e permite uma nova tentativa', async () => {
+    checkForUpdateAsync.mockResolvedValue({ isAvailable: false, isRollBackToEmbedded: true, manifest: undefined, reason: undefined });
+    fetchUpdateAsync.mockRejectedValueOnce(new Error('download interrompido'));
+    await expect(verificarEAplicarAtualizacao()).resolves.toBeUndefined();
+    expect(reloadAsync).not.toHaveBeenCalled();
+    await verificarEAplicarAtualizacao();
+    expect(checkForUpdateAsync).toHaveBeenCalledTimes(2);
+    expect(reloadAsync).toHaveBeenCalledTimes(1);
+  });
+  it('compartilha uma única verificação e um único reload entre chamadas simultâneas', async () => {
+    let concluir!: (resultado: UpdateCheckResult) => void;
+    checkForUpdateAsync.mockReturnValueOnce(new Promise((resolve) => { concluir = resolve; }));
+    const primeira = verificarEAplicarAtualizacao();
+    const segunda = verificarEAplicarAtualizacao();
+    expect(checkForUpdateAsync).toHaveBeenCalledTimes(1);
+    concluir({ isAvailable: false, isRollBackToEmbedded: true, manifest: undefined, reason: undefined });
+    await Promise.all([primeira, segunda]);
+    expect(fetchUpdateAsync).toHaveBeenCalledTimes(1);
+    expect(reloadAsync).toHaveBeenCalledTimes(1);
+    await verificarEAplicarAtualizacao();
+    expect(checkForUpdateAsync).toHaveBeenCalledTimes(2);
+  });
+  it('libera a verificação depois de falha ao recarregar', async () => {
+    checkForUpdateAsync.mockResolvedValue({ isAvailable: false, isRollBackToEmbedded: true, manifest: undefined, reason: undefined });
+    reloadAsync.mockRejectedValueOnce(new Error('reload indisponível'));
+    await expect(verificarEAplicarAtualizacao()).resolves.toBeUndefined();
+    await expect(verificarEAplicarAtualizacao()).resolves.toBeUndefined();
+    expect(checkForUpdateAsync).toHaveBeenCalledTimes(2);
+    expect(reloadAsync).toHaveBeenCalledTimes(2);
   });
 });

@@ -58,14 +58,33 @@ eas update --branch production -m "Correção: lembretes de vacina"
 
 **Rollback da atualização OTA:**
 
-- **Expo Dashboard:** abra o projeto > Updates > selecione a atualização problemática do branch `production` > "Roll back". O branch volta para a atualização anterior imediatamente.
-- **CLI:**
+O EAS permite republicar uma atualização anterior ou emitir uma diretiva para
+voltar ao bundle incluído no binário. Confira grupo, plataforma, branch vinculado
+ao canal e runtime antes de confirmar a operação no Dashboard ou na CLI.
+O comando abaixo abre a seleção interativa na versão atual da CLI:
 
 ```bash
-eas update:rollback --branch production   # veja `eas update:rollback --help`
+eas update:rollback
 ```
 
-Builds já instalados continuam na versão anterior até receberem a próxima atualização compatível.
+Para selecionar explicitamente uma versão anterior, o fluxo de republicação é
+`eas update:republish`; consulte `--help` para selecionar grupo e destino.
+Os clientes aplicam a recuperação ao receber e carregar a atualização compatível;
+a operação no servidor não reinicia imediatamente todos os aparelhos.
+
+**Tratamento no app (24/10/2026):** `src/lib/atualizacao.ts` reconhece também
+`isRollBackToEmbedded`, que vem com `isAvailable=false`. Só recarrega depois que
+o download confirma uma versão nova ou a diretiva de rollback. Chamadas
+simultâneas compartilham a mesma operação. Erros de verificação, download ou
+reload liberam uma tentativa futura e preservam o app atual.
+
+**Validação:** testes cobrem atualização normal, rollback, download sem mudança,
+concorrência e falhas com nova tentativa. A entrega não executa rollback de
+nenhum canal. Validar a recuperação efetiva em aparelho de teste antes de
+considerar a operação homologada. A task de publicação permanece em andamento.
+
+Referências: [SDK 58 Updates](https://docs.expo.dev/versions/v58.0.0/sdk/updates/)
+e [recuperação no EAS Update](https://docs.expo.dev/eas-update/rollbacks/).
 
 ## 3. Ficha da loja
 
