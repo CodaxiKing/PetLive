@@ -83,6 +83,11 @@ concorrência e falhas com nova tentativa. A entrega não executa rollback de
 nenhum canal. Validar a recuperação efetiva em aparelho de teste antes de
 considerar a operação homologada. A task de publicação permanece em andamento.
 
+Correção publicada no Android preview a partir de `a3e4656`: grupo OTA
+`ab6f2262-a80c-4b38-8b06-61ddb49e3c25`, runtime
+`1264fb8e8b1374172a594db4c6ebbf26fe172e0c`. Passaram 116 testes gerais;
+os 9 testes de atualização, TypeScript e lint passaram também na cópia limpa.
+
 Referências: [SDK 58 Updates](https://docs.expo.dev/versions/v58.0.0/sdk/updates/)
 e [recuperação no EAS Update](https://docs.expo.dev/eas-update/rollbacks/).
 
