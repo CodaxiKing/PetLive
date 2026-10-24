@@ -4,6 +4,11 @@ Roteiro do item do board **"Publicar nas lojas de apps (EAS Build e EAS Update)"
 e os textos que as lojas pedem. O que depende de conta ou de dinheiro está marcado
 com **[você]**.
 
+Regras para a assinatura Premium: consultar a
+[validação de cobrança](validacao-premium-cobranca.md), revisada em 24/10/2026.
+Há programas regionais de pagamento alternativo no Brasil; o fluxo inicial
+planejado continua pelas lojas. Produtos, preços e homologação seguem pendentes.
+
 ## 1. Antes do primeiro build de produção
 
 | Passo | Onde | Quem |

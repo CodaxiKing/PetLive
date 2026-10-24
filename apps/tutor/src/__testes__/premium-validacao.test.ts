@@ -9,10 +9,9 @@ import { join } from 'path';
  * tutor a pagar o Premium fora das lojas (Apple App Store / Google Play)
  * onde a política proíbe esse direcionamento para bens digitais/assinaturas.
  *
- * Como o Premium ainda não foi implementado (bloco 5, Fase 2), este teste
- * cobre as telas que já fazem referência ao Premium e serve de trava contra
- * regressão: se alguém adicionar um link de pagamento externo (Pix, cartão,
- * Asaas, site próprio) para assinatura Premium, o teste falha.
+ * A integração atual prevê compras pelas lojas, sem adesão comprovada a
+ * programas regionais alternativos. Este teste protege essa configuração;
+ * não afirma que pagamentos externos sejam universalmente proibidos.
  */
 
 const RAIZ_APP = join(__dirname, '..', '..', 'app');
@@ -65,7 +64,7 @@ describe('Validação P-CJgTU — Premium sem pagamento externo às lojas', () =
   it('o perfil abre a consulta do plano e a tela informa a indisponibilidade de compras', () => {
     const conteudo = lerConteudo(join(RAIZ_APP, '(app)', 'perfil.tsx'));
 
-    // O botão atual chama Alert.alert com texto informativo, não abre link externo.
+    // O perfil abre a consulta do plano; ainda não há compra integrada.
     expect(conteudo).toContain("router.push('/premium')");
     expect(lerConteudo(join(RAIZ_APP, 'premium.tsx'))).toContain('A compra e a restauração de assinaturas ainda não estão disponíveis');
     // Não deve conter window.open, Linking.openURL ou expo-web-browser para pagamento externo.
