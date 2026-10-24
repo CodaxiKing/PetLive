@@ -63,5 +63,17 @@ Esses testes de aparelho não foram executados nesta entrega. Os testes
 automatizados usam registros e armazenamento controlados. A publicação preview
 permite a conferência; não comprova recebimento da atualização no aparelho.
 
+## Preview publicado — 24/10/2026
+
+Commit a63b291 enviado para main. Cópia limpa aprovada em 157 testes, TypeScript,
+lint e export Metro Android. [Atualização Android preview 2cca3421](https://expo.dev/accounts/codaxi/projects/petlive-tutor/updates/2cca3421-c7db-4baf-82a6-5d80bcd383ea).
+Runtime 1264fb8e8b1374172a594db4c6ebbf26fe172e0c, confirmado pelo EAS com o
+perfil preview e na publicação; compatível com o
+[APK a387fe10](https://expo.dev/accounts/codaxi/projects/petlive-tutor/builds/a387fe10-ae05-406a-aeba-5e372b75689a).
+Abrir o APK com internet para baixar a atualização e reabrir após o download.
+O histórico está em Passeios → Histórico e meta semanal. O escopo desta task
+está implementado, validado automaticamente e entregue no preview; marcado Done.
+A homologação real do gravador/GPS continua no item próprio em andamento.
+
 Referências consultadas: [Expo SDK 58](https://docs.expo.dev/versions/v58.0.0/)
 e [FlatList do React Native](https://reactnative.dev/docs/flatlist).

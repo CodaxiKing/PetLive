@@ -38,11 +38,12 @@ após confirmação e com a gravação pausada. Não há upload automático.
 
 Esta entrega não implementa as outras tasks: gravação com tela apagada,
 sincronização/tabelas no backend, resumo com foto/anotação/ritmo/mapa de ruas,
-histórico com totais e metas, selo Passeios em dia ou compartilhamento social.
+selo Passeios em dia ou compartilhamento social. O histórico com totais e meta
+semanal foi implementado depois do gravador; ver [validação do histórico](validacao-historico-passeios.md).
 Por enquanto cada passeio é de um pet; seleção simultânea de vários pets,
 política de descarte de passeio curto e encerramento automático precisam ser
 definidos/implementados nas próximas entregas. A tela informa a gravação local
-e a necessidade de permanecer aberta. Nenhuma dessas tasks foi marcada Done.
+e a necessidade de permanecer aberta. As tasks restantes acima não foram marcadas Done.
 
 ## Validação automatizada
 
