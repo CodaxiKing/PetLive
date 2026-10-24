@@ -9,6 +9,7 @@ import { usePets } from '../../src/pets/PetsProvider';
 import { gravadorPasseioLocal } from '../../src/passeios/sessaoLocal';
 import { TrajetoPasseio } from '../../src/passeios/TrajetoPasseio';
 import { duracaoPasseio } from '../../src/passeios/passeio';
+import { apagarPasseiosNuvem, limparControlePasseios, sincronizadorPasseios } from '../../src/passeios/nuvem';
 import { colors } from '../../src/theme/colors';
 import { spacing, radius } from '../../src/theme/tokens';
 import { typography } from '../../src/theme/typography';
@@ -62,7 +63,7 @@ function GravarPasseio({ tutorId }: { tutorId: string }) {
     <CabecalhoTela titulo="Passeios" />
     <Pressable accessibilityRole="button" onPress={() => router.push('/passeios/historico')} style={s.acao}><Text style={s.link}>Histórico e meta semanal</Text></Pressable>
     <Text style={s.texto}>Escolha seu pet e registre o passeio com GPS. Mantenha esta tela aberta: sair do app ou apagar a tela pausa a gravação.</Text>
-    <Text style={s.texto}>Os dados ficam somente neste aparelho, separados por conta. Não são sincronizados com a nuvem nesta versão.</Text>
+    <Text style={s.texto}>Grave sem internet. Salve neste aparelho e, quando quiser, sincronize trajetos e anotações com sua conta. Fotos ficam somente aqui.</Text>
     {estado.erro ? <Text accessibilityRole="alert" style={s.erro}>{estado.erro}</Text> : null}
     {estado.carregando ? <>
       <ActivityIndicator accessibilityLabel="Carregando passeios salvos" />
@@ -90,8 +91,17 @@ function GravarPasseio({ tutorId }: { tutorId: string }) {
         <BotaoPrimario titulo="Iniciar passeio" carregando={estado.ocupado} onPress={() => { if (pet) void gravador.iniciar(pet); }} />
       </> : <BotaoPrimario titulo="Cadastrar um pet" onPress={() => router.push('/pet/novo')} />}
       {estado.passeios.length > 0 ? <Pressable accessibilityRole="button" disabled={estado.ocupado || atual?.status === 'gravando'} style={s.acao} onPress={() => Alert.alert('Apagar passeios deste aparelho?', 'Apaga os registros, fotos e anotações guardados pelo app nesta conta, incluindo o passeio pausado. Esta ação não pode ser desfeita.', [
-        { text: 'Cancelar', style: 'cancel' }, { text: 'Apagar passeios', style: 'destructive', onPress: () => { void gravador.apagar(); } },
+        { text: 'Cancelar', style: 'cancel' }, { text: 'Apagar passeios', style: 'destructive', onPress: () => { void gravador.apagar(() => limparControlePasseios(tutorId)); } },
       ])}><Text style={s.erro}>Apagar passeios deste aparelho</Text></Pressable> : null}
+      <View style={s.card}>
+        <Text accessibilityRole="header" style={s.titulo}>Seus passeios na nuvem</Text>
+        <Text style={s.texto}>Envie seu trajeto GPS e anotações para a sua conta privada ou recupere os de outro aparelho. Pause antes de sincronizar. Fotos não são enviadas.</Text>
+        <BotaoPrimario titulo="Sincronizar trajetos e anotações" carregando={estado.ocupado} desabilitado={atual?.status === 'gravando'} onPress={() => { void gravador.sincronizar(sincronizadorPasseios(tutorId)); }} />
+        <Text style={s.texto}>Após oito horas sem atualização, passeios pausados na nuvem são encerrados no último registro, sem somar a espera. Apagar só deste aparelho mantém a cópia na nuvem, que volta ao sincronizar.</Text>
+        <Pressable accessibilityRole="button" disabled={estado.ocupado || atual?.status === 'gravando'} style={s.acao} onPress={() => Alert.alert('Apagar passeios locais e da nuvem?', 'Remove os trajetos e anotações desta conta na nuvem e neste aparelho, incluindo suas fotos locais. Requer internet e não pode ser desfeito. Outros aparelhos podem manter cópias offline; apague-as também para evitar reenvio.', [
+          { text: 'Cancelar', style: 'cancel' }, { text: 'Apagar tudo', style: 'destructive', onPress: () => { void gravador.apagar(() => apagarPasseiosNuvem(tutorId)); } },
+        ])}><Text style={s.erro}>Apagar passeios locais e da nuvem</Text></Pressable>
+      </View>
     </>}
   </ScrollView>;
 }

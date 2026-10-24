@@ -114,12 +114,20 @@ export class GravadorPasseio {
       this.emitir({ aviso: 'Passeio concluído e salvo neste aparelho.' });
     });
   }
-  apagar() {
+  apagar(prepararExclusao?: () => Promise<void>) {
     return this.comando(async () => {
       if (this.atual()?.status === 'gravando') throw new Error('Pause o passeio antes de apagar os dados.');
+      await prepararExclusao?.();
       await this.fotos?.apagarTodas();
       await this.repo.salvar([]);
       this.emitir({ passeios: [], aviso: 'Os passeios desta conta foram apagados deste aparelho.' });
+    });
+  }
+  sincronizar(executar: (passeios: Passeio[], salvar: (p: Passeio[]) => Promise<void>) => Promise<Passeio[]>) {
+    return this.comando(async () => {
+      if (this.atual()?.status === 'gravando') throw new Error('Pause o passeio antes de sincronizar.');
+      const passeios = await executar(this.estado.passeios, (p) => this.repo.salvar(p));
+      this.emitir({ passeios, aviso: 'Trajetos e anotações sincronizados. As fotos continuam somente neste aparelho.' });
     });
   }
   salvarResumo(id: string, anotacao: string, foto: string | null | undefined) {

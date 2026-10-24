@@ -91,7 +91,7 @@ function Historico({ tutorId }: { tutorId: string }) {
     keyboardShouldPersistTaps="handled" data={carregando ? [] : lista} keyExtractor={(p) => p.id}
     ListHeaderComponent={<View style={s.cabecalho}>
       <CabecalhoTela titulo="Histórico de passeios" />
-      <Text style={s.texto}>Passeios concluídos neste aparelho. A semana começa na segunda-feira; as datas seguem o horário do aparelho.</Text>
+      <Text style={s.texto}>Passeios concluídos salvos ou recuperados neste aparelho. Para atualizar com a nuvem, use Sincronizar na tela Passeios. A semana começa na segunda-feira; as datas seguem o horário do aparelho.</Text>
       <Text style={s.texto}>{plano.carregando ? 'Consultando seu plano…' : premium ? 'Histórico completo disponível nesta conta Premium.' : 'Plano grátis: últimos 30 dias, incluindo hoje. Os passeios antigos continuam salvos; a lista e os totais respeitam esse limite.'}</Text>
       {plano.erro ? <Pressable accessibilityRole="button" onPress={plano.recarregar} style={s.acao}><Text style={s.link}>Não foi possível consultar o plano. Tentar novamente</Text></Pressable> : null}
       {estado.erro ? <Text accessibilityRole="alert" style={s.erro}>{estado.erro}</Text> : null}

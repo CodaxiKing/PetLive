@@ -95,7 +95,7 @@ function EditorResumo({ passeio, gravador, ocupado, erro }: { passeio: Passeio; 
     {escolhendo ? <ActivityIndicator accessibilityLabel="Escolhendo foto" /> : null}
     {erroFoto ? <Text accessibilityRole="alert" style={s.erro}>{erroFoto}</Text> : null}
     <TextInput accessibilityLabel="Anotação do passeio" placeholder="Como foi o passeio?" multiline maxLength={1000} value={anotacao} onChangeText={setAnotacao} editable={!bloqueado} style={s.campo} />
-    <Text style={s.texto}>{anotacao.length}/1000 caracteres. Foto, anotação e trajeto ficam privados neste aparelho.</Text>
+    <Text style={s.texto}>{anotacao.length}/1000 caracteres. Salvo neste aparelho. Trajeto e anotação podem ser sincronizados na tela Passeios; a foto fica somente aqui.</Text>
     {erro ? <Text accessibilityRole="alert" style={s.erro}>{erro}</Text> : null}
     <BotaoPrimario titulo="Salvar passeio" carregando={ocupado} desabilitado={bloqueado || erroImagem || passeio.status === 'gravando'} onPress={() => { void salvar(); }} />
     <Text style={s.texto}>Só salvamos foto e anotação ao tocar em Salvar passeio. Se sair agora, o trajeto pausado continua guardado.</Text>
