@@ -32,6 +32,8 @@ A lista ficará vazia enquanto não houver pets reais publicados de ONGs aprovad
 
 ## Pendências
 
+Preview Android publicado: [OTA b9650397](https://expo.dev/accounts/codaxi/projects/petlive-tutor/updates/b9650397-c886-404d-94ef-9ff20a3027f0), código `5f14585`, runtime `dff916ce37166d489949d7b3020e4ed90d1755dd`. Compatível com o APK dos atalhos `efb3cb3b-a260-427c-b501-21dde90e5dd0`; abrir com internet e reabrir o app para carregar. A OTA não aplica a migration.
+
 Aplicar migration, publicar dados reais verificados e testar no Android os filtros, paginação, atualização, erro de rede, persistência de favoritos e troca de conta. O preview usa o runtime do APK dos atalhos (`dff916ce37166d489949d7b3020e4ed90d1755dd`); não requer dependência nativa nova.
 
 Continuam em outras tarefas: cadastro de ONG/CNPJ/documentos, gestão e fotos pela ONG, painel de aprovação/moderação, ficha completa e Tenho interesse/contato com a ONG. Não há botão de contato fictício na lista. Essas tarefas não são encerradas por esta entrega.
