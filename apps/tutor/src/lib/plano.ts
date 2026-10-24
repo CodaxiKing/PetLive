@@ -1,32 +1,41 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useState } from 'react'
+import { useFocusEffect } from 'expo-router'
 import { useAuth } from '../auth/AuthProvider'
 import { supabase } from './supabase'
 
-export type Plano = 'gratis' | 'premium'
+import { estadoPlanoDaConta, type ConsultaPlano } from './estadoPlano'
+export type { Plano } from './estadoPlano'
 
 /**
  * Plano do tutor (profiles.plano). Enquanto não carrega, considera grátis:
  * os limites do grátis são o comportamento seguro (BUSINESS.md 10).
  */
-export function usePlano(): Plano {
+export function useEstadoPlano() {
   const { user } = useAuth()
-  const [plano, setPlano] = useState<Plano>('gratis')
+  const tutorId = user?.id
+  const [consulta, setConsulta] = useState<ConsultaPlano | null>(null)
+  const [tentativa, setTentativa] = useState(0)
 
-  useEffect(() => {
-    if (!user) return
+  useFocusEffect(useCallback(() => {
+    if (!tutorId) return
     let vivo = true
-    supabase
+    Promise.resolve(supabase
       .from('profiles')
       .select('plano')
-      .eq('id', user.id)
-      .maybeSingle()
-      .then(({ data }) => {
-        if (vivo && data?.plano === 'premium') setPlano('premium')
+      .eq('id', tutorId)
+      .maybeSingle())
+      .then(({ data, error }) => {
+        if (vivo) setConsulta({ tutorId, plano: data?.plano === 'premium' ? 'premium' : 'gratis', erro: Boolean(error) || !data })
       })
+      .catch(() => { if (vivo) setConsulta({ tutorId, plano: 'gratis', erro: true }) })
     return () => {
       vivo = false
     }
-  }, [user])
+  // A tentativa repete a consulta quando o tutor solicita.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tutorId, tentativa]))
 
-  return plano
+  return { ...estadoPlanoDaConta(tutorId, consulta), recarregar: () => setTentativa((n) => n + 1) }
 }
+
+export function usePlano() { return useEstadoPlano().plano }

@@ -7,6 +7,20 @@ Referência de telas: `../../prototipo/` (Welcome, Login, Main, Inicio, MeusPets
 
 Status: em desenvolvimento.
 
+## Consulta do plano Premium
+
+O convite do perfil abre `/premium`, que consulta o plano da conta atual,
+apresenta os recursos e distingue carregamento, falha de rede e plano
+confirmado. A consulta é refeita ao retornar à tela. Troca de conta,
+logout, erro de consulta ou retirada do Premium deixam de reaproveitar
+o benefício anterior. A tela permite tentar novamente após falha.
+
+A compra e a restauração de assinatura pelas lojas ainda não estão
+integradas. A interface informa essa indisponibilidade e não realiza
+cobranças nem oferece pagamento externo. A tarefa continua em andamento
+até configurar produtos, validar recibos no backend e testar compra e
+restauração nas lojas.
+
 ## QR da coleira
 
 Na carteirinha, **QR da coleira** permite gerar um código permanente,

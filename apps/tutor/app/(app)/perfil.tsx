@@ -9,6 +9,7 @@ import { MarcaPata } from '../../src/components/MarcaPata';
 import { Mascote } from '../../src/components/Mascote';
 import { limparCacheOffline } from '../../src/lib/cacheOffline';
 import { mascaraTelefone } from '../../src/lib/mascaras';
+import { useEstadoPlano } from '../../src/lib/plano';
 import { supabase } from '../../src/lib/supabase';
 import { useLembretes } from '../../src/lembretes/LembretesProvider';
 import { useCidade } from '../../src/mapa/useCidade';
@@ -32,6 +33,7 @@ function fimDeHoje(): number {
 export default function Perfil() {
   const router = useRouter();
   const { user } = useAuth();
+  const plano = useEstadoPlano();
   const { pets, definirPetAtivo } = usePets();
 
   const [nome, setNome] = useState<string | null>(null);
@@ -209,16 +211,14 @@ export default function Perfil() {
 
           <Tocavel
             accessibilityRole="button"
-            accessibilityLabel="Plano Grátis. Conhecer o Premium"
-            onPress={() =>
-              Alert.alert('Premium', 'O Premium chega na próxima fase do PetLive. Avisaremos você por aqui.')
-            }
+            accessibilityLabel="Consultar plano e conhecer o Premium"
+            onPress={() => router.push('/premium')}
             escala={0.98}
             style={estilos.premium}
           >
             <View style={estilos.flex1}>
-              <Text style={estilos.premiumSelo}>Plano Grátis</Text>
-              <Text style={estilos.premiumTitulo}>Mais pets, PDF e QR da coleira</Text>
+              <Text style={estilos.premiumSelo}>{plano.carregando ? 'Consultando plano…' : plano.erro ? 'Consultar meu plano' : plano.plano === 'premium' ? 'Plano Premium' : 'Plano Grátis'}</Text>
+              <Text style={estilos.premiumTitulo}>Mais pets e carteirinha em PDF</Text>
             </View>
             <View style={estilos.premiumBotao}>
               <Text style={estilos.premiumBotaoTexto}>Premium</Text>

@@ -21,6 +21,7 @@ const RAIZ_APP = join(__dirname, '..', '..', 'app');
 // assinatura no futuro. Adicionar aqui à medida que novas telas Premium forem
 // criadas.
 const ARQUIVOS_PREMIUM = [
+  join(RAIZ_APP, 'premium.tsx'),
   join(RAIZ_APP, '(app)', 'perfil.tsx'),
   join(RAIZ_APP, 'despesas', 'index.tsx'),
   join(RAIZ_APP, 'pet', '[id]', 'qualidade-de-vida.tsx'),
@@ -61,11 +62,12 @@ describe('Validação P-CJgTU — Premium sem pagamento externo às lojas', () =
     }
   });
 
-  it('o botão Premium do Perfil só exibe aviso informativo, sem link de pagamento', () => {
+  it('o perfil abre a consulta do plano e a tela informa a indisponibilidade de compras', () => {
     const conteudo = lerConteudo(join(RAIZ_APP, '(app)', 'perfil.tsx'));
 
     // O botão atual chama Alert.alert com texto informativo, não abre link externo.
-    expect(conteudo).toContain("O Premium chega na próxima fase do PetLive");
+    expect(conteudo).toContain("router.push('/premium')");
+    expect(lerConteudo(join(RAIZ_APP, 'premium.tsx'))).toContain('A compra e a restauração de assinaturas ainda não estão disponíveis');
     // Não deve conter window.open, Linking.openURL ou expo-web-browser para pagamento externo.
     expect(conteudo).not.toMatch(/Linking\.openURL\("https/);
     expect(conteudo).not.toMatch(/WebBrowser\.openAsync\("https/);
