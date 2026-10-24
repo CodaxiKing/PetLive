@@ -33,3 +33,26 @@ export function idadeAdocao(nascimento: string | null, hoje = new Date()): strin
 export function juntarPaginaAdocao(atual: PetAdocao[], nova: PetAdocao[]) {
   const mapa = new Map(atual.map((i) => [i.id, i])); for (const i of nova) mapa.set(i.id, i); return [...mapa.values()];
 }
+export type ReciboInteresse = { id: string; criado_em: string };
+export type DetalheAdocao = { pet: PetAdocao; contato: ReciboInteresse | null };
+export function conferirReciboInteresse(valor: unknown): ReciboInteresse {
+  const r = valor as ReciboInteresse | null;
+  if (!r || typeof r.id !== 'string' || !r.id || typeof r.criado_em !== 'string' || !Number.isFinite(Date.parse(r.criado_em))) {
+    throw new Error('Não foi possível confirmar o interesse. Atualize a ficha antes de tentar novamente.');
+  }
+  return r;
+}
+export function conferirDetalheAdocao(valor: unknown): DetalheAdocao | null {
+  if (valor === null) return null;
+  const d = valor as DetalheAdocao;
+  if (!d || !('contato' in d)) throw new Error('A ficha recebida está incompleta. Tente novamente.');
+  const pet = conferirPaginaAdocao({ itens: [d.pet], tem_mais: false }).itens[0];
+  return { pet, contato: d.contato === null ? null : conferirReciboInteresse(d.contato) };
+}
+export function validarInteresse(mensagem: string, email: string, concordo: boolean) {
+  const texto = mensagem.trim(), resposta = email.trim().toLowerCase();
+  if (texto.length < 10 || texto.length > 1000) throw new Error('Escreva uma mensagem de 10 a 1000 caracteres.');
+  if (resposta.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(resposta)) throw new Error('Informe um e-mail válido para resposta.');
+  if (!concordo) throw new Error('Confirme o compartilhamento com a ONG.');
+  return { mensagem: texto, email: resposta };
+}

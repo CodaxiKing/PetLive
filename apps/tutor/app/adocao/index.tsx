@@ -1,6 +1,6 @@
 import { useCallback, useRef, useState, type ReactNode } from 'react';
 import { ActivityIndicator, FlatList, Image, Pressable, StyleSheet, Text, View } from 'react-native';
-import { Redirect, useFocusEffect } from 'expo-router';
+import { Redirect, router, useFocusEffect } from 'expo-router';
 import { useAuth } from '../../src/auth/AuthProvider';
 import { FiltrosCatalogo } from '../../src/adocao/FiltrosCatalogo';
 import { FILTROS_ADOCAO, idadeAdocao, juntarPaginaAdocao, type CursorAdocao, type FiltrosAdocao, type PetAdocao } from '../../src/adocao/modelo';
@@ -66,6 +66,7 @@ function Cartao({ pet, ocupado, favoritar }: { pet: PetAdocao; ocupado: boolean;
   return <View style={s.card}>{pet.fotos[0] && fotoFalhou !== pet.fotos[0] ? <Image source={{ uri: pet.fotos[0] }} accessibilityLabel={`Foto de ${pet.nome}`} style={s.foto} resizeMode="cover" onError={() => setFotoFalhou(pet.fotos[0])} /> : <View style={[s.foto, s.semFoto]}><Text style={s.texto}>Foto não disponível</Text></View>}
     <View style={s.dados}><Text style={s.titulo}>{pet.nome}</Text><Text style={s.texto}>{pet.especie === 'cao' ? 'Cão' : 'Gato'} · {idadeAdocao(pet.nascimento)} · {pet.porte}{pet.sexo === 'nao_informado' ? '' : ` · ${pet.sexo === 'femea' ? 'fêmea' : 'macho'}`}</Text>
       <Text style={s.texto}>{pet.bairro}, {pet.cidade}</Text><Text style={s.filtro}>{pet.ong_nome} · ONG verificada</Text>
+      <BotaoPrimario titulo="Ver ficha e interesse" onPress={() => router.push({ pathname: '/adocao/[id]', params: { id: pet.id } })} />
       <Pressable accessibilityRole="button" accessibilityLabel={`${pet.favorito ? 'Remover' : 'Adicionar'} ${pet.nome} ${pet.favorito ? 'dos' : 'aos'} favoritos`} accessibilityState={{ selected: pet.favorito, disabled: ocupado }} disabled={ocupado} onPress={favoritar} style={[s.acao, pet.favorito && s.ativo]}><Text style={s.filtro}>{ocupado ? 'Salvando…' : pet.favorito ? '♥ Favoritado' : '♡ Favoritar'}</Text></Pressable>
       <Pressable accessibilityRole="button" accessibilityState={{ expanded: expandido }} onPress={() => setExpandido(!expandido)} style={s.acao}><Text style={s.filtro}>{expandido ? 'Recolher informações' : `Sobre ${pet.nome}`}</Text></Pressable>
       {expandido ? <><Text style={s.texto}>{pet.descricao}</Text><Text style={s.texto}>{[['Castrado', pet.castrado], ['Vacinado', pet.vacinado], ['Vermifugado', pet.vermifugado]].map(([rotulo, valor]) => `${rotulo}: ${valor === null ? 'não informado' : valor ? 'sim' : 'não'}`).join(' · ')}</Text><Text style={s.texto}>Informações fornecidas pela ONG. Confirme os cuidados e a disponibilidade com ela.</Text></> : null}
