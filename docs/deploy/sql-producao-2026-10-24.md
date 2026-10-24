@@ -1,5 +1,13 @@
 # Atualização SQL de produção — 24/10/2026
 
+## Entrega adicional: ficha e interesse de adoção
+
+Após o pacote abaixo, aplicada separadamente a migration `20261209000000_interesse_adocao.sql`, fonte commit `54fd2eb`. Validação na produção com ROLLBACK aprovada; em seguida COMMIT aprovado. Lock timeout 5 s e statement timeout 60 s. Nenhum contato, e-mail, ONG ou pet de teste foi inserido em produção.
+
+Verificação pós-aplicação: `adocao_detalhe` e `adocao_enviar_interesse` instaladas; anon sem EXECUTE no envio, authenticated sem INSERT direto na tabela e RLS dos contatos ativa. Consulta autenticada com UUID inexistente retornou pet indisponível, em transação revertida. Testes isolados PGlite cobriram consentimento, idempotência/limite, propriedade, disponibilidade, LGPD e cascata. Homologação com ONG real e aparelho continua pendente. Roteiro em `apps/tutor/lojas/validacao-interesse-adocao.md`.
+
+## Pacote inicial
+
 Aplicada no projeto Supabase `qurdqbhjtgapyksrilyk` (nome petlive-dev, utilizado pelo app publicado), via CLI autenticada e Management API. Fonte: commit 8236ff4, enviado à main antes da implantação.
 
 O banco tinha schema antigo criado manualmente e não tinha histórico de migrations. Não foi usado db push nem fabricado histórico. As 15 migrations abaixo foram executadas na ordem explícita indicada, em uma única transação, primeiro com ROLLBACK (validação bem-sucedida), depois com COMMIT. Lock timeout 5 s, statement timeout 120 s. As transações externas BEGIN/COMMIT dos arquivos foram removidas somente no pacote de execução.

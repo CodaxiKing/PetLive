@@ -22,3 +22,9 @@ Servidor: conta esperada, pet publicado/confirmado há menos de 60 dias, ONG apr
 6. Trocar de conta durante a consulta/envio: a nova conta não pode receber dados ou confirmação da anterior. Testar fonte ampliada, teclado e rolagem em Android/iOS.
 
 Esses testes nativos e o fluxo com uma ONG real continuam pendentes até execução no aparelho. Não publicar animais/ONGs fictícios para preencher o catálogo de produção.
+
+## Implantação — 24/10/2026
+
+Código `54fd2eb` enviado à main. Migration aplicada no Supabase de produção `qurdqbhjtgapyksrilyk`, após validação com ROLLBACK; funções/permissões/RLS conferidas após COMMIT. Nenhum contato real ou dado fictício foi criado para os testes.
+
+Preview Android publicado: https://expo.dev/accounts/codaxi/projects/petlive-tutor/updates/0df650e1-bbc3-4114-9be2-21bb50d51b9e . Runtime `dff916ce37166d489949d7b3020e4ed90d1755dd`, compatível com o APK `efb3cb3b-a260-427c-b501-21dde90e5dd0`. Não exige novo APK nem Redeploy do site. Cópia limpa passou nos 234 testes/39 arquivos, TypeScript, lint e export Metro Android. Publicação OTA confirmada pelo EAS; recebimento/uso no aparelho ainda precisa de validação.
