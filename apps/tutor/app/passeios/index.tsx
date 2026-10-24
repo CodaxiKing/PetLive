@@ -55,6 +55,7 @@ function GravarPasseio({ tutorId }: { tutorId: string }) {
 
   return <ScrollView style={s.tela} contentContainerStyle={{ padding: spacing.xl, paddingTop: insets.top, paddingBottom: insets.bottom + spacing.xl, gap: spacing.lg }}>
     <CabecalhoTela titulo="Passeios" />
+    <Pressable accessibilityRole="button" onPress={() => router.push('/passeios/historico')} style={s.acao}><Text style={s.link}>Histórico e meta semanal</Text></Pressable>
     <Text style={s.texto}>Escolha seu pet e registre o passeio com GPS. Mantenha esta tela aberta: sair do app ou apagar a tela pausa a gravação.</Text>
     <Text style={s.texto}>Os dados ficam somente neste aparelho, separados por conta. Não são sincronizados com a nuvem nesta versão.</Text>
     {estado.erro ? <Text accessibilityRole="alert" style={s.erro}>{estado.erro}</Text> : null}
