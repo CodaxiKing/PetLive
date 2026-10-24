@@ -1,5 +1,11 @@
 # Atualização SQL de produção — 24/10/2026
 
+## Correção do cadastro de pet: perfil ausente
+
+Erro reportado no Android: `pets_tutor_id_fkey`. Auditoria encontrou uma conta Auth sem registro correspondente em profiles, embora o trigger de novos cadastros estivesse ativo. Migration `20261210000000_reparar_perfis_ausentes.sql` (commit `27bc2e2`) aplicada em produção: insere apenas perfis ausentes a partir do Auth, preserva existentes e defaults de plano/papel, não inventa aceite. Revoga DELETE direto de profiles pelo cliente para não deixar sessões válidas sem perfil; exclusão de conta pelo backend/Auth continua em cascata.
+
+Pós-aplicação: zero contas sem perfil, DELETE direto bloqueado e trigger de cadastro ativo. Teste PGlite `testar-perfis-ausentes.mjs` reproduziu a FK, confirmou cadastro após reparo, reaplicação, defaults sem promoção, preservação de perfil existente e cascata de exclusão. Nenhum pet fictício foi criado em produção. Não exige APK/OTA; usuário pode tentar Salvar pet novamente. Confirmação no aparelho permanece pendente.
+
 ## Entrega adicional: ficha e interesse de adoção
 
 Após o pacote abaixo, aplicada separadamente a migration `20261209000000_interesse_adocao.sql`, fonte commit `54fd2eb`. Validação na produção com ROLLBACK aprovada; em seguida COMMIT aprovado. Lock timeout 5 s e statement timeout 60 s. Nenhum contato, e-mail, ONG ou pet de teste foi inserido em produção.
