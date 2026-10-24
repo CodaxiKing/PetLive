@@ -43,8 +43,8 @@ describe('app.json (identidade do app e EAS Update)', () => {
     expect(expo.android.package).toBe('app.petlive.tutor');
   });
 
-  it('tem EAS Update configurado (runtimeVersion pela versão do app e canal de produção)', () => {
-    expect(expo.runtimeVersion.policy).toBe('appVersion');
+  it('separa atualizações quando dependências ou configuração nativa mudam', () => {
+    expect(expo.runtimeVersion.policy).toBe('fingerprint');
     expect(expo.updates.url).toContain('u.expo.dev');
     expect(expo.updates.enabled).toBe(true);
     expect(expo.updates.checkAutomatically).toBe('ON_LOAD');

@@ -40,7 +40,9 @@ eas submit --platform android --latest            # envia o .aab para o Google P
 
 ## 3. EAS Update: atualizações OTA e rollback
 
-**Configuração:** `expo-updates` está instalado, `runtimeVersion` segue a política `appVersion` (a `version` do `app.json`) e o canal de produção é o branch `production` do projeto EAS (`updates.url` em `app.json`). O app busca e aplica a atualização na inicialização (`src/lib/atualizacao.ts`), sem necessidade de nova aprovação nas lojas para mudanças cobertas pelo expo-updates (JS, assets e fontes). Mudanças em módulos nativos exigem build novo nas lojas.
+**Configuração:** `expo-updates` está instalado e `runtimeVersion` usa a política `fingerprint`. O Expo calcula a compatibilidade a partir das dependências e configurações nativas durante builds e updates. Isso evita tratar builds diferentes como compatíveis apenas porque ambos têm a versão `0.1.0`. O canal de produção está configurado no perfil EAS; confira seu vínculo com o branch antes de publicar. O app busca atualizações na inicialização (`src/lib/atualizacao.ts`). Mudanças nativas exigem um novo binário compatível.
+
+**Transição de runtime:** os APKs antigos com runtime `0.1.0` não recebem updates destinados ao novo fingerprint. Gere e instale um novo build antes de testar OTA nessa política. Não force o runtime antigo para enviar código que depende dos módulos novos. Build e update precisam das mesmas variáveis de ambiente que afetam a configuração nativa, inclusive as chaves do Maps. Confira o fingerprint de cada plataforma; um hash Android não comprova compatibilidade com iOS.
 
 Publicar uma correção OTA (entregue apenas a builds com `runtimeVersion` compatível):
 
