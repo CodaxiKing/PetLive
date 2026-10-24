@@ -20,6 +20,7 @@ function AdocaoDaConta({ tutorId }: { tutorId: string }) {
   const [filtros, setFiltros] = useState<FiltrosAdocao>({ ...FILTROS_ADOCAO }), [rascunho, setRascunho] = useState(filtros), [editando, setEditando] = useState(false);
   const painel = editando ? <FiltrosCatalogo valor={rascunho} alterar={setRascunho} aplicar={() => { setFiltros({ ...rascunho, cidade: rascunho.cidade.trim() }); setEditando(false); }} /> : null;
   return <View style={s.tela}><CabecalhoTela titulo="Adoção" acao={editando ? 'Fechar filtros' : 'Filtros'} onAcao={() => { if (!editando) setRascunho({ ...filtros }); setEditando(!editando); }} />
+    <Pressable accessibilityRole="button" style={s.acao} onPress={() => router.push('/ong')}><Text style={s.filtro}>Sou responsável por uma ONG</Text></Pressable>
     <Catalogo key={JSON.stringify(filtros)} tutorId={tutorId} filtros={filtros} painel={painel} />
   </View>;
 }
