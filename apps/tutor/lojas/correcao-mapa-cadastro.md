@@ -85,3 +85,9 @@ local de importação, reconsulta e ficha em duas regiões, com provedor control
 nesta máquina; a descoberta externa em produção e o layout no Android ainda
 dependem de validação no aparelho. Nenhum novo SQL é necessário após o reparo.
 
+Publicação concluída: commit `bfb3e01`, função `discover-places` ACTIVE v2 com
+JWT obrigatório, OTA Android preview `010ff41f-a6c2-49cc-b9e5-2a8f5be1d057`,
+runtime `1264fb8e8b1374172a594db4c6ebbf26fe172e0c`. Na cópia limpa passaram
+102 testes, TypeScript e lint. O APK compatível continua sendo o build
+`a387fe10-ae05-406a-aeba-5e372b75689a`.
+
