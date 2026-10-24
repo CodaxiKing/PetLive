@@ -37,9 +37,12 @@ após confirmação e com a gravação pausada. Não há upload automático.
 ## Escopo ainda pendente
 
 Esta entrega não implementa as outras tasks: gravação com tela apagada,
-sincronização/tabelas no backend, resumo com foto/anotação/ritmo/mapa de ruas,
+sincronização/tabelas no backend,
 selo Passeios em dia ou compartilhamento social. O histórico com totais e meta
 semanal foi implementado depois do gravador; ver [validação do histórico](validacao-historico-passeios.md).
+O resumo com foto, anotação, ritmo e mapa de ruas também foi implementado:
+Finalizar e revisar pausa o passeio e abre a revisão, que exige Salvar passeio.
+Ver [validação do resumo](validacao-resumo-passeio.md), ainda pendente no Android.
 Por enquanto cada passeio é de um pet; seleção simultânea de vários pets,
 política de descarte de passeio curto e encerramento automático precisam ser
 definidos/implementados nas próximas entregas. A tela informa a gravação local

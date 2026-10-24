@@ -76,6 +76,19 @@ Status In Progress até conferir mapa, câmera e persistência real no aparelho.
 Não exige SQL. Segundo plano, sincronização e política de descarte/encerramento
 automático continuam em tarefas separadas; não foram implementados aqui.
 
+## Preview publicado — 24/10/2026
+
+Commit b1254ca enviado para main. Cópia limpa aprovada em 171 testes,
+TypeScript, lint e export Metro Android.
+[Atualização Android preview 0424c021](https://expo.dev/accounts/codaxi/projects/petlive-tutor/updates/0424c021-177d-4c7a-9e5e-2204bf6a1272).
+Runtime 1264fb8e8b1374172a594db4c6ebbf26fe172e0c, confirmado pelo fingerprint
+do perfil preview e pela publicação. Compatível com o
+[APK a387fe10](https://expo.dev/accounts/codaxi/projects/petlive-tutor/builds/a387fe10-ae05-406a-aeba-5e372b75689a).
+Não exige SQL nem novo APK. Abrir com internet para baixar a atualização e
+reabrir após o download. Acesso por Passeios → Finalizar e revisar ou pelo
+histórico. Câmera, mapa e persistência das fotos ainda aguardam o roteiro
+nativo acima; a publicação não comprova recebimento no aparelho.
+
 Referências: [ImagePicker SDK 58](https://docs.expo.dev/versions/v58.0.0/sdk/imagepicker/),
 [FileSystem SDK 58](https://docs.expo.dev/versions/v58.0.0/sdk/filesystem/),
 [MapLibre Camera](https://maplibre.org/maplibre-react-native/docs/components/camera/),

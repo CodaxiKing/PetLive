@@ -33,9 +33,11 @@ continua bloqueando exportação misturada. Remover meta não apaga trajetos;
 apagar trajetos na tela do gravador não altera a meta configurada.
 
 Não requer SQL, nova dependência ou configuração nativa. Dados são deste
-aparelho, sem sincronização na nuvem. Backend, resumo completo com foto/anotação
-e mapa de ruas, gravação em segundo plano e selo de passeios continuam em suas
+aparelho, sem sincronização na nuvem. Backend,
+gravação em segundo plano e selo de passeios continuam em suas
 tasks; esta entrega não encerra esses itens.
+O resumo com foto, anotação e mapa de ruas foi implementado depois e pode ser
+aberto pelo histórico; ver [validação do resumo](validacao-resumo-passeio.md).
 
 ## Verificação
 
