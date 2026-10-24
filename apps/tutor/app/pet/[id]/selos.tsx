@@ -8,6 +8,8 @@ import { usePets } from '../../../src/pets/PetsProvider'
 import { conferirSelos, SELOS, type Selo } from '../../../src/pets/selos'
 import { colors } from '../../../src/theme/colors'
 import { fontFamily } from '../../../src/theme/typography'
+import { useAuth } from '../../../src/auth/AuthProvider'
+import { SeloPasseios } from '../../../src/passeios/SeloPasseios'
 
 /**
  * Selos de cuidado (protótipo Selos): os conquistados em cor, os que faltam
@@ -17,6 +19,7 @@ import { fontFamily } from '../../../src/theme/typography'
 export default function TelaSelos() {
   const { id } = useLocalSearchParams<{ id: string }>()
   const { pets, petsMemoria } = usePets()
+  const { user } = useAuth()
   const pet = [...pets, ...petsMemoria].find((p) => p.id === id) ?? null
   const [selos, setSelos] = useState<Set<Selo> | null>(null)
 
@@ -51,6 +54,7 @@ export default function TelaSelos() {
             )
           })}
         </View>
+        {user && pet ? <SeloPasseios key={`${user.id}:${pet.id}`} tutorId={user.id} petId={pet.id} /> : null}
         <Text style={estilos.nota}>Os selos mostram o cuidado do dia a dia. Não há ranking nem pontos.</Text>
       </ScrollView>
     </View>
