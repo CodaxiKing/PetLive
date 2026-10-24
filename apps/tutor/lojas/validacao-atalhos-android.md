@@ -17,10 +17,15 @@ O plugin gera recursos no projeto Android durante o prebuild. Não editar `andro
 ## Validação
 
 - Testes de allowlist, intenção de login com expiração/consumo único, três intents explícitos com recursos locais e reaplicação do plugin sem duplicar metadados ou remover entradas anteriores.
-- Rodar testes, TypeScript e lint do tutor; validar o prebuild e a compilação Android em uma cópia limpa do commit.
+- 224 testes em 38 arquivos, TypeScript e lint sem avisos, tanto no workspace quanto na cópia limpa da entrega. Os cinco XMLs gerados foram lidos por um parser XML.
+- Build Android SDK 58 concluído com sucesso no EAS: prebuild, recursos, compilação e assinatura do APK a partir de `adc2b9d`. A correção JavaScript de Voltar (`c983a82`) foi exportada e publicada por OTA no mesmo runtime.
 - Exige novo APK: o APK anterior não tem os recursos de atalhos. OTA sozinha não acrescenta entradas no launcher.
 
 ## Conferir no aparelho
+
+[Baixar APK dos atalhos](https://expo.dev/artifacts/eas/dY0AmdntQYN4CQjNhP5l8MzZvYyhsDufhoPIDGr4nw0.apk). [Build efb3cb3b](https://expo.dev/accounts/codaxi/projects/petlive-tutor/builds/efb3cb3b-a260-427c-b501-21dde90e5dd0), status **FINISHED** em 24/10/2026. Mesmo pacote e assinatura do preview anterior; instalar como atualização do app.
+
+Atualização Android publicada em 24/10/2026: [OTA 62c34a06](https://expo.dev/accounts/codaxi/projects/petlive-tutor/updates/62c34a06-61cd-4e52-b38a-6df5d381dfd3), código `c983a82`, runtime `dff916ce37166d489949d7b3020e4ed90d1755dd`. Inclui o ajuste de Voltar ao início. Abrir o novo APK com internet e reabrir o app para garantir a atualização. O runtime anterior `b71630dbeb6ccaf42188e65c5351268044bbb4f9` não tem os atalhos nativos.
 
 1. Instalar o APK e pressionar o ícone antes de abrir o app. Conferir os três rótulos e ícones.
 2. Abrir cada atalho com o app fechado, já aberto e em segundo plano. Voltar deve continuar utilizável.
