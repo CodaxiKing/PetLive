@@ -73,6 +73,19 @@ Não exige migration, nova dependência nem mudança da configuração nativa.
 Status In Progress até homologar no aparelho. Backend e tela apagada continuam
 nas respectivas tasks a fazer.
 
+## Preview publicado — 24/10/2026
+
+Commit 1d48967 enviado para main e exportado/publicado a partir de cópia limpa,
+com 149 testes, TypeScript e lint aprovados.
+[Atualização Android preview b8251e78](https://expo.dev/accounts/codaxi/projects/petlive-tutor/updates/b8251e78-5f22-4ee2-8f7b-34f47603c503).
+Runtime 1264fb8e8b1374172a594db4c6ebbf26fe172e0c, confirmado com
+`npx eas-cli@latest fingerprint:generate --build-profile preview --platform android --json --non-interactive`
+e na publicação. Compatível com o
+[APK a387fe10](https://expo.dev/accounts/codaxi/projects/petlive-tutor/builds/a387fe10-ae05-406a-aeba-5e372b75689a).
+No APK compatível, abrir com internet para baixar a atualização e reabrir
+após o download. Depois seguir o roteiro acima. Nenhum teste nativo foi
+confirmado nesta entrega e não houve publicação nas lojas.
+
 Referências: [Expo Location SDK 58](https://docs.expo.dev/versions/v58.0.0/sdk/location/),
 [Expo Crypto SDK 58](https://docs.expo.dev/versions/v58.0.0/sdk/crypto/),
 [AppState](https://reactnative.dev/docs/appstate).
