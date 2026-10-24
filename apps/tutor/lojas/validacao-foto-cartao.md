@@ -29,6 +29,8 @@ resposta da captura; isso não equivale a garantir remoção de metadados dos by
 
 A câmera só é montada enquanto a captura está aberta e o app está ativo. Sair
 do primeiro plano desmonta a câmera; voltar exige seu callback de prontidão.
+Voltar das configurações do aparelho consulta a permissão novamente, sem
+depender de fechar e reabrir a tela depois de autorizar ou revogar o acesso.
 Resultados atrasados de preparação/captura são descartados quando a tela fecha.
 Toques repetidos ficam bloqueados durante captura/envio. Voltar do Android e
 Cancelar fecham quando não há operação em andamento. A captura guiada é móvel;
@@ -77,3 +79,18 @@ limite mensal/eliminação da imagem de leitura e revisão das vacinas seguem To
 
 Referências: [Expo Camera SDK 58](https://docs.expo.dev/versions/v58.0.0/sdk/camera/)
 e [configuração do app SDK 58](https://docs.expo.dev/versions/v58.0.0/config/app/).
+
+## Build e atualização preview — 24/10/2026
+
+Código dffbd39 (captura/módulo nativo) e 518a575 (consulta de permissão ao retornar)
+enviados à main. Cópia limpa aprovada em 210 testes, TypeScript, lint e export
+Metro Android. Instalação pelo lockfile com --frozen-lockfile --ignore-scripts.
+[Build Android 3955a842](https://expo.dev/accounts/codaxi/projects/petlive-tutor/builds/3955a842-4c34-44c7-8be6-a6ca6d029df6)
+concluído com status FINISHED a partir de dffbd39.
+[Baixar novo APK](https://expo.dev/artifacts/eas/ANMCkfofoaBGWf-WVRPNJ4Z2C5qVu2Vg5nGwCuty7VQ.apk).
+[Atualização preview 3a0c80d0](https://expo.dev/accounts/codaxi/projects/petlive-tutor/updates/3a0c80d0-fb7f-4022-9449-32fa5d59a7d5)
+publicada a partir de 518a575, com runtime b71630dbeb6ccaf42188e65c5351268044bbb4f9,
+igual ao fingerprint do build. Depois de instalar o novo APK, abrir com internet
+e reabrir após baixar a atualização. O APK antigo não contém o módulo de câmera.
+O build bem-sucedido confirma a compilação nativa; não substitui o roteiro de
+homologação acima. A task permanece In Progress até validar no aparelho.
