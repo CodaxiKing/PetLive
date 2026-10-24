@@ -109,3 +109,8 @@ expiração, concorrência, limite de armazenamento e distinção entre falha de
 transporte e indisponibilidade do provedor. O teste em Android com modo avião
 permanece pendente, junto às demais verificações do mapa no aparelho.
 
+Publicada a partir do commit `9908276`: OTA Android preview
+`ead83bfa-0d22-44ec-b575-ab0c0aea1c68`, runtime
+`1264fb8e8b1374172a594db4c6ebbf26fe172e0c`, compatível com o APK preview
+`a387fe10-ae05-406a-aeba-5e372b75689a`. TypeScript e lint também aprovados.
+
