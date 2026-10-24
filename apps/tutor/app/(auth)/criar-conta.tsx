@@ -11,7 +11,7 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import Svg, { Circle, Path, Rect } from 'react-native-svg';
-import { useRouter } from 'expo-router';
+import { useRouter, useLocalSearchParams } from 'expo-router';
 import * as Linking from 'expo-linking';
 import { BotaoPrimario } from '../../src/components/BotaoPrimario';
 import { Campo } from '../../src/components/Campo';
@@ -69,7 +69,8 @@ function IconeSenha() {
 export default function CriarConta() {
   const { width } = useWindowDimensions();
   const router = useRouter();
-  const [modo, setModo] = useState<Modo>('criar');
+  const parametros = useLocalSearchParams<{ modo?: string }>();
+  const [modo, setModo] = useState<Modo>(() => parametros.modo === 'entrar' ? 'entrar' : 'criar');
   const [nome, setNome] = useState('');
   const [celular, setCelular] = useState('');
   const [email, setEmail] = useState('');

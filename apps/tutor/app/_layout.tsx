@@ -26,6 +26,7 @@ import { registrarAberturaDiaria } from '../src/lib/eventos';
 import { marcarLido } from '../src/notificacoes/caixa';
 import { TelaAtualizar } from '../src/components/TelaAtualizar';
 import { verificarEAplicarAtualizacao } from '../src/lib/atualizacao';
+import { RetomarAtalho } from '../src/atalhos/RetomarAtalho';
 
 /**
  * Sentry: só liga quando há DSN (sem conta/DSN o app segue normal,
@@ -103,7 +104,7 @@ function RaizProtegida() {
   }
 
   return (
-    <PetsProvider>
+    <PetsProvider key={session?.user.id ?? 'sem-conta'}>
       <VacinasProvider>
         <LembretesProvider>
           <RemediosProvider>
@@ -162,6 +163,7 @@ function RaizProtegida() {
               <Stack.Protected guard={!session}>
                 <Stack.Screen name="(auth)" options={{ animation: 'fade' }} />
               </Stack.Protected>
+              <Stack.Screen name="acao-rapida" />
             </Stack>
           </RemediosProvider>
         </LembretesProvider>
@@ -205,6 +207,7 @@ function RootLayout() {
     <AuthProvider>
       <StatusBar style="dark" />
       <RaizProtegida />
+      <RetomarAtalho />
     </AuthProvider>
   );
 }
