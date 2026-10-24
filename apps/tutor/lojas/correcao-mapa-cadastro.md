@@ -51,3 +51,37 @@ APK compatível: build a387fe10-ae05-406a-aeba-5e372b75689a.
 Validação final no aparelho permanece pendente; cadastro e mapa estão
 In Progress no board até confirmação dos fluxos acima.
 
+## Descoberta automática e filtros — 23/10/2026
+
+Os filtros agora ficam em um cabeçalho único junto à busca e à região.
+A faixa horizontal tem altura limitada a 52 px e os botões ficam centralizados,
+com seleção visível. Tocar no filtro ou na aba já selecionada não deixa o
+carregamento preso. Banho e tosa aparece entre os primeiros filtros.
+
+Com GPS permitido, a consulta aguarda a posição real; sem posição disponível,
+oferece tentar novamente ou escolher um bairro/cidade. Não consulta lugares
+do Rio como se fossem a região do tutor. O centro padrão é somente visual.
+
+A função autenticada `discover-places` consulta serviços e lugares com indicação
+explícita de aceitar cães no OpenStreetMap/Overpass, por região aproximada e
+raio de até 10 km, e faz upsert em `places`. Nenhuma loja precisa criar conta
+no PetLive. Os dados já importados do Overture e indicações continuam disponíveis.
+Isso não garante todos os estabelecimentos: depende da cobertura das fontes.
+
+As consultas são compartilhadas entre filtros, com cache de uma hora no app e
+por worker no servidor, prazo de 22 segundos e limite por usuário por worker.
+Somente coordenadas aproximadas e raio são enviados ao provedor; não são enviados
+dados de conta. `OVERPASS_URL` permite configurar uma instância própria ou contratada.
+O endpoint padrão é o histórico `overpass.kumi.systems` (Private.coffee).
+Referência do provedor: https://overpass.private.coffee/ .
+Os pins importados aparecem antes de terminar a atualização externa. Uma falha
+da busca pet friendly não esconde os serviços retornados. Consultas sem dados e
+com falha mostram erro, em vez de afirmar que não existem estabelecimentos.
+
+Validação: testes unitários de classificação, duplicatas entre fontes, raio,
+24h, cache, falha de provedor e carregamento parcial; integração autenticada
+local de importação, reconsulta e ficha em duas regiões, com provedor controlado
+(`supabase/tests/provedor-osm-local.mjs`). A fonte pública real apresentou timeout
+nesta máquina; a descoberta externa em produção e o layout no Android ainda
+dependem de validação no aparelho. Nenhum novo SQL é necessário após o reparo.
+

@@ -23,6 +23,7 @@ import { ehErroDeRede } from '../../src/lib/cacheOffline';
 import { acharEndereco } from '../../src/mapa/geocodificar';
 import { AcaoEstado, CartaoEstadoMapa } from '../../src/mapa/CartaoEstadoMapa';
 import { lugaresSalvos } from '../../src/mapa/favoritos';
+import { reunirLugares } from '../../src/mapa/descoberta';
 import { FolhaRota } from '../../src/mapa/FolhaRota';
 import { IlustracaoLugar } from '../../src/mapa/IlustracaoLugar';
 import { MapaLugares, type ControleMapa } from '../../src/mapa/MapaLugares';
@@ -45,14 +46,14 @@ import { fontFamily, typography } from '../../src/theme/typography';
 /** 'pet_friendly' chega da tela Pet friendly ("Ver no mapa"). */
 type Filtro = 'todos' | CategoriaLugar | '24h' | 'salvos' | 'pet_friendly';
 
-// Ordem do protótipo Mapa; o chip Pet friendly abre a tela própria (5.19).
+// Serviços mais usados primeiro; a faixa permite acessar os demais filtros.
 const FILTROS: { valor: Filtro; rotulo: string }[] = [
   { valor: 'todos', rotulo: 'Todos' },
   { valor: 'clinica', rotulo: 'Clínicas' },
   { valor: 'petshop', rotulo: 'Petshops' },
+  { valor: 'banho_tosa', rotulo: 'Banho e tosa' },
   { valor: 'creche', rotulo: 'Creches' },
   { valor: 'hotelzinho', rotulo: 'Hotelzinhos' },
-  { valor: 'banho_tosa', rotulo: 'Banho e tosa' },
   { valor: '24h', rotulo: '24 h' },
   { valor: 'salvos', rotulo: 'Salvos' },
 ];
@@ -109,7 +110,7 @@ export default function Mapa() {
   const filtroDoAtalho = FILTROS_DE_ATALHO.find((valor) => valor === filtro) ?? 'todos';
   const categoria: Filtro = categoriaManual ?? filtroDoAtalho;
 
-  const { permissao, posicao, localizar } = useLocalizacao();
+  const { permissao, posicao, localizar, localizando } = useLocalizacao();
 
   const [busca, setBusca] = useState('');
   const [buscaAtiva, setBuscaAtiva] = useState('');
@@ -143,12 +144,22 @@ export default function Mapa() {
   // Consulta por perto muda com a posição, o filtro e a busca.
   useEffect(() => {
     if (aba !== 'lugares') return;
+    if (!posicao && !regiao && categoria !== 'salvos') return;
     let vivo = true;
+    let parciais: Lugar[] = [];
+    const aoCarregar = (lista: Lugar[]) => {
+      if (!vivo) return;
+      parciais = reunirLugares([parciais, lista]);
+      setLugares(parciais);
+      setSelecionado(null);
+      setErroLugares(null);
+      setCarregando(false);
+    };
     const consulta =
       categoria === 'salvos'
         ? lugaresSalvos()
         : categoria === 'pet_friendly'
-          ? buscarPetFriendly({ lat: centro.lat, lng: centro.lng }, raioKm)
+          ? buscarPetFriendly({ lat: centro.lat, lng: centro.lng }, raioKm, aoCarregar)
           : buscarLugares({
               lat: centro.lat,
               lng: centro.lng,
@@ -157,6 +168,7 @@ export default function Mapa() {
               aberto24h: so24h ? true : null,
               raioKm,
               incluirPetFriendly: categoria === 'todos',
+              aoCarregar,
             });
     consulta
       .then((lista) => {
@@ -193,7 +205,7 @@ export default function Mapa() {
     return () => {
       vivo = false;
     };
-  }, [aba, centro.lat, centro.lng, categoria, buscaAtiva, so24h, raioKm, tentativa]);
+  }, [aba, centro.lat, centro.lng, posicao, regiao, categoria, buscaAtiva, so24h, raioKm, tentativa]);
 
   useFocusEffect(useCallback(() => {
     if (aba !== 'eventos') return;
@@ -216,6 +228,7 @@ export default function Mapa() {
   }, [posicao, regiao]);
 
   function escolherFiltro(valor: Filtro) {
+    if (valor === categoria) return;
     setCategoriaManual(valor);
     setSelecionado(null);
     setCarregando(true);
@@ -240,6 +253,7 @@ export default function Mapa() {
       return;
     }
     setBuscaAtiva(enviado.trim());
+    if (enviado.trim() === buscaAtiva) setTentativa((n) => n + 1);
     setSelecionado(null);
     setCarregando(true);
   }
@@ -261,6 +275,7 @@ export default function Mapa() {
     setBusca('');
     setBuscaAtiva('');
     setCarregando(true);
+    setTentativa((n) => n + 1);
   }
 
   function selecionar(lugar: Lugar) {
@@ -276,9 +291,11 @@ export default function Mapa() {
     // O ponto azul anda com o GPS; a primeira posição fica de reserva.
     const agora = mapaRef.current?.posicaoUsuario() ?? posicao;
     if (agora) {
+      setCarregando(true);
       setRegiao(agora);
       setBusca('');
       setBuscaAtiva('');
+      setTentativa((n) => n + 1);
       mapaRef.current?.irPara(agora, 15, 350);
     } else {
       localizar();
@@ -287,7 +304,7 @@ export default function Mapa() {
 
   const lugar = aba === 'lugares' ? selecionado : null;
   // Algum cartão de estado (sem internet, sem localização, sem resultados) na tela.
-  const comEstado = aba === 'lugares' && !lugar && (Boolean(erroLugares) || Boolean(semRede) || (permissao === 'negada' && !regiao) || (!carregando && lugares.length === 0));
+  const comEstado = aba === 'lugares' && !lugar && (Boolean(erroLugares) || Boolean(semRede) || (!posicao && !regiao && !localizando && categoria !== 'salvos') || (!carregando && lugares.length === 0));
 
   return (
     <View style={estilos.tela} onLayout={(e) => setAlturaTela(e.nativeEvent.layout.height)}>
@@ -348,19 +365,27 @@ export default function Mapa() {
         </View>
         </View>
 
+        <View style={estilos.linhaContexto}>
+        <Pressable onPress={buscarPorRegiao} accessibilityRole="button" accessibilityLabel="Escolher bairro ou cidade" style={estilos.regiaoAtual}>
+          <Icone nome="local" size={15} cor={colors.primaryDeep} />
+          <Text numberOfLines={1} style={estilos.regiaoTexto}>{regiao ? 'Região escolhida' : posicao ? 'Perto de você' : 'Escolher região'} · {raioKm} km</Text>
+        </Pressable>
         <View style={estilos.abasMapa}>
           {(['lugares', 'eventos'] as const).map((item) => {
             const ativo = aba === item;
             return (
-              <Pressable key={item} onPress={() => { setAba(item); setBusca(''); if (item === 'lugares') setCarregando(true); }} accessibilityRole="button"
+              <Pressable key={item} onPress={() => { if (item === aba) return; setAba(item); setBusca(''); if (item === 'lugares') setCarregando(true); }} accessibilityRole="button"
                 accessibilityState={{ selected: ativo }} style={[estilos.abaMapa, ativo && estilos.abaMapaAtiva]}>
                 <Text style={[estilos.abaMapaTexto, ativo && estilos.abaMapaTextoAtiva]}>{item === 'lugares' ? 'Lugares' : 'Eventos'}</Text>
               </Pressable>
             );
           })}
         </View>
+        </View>
         {aba === 'lugares' ? <ScrollView
           horizontal
+          bounces={false}
+          contentInsetAdjustmentBehavior="never"
           showsHorizontalScrollIndicator={false}
           style={estilos.filtrosRolagem}
           contentContainerStyle={estilos.filtros}
@@ -375,6 +400,7 @@ export default function Mapa() {
                 accessibilityState={{ selected: ativo }}
                 style={[estilos.pilula, ativo && estilos.pilulaAtiva]}
               >
+                {ativo ? <Icone nome="check" size={15} cor={colors.white} /> : null}
                 <Text style={[estilos.pilulaTexto, ativo && estilos.pilulaTextoAtiva]}>
                   {opcao.rotulo}
                 </Text>
@@ -458,7 +484,7 @@ export default function Mapa() {
         </View>
       ) : null}
 
-      {aba === 'lugares' && carregando && (
+      {aba === 'lugares' && (localizando || (carregando && (categoria === 'salvos' || Boolean(posicao || regiao)))) && (
         <ActivityIndicator
           style={estilos.indicador}
           size="large"
@@ -510,16 +536,16 @@ export default function Mapa() {
             }}
           />
         </CartaoEstadoMapa>
-      ) : !lugar && permissao === 'negada' && !regiao ? (
+      ) : !lugar && !posicao && !regiao && !localizando && categoria !== 'salvos' ? (
         <CartaoEstadoMapa
           topoMinimo={alturaTopo + 28}
           icone="local"
           fundoIcone={colors.primarySurface}
-          titulo="Ative a localização"
+          titulo={permissao === 'negada' ? 'Ative a localização' : 'Não encontramos sua posição'}
           sub="Para mostrar o que há por perto"
           texto="O PetLive usa a sua posição só enquanto o mapa está aberto, para achar clínicas, petshops e lugares pet friendly perto de você."
         >
-          <AcaoEstado rotulo="Permitir localização" onPress={permitirLocalizacao} />
+          <AcaoEstado rotulo={permissao === 'negada' ? 'Permitir localização' : 'Tentar localizar novamente'} onPress={permitirLocalizacao} />
           <AcaoEstado rotulo="Buscar por bairro ou região" tipo="secundaria" onPress={buscarPorRegiao} />
           <AcaoEstado rotulo="Emergência? Abrir o SOS" tipo="link" cor="#B3173A" onPress={() => router.push('/sos')} />
         </CartaoEstadoMapa>
@@ -713,10 +739,12 @@ const estilos = StyleSheet.create({
     alignSelf: 'center',
     padding: 4,
     borderRadius: radius.pill,
-    backgroundColor: colors.surface,
-    ...shadow.card,
+    backgroundColor: colors.background,
   },
-  abaMapa: { paddingHorizontal: spacing.lg, paddingVertical: spacing.sm, borderRadius: radius.pill },
+  abaMapa: { paddingHorizontal: spacing.md, paddingVertical: spacing.sm, borderRadius: radius.pill },
+  linhaContexto: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: spacing.sm },
+  regiaoAtual: { flexDirection: 'row', alignItems: 'center', gap: 4, flex: 1, minWidth: 0, minHeight: 44 },
+  regiaoTexto: { ...typography.captionMedium, color: colors.textMuted, flexShrink: 1 },
   abaMapaAtiva: { backgroundColor: colors.black },
   abaMapaTexto: { ...typography.captionMedium, color: colors.textMuted },
   abaMapaTextoAtiva: { color: colors.white },
@@ -776,9 +804,13 @@ const estilos = StyleSheet.create({
     top: 0,
     left: 0,
     right: 0,
-    paddingHorizontal: spacing.xxl,
-    paddingTop: 54,
-    gap: spacing.sm,
+    paddingHorizontal: spacing.lg,
+    paddingBottom: 8,
+    backgroundColor: colors.surface,
+    borderBottomLeftRadius: radius.xl,
+    borderBottomRightRadius: radius.xl,
+    ...shadow.card,
+    gap: 6,
   },
   creditoMapa: {
     right: spacing.xxl,
@@ -816,21 +848,30 @@ const estilos = StyleSheet.create({
     padding: 0,
   },
   filtrosRolagem: {
+    height: 52,
+    maxHeight: 52,
     flexGrow: 0,
     flexShrink: 0,
-    marginHorizontal: -spacing.xxl,
+    marginHorizontal: -spacing.lg,
   },
   filtros: {
     gap: spacing.sm,
-    paddingHorizontal: spacing.xxl,
-    paddingBottom: 6,
+    alignItems: 'center',
+    paddingHorizontal: spacing.lg,
   },
   pilula: {
-    paddingHorizontal: spacing.lg,
-    paddingVertical: spacing.sm,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    alignSelf: 'center',
+    gap: 5,
+    minHeight: 44,
+    paddingHorizontal: spacing.md,
+    paddingVertical: 10,
+    borderWidth: 1,
+    borderColor: colors.border,
     borderRadius: radius.pill,
     backgroundColor: colors.surface,
-    ...shadow.card,
   },
   pilulaSos: {
     backgroundColor: '#FDE0E6',
@@ -840,6 +881,7 @@ const estilos = StyleSheet.create({
   },
   pilulaAtiva: {
     backgroundColor: colors.black,
+    borderColor: colors.black,
   },
   pilulaTexto: {
     ...typography.captionMedium,

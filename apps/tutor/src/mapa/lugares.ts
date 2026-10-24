@@ -1,4 +1,5 @@
 import { supabase } from '../lib/supabase';
+import { descobrirLugares, distanciaKm, reunirLugares } from './descoberta';
 
 /**
  * Lugares do mapa (BUSINESS.md 5.15). Duas fontes:
@@ -20,7 +21,7 @@ export type CategoriaLugar =
   | 'hotelzinho'
   | CategoriaPetFriendly;
 
-/** Pet friendly (5.19): só nos dados do Google. */
+/** Categorias pet friendly nas fontes públicas e no Google. */
 export type CategoriaPetFriendly = 'parque' | 'praia' | 'restaurante' | 'hotel';
 
 export const CATEGORIAS_PET_FRIENDLY: CategoriaPetFriendly[] = ['parque', 'praia', 'restaurante', 'hotel'];
@@ -151,18 +152,20 @@ export async function buscarLugares(opcoes: {
   aberto24h?: boolean | null;
   raioKm?: number;
   incluirPetFriendly?: boolean;
+  aoCarregar?: (lugares: Lugar[]) => void;
 }): Promise<Lugar[]> {
   if (opcoes.incluirPetFriendly && !opcoes.categoria && !opcoes.aberto24h) {
-    const listas = await Promise.all([
+    const resultados = await Promise.allSettled([
       buscarLugares({ ...opcoes, incluirPetFriendly: false }),
-      buscarPetFriendly(opcoes, opcoes.raioKm ?? 5),
+      buscarPetFriendly(opcoes, opcoes.raioKm ?? 5, opcoes.aoCarregar),
     ]);
-    const termo = opcoes.busca?.trim().toLocaleLowerCase('pt-BR');
-    const unicos = new Map<string, Lugar>();
-    for (const lugar of listas.flat()) {
-      if ((!termo || lugar.nome.toLocaleLowerCase('pt-BR').includes(termo)) && !unicos.has(lugar.id)) unicos.set(lugar.id, lugar);
+    const listas = resultados.flatMap((resultado) => resultado.status === 'fulfilled' ? [resultado.value] : []);
+    if (!listas.some((lista) => lista.length > 0)) {
+      const falha = resultados.find((resultado) => resultado.status === 'rejected');
+      if (falha?.status === 'rejected') throw falha.reason;
     }
-    return [...unicos.values()].sort((a, b) => (a.distancia_km ?? Infinity) - (b.distancia_km ?? Infinity));
+    const termo = opcoes.busca?.trim().toLocaleLowerCase('pt-BR');
+    return reunirLugares(listas).filter((lugar) => !termo || lugar.nome.toLocaleLowerCase('pt-BR').includes(termo));
   }
   if (usarGoogle()) {
     try {
@@ -183,16 +186,41 @@ export async function buscarLugares(opcoes: {
     }
   }
 
-  const { data, error } = await supabase.rpc('lugares_por_perto', {
+  return buscarDadosAbertos(opcoes);
+}
+
+async function buscarDadosAbertos(opcoes: { lat: number; lng: number; categoria?: CategoriaLugar | null; busca?: string | null; aberto24h?: boolean | null; raioKm?: number; aoCarregar?: (lugares: Lugar[]) => void }, petFriendly = false): Promise<Lugar[]> {
+  const raio = opcoes.raioKm ?? 10;
+  const [banco, descoberta] = await Promise.allSettled([
+    supabase.rpc('lugares_por_perto', {
     p_lat: opcoes.lat,
     p_lng: opcoes.lng,
     p_categoria: opcoes.categoria ?? null,
     p_busca: opcoes.busca?.trim() || null,
     p_aberto_24h: opcoes.aberto24h ?? null,
-    p_raio_km: opcoes.raioKm ?? 10,
-  });
-  if (error) throw new Error(error.message);
-  return (data ?? []) as Lugar[];
+    p_raio_km: raio,
+    p_grupo: petFriendly ? 'pet_friendly' : 'servicos',
+    p_limite: 200,
+    }).then((resultado) => {
+      if (!resultado.error && resultado.data?.length) opcoes.aoCarregar?.(resultado.data as Lugar[]);
+      return resultado;
+    }),
+    descobrirLugares(opcoes, raio),
+  ]);
+  const data = banco.status === 'fulfilled' && !banco.value.error ? (banco.value.data ?? []) as Lugar[] : [];
+  const publicos = descoberta.status === 'fulfilled' ? descoberta.value : [];
+  const termo = opcoes.busca?.trim().toLocaleLowerCase('pt-BR');
+  const filtrados = publicos.map((lugar) => ({ ...lugar, distancia_km: distanciaKm(opcoes, lugar) })).filter((lugar) =>
+    Number.isFinite(lugar.distancia_km) && lugar.distancia_km <= raio &&
+    (opcoes.categoria ? lugar.categoria === opcoes.categoria : CATEGORIAS_PET_FRIENDLY.includes(lugar.categoria as CategoriaPetFriendly) === petFriendly) &&
+    (opcoes.aberto24h == null || lugar.aberto_24h === opcoes.aberto24h) &&
+    (!termo || lugar.nome.toLocaleLowerCase('pt-BR').includes(termo)));
+  if (descoberta.status === 'rejected' && data.length === 0) throw descoberta.reason;
+  if (publicos.length === 0) {
+    if (banco.status === 'rejected') throw banco.reason;
+    if (banco.value.error) throw new Error(banco.value.error.message);
+  }
+  return reunirLugares([filtrados, data]);
 }
 
 /**
@@ -200,16 +228,9 @@ export async function buscarLugares(opcoes: {
  * Nos dados abertos é a tabela places (grupo pet_friendly); no Google, uma
  * busca por categoria, juntas pela distância.
  */
-export async function buscarPetFriendly(posicao: { lat: number; lng: number }, raioKm = 5): Promise<Lugar[]> {
+export async function buscarPetFriendly(posicao: { lat: number; lng: number }, raioKm = 5, aoCarregar?: (lugares: Lugar[]) => void): Promise<Lugar[]> {
   if (!usarGoogle()) {
-    const { data, error } = await supabase.rpc('lugares_por_perto', {
-      p_lat: posicao.lat,
-      p_lng: posicao.lng,
-      p_grupo: 'pet_friendly',
-      p_raio_km: raioKm,
-    });
-    if (error) throw new Error(error.message);
-    return (data ?? []) as Lugar[];
+    return buscarDadosAbertos({ ...posicao, raioKm, aoCarregar }, true);
   }
   try {
     const listas = await Promise.all(
@@ -226,7 +247,7 @@ export async function buscarPetFriendly(posicao: { lat: number; lng: number }, r
   } catch (e) {
     if ((e as { codigo?: string }).codigo !== 'sem_chave') throw e;
     googleIndisponivel = true;
-    return buscarPetFriendly(posicao, raioKm);
+    return buscarPetFriendly(posicao, raioKm, aoCarregar);
   }
 }
 

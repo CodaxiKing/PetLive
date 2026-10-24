@@ -14,10 +14,12 @@ export type Posicao = { lat: number; lng: number };
 export function useLocalizacao() {
   const [permissao, setPermissao] = useState<PermissaoLocalizacao>('desconhecida');
   const [posicao, setPosicao] = useState<Posicao | null>(null);
+  const [localizando, setLocalizando] = useState(true);
 
   const localizar = useCallback(() => {
     Location.requestForegroundPermissionsAsync()
       .then((resultado) => {
+        setLocalizando(true);
         setPermissao(resultado.status === 'granted' ? 'concedida' : 'negada');
         if (resultado.status !== 'granted') return null;
         // GPS que não responde não pode deixar o mapa sem posição: espera
@@ -33,12 +35,13 @@ export function useLocalizacao() {
         }
       })
       // Serviços de localização desligados: mapa segue no centro padrão.
-      .catch(() => undefined);
+      .catch(() => undefined)
+      .finally(() => setLocalizando(false));
   }, []);
 
   useEffect(() => {
     localizar();
   }, [localizar]);
 
-  return { permissao, posicao, localizar };
+  return { permissao, posicao, localizar, localizando };
 }
