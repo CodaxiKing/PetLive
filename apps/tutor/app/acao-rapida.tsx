@@ -8,7 +8,7 @@ import { usePets } from '../src/pets/PetsProvider';
 import { colors } from '../src/theme/colors';
 import { typography } from '../src/theme/typography';
 
-export default function AcaoRapida() {
+export default function TelaAcaoRapida() {
   const { acao: valor } = useLocalSearchParams<{ acao?: string }>();
   const acao = conferirAcao(valor);
   const { user, carregando } = useAuth();
