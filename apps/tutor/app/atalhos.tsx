@@ -14,6 +14,7 @@ type Atalho = { nome: string; descricao: string; fundo: string; icone: NomeIcone
  * futuras só entram quando a implementação estiver disponível.
  */
 const ATALHOS: Atalho[] = [
+  { nome: 'Adoção', descricao: 'Conheça pets de ONGs verificadas', fundo: '#DDF3E6', icone: 'pata', destino: () => '/adocao' },
   { nome: 'SOS', descricao: 'Clínica 24 h e primeiros socorros', fundo: '#FBDADF', icone: 'cruz', cor: '#B3173A', destino: () => '/sos' },
   { nome: 'Lugares', descricao: 'Clínicas, petshops e mais', fundo: '#E3F3FC', icone: 'local', destino: () => '/mapa' },
   { nome: 'Calculadoras', descricao: 'Ração, idade e peso', fundo: '#FFF0C9', icone: 'calculadora', destino: () => '/ferramentas/calculadoras' },
