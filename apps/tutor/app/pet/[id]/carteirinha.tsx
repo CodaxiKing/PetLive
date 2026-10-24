@@ -274,6 +274,9 @@ export default function TelaCarteirinha() {
         )}
 
         <Text style={estilos.nota}>Dados informados pelo tutor. Ao compartilhar, você escolhe o que vai no link e por quanto tempo ele vale.</Text>
+        <Tocavel accessibilityRole="button" onPress={() => router.push({ pathname: '/pet/[id]/qr', params: { id: pet.id } })} style={estilos.botaoPdf}>
+          <Text style={estilos.textoPdf}>QR da coleira</Text>
+        </Tocavel>
         {erroDados ? <Text accessibilityRole="alert" style={estilos.aviso}>Não foi possível carregar todos os dados. Volte e abra a carteirinha novamente antes de gerar o PDF.</Text> : null}
         <Tocavel accessibilityRole="button" onPress={() => setOpcoesPdf(!opcoesPdf)} style={estilos.botaoPdf}>
           <Text style={estilos.textoPdf}>Salvar carteirinha em PDF{plano === 'premium' ? '' : ' · Premium'}</Text>

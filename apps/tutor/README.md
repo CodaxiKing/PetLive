@@ -7,6 +7,31 @@ Referência de telas: `../../prototipo/` (Welcome, Login, Main, Inicio, MeusPets
 
 Status: em desenvolvimento.
 
+## QR da coleira
+
+Na carteirinha, **QR da coleira** permite gerar um código permanente,
+escolher foto, telefone e alergias, ativar/desativar o acesso e exportar
+uma etiqueta PNG pelo menu do aparelho. Nome e espécie aparecem sempre;
+os demais campos começam desligados. O servidor exige telefone cadastrado
+no perfil para autorizar sua exibição. O QR básico não exige assinatura.
+
+As permissões são aplicadas na página `/p/[codigo]` do site e podem mudar
+sem imprimir outra etiqueta. Ela consulta os dados atuais e não exibe
+IDs, endereço ou histórico de saúde. Pets inativos ou em memória não abrem.
+O código volta a funcionar após reativação do pet se o tutor o deixou ativo.
+Falhas de rede são distintas de códigos desativados. Não há envio de GPS
+nesta entrega; esse recurso permanece na tarefa de backend do board.
+
+Antes de disponibilizar a etiqueta, aplique a migration
+`20261130000000_qr_coleira.sql`, publique a página web e configure
+`EXPO_PUBLIC_SITE_URL` com o domínio do site. Valide em aparelho a leitura
+do PNG exportado e o menu de salvar/compartilhar. Builds devem incluir
+`react-native-view-shot` e `expo-sharing`. Testes SQL em
+`supabase/tests/qr-coleira.sql` rodam em transação e terminam com rollback.
+TypeScript e lint da página passaram. O build web completo nesta máquina
+falhou no subprocesso de CSS do Turbopack (`globals.css.css`); a publicação
+continua dependendo da resolução desse erro e de um build aprovado.
+
 ## Carteirinha em PDF
 
 Na carteirinha, **Salvar carteirinha em PDF** abre as opções de inclusão:
