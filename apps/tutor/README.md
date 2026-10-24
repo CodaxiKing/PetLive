@@ -42,6 +42,11 @@ Antes de disponibilizar a etiqueta, aplique a migration
 do PNG exportado e o menu de salvar/compartilhar. Builds devem incluir
 `react-native-view-shot` e `expo-sharing`. Testes SQL em
 `supabase/tests/qr-coleira.sql` rodam em transação e terminam com rollback.
+O desenho SVG preserva a ordem linha/coluna da matriz do QR e a margem
+branca de quatro módulos. Os testes rasterizam esse mesmo desenho e usam
+`jsqr` (dependência apenas de teste) para ler links de coleira, ficha e
+cuidador. Essa leitura automatizada não substitui o teste de exportação
+e leitura da etiqueta em aparelho.
 TypeScript, lint e build de produção da página passaram. O Tailwind usa
 PostCSS e a leitura do código fica dentro de Suspense para permitir a
 pré-renderização. Publicação e leitura da etiqueta em aparelho continuam
