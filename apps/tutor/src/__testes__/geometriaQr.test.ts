@@ -2,16 +2,18 @@ import { describe, expect, it } from 'vitest';
 import QRCode from 'qrcode';
 import jsQR from 'jsqr';
 import { geometriaQr } from '../lib/geometriaQr';
+import { conviteCartao } from '../pets/cartaoPet';
 
 /** Rasteriza o caminho que o componente SVG recebe, sem montar React Native. */
-function rasterizar(valor: string, escala = 6) {
+function rasterizar(valor: string, escala = 6, tamanhoFinal?: number) {
   const { caminho, lado } = geometriaQr(valor);
-  const largura = lado * escala;
+  const largura = tamanhoFinal ?? lado * escala;
+  const fator = largura / lado;
   const pixels = new Uint8ClampedArray(largura * largura * 4).fill(255);
   const pontos = [...caminho.matchAll(/M(\d+) (\d+)h1v1h-1z/g)].map((m) => [Number(m[1]), Number(m[2])]);
   for (const [x, y] of pontos) {
-    for (let py = y * escala; py < (y + 1) * escala; py++) {
-      for (let px = x * escala; px < (x + 1) * escala; px++) {
+    for (let py = Math.ceil(y * fator); py < Math.ceil((y + 1) * fator); py++) {
+      for (let px = Math.ceil(x * fator); px < Math.ceil((x + 1) * fator); px++) {
         const i = (py * largura + px) * 4;
         pixels[i] = pixels[i + 1] = pixels[i + 2] = 17;
       }
@@ -38,5 +40,10 @@ describe('QR desenhado na etiqueta e nas fichas', () => {
     const { pixels, largura } = rasterizar(valor);
     const lido = jsQR(pixels, largura, largura, { inversionAttempts: 'dontInvert' });
     expect(lido?.data).toBe(valor);
+  });
+  it('decodifica o convite do domínio de preview no tamanho usado na imagem final', () => {
+    const valor = conviteCartao('http://nea67e6gbvk6kc25l5dct9qk.191.96.225.192.sslip.io')!;
+    const { pixels, largura } = rasterizar(valor, 6, 192);
+    expect(jsQR(pixels, largura, largura, { inversionAttempts: 'dontInvert' })?.data).toBe(valor);
   });
 });
