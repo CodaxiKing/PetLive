@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Text, View, useWindowDimensions } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Deslizar } from '../components/Animacoes';
 import { Icone, type NomeIcone } from '../components/Icone';
 import { colors } from '../theme/colors';
@@ -17,6 +18,7 @@ export function CartaoEstadoMapa({
   sub,
   texto,
   children,
+  topoMinimo = 200,
 }: {
   icone: NomeIcone;
   fundoIcone: string;
@@ -24,9 +26,14 @@ export function CartaoEstadoMapa({
   sub: string;
   texto: string;
   children: ReactNode;
+  topoMinimo?: number;
 }) {
+  const { height } = useWindowDimensions();
+  const insets = useSafeAreaInsets();
+  const bottom = Math.max(insets.bottom, 20) + 64 + 12;
   return (
-    <Deslizar style={estilos.cartao}>
+    <Deslizar style={[estilos.cartao, { bottom, maxHeight: Math.max(80, height - bottom - topoMinimo) }]}>
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ gap: 12 }}>
       <View style={estilos.topo}>
         <View style={[estilos.icone, { backgroundColor: fundoIcone }]}>
           <Icone nome={icone} size={22} espessura={2} />
@@ -40,6 +47,7 @@ export function CartaoEstadoMapa({
       </View>
       <Text style={estilos.texto}>{texto}</Text>
       {children}
+      </ScrollView>
     </Deslizar>
   );
 }

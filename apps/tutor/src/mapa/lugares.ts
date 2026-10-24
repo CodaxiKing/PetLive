@@ -150,7 +150,20 @@ export async function buscarLugares(opcoes: {
   busca?: string | null;
   aberto24h?: boolean | null;
   raioKm?: number;
+  incluirPetFriendly?: boolean;
 }): Promise<Lugar[]> {
+  if (opcoes.incluirPetFriendly && !opcoes.categoria && !opcoes.aberto24h) {
+    const listas = await Promise.all([
+      buscarLugares({ ...opcoes, incluirPetFriendly: false }),
+      buscarPetFriendly(opcoes, opcoes.raioKm ?? 5),
+    ]);
+    const termo = opcoes.busca?.trim().toLocaleLowerCase('pt-BR');
+    const unicos = new Map<string, Lugar>();
+    for (const lugar of listas.flat()) {
+      if ((!termo || lugar.nome.toLocaleLowerCase('pt-BR').includes(termo)) && !unicos.has(lugar.id)) unicos.set(lugar.id, lugar);
+    }
+    return [...unicos.values()].sort((a, b) => (a.distancia_km ?? Infinity) - (b.distancia_km ?? Infinity));
+  }
   if (usarGoogle()) {
     try {
       const categoria = opcoes.aberto24h ? '24h' : (opcoes.categoria ?? 'todos');
@@ -187,13 +200,13 @@ export async function buscarLugares(opcoes: {
  * Nos dados abertos é a tabela places (grupo pet_friendly); no Google, uma
  * busca por categoria, juntas pela distância.
  */
-export async function buscarPetFriendly(posicao: { lat: number; lng: number }): Promise<Lugar[]> {
+export async function buscarPetFriendly(posicao: { lat: number; lng: number }, raioKm = 5): Promise<Lugar[]> {
   if (!usarGoogle()) {
     const { data, error } = await supabase.rpc('lugares_por_perto', {
       p_lat: posicao.lat,
       p_lng: posicao.lng,
       p_grupo: 'pet_friendly',
-      p_raio_km: 5,
+      p_raio_km: raioKm,
     });
     if (error) throw new Error(error.message);
     return (data ?? []) as Lugar[];
@@ -201,7 +214,7 @@ export async function buscarPetFriendly(posicao: { lat: number; lng: number }): 
   try {
     const listas = await Promise.all(
       CATEGORIAS_PET_FRIENDLY.map((categoria) =>
-        chamarFuncao<{ lugares: LugarGoogle[] }>('places-nearby', { ...posicao, categoria, raioKm: 5 }),
+        chamarFuncao<{ lugares: LugarGoogle[] }>('places-nearby', { lat: posicao.lat, lng: posicao.lng, categoria, raioKm }),
       ),
     );
     // Um lugar pode vir em duas categorias (parque na praia): fica a primeira.
@@ -213,7 +226,7 @@ export async function buscarPetFriendly(posicao: { lat: number; lng: number }): 
   } catch (e) {
     if ((e as { codigo?: string }).codigo !== 'sem_chave') throw e;
     googleIndisponivel = true;
-    return buscarPetFriendly(posicao);
+    return buscarPetFriendly(posicao, raioKm);
   }
 }
 

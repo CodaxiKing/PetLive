@@ -3,6 +3,7 @@ import { mensagemDeErro } from '../lib/cacheOffline'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../auth/AuthProvider'
 import { enviarFotoPet } from './foto'
+import { cadastrarPet } from './cadastrarPet'
 import { petsSenior } from './senior'
 import type { Pet, PetForm } from './types'
 import { FORM_VAZIO, formParaRegistro } from './types'
@@ -74,23 +75,23 @@ export function PetsProvider({ children }: { children: ReactNode }) {
 
   const criarPet = useCallback(
     async (form: PetForm) => {
-      if (!tutorId) return null
-      setSalvando(true)
-      setErro(null)
-      const { data, error } = await supabase
-        .from('pets')
-        .insert(formParaRegistro(form, tutorId))
-        .select()
-        .single()
-      setSalvando(false)
-      if (error) {
-        setErro(mensagemDeErro(error.message))
+      if (!tutorId) {
+        setErro('Sua sessão expirou. Entre novamente para salvar o pet.')
         return null
       }
-      const pet = data as Pet
-      setPets((atual) => [pet, ...atual])
-      setPetAtivoId(pet.id)
-      return pet
+      setSalvando(true)
+      setErro(null)
+      try {
+        const pet = await cadastrarPet(form, tutorId)
+        setPets((atual) => [pet, ...atual])
+        setPetAtivoId(pet.id)
+        return pet
+      } catch (e) {
+        setErro(mensagemDeErro(e instanceof Error ? e.message : 'Não foi possível salvar o pet. Tente novamente.'))
+        return null
+      } finally {
+        setSalvando(false)
+      }
     },
     [tutorId],
   )
@@ -120,31 +121,34 @@ export function PetsProvider({ children }: { children: ReactNode }) {
       if (!tutorId) return null
       setSalvando(true)
       setErro(null)
-      const resultado = await enviarFotoPet({
-        tutorId,
-        petId: id,
-        uri: foto.uri,
-        mimeType: foto.mimeType,
-      })
-      if (!resultado.url) {
-        setErro(resultado.erro)
-        setSalvando(false)
+      try {
+        const resultado = await enviarFotoPet({
+          tutorId,
+          petId: id,
+          uri: foto.uri,
+          mimeType: foto.mimeType,
+        })
+        if (!resultado.url) {
+          setErro(resultado.erro)
+          return null
+        }
+        const { data, error } = await supabase
+          .from('pets')
+          .update({ foto_url: resultado.url })
+          .eq('id', id)
+          .select()
+          .single()
+        if (error) {
+          setErro(mensagemDeErro(error.message))
+          return null
+        }
+        const pet = data as Pet
+        setPets((atual) => atual.map((p) => (p.id === id ? pet : p)))
+        return resultado.url
+      } catch (e) {
+        setErro(mensagemDeErro(e instanceof Error ? e.message : 'Não foi possível enviar a foto. Tente novamente.'))
         return null
-      }
-      const { data, error } = await supabase
-        .from('pets')
-        .update({ foto_url: resultado.url })
-        .eq('id', id)
-        .select()
-        .single()
-      setSalvando(false)
-      if (error) {
-        setErro(mensagemDeErro(error.message))
-        return null
-      }
-      const pet = data as Pet
-      setPets((atual) => atual.map((p) => (p.id === id ? pet : p)))
-      return resultado.url
+      } finally { setSalvando(false) }
     },
     [tutorId],
   )

@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 import { router, useFocusEffect, useLocalSearchParams } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as Location from 'expo-location';
 import Svg, { Path } from 'react-native-svg';
 import { ligarPara } from '../../src/mapa/acoes';
@@ -96,6 +97,11 @@ function haQuanto(data: Date): string {
  * card do lugar selecionado com ligar, rota e atalho para a ficha.
  */
 export default function Mapa() {
+  const insets = useSafeAreaInsets();
+  const [alturaTopo, setAlturaTopo] = useState(200);
+  const [alturaTela, setAlturaTela] = useState(700);
+  const rodape = Math.max(insets.bottom, 20) + 64 + 12;
+  const inicioEventos = Math.max(alturaTopo + 120, alturaTela * 0.48);
   // Atalhos do Início chegam como ?filtro=clinica|banho_tosa|petshop|24h; a escolha manual
   // dos chips passa a valer assim que o toque um.
   const { filtro, aba: abaInicial } = useLocalSearchParams<{ filtro?: string; aba?: string }>();
@@ -109,6 +115,7 @@ export default function Mapa() {
   const [buscaAtiva, setBuscaAtiva] = useState('');
   const [lugares, setLugares] = useState<Lugar[]>([]);
   const [carregando, setCarregando] = useState(true);
+  const [erroLugares, setErroLugares] = useState<string | null>(null);
   const [selecionado, setSelecionado] = useState<Lugar | null>(null);
   const [rotaAberta, setRotaAberta] = useState(false);
   const [raioKm, setRaioKm] = useState(RAIO_PADRAO_KM);
@@ -141,7 +148,7 @@ export default function Mapa() {
       categoria === 'salvos'
         ? lugaresSalvos()
         : categoria === 'pet_friendly'
-          ? buscarPetFriendly({ lat: centro.lat, lng: centro.lng })
+          ? buscarPetFriendly({ lat: centro.lat, lng: centro.lng }, raioKm)
           : buscarLugares({
               lat: centro.lat,
               lng: centro.lng,
@@ -149,6 +156,7 @@ export default function Mapa() {
               busca: buscaAtiva,
               aberto24h: so24h ? true : null,
               raioKm,
+              incluirPetFriendly: categoria === 'todos',
             });
     consulta
       .then((lista) => {
@@ -156,6 +164,7 @@ export default function Mapa() {
         setLugares(lista);
         setSelecionado(null);
         setSemRede(null);
+        setErroLugares(null);
         setCarregando(false);
         if (lista.length > 0) {
           AsyncStorage.setItem(ULTIMOS_VISTOS, JSON.stringify({ quando: new Date().toISOString(), lugares: lista })).catch(
@@ -165,12 +174,19 @@ export default function Mapa() {
       })
       .catch(async (e: Error) => {
         if (!vivo) return;
+        setSelecionado(null);
         if (ehErroDeRede(e.message)) {
           const guardado = await AsyncStorage.getItem(ULTIMOS_VISTOS).catch(() => null);
-          const ultimos = guardado ? (JSON.parse(guardado) as { quando: string; lugares: Lugar[] }) : null;
+          let ultimos: { quando: string; lugares: Lugar[] } | null = null;
+          try { const dados = guardado ? JSON.parse(guardado) : null; if (Array.isArray(dados?.lugares)) ultimos = dados; } catch { /* Cache corrompido não impede tentar novamente. */ }
           if (!vivo) return;
           setLugares(ultimos?.lugares ?? []);
           setSemRede({ desde: ultimos ? new Date(ultimos.quando) : null });
+          setErroLugares(null);
+        } else {
+          setLugares([]);
+          setSemRede(null);
+          setErroLugares('Não foi possível consultar os lugares agora. Tente novamente em instantes.');
         }
         setCarregando(false);
       });
@@ -194,10 +210,10 @@ export default function Mapa() {
 
   // Chegou a localização real: centraliza o mapa nela.
   useEffect(() => {
-    if (posicao) {
+    if (posicao && !regiao) {
       mapaRef.current?.irPara(posicao, 14, 600);
     }
-  }, [posicao]);
+  }, [posicao, regiao]);
 
   function escolherFiltro(valor: Filtro) {
     setCategoriaManual(valor);
@@ -260,6 +276,9 @@ export default function Mapa() {
     // O ponto azul anda com o GPS; a primeira posição fica de reserva.
     const agora = mapaRef.current?.posicaoUsuario() ?? posicao;
     if (agora) {
+      setRegiao(agora);
+      setBusca('');
+      setBuscaAtiva('');
       mapaRef.current?.irPara(agora, 15, 350);
     } else {
       localizar();
@@ -268,14 +287,14 @@ export default function Mapa() {
 
   const lugar = aba === 'lugares' ? selecionado : null;
   // Algum cartão de estado (sem internet, sem localização, sem resultados) na tela.
-  const comEstado = aba === 'lugares' && !lugar && (Boolean(semRede) || (permissao === 'negada' && !regiao) || (!carregando && lugares.length === 0));
+  const comEstado = aba === 'lugares' && !lugar && (Boolean(erroLugares) || Boolean(semRede) || (permissao === 'negada' && !regiao) || (!carregando && lugares.length === 0));
 
   return (
-    <View style={estilos.tela}>
-      <View style={aba === 'eventos' ? estilos.mapaEventos : StyleSheet.absoluteFill}>
+    <View style={estilos.tela} onLayout={(e) => setAlturaTela(e.nativeEvent.layout.height)}>
+      <View style={aba === 'eventos' ? [estilos.mapaEventos, { height: inicioEventos }] : StyleSheet.absoluteFill}>
         <MapaLugares ref={mapaRef} centro={centro} zoom={13}
           pins={aba === 'lugares' ? lugares : eventos.flatMap((e) => e.lat === null || e.lng === null ? [] : [{ id: e.id, lat: e.lat, lng: e.lng, categoria: 'parque' as const, evento: true }])}
-          selecionado={aba === 'lugares' ? lugar?.id : null} mostrarUsuario={permissao === 'concedida'} posicaoCredito={estilos.creditoMapa}
+          selecionado={aba === 'lugares' ? lugar?.id : null} mostrarUsuario={permissao === 'concedida'} posicaoCredito={[estilos.creditoMapa, { top: alturaTopo + 8 }]}
           onPin={(id) => {
             if (aba === 'eventos') { router.push({ pathname: '/eventos/[id]', params: { id } }); return; }
             const escolhido = lugares.find((l) => l.id === id);
@@ -286,7 +305,7 @@ export default function Mapa() {
       </View>
 
       {/* Topo: busca e filtros flutuando sobre o mapa (protótipo Mapa). */}
-      <View style={estilos.topo} pointerEvents="box-none">
+      <View style={[estilos.topo, { paddingTop: insets.top + 12 }]} onLayout={(e) => setAlturaTopo(e.nativeEvent.layout.height)} pointerEvents="box-none">
         <View style={estilos.linhaBusca}>
         <Pressable
           accessibilityRole="button"
@@ -363,7 +382,7 @@ export default function Mapa() {
             );
           })}
           <Pressable
-            onPress={() => router.push('/mapa/pet-friendly')}
+            onPress={() => escolherFiltro('pet_friendly')}
             accessibilityRole="button"
             accessibilityState={{ selected: categoria === 'pet_friendly' }}
             style={[estilos.pilula, categoria === 'pet_friendly' && estilos.pilulaAtiva]}
@@ -385,7 +404,7 @@ export default function Mapa() {
       </View>
 
       {aba === 'eventos' ? (
-        <View style={estilos.listaEventos}>
+        <View style={[estilos.listaEventos, { top: inicioEventos, bottom: rodape }]}>
           <View style={estilos.eventosCabecalho}>
             <View style={{ flex: 1 }}>
               <Text style={estilos.eventosTitulo}>Eventos por perto</Text>
@@ -401,7 +420,7 @@ export default function Mapa() {
               </Pressable>
             </View>
           </View>
-          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={estilos.filtrosEvento}>
+          <ScrollView horizontal style={{ flexGrow: 0, flexShrink: 0 }} showsHorizontalScrollIndicator={false} contentContainerStyle={estilos.filtrosEvento}>
             {([{ valor: 'hoje', rotulo: 'Hoje' }, { valor: 'semana', rotulo: 'Esta semana' }, { valor: 'mes', rotulo: '30 dias' }] as const).map((item) => <Pressable key={item.valor} accessibilityRole="button" accessibilityState={{ selected: filtroEvento === item.valor }} onPress={() => setFiltroEvento(item.valor)} style={[estilos.filtroEvento, filtroEvento === item.valor && estilos.filtroEventoAtivo]}><Text style={[estilos.filtroEventoTexto, filtroEvento === item.valor && estilos.filtroEventoTextoAtivo]}>{item.rotulo}</Text></Pressable>)}
             <View style={estilos.separadorFiltro} />
             {([null, ...Object.keys(TIPO_EVENTO)] as (EventoMapa['tipo'] | null)[]).map((valor) => <Pressable key={valor ?? 'todos'} accessibilityRole="button" accessibilityState={{ selected: tipoEvento === valor }} onPress={() => setTipoEvento(valor)} style={[estilos.filtroEvento, (tipoEvento === valor) && estilos.filtroEventoAtivo]}><Text style={[estilos.filtroEventoTexto, tipoEvento === valor && estilos.filtroEventoTextoAtivo]}>{valor ? TIPO_EVENTO[valor] : 'Todos os tipos'}</Text></Pressable>)}
@@ -450,14 +469,20 @@ export default function Mapa() {
 
       {/* Estados do mapa (BUSINESS.md 5.43): sem internet, sem localização, sem resultados. */}
       {aba === 'lugares' && semRede ? (
-        <View style={estilos.faixaSemRede} pointerEvents="none">
+        <View style={[estilos.faixaSemRede, { top: alturaTopo + 30 }]} pointerEvents="none">
           <Icone nome="semRede" size={18} cor={colors.warningText} espessura={2} />
           <Text style={estilos.faixaSemRedeTexto}>Sem internet. Mostrando os últimos lugares vistos.</Text>
         </View>
       ) : null}
 
-      {aba !== 'lugares' ? null : !lugar && !carregando && semRede ? (
+      {aba !== 'lugares' ? null : !lugar && !carregando && erroLugares ? (
+        <CartaoEstadoMapa icone="local" fundoIcone={colors.primarySurface} titulo="Não foi possível carregar" sub="A consulta de lugares falhou" texto={erroLugares} topoMinimo={alturaTopo + 28}>
+          <AcaoEstado rotulo="Tentar novamente" onPress={() => { setCarregando(true); setTentativa((n) => n + 1); }} />
+          <AcaoEstado rotulo="Abrir o SOS" tipo="link" onPress={() => router.push('/sos')} />
+        </CartaoEstadoMapa>
+      ) : !lugar && !carregando && semRede ? (
         <CartaoEstadoMapa
+          topoMinimo={alturaTopo + 80}
           icone="semRede"
           fundoIcone={colors.warningSurface}
           titulo="Você está sem internet"
@@ -487,6 +512,7 @@ export default function Mapa() {
         </CartaoEstadoMapa>
       ) : !lugar && permissao === 'negada' && !regiao ? (
         <CartaoEstadoMapa
+          topoMinimo={alturaTopo + 28}
           icone="local"
           fundoIcone={colors.primarySurface}
           titulo="Ative a localização"
@@ -500,6 +526,7 @@ export default function Mapa() {
       ) : !lugar && !carregando && lugares.length === 0 ? (
         categoria === 'salvos' ? (
           <CartaoEstadoMapa
+            topoMinimo={alturaTopo + 28}
             icone="coracao"
             fundoIcone={colors.premiumSurface}
             titulo="Nenhum lugar salvo"
@@ -510,6 +537,7 @@ export default function Mapa() {
           </CartaoEstadoMapa>
         ) : (
           <CartaoEstadoMapa
+            topoMinimo={alturaTopo + 28}
             icone="lupaMenos"
             fundoIcone={colors.premiumSurface}
             titulo="Nada por perto"
@@ -536,7 +564,7 @@ export default function Mapa() {
       {/* Botão "meu local" (some enquanto o card do lugar está aberto). */}
       {aba === 'lugares' && !lugar && !comEstado && (
         <Pressable
-          style={estilos.fab}
+          style={[estilos.fab, { bottom: rodape + 12 }]}
           onPress={meuLocal}
           accessibilityRole="button"
           accessibilityLabel="Centralizar na minha localização"
@@ -559,7 +587,7 @@ export default function Mapa() {
 
       {/* Card do lugar selecionado: resumo + ligar, rota e ficha. */}
       {lugar && (
-        <Deslizar key={lugar.id} style={estilos.ficha}>
+        <Deslizar key={lugar.id} style={[estilos.ficha, { bottom: rodape }]}>
           <Pressable
             onPress={() =>
               router.push({ pathname: '/lugar', params: { id: lugar.id, categoria: lugar.categoria } })
@@ -678,12 +706,11 @@ const estilos = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.background,
   },
-  mapaEventos: { ...StyleSheet.absoluteFill, bottom: '43%' },
+  mapaEventos: { position: 'absolute', top: 0, left: 0, right: 0 },
   abasMapa: {
     flexDirection: 'row',
-    alignSelf: 'flex-start',
-    marginTop: 62,
-    marginLeft: 64,
+    marginTop: 0,
+    alignSelf: 'center',
     padding: 4,
     borderRadius: radius.pill,
     backgroundColor: colors.surface,
@@ -789,6 +816,8 @@ const estilos = StyleSheet.create({
     padding: 0,
   },
   filtrosRolagem: {
+    flexGrow: 0,
+    flexShrink: 0,
     marginHorizontal: -spacing.xxl,
   },
   filtros: {

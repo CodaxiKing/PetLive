@@ -64,7 +64,26 @@ export function dataParaIso(bruto: string): string | null {
   const mes = Number(m)
   const ano = Number(a)
   if (dia < 1 || dia > 31 || mes < 1 || mes > 12 || ano < 1900) return null
+  const data = new Date(Date.UTC(ano, mes - 1, dia))
+  if (data.getUTCFullYear() !== ano || data.getUTCMonth() !== mes - 1 || data.getUTCDate() !== dia) return null
   return `${a}-${m}-${d}`
+}
+
+export function validarFormularioPet(form: PetForm): string | null {
+  if (!form.nome.trim() || form.nome.trim().length > 60) return 'Informe um nome com até 60 caracteres.'
+  if (form.nascimento.trim()) {
+    const iso = dataParaIso(form.nascimento)
+    if (!iso) return 'Informe uma data de nascimento válida no formato DD/MM/AAAA.'
+    const hoje = new Date()
+    const data = new Date(`${iso}T00:00:00`)
+    if (data > hoje) return 'A data de nascimento não pode estar no futuro.'
+  }
+  if (form.peso.trim()) {
+    const texto = form.peso.trim().replace(',', '.')
+    const peso = Number(texto)
+    if (!/^\d+(\.\d{1,2})?$/.test(texto) || peso <= 0 || peso > 999.99) return 'Informe um peso maior que zero, com até duas casas decimais.'
+  }
+  return null
 }
 
 /** Formulário -> payload de insert/update em public.pets. */
@@ -76,7 +95,7 @@ export function formParaRegistro(form: PetForm, tutorId: string) {
     raca: form.raca.trim() || null,
     nascimento: dataParaIso(form.nascimento),
     sexo: form.sexo,
-    peso_atual: form.peso ? Number(form.peso.replace(',', '.')) : null,
+    peso_atual: form.peso.trim() ? Number(form.peso.trim().replace(',', '.')) : null,
     castrado: form.castrado,
   }
 }
