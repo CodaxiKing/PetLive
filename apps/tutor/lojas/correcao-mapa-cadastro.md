@@ -40,3 +40,14 @@ e Pet friendly em Nova Iguaçu. O retorno deve corresponder aos dados importados
 Testar também busca por bairro, centralização, alternância Lugares/Eventos
 e uma falha de rede. Criar um pet sem foto e outro com foto; conferir que
 aparecem na lista e que uma data inválida é rejeitada com mensagem.
+
+## Publicação do preview — 23/10/2026
+
+O usuário confirmou a aplicação dos dois SQLs em produção. Correção do app
+publicada a partir de e502a2e no canal preview (Android), grupo EAS Update
+0f88df94-8a5f-4b8a-8634-6266a8bc04b4, runtime
+1264fb8e8b1374172a594db4c6ebbf26fe172e0c.
+APK compatível: build a387fe10-ae05-406a-aeba-5e372b75689a.
+Validação final no aparelho permanece pendente; cadastro e mapa estão
+In Progress no board até confirmação dos fluxos acima.
+
