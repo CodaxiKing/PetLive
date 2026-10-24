@@ -11,7 +11,7 @@ type Atalho = { nome: string; descricao: string; fundo: string; icone: NomeIcone
 
 /**
  * Todos os atalhos (protótipo TodosAtalhos, BUSINESS.md 5.43). Os de fases
- * futuras (Eventos, Adoção e Passeios) só entram quando a fase existir.
+ * futuras só entram quando a implementação estiver disponível.
  */
 const ATALHOS: Atalho[] = [
   { nome: 'SOS', descricao: 'Clínica 24 h e primeiros socorros', fundo: '#FBDADF', icone: 'cruz', cor: '#B3173A', destino: () => '/sos' },
@@ -43,6 +43,7 @@ const ATALHOS: Atalho[] = [
   },
   { nome: 'Fogos e trovão', descricao: 'Dicas e modo calmo', fundo: '#EBDDFB', icone: 'alerta', destino: () => '/cuidados/fogos' },
   { nome: 'Despesas', descricao: 'Quanto você gasta por mês', fundo: '#DDF3E6', icone: 'sacola', destino: () => '/despesas' },
+  { nome: 'Passeios', descricao: 'Gravar com GPS, pausar e finalizar', fundo: '#DDF3E6', icone: 'pata', destino: () => '/passeios' },
 ];
 
 export default function TodosAtalhos() {
