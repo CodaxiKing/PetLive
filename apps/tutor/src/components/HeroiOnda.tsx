@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
 import { Pressable, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
-import { router } from 'expo-router';
+import { voltarOuInicio } from '../lib/voltar';
 import { colors } from '../theme/colors';
 import { typography } from '../theme/typography';
 import { Surgir } from './Animacoes';
@@ -49,7 +49,7 @@ export function HeroiOnda({
           accessibilityRole="button"
           accessibilityLabel="Voltar"
           hitSlop={12}
-          onPress={() => router.back()}
+          onPress={voltarOuInicio}
           style={({ pressed }) => [estilos.voltar, pressed && { opacity: 0.6 }]}
         >
           <Svg width={20} height={20} viewBox="0 0 24 24" fill="none">

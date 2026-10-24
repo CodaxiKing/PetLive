@@ -10,6 +10,8 @@ A rota pública `/acao-rapida` aceita somente três ações conhecidas. Sem sess
 - Registrar peso pede o pet ativo e pertencente à conta. Não oferece pets de outro tutor ou em memória. Abre o formulário existente sem gravar nada automaticamente; sem pet, oferece cadastro. Falhas de carregamento permitem tentar novamente.
 - Iniciar passeio abre a tela existente para escolher o pet e confirmar o início. Não solicita localização nem inicia GPS só por tocar no atalho.
 
+Os cabeçalhos compartilhados retornam à rota inicial quando não existe histórico de navegação, cobrindo a abertura direta com o app fechado. Com histórico, mantêm a navegação Voltar habitual.
+
 O plugin gera recursos no projeto Android durante o prebuild. Não editar `android/` manualmente. Não usa a biblioteca comunitária `expo-quick-actions`: a versão publicada consultada usa um script Gradle removido do SDK 58. Não foi adicionada dependência ao projeto.
 
 ## Validação
