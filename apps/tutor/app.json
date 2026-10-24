@@ -25,6 +25,7 @@
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
       "predictiveBackGestureEnabled": false,
+      "blockedPermissions": ["android.permission.RECORD_AUDIO"],
       "permissions": [
         "android.permission.ACCESS_COARSE_LOCATION",
         "android.permission.ACCESS_FINE_LOCATION",
@@ -39,6 +40,15 @@
       "expo-router",
       "expo-font",
       [
+        "expo-camera",
+        {
+          "cameraPermission": "O PetLive usa a câmera para fotografar seu pet e documentos de saúde.",
+          "microphonePermission": false,
+          "recordAudioAndroid": false,
+          "barcodeScannerEnabled": false
+        }
+      ],
+      [
         "expo-splash-screen",
         {
           "backgroundColor": "#A9DCF6",
@@ -51,7 +61,7 @@
         "expo-image-picker",
         {
           "photosPermission": "O PetLive acessa suas fotos para você colocar uma imagem no seu pet.",
-          "cameraPermission": "O PetLive usa a câmera para você fotografar o seu pet.",
+          "cameraPermission": "O PetLive usa a câmera para fotografar seu pet e documentos de saúde.",
           "microphonePermission": false
         }
       ],

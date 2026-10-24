@@ -20,6 +20,7 @@ import {
 import { hojeComoCampo, dataParaIso, dataParaExibicao } from '../../../src/saude/types'
 import { colors } from '../../../src/theme/colors'
 import { fontFamily } from '../../../src/theme/typography'
+import { FotografarCartao } from '../../../src/saude/FotografarCartao'
 
 const ROTULOS: Record<TipoDocumentoSaude, string> = {
   cartao_vacina: 'Cartão de vacina',
@@ -127,6 +128,7 @@ export default function DocumentosSaude() {
         <Campo rotulo="Nome (opcional)" placeholder={tipo === 'exame' ? 'Ex.: Hemograma' : 'Ex.: Carteira atualizada'} value={titulo} onChangeText={setTitulo} />
         <Campo rotulo="Data do documento" mascara="data" placeholder="dd/mm/aaaa" value={data} onChangeText={setData} />
         <BotaoPrimario titulo="Adicionar foto" icone={<Text style={estilos.mais}>＋</Text>} onPress={perguntarImagem} carregando={enviando} />
+        {tipo === 'cartao_vacina' && user && pet?.tutor_id === user.id ? <FotografarCartao key={`${user.id}:${id}`} tutorId={user.id} petId={id} titulo={titulo} data={data} onSalvo={() => { setTitulo(''); setData(hojeComoCampo()); recarregar(); }} /> : null}
 
         <Text style={estilos.secao}>Salvos</Text>
         {carregando ? <ActivityIndicator color={colors.primaryDeep} /> : documentos.length === 0 ? (
