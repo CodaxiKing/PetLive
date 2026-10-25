@@ -1,0 +1,11 @@
+import assert from 'node:assert/strict';
+import { centavos, reais, inteiro, dataLocal } from '../src/lib/admin/rascunhos.ts';
+assert.equal(centavos('19,90'),1990);assert.equal(centavos('0.01'),1);assert.equal(centavos('12,3'),1230);
+assert.equal(centavos('0',true),0);assert.equal(reais(null),'');assert.equal(reais(1990),'19,90');
+for(const v of ['', '0', '-1', 'NaN', '1e3', '1.234,56', '1,999', '21474836,48']) assert.throws(()=>centavos(v));
+assert.equal(centavos('21474836,47'),2147483647);
+assert.equal(inteiro('0',0,90),0);assert.equal(inteiro('100',1,100),100);
+for(const v of ['1.2','-1','1e2','101'])assert.throws(()=>inteiro(v,1,100));
+const iso='2027-02-01T15:30:00.000Z';
+assert.equal(new Date(dataLocal(iso)).toISOString(),iso);
+console.log('OK: centavos sem arredondamento silencioso, limites inteiros, preço indefinido e horário local preservado.');

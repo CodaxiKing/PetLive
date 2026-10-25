@@ -35,7 +35,7 @@ const AREAS: { rotulo: string; href?: string; icone: keyof typeof ICONES; papeis
   { rotulo: "Visão geral", href: "/admin", icone: "visao" },
   { rotulo: "Relatórios", href: "/admin/relatorios", icone: "relatorios", papeis: ["financeiro", "marketing", "leitura"] },
   { rotulo: "Assinaturas", href: "/admin/assinaturas", icone: "financeiro", papeis: ["financeiro", "leitura"] },
-  { rotulo: "Planos e cupons", icone: "breve" },
+  { rotulo: "Planos e cupons", href: "/admin/planos", icone: "financeiro", papeis: ["financeiro", "leitura"] },
   { rotulo: "Financeiro", href: "/admin/financeiro", icone: "financeiro", papeis: ["financeiro", "leitura"] },
   { rotulo: "Avaliações", icone: "breve" },
   { rotulo: "Usuários e pets", href: "/admin/usuarios", icone: "usuarios", papeis: ["suporte", "moderacao", "leitura"] },
