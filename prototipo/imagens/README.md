@@ -28,7 +28,7 @@ Capturas das telas do protótipo, geradas a partir de `prototipo/*.dc.html` e or
 
 # Fase 2 · Premium, eventos, adoção e painel admin
 
-## App do tutor (49)
+## App do tutor (53)
 
 | | | | |
 | --- | --- | --- | --- |
@@ -44,7 +44,8 @@ Capturas das telas do protótipo, geradas a partir de `prototipo/*.dc.html` e or
 | <img src="tutor/83-reativar-o-pet.png" width="160"><br>83 · Reativar o pet | <img src="tutor/84-pet-senior.png" width="160"><br>84 · Pet sênior | <img src="tutor/85-aviso-pet-senior.png" width="160"><br>85 · Aviso: pet sênior | <img src="tutor/85-pet-senior-tela-do-pet.png" width="160"><br>85 · Pet sênior, tela do pet |
 | <img src="tutor/85-qualidade-de-vida.png" width="160"><br>85 · Qualidade de vida | <img src="tutor/88-ficha-da-clinica-com-enviar-ficha.png" width="160"><br>88 · Ficha da clínica com enviar ficha | <img src="tutor/89-enviar-ficha-a-clinica.png" width="160"><br>89 · Enviar ficha à clínica | <img src="tutor/91-link-da-ficha-expirado.png" width="160"><br>91 · Link da ficha expirado |
 | <img src="tutor/92-visao-do-cuidador-link.png" width="160"><br>92 · Visão do cuidador (link) | <img src="tutor/93-cadastro-da-ong.png" width="160"><br>93 · Cadastro da ONG | <img src="tutor/94-novo-pet-para-adocao-modo-ong.png" width="160"><br>94 · Novo pet para adoção (modo ONG) | <img src="tutor/95-pets-e-interessados-modo-ong.png" width="160"><br>95 · Pets e interessados (modo ONG) |
-| <img src="tutor/96-meus-eventos.png" width="160"><br>96 · Meus eventos | | | |
+| <img src="tutor/96-meus-eventos.png" width="160"><br>96 · Meus eventos | <img src="tutor/101-guarda-compartilhada.png" width="160"><br>101 · Guarda compartilhada | <img src="tutor/102-convidar-para-a-guarda.png" width="160"><br>102 · Convidar para a guarda | <img src="tutor/103-convite-de-guarda-recebido.png" width="160"><br>103 · Convite de guarda recebido |
+| <img src="tutor/104-atualizacoes-do-pet.png" width="160"><br>104 · Atualizações do pet |  |  |  |
 
 ## Site (1)
 

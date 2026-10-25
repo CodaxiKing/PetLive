@@ -1457,6 +1457,38 @@
       "x": 3290,
       "y": 6128,
       "title": "18 · Editar perfil"
+    },
+    "GuardaCompartilhada.dc.html": {
+      "w": 390,
+      "h": 844,
+      "is_interactive": true,
+      "x": 2350,
+      "y": 21836,
+      "title": "101 · Guarda compartilhada"
+    },
+    "GuardaConvidar.dc.html": {
+      "w": 390,
+      "h": 844,
+      "is_interactive": true,
+      "x": 2820,
+      "y": 21836,
+      "title": "102 · Convidar para a guarda"
+    },
+    "GuardaConvite.dc.html": {
+      "w": 390,
+      "h": 844,
+      "is_interactive": true,
+      "x": 3290,
+      "y": 21836,
+      "title": "103 · Convite de guarda recebido"
+    },
+    "GuardaAtividade.dc.html": {
+      "w": 390,
+      "h": 844,
+      "is_interactive": true,
+      "x": 3760,
+      "y": 21836,
+      "title": "104 · Atualizações do pet"
     }
   },
   "createdOnFiles": {
@@ -1551,9 +1583,9 @@
     "s12": {
       "x": 0,
       "y": 21536,
-      "text": "NOVO · Modo ONG, meus eventos e minha assinatura",
+      "text": "NOVO · Modo ONG, meus eventos, minha assinatura e guarda compartilhada",
       "kind": "title1",
-      "maxW": 2270
+      "maxW": 4150
     },
     "s13": {
       "x": 0,
@@ -1840,6 +1872,10 @@
     "PermissoesApp.dc.html",
     "PrivacidadeDados.dc.html",
     "MinhaAssinatura.dc.html",
+    "GuardaCompartilhada.dc.html",
+    "GuardaConvidar.dc.html",
+    "GuardaConvite.dc.html",
+    "GuardaAtividade.dc.html",
     "CompartilharOpcoes.dc.html",
     "Carteirinha.dc.html",
     "RotaApps.dc.html",
