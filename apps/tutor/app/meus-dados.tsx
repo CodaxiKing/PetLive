@@ -206,13 +206,13 @@ export default function MeusDados() {
         <Campo rotulo="Celular" variante="verde" mascara="telefone" placeholder="(21) 99999-9999" value={dados.contato_emergencia_telefone} onChangeText={(v) => mudar('contato_emergencia_telefone', v)} />
 
         <Text style={estilos.secao}>Conta</Text>
-        <View style={estilos.linha}>
+        <Tocavel accessibilityRole="button" accessibilityLabel="Alterar e-mail de acesso" onPress={() => router.push('/alterar-email')} style={estilos.linha}>
           <View style={estilos.flex}>
             <Text style={estilos.linhaSub}>E-mail de acesso</Text>
             <Text style={estilos.linhaTitulo} numberOfLines={1}>{user?.email ?? '—'}</Text>
           </View>
-          <Icone nome="cadeado" size={18} cor="#566070" />
-        </View>
+          <Icone nome="seta" size={18} cor="#566070" />
+        </Tocavel>
         {temSenha(user) ? (
           <Tocavel accessibilityRole="button" onPress={() => router.push('/alterar-senha')} style={estilos.linha}>
             <View style={estilos.flex}>

@@ -11,12 +11,14 @@ type AuthState = {
   user: User | null;
   /** true enquanto a sessão salva ainda está sendo carregada. */
   carregando: boolean;
+  atualizarUsuario: () => Promise<User | null>;
 };
 
 const AuthContext = createContext<AuthState>({
   session: null,
   user: null,
   carregando: true,
+  atualizarUsuario: async () => null,
 });
 
 export function AuthProvider({ children }: { children: ReactNode }) {
@@ -54,10 +56,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return () => subscription.subscription.unsubscribe();
   }, []);
 
+  async function atualizarUsuario() {
+    const { data: atual } = await supabase.auth.getSession();
+    if (!atual.session) return null;
+    const { data, error } = await supabase.auth.getUser(atual.session.access_token);
+    if (error) throw new Error('Não foi possível verificar a confirmação. Tente novamente.');
+    const { data: depois } = await supabase.auth.getSession();
+    if (depois.session?.user.id !== data.user.id) return null;
+    setSession((s) => s?.user.id === data.user.id ? { ...s, user: data.user } : s);
+    return data.user;
+  }
+
   const value: AuthState = {
     session,
     user: session?.user ?? null,
     carregando,
+    atualizarUsuario,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
