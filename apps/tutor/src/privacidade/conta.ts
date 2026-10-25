@@ -45,7 +45,7 @@ export async function exportarMeusDados(): Promise<void> {
   const passeiosLocais = await repositorioPasseiosLocal(auth.user.id).carregar();
   const metaPasseios = await repositorioMetaPasseiosLocal(auth.user.id).carregar();
   const [{ data, error }, { data: documentos, error: erroDocumentos }] = await Promise.all([
-    supabase.rpc('exportar_meus_dados'),
+    supabase.rpc('privacidade_exportar_dados', { p_tutor: auth.user.id }),
     supabase
       .from('documentos_saude')
       .select('pet_id, tipo, titulo, realizado_em, arquivo_path, criado_em')
@@ -53,6 +53,9 @@ export async function exportarMeusDados(): Promise<void> {
   ]);
   if (error) throw new Error(error.message);
   if (erroDocumentos) throw new Error(erroDocumentos.message);
+  if (!data || typeof data !== 'object' || Array.isArray(data)) {
+    throw new Error('O servidor não retornou seus dados. Tente exportar novamente.');
+  }
   const { data: contaAtual } = await supabase.auth.getUser();
   if (contaAtual.user?.id !== auth.user.id) throw new Error('A conta mudou durante a exportação. Tente novamente.');
   await compartilharExportacao({ ...data, documentos_saude: documentos ?? [], passeios_locais: passeiosLocais, meta_semanal_passeios_km: metaPasseios }, auth.user.id, passeiosLocais, async () => {
