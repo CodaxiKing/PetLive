@@ -13,3 +13,5 @@ Teste `supabase/tests/testar-admin-assinaturas.mjs`: usa as funções reais admi
 Publicação web exige Redeploy no Coolify da main. Homologação visual e uso com sessão administrativa real e 2FA permanecem pendentes após publicação. Não há alteração no APK do tutor, nos limites de plano ou no Firebase.
 
 Verificações locais concluídas: ESLint sem erros, geração de tipos Next, tsc sem erros e build de produção bem-sucedido com a rota `/admin/assinaturas` incluída.
+
+Migration aplicada em produção após `4c5c22e`. Metadados confirmaram RPC disponível a authenticated, negada a anon, chamada interna de admin_exigir, SELECT/UPDATE diretos em subscriptions negados e limites de plano ainda desligados. Nenhum contrato, cobrança, usuário de teste ou acesso administrativo foi criado em produção. Board atualizado para Em andamento, aguardando publicação web e homologação com 2FA.
