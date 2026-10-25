@@ -3,7 +3,7 @@ export type CursorOng = { id: string; criado_em: string };
 export type PetOng = CursorOng & { nome: string; status: 'rascunho' | 'publicado' | 'adotado' | 'oculto'; confirmado_em: string; ong_nome: string; ong_status: string; interesses: number };
 export type ContatoOng = CursorOng & { mensagem: string; email_resposta: string | null };
 type Pagina<T> = { itens: T[]; tem_mais: boolean };
-export type PainelOng = Pagina<PetOng> & { ongs: { nome: string; status: string }[] };
+export type PainelOng = Pagina<PetOng> & { ongs: { id?: string; nome: string; status: string }[] };
 const estados = ['pendente', 'aprovada', 'suspensa', 'recusada'];
 const dataValida = (v: unknown) => typeof v === 'string' && Number.isFinite(Date.parse(v));
 export function conferirPaginaOng<T>(valor: unknown, itemValido: (v: T) => boolean): Pagina<T> {

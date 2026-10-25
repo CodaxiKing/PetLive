@@ -1,6 +1,6 @@
 import { useCallback, useRef, useState } from 'react';
 import { ActivityIndicator, Alert, FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
-import { Redirect, useFocusEffect } from 'expo-router';
+import { Redirect, router, useFocusEffect } from 'expo-router';
 import * as Linking from 'expo-linking';
 import { useAuth } from '../../src/auth/AuthProvider';
 import { carregarInteressesOng, carregarPetsOng, marcarAdotadoOng, prepararRespostaOng, type ContatoOng, type CursorOng, type PainelOng, type PetOng } from '../../src/adocao/ong';
@@ -68,7 +68,7 @@ function PainelDaConta({ tutorId }: { tutorId: string }) {
     <Text style={s.titulo}>{pet ? `Interessados em ${pet.nome}` : 'Pets e interessados'}</Text>
     {pet ? <Pressable accessibilityRole="button" disabled={acao} style={s.voltar} onPress={() => selecionar(null)}><Text style={s.texto}>← Voltar aos pets da ONG</Text></Pressable> : <>
       <Text style={s.texto}>Gerencie os pets das organizações pelas quais você é responsável. O cadastro e a aprovação de ONGs são feitos separadamente.</Text>
-      {painel?.ongs.map((g, i) => <Text key={i} style={s.texto}>{g.nome} · {status[g.status]}</Text>)}
+      {painel?.ongs.map((g, i) => <View key={g.id ?? i} style={s.grupo}><Text style={s.texto}>{g.nome} · {status[g.status]}</Text>{g.status === 'aprovada' && g.id ? <BotaoPrimario titulo="Novo pet para adoção" desabilitado={acao || carregando} onPress={() => router.push({ pathname: '/ong/pet', params: { ong: g.id } })} /> : null}</View>)}
       {painel?.ongs.length === 0 ? <Text style={s.texto}>Sua conta ainda não está vinculada a uma ONG. O cadastro de organizações está em preparação.</Text> : null}
     </>}
     {pet ? <Text style={s.texto}>Responder abre seu aplicativo de e-mail. Revise e envie por lá; o PetLive não envia a mensagem nem confirma a entrega.</Text> : null}
@@ -86,6 +86,7 @@ function PainelDaConta({ tutorId }: { tutorId: string }) {
         renderItem={({ item }) => <View style={s.card}><Text style={s.titulo}>{item.nome}</Text><Text style={s.texto}>{item.ong_nome} · {status[item.status]} · {item.interesses} interesse(s)</Text>
           <Text style={s.texto}>Última confirmação: {new Date(item.confirmado_em).toLocaleDateString('pt-BR')}. Pets publicados sem confirmação há 60 dias ficam fora do catálogo.</Text>
           {item.ong_status === 'aprovada' ? <><BotaoPrimario titulo="Ver interessados" desabilitado={acao || carregando} onPress={() => selecionar(item)} />
+            {['rascunho', 'publicado'].includes(item.status) ? <BotaoPrimario titulo="Editar dados e fotos" desabilitado={acao || carregando} onPress={() => router.push({ pathname: '/ong/pet', params: { pet: item.id } })} /> : null}
             {item.status === 'publicado' ? <BotaoPrimario titulo="Marcar como adotado" desabilitado={acao || carregando} onPress={() => confirmarAdocao(item)} /> : null}</> : <Text style={s.texto}>As ações ficam disponíveis quando a ONG está aprovada.</Text>}</View>}
         ListFooterComponent={mais ? <BotaoPrimario titulo="Mais pets" carregando={carregando} desabilitado={acao} onPress={() => { void buscar(null, true); }} /> : undefined} />}
   </View>;
