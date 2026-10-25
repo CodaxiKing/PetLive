@@ -33,7 +33,7 @@ Cada seção deste documento indica a fase a que se aplica. Onde não houver ind
 | --- | --- |
 | 1 a 3 | Visão, públicos e produtos |
 | 4 | Funcionalidades por módulo (tutor, lojista, admin, site) |
-| 5 | Regras de negócio, com a fase de cada uma (5.1 a 5.36) |
+| 5 | Regras de negócio, com a fase de cada uma (5.1 a 5.45) |
 | 6 | Modelos de reserva por serviço (Fase 3) |
 | 7 e 8 | Dados (resumo) e stack |
 | 9 e 10 | Roadmap por fase e monetização, com o que é grátis e o que é Premium |
@@ -116,7 +116,7 @@ Em uma frase: a carteira de saúde do pet, com lembretes e um mapa de lugares pe
 
 **Conta e perfil**
 - Boas-vindas, criar conta e entrar (e-mail e Google), aceite de termos e LGPD.
-- Perfil do tutor, excluir conta e exportar dados.
+- Perfil do tutor com **Editar perfil** (foto, nome, celular, cidade e senha), excluir conta e exportar dados.
 
 **Pets**
 - Cadastro com foto, espécie, raça e nascimento. Lista Meus pets e tela do pet.
@@ -178,7 +178,7 @@ Em uma frase: a carteira de saúde do pet, com lembretes e um mapa de lugares pe
 - Qualquer pessoa pode **criar evento**, que passa por análise antes de aparecer (seção 5.16).
 
 **Compartilhar e segurança (Fase 2, Premium)**
-- Carteira em PDF para o veterinário, QR Code da coleira, acesso compartilhado com a família.
+- Carteira em PDF para o veterinário, QR Code da coleira e **guarda compartilhada** (dividir os cuidados de um ou mais pets com outra conta).
 
 **Loja e serviços (marketplace, Fase 3)**
 - Vitrine de produtos, detalhe do produto, solicitação e acompanhamento do pedido.
@@ -360,7 +360,7 @@ O PetLive organiza informações e não substitui o atendimento veterinário. Es
 - Falha de cobrança: novas tentativas por `[3]` dias. Sem sucesso, o plano volta a Grátis no fim do período já pago.
 - Cancelar mantém o Premium até o fim do período pago.
 - Pets além do limite do plano grátis ficam **somente leitura**, sem serem apagados.
-- **Acesso da família:** o tutor Premium compartilha cada pet com o e-mail de uma conta PetLive existente. O acesso começa na hora e pode ser revogado pelo tutor. A família pode ler e atualizar o pet, saúde e lembretes ligados a ele; não pode apagar o pet, transferir sua propriedade, gerenciar outros familiares nem acessar o perfil e pagamentos do tutor. Se o Premium do tutor acabar, o acesso familiar fica suspenso e volta quando o plano for reativado.
+- **Acesso da família:** primeira versão da **guarda compartilhada** (5.45). Hoje o tutor Premium compartilha cada pet com o e-mail de uma conta PetLive existente. O acesso começa na hora e pode ser revogado pelo tutor. A família pode ler e atualizar o pet, saúde e lembretes ligados a ele; não pode apagar o pet, transferir sua propriedade, gerenciar outros familiares nem acessar o perfil e pagamentos do tutor. Se o Premium do tutor acabar, o acesso familiar fica suspenso e volta quando o plano for reativado.
 - O que é grátis e o que é Premium, recurso por recurso, está na tabela da seção 10 (proposta a validar).
 
 ### 5.14 Disputas e estornos (Fase 3)
@@ -663,7 +663,7 @@ O PetLive organiza informações e não substitui o atendimento veterinário. Es
 > **Telas:** `Inicio`, `TodosAtalhos`, `CaixaAvisos`, `MapaSemPermissao`, `MapaSemInternet`, `MapaSemResultados`, `CartaoPremium`, `CarteirinhaVazia`, `CompartilharSecoes`.
 
 - **Início segue o pet escolhido.** O seletor de pets no topo troca o **cartão da próxima vacina ou dose**, a lista **Hoje** (cada item com o botão **Feito**) e o card da **Carteirinha**. O pet sênior mostra a etiqueta **Sênior**. O botão **+** abre o cadastro de um novo pet (limite do plano grátis na seção 10).
-- **Atalhos.** A linha rola para o lado e mostra **5 atalhos** (SOS, Lugares, Calcular, Rotina e Lembretes) mais **Ver todos**, que abre `TodosAtalhos` com os 12: SOS, Lugares, Calculadoras, Rotina, Lembretes, Medicamentos, Pet friendly, Eventos, Adoção, Passeios, Despesas e Carteirinha. Os de fases futuras só aparecem quando a fase existir.
+- **Atalhos.** A linha rola para o lado. Primeiro vêm os **4 principais**, maiores: SOS (vermelho), Lembretes, Carteirinha e Remédios. Depois de um divisor, os outros menores: Calcular, Rotina, Passeios, Eventos, Pet friendly, Adoção, Despesas e **Mais**, que abre `TodosAtalhos` com os 12: SOS, Lugares, Calculadoras, Rotina, Lembretes, Medicamentos, Pet friendly, Eventos, Adoção, Passeios, Despesas e Carteirinha. Os de fases futuras só aparecem quando a fase existir.
 - **Caixa de avisos.** O sino da Início abre `CaixaAvisos`: o **histórico dos últimos `[30]` dias** de avisos (vacina, dose, hotel, sênior, eventos, peso), agrupado em **Hoje** e **Ontem**, com **ponto vermelho** nos não lidos e a hora. Tocar em um aviso abre a tela dele e o marca como lido. A engrenagem abre as **preferências** (`Notificacoes`). O aviso que o tutor desligou nas preferências **não chega**, mas o que já chegou continua na caixa.
 - **Mapa sem localização.** Se a permissão foi negada, o mapa mostra a explicação ("usamos sua posição só com o mapa aberto") e três saídas: **Permitir localização** (abre os ajustes do aparelho), **Buscar por bairro ou região** (funciona sem GPS) e **Abrir o SOS**.
 - **Mapa sem internet.** Mostra um aviso, os **últimos lugares vistos** (guardados no aparelho) com a data da última atualização e **Tentar de novo**. Telefone, horário e fotos podem estar desatualizados, e a busca e a rota exigem internet. O atalho **Primeiros socorros** segue funcionando.
@@ -673,6 +673,37 @@ O PetLive organiza informações e não substitui o atendimento veterinário. Es
 - **O que incluir ao compartilhar.** Antes de escolher o formato (`CompartilharOpcoes`), o tutor passa por `CompartilharSecoes` e escolhe entre **8 itens**: dados do pet, vacinas, alergias, remédios, saúde e cuidados, veterinário, observações e o telefone do tutor. Vêm ligados dados, vacinas, alergias, veterinário e telefone. A escolha vale **só para aquele envio**.
 - **Ordem do cadastro.** Boas-vindas, Conta, **Termos e consentimento**, **Permissões do app**, Cadastro do pet e Início. O tutor só chega ao app depois de aceitar os termos.
 - **Um só nome para a ação de dose.** O botão que confirma remédio, vacina ou lembrete se chama **Feito**, na Início, na notificação, no widget e na visão do cuidador.
+
+### 5.44 Perfil do tutor e Editar perfil (Fase 1)
+
+> **Telas:** `Perfil` (18) e `EditarPerfil` (18 · Editar perfil). A troca de senha abre a partir de Editar perfil.
+
+- **Perfil.** Mostra a foto do tutor (ou a inicial do nome), o nome, a cidade e o celular. Tocar na foto ou no lápis abre **Editar perfil**. A lista do Perfil tem Editar perfil, Notificações, Meus eventos, Guarda compartilhada *(Fase 2)*, Privacidade e dados e Sair.
+- **Foto.** O tutor escolhe da galeria ou tira com a câmera, recortada em quadrado, até 5 MB (JPEG, PNG ou WebP), e pode remover. A foto é salva na hora, sem esperar o botão Salvar.
+- **A foto é privada.** Fica num armazenamento privado e só o próprio tutor a vê, por link temporário. Não aparece na carteirinha, na ficha de emergência, na visão do cuidador nem para quem divide a guarda, que veem só o nome.
+- **Nome** de 2 a 60 caracteres. **Celular** com DDD, com a opção **Este celular tem WhatsApp**, que mostra o botão do WhatsApp para a clínica e o cuidador quando o tutor libera.
+- **Cidade** digitada ou preenchida por **Usar minha localização**. A permissão de localização só é pedida nesse toque; sem ela, o tutor digita.
+- **Contato de emergência** (nome e celular), usado pela ficha de emergência e pelo cuidador quando o tutor libera.
+- **E-mail** aparece só para leitura e não é mostrado a ninguém. Trocar o e-mail fica com o suporte por enquanto.
+- **Alterar senha.** Só para contas com e-mail e senha: pede a **senha atual**, a nova (mínimo **8 caracteres**) e a repetição. A nova precisa ser diferente da atual. Quem entra com Google ou Apple vê que não há senha do PetLive para trocar. Quem esqueceu a senha atual usa **Entrar › Esqueci minha senha**.
+
+### 5.45 Guarda compartilhada (Fase 2, Premium)
+
+> **Telas:** `GuardaCompartilhada` (101), `GuardaConvidar` (102), `GuardaConvite` (103) e `GuardaAtividade` (104). Abre pelo Perfil (**Guarda compartilhada**) e pelo pet (**Compartilhar › Dividir os cuidados**).
+
+- **O que é.** O tutor titular divide os cuidados de **um ou mais pets** com outra pessoa: cônjuge, ex, filho, avó, quem também cuida do pet. As duas contas cuidam do pet juntas e veem os mesmos dados.
+- **Convite para vários pets.** O titular escolhe **um ou mais pets** e informa o e-mail. Se a pessoa já tem conta, recebe o convite no app (Caixa de avisos e push) e por e-mail. Se não tem, recebe um e-mail com link para criar a conta e aceitar.
+- **O acesso só começa quando a pessoa aceita.** O convite mostra quem convidou, os pets e o que a pessoa vai poder fazer, com **Aceitar** e **Recusar**. Vale por **`[7]` dias** e o titular pode cancelar antes. A pessoa pode aceitar só alguns dos pets do convite.
+- **Até `[4]` pessoas por pet**, além do titular. O titular pode incluir a mesma pessoa em mais pets depois ou tirar um pet sem tirar os outros.
+- **O que quem divide a guarda pode fazer.** Ver e atualizar o cadastro do pet, vacinas e vermífugo, remédios e doses (**Feito**), peso, consultas, lembretes, rotina, anexos, passeios e linha do tempo. Despesas só aparecem se o titular liberar.
+- **O que só o titular faz.** Apagar o pet, registrar a partida e o memorial, convidar ou remover pessoas, criar acesso de cuidador e cuidar do plano e dos pagamentos. Quem divide a guarda não vê o celular, o e-mail, a foto nem os outros pets do titular, só o nome.
+- **Todos ficam atualizados.** Uma alteração feita por uma pessoa aparece para as outras **na hora**, com o app aberto, e na próxima abertura, com ele fechado. Cada registro mostra **quem fez** ("Registrado por Ana"). A tela **Atualizações do pet** lista o que cada pessoa fez, por dia.
+- **Aviso da alteração.** Quando outra pessoa registra vacina, dose, remédio novo, peso ou consulta, os demais recebem um aviso na Caixa de avisos ("Ana registrou a vacina V10 do Rex"). O push desse aviso é opcional, em Notificações.
+- **Doses sem repetir.** O aviso de dose vai para todos que dividem a guarda. Quando um toca **Feito**, a dose some para os outros e ninguém recebe o próximo aviso daquela dose. Se dois marcam ao mesmo tempo, vale o primeiro, e o segundo vê "Ana já marcou às 8:02".
+- **Conflitos e sem internet.** O que foi registrado sem internet sobe quando a conexão volta, com o horário real do registro. Se duas pessoas editam o mesmo dado, vale a última alteração, e as Atualizações guardam o histórico.
+- **Sair e remover.** Quem foi convidado pode **sair da guarda** de um pet ou de todos a qualquer momento. O titular pode remover a pessoa de um pet ou de todos. O acesso acaba na hora, e o que a pessoa registrou continua no histórico do pet com o nome dela.
+- **Plano.** A guarda usa o Premium do titular, e quem foi convidado não precisa de Premium. Se o Premium do titular acabar, a guarda fica **suspensa** (as pessoas veem o aviso e não acessam o pet) e volta sozinha quando o plano for reativado.
+- **Privacidade.** Cada alteração fica registrada com autor e horário. O titular vê quem tem acesso a cada pet e desde quando.
 
 ---
 
@@ -806,7 +837,7 @@ A divisão abaixo é uma **proposta para validar**. Regra geral: tudo que proteg
 | Checklist de viagem | Lista | Lista e PDF |
 | **Ler cartão de vacina por foto** | Não (mostra o convite) | `[x]` leituras por mês |
 | Anexos de exames e carteira em PDF | Não | Sim |
-| Acesso da família | Não | Sim |
+| Guarda compartilhada (dividir os cuidados de um ou mais pets) | Não | Sim, até `[4]` pessoas por pet |
 | Cuidador temporário | `[1]` acesso ativo `[a definir]` | Vários acessos |
 | QR da coleira | `[a definir]` (recomendado: básico grátis, por segurança) | Completo, com o que mostrar escolhido |
 | Alerta de pet perdido (Fase 5) | Sim | Sim |
@@ -971,6 +1002,7 @@ A divisão abaixo é uma **proposta para validar**. Regra geral: tudo que proteg
 | Solicitação *(Fase 3)* | Pedido de produto ou reserva de serviço feito pelo tutor |
 | `place_id` | Identificador de um lugar no Google, o único dado do Google que o PetLive guarda |
 | Venda com receita | Produto listado só para consulta, com compra apenas na loja |
+| Guarda compartilhada | Duas ou mais contas que cuidam do mesmo pet: o titular, que criou o pet, e quem aceitou o convite |
 | Código de entrega | Número de 4 dígitos que o tutor passa ao entregador |
 | Conteúdo mestre | Calendário de vacinas, raças e categorias mantidos pelo admin |
 | RLS | Regras de acesso por linha no banco de dados |
@@ -1015,6 +1047,7 @@ A divisão abaixo é uma **proposta para validar**. Regra geral: tudo que proteg
 | `admin_readonly` | Painel admin | Só leitura |
 | `ngo` | App (modo ONG) | ONG verificada que cadastra pets para adoção (Fase 2) |
 | `caregiver` | Acesso por link ou código | Cuidador temporário, vê só o que o tutor liberou, até o prazo (Fase 2) |
+| `guardian` | App do tutor | Divide a guarda de um ou mais pets com o titular: vê e atualiza esses pets, sem apagar nem convidar (Fase 2) |
 
 Na **Fase 1** só existe o papel `tutor` (plano `free`). Os papéis `admin_*` entram na **Fase 2** e os papéis de loja, na **Fase 3**.
 
@@ -1063,7 +1096,7 @@ A coluna **Fase** diz quando a tela entra. No canvas do protótipo, as telas tam
 
 Cada linha liga a tela do protótipo (arquivo `prototipo/<nome>.dc.html` e imagem em `prototipo/imagens`) à rota sugerida e aos dados que ela usa. As rotas seguem o Expo Router no app e a estrutura de pastas equivalente na web.
 
-### 18.1 App do tutor (telas 1 a 18, 46 a 51 e 97 a 99 na Fase 1; 92 a 96 e 100 também na Fase 2; 19 a 21, 43 a 45, 52 a 59, 68 a 75, 77, 78, 82 a 85 e 88 a 91 (mais a versão para computador do link) na Fase 2; 22 a 42, 76, 79, 86 e 87 na Fase 3; 62 e 63 na Fase 4; 60, 61, 64 a 67, 80 e 81 na Fase 5)
+### 18.1 App do tutor (telas 1 a 18, 46 a 51 e 97 a 99 na Fase 1; 92 a 96, 100 e 101 a 104 também na Fase 2; 19 a 21, 43 a 45, 52 a 59, 68 a 75, 77, 78, 82 a 85 e 88 a 91 (mais a versão para computador do link) na Fase 2; 22 a 42, 76, 79, 86 e 87 na Fase 3; 62 e 63 na Fase 4; 60, 61, 64 a 67, 80 e 81 na Fase 5)
 
 Navegação por abas: **Início**, **Pets**, **Mapa**, **Lembretes** e **Perfil**. A loja abre a partir do Mapa, do Início e da ficha do lugar.
 
@@ -1163,6 +1196,12 @@ Navegação por abas: **Início**, **Pets**, **Mapa**, **Lembretes** e **Perfil*
 | Criar evento | `EventoNovo` | `/eventos/novo` | `events` | 2 |
 | Ficha do lugar | `Lugar` | `/lugares/[id]` (id = `place_id`) | Google Places via `place-details` e `place-photo`, `saved_places` | 1 |
 | Perfil do tutor | `Perfil` | `/(tabs)/perfil` | `profiles`, `subscriptions` | 1 |
+| Editar perfil | `EditarPerfil` | `/meus-dados` | `profiles`, foto no armazenamento privado `perfis` | 1 |
+| Alterar senha | `EditarPerfil` (Alterar senha) | `/alterar-senha` | `auth.users` | 1 |
+| Guarda compartilhada | `GuardaCompartilhada` | `/guarda` | `pet_members`, `pet_invites` | 2 |
+| Convidar para a guarda | `GuardaConvidar` | `/guarda/convidar` | `pets`, `pet_invites` | 2 |
+| Convite recebido | `GuardaConvite` | `/guarda/convite/[token]` | `pet_invites` via função | 2 |
+| Atualizações do pet | `GuardaAtividade` | `/pet/[id]/atualizacoes` | `pet_activity` (Realtime) | 2 |
 | Premium | `Premium` | `/premium` | `plans`, `subscriptions`, cupom | 2 |
 | Carteira em PDF | `Compartilhar` | `/pets/[id]/carteira` | Gera PDF no servidor | 2 |
 | QR da coleira | `QR` | `/pets/[id]/qr` | `pet_qr_settings` | 2 |
@@ -1857,6 +1896,25 @@ flowchart TD
   I --> J[Tutor é avisado de que a ficha foi aberta]
 ```
 
+### 19.34 Guarda compartilhada (Fase 2)
+
+```mermaid
+flowchart TD
+  A[Perfil ou pet: Guarda compartilhada] --> B[Convidar pessoa]
+  B --> C[Escolhe um ou mais pets e informa o e-mail]
+  C --> D{Premium ativo e menos de 4 pessoas no pet?}
+  D -- não --> E[Mostra o limite ou o convite do Premium]
+  D -- sim --> F[Convite enviado: app, push e e-mail]
+  F --> G{Pessoa aceita em até 7 dias?}
+  G -- recusa ou expira --> H[Titular é avisado]
+  G -- aceita --> I[Escolhe os pets que aceita]
+  I --> J[Os dois cuidam do pet]
+  J --> K[Um registra vacina, dose ou peso]
+  K --> L[Outros veem na hora e recebem aviso]
+  J --> M{Sai ou é removido?}
+  M -- sim --> N[Acesso acaba na hora, histórico fica]
+```
+
 ---
 
 ## 20. Máquinas de estado
@@ -2048,9 +2106,11 @@ Convenções: `id uuid` em todas as tabelas, `created_at` e `updated_at`, soft d
 
 | Tabela | Campos principais |
 | --- | --- |
-| `profiles` | `user_id`, `name`, `phone`, `city`, `plan` (`free`/`premium`), `onboarded_at`, `terms_version`, `terms_accepted_at` |
+| `profiles` | `user_id`, `name`, `phone`, `whatsapp`, `city`, `avatar_url` (caminho no armazenamento privado `perfis`), `plan` (`free`/`premium`), `onboarded_at`, `terms_version`, `terms_accepted_at` |
 | `pets` | `owner_id`, `name`, `species` (`dog`/`cat`), `breed_id`, `birth_date`, `sex`, `weight_kg`, `photo_url`, `allergies` |
-| `pet_members` | `pet_id`, `user_id`, `role` (`owner`/`family`), usado pelo acesso da família |
+| `pet_members` | `pet_id`, `user_id`, `role` (`owner`/`guardian`; `family` na primeira versão), `invited_by`, `accepted_at`, usado pela guarda compartilhada |
+| `pet_invites` | `owner_id`, `email`, `pet_ids[]`, `token_hash`, `status` (`enviado`/`aceito`/`recusado`/`cancelado`/`expirado`), `expires_at` |
+| `pet_activity` | `pet_id`, `actor_id`, `kind` (`vacina`/`dose`/`remedio`/`peso`/`consulta`/`pet`/...), `ref_table`, `ref_id`, `summary`, `created_at`; as tabelas de saúde ganham `created_by` e `updated_by` |
 | `vaccinations` | `pet_id`, `vaccine_id`, `applied_at`, `next_due_at`, `vet_name`, `batch`, `attachment_url` |
 | `dewormings` | `pet_id`, `product`, `applied_at`, `next_due_at` |
 | `weights` | `pet_id`, `kg`, `measured_at` |
@@ -2215,7 +2275,7 @@ Na Fase 1 só valem as linhas do tutor e do anônimo. As de loja entram na Fase 
 | Quem | Pode |
 | --- | --- |
 | Tutor | Ler e escrever os próprios `pets`, saúde, lembretes, `addresses`, `requests`, `reviews`, `messages` e `subscriptions`. Ler `stores` e `products` publicados |
-| Família | Ler e escrever nos pets em que consta em `pet_members`, sem acesso a pagamentos |
+| Guarda compartilhada (`guardian`) | Ler e escrever nos pets em que consta em `pet_members`, sem apagar o pet, convidar pessoas nem ver pagamentos |
 | Lojista | Ler e escrever dados da própria loja e `requests`, `deliveries`, `conversations` e `reviews` dela, conforme a função em `store_members` |
 | Anônimo | Nada direto. A página `/p/[codigo]` chama uma função pública que devolve só os campos liberados |
 | Admin | Acesso por função em `admin_members`, via funções seguras. Toda leitura de dado de saúde exige autorização do tutor e grava `audit_log` |
@@ -2240,6 +2300,10 @@ Canal: **push** (P), **e-mail** (E) ou **na tela de Avisos** (A). O tutor contro
 | Vacina ou vermífugo vencendo (7 e 1 dia) | Tutor | P, A |
 | Hora do remédio | Tutor | P |
 | Dose perdida | Tutor | P, A |
+| Convite de guarda compartilhada *(Fase 2)* | Pessoa convidada | P, E, A |
+| Convite aceito, recusado ou expirado *(Fase 2)* | Titular | P, A |
+| Outra pessoa registrou vacina, dose, remédio, peso ou consulta *(Fase 2)* | Quem divide a guarda | A (P opcional) |
+| Guarda suspensa porque o Premium acabou *(Fase 2)* | Titular e quem divide a guarda | A, E |
 | Nova solicitação | Lojista e equipe com permissão | P |
 | Solicitação confirmada, recusada ou expirada | Tutor | P, A |
 | Pedido pronto para retirar | Tutor | P |
@@ -2485,6 +2549,7 @@ Uma tabela para consultar de uma vez: cada funcionalidade com a fase, a regra, a
 | Funcionalidade | Regra | Telas | Dados | Funções e jobs |
 | --- | --- | --- | --- | --- |
 | Conta, termos, permissões e privacidade | 5.7, 12 | 1, 2, 18, 97 a 99 | `profiles`, `consents`, `lgpd_requests` | Autenticação, `lgpd-export`, `lgpd-delete` |
+| Perfil do tutor e Editar perfil (foto, cidade, senha) | 5.44 | 18 | `profiles`, armazenamento `perfis` | Autenticação (troca de senha) |
 | Pets e saúde (vacinas, peso, consultas) | 4.1 | 3, 5 a 9 | `pets`, `vaccinations`, `weights`, `visits` | Calendário sugerido |
 | Lembretes e remédios | 5.21 | 10 a 15 | `reminders`, `medications`, `medication_doses` | `send-reminders`, `mark-missed-doses` |
 | Início | 4.1 | 4 | Próximas vacinas e doses | Consultas agregadas |
@@ -2507,6 +2572,7 @@ Uma tabela para consultar de uma vez: cada funcionalidade com a fase, a regra, a
 | Cartão de vacina por foto | 5.22 | 52, 53 | `vaccine_card_scans` | `scan-vaccine-card` |
 | Adoção e modo ONG | 5.23 | 54, 55, 93 a 95, admin Adoção | `ngos`, `adoption_pets`, `adoption_favorites`, `adoption_contacts` | `adoption-search`, `adoption-contact`, `adoption-stale` |
 | Cuidador temporário | 5.24 | 56, 92 | `caregiver_access`, `caregiver_access_log` | `create-caregiver-access`, `caregiver-view`, `caregiver-expire` |
+| Guarda compartilhada | 5.45 | 101 a 104 | `pet_members`, `pet_invites`, `pet_activity` | `guardian-invite`, `guardian-accept`, `guardian-leave`, `pet-activity-notify`, `expire-guardian-invites` |
 | Início, caixa de avisos, estados do app e cadastro | 5.43 | 4, 15, 16, 20, 52 | `notification_log` | `notification-log` |
 | Hóspedes do hotelzinho e boletim | 5.42 | 33 e painel do lojista | `caregiver_access`, `hotel_reports` | `create-caregiver-access`, `hotel-report` |
 | Linha do tempo | 5.25 | 57 | `timeline_entries` | Marcos automáticos |
