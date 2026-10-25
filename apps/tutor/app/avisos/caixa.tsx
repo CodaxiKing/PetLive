@@ -1,6 +1,7 @@
-import { useCallback, useState } from 'react';
-import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { useCallback, useRef, useState } from 'react';
+import { ActivityIndicator, Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { router, useFocusEffect, type Href } from 'expo-router';
+import { useAuth } from '../../src/auth/AuthProvider';
 import { Surgir, Tocavel } from '../../src/components/Animacoes';
 import { HeroiOnda } from '../../src/components/HeroiOnda';
 import { Icone, type NomeIcone } from '../../src/components/Icone';
@@ -40,33 +41,51 @@ function hora(iso: string): string {
  * preferências (tela Avisos).
  */
 export default function CaixaAvisos() {
+  const { user } = useAuth();
   const [avisos, setAvisos] = useState<Aviso[]>([]);
   const [carregando, setCarregando] = useState(true);
+  const [erro, setErro] = useState<string | null>(null);
+  const [dono, setDono] = useState<string | null>(null);
+  const [abrindo, setAbrindo] = useState(false);
+  const versao = useRef(0);
+  const ocupado = useRef(false);
 
-  useFocusEffect(
-    useCallback(() => {
-      carregarAvisos().then(
+  const recarregar = useCallback(() => {
+      const token = ++versao.current;
+      setAvisos([]); setDono(null); setErro(null); setCarregando(true); setAbrindo(false); ocupado.current=false;
+      if (!user) { setCarregando(false); return; }
+      carregarAvisos(user.id).then(
         (lista) => {
+          if (token !== versao.current) return;
           setAvisos(lista);
-          setCarregando(false);
+          setDono(user.id);
         },
-        () => setCarregando(false),
-      );
-    }, []),
-  );
+        (e) => { if (token === versao.current) setErro(e instanceof Error ? e.message : String(e)); },
+      ).finally(() => { if (token === versao.current) setCarregando(false); });
+    }, [user]);
+  useFocusEffect(useCallback(() => { recarregar(); return () => { versao.current++; }; }, [recarregar]));
 
-  const naoLidos = avisos.filter((a) => !a.read_at).length;
+  const listaAtual = dono === user?.id ? avisos : [];
+  const naoLidos = listaAtual.filter((a) => !a.read_at).length;
 
-  function abrir(aviso: Aviso) {
-    if (!aviso.read_at) {
-      setAvisos((atual) => atual.map((a) => (a.id === aviso.id ? { ...a, read_at: new Date().toISOString() } : a)));
-      marcarLido(aviso.id);
+  async function handleAbrir(aviso: Aviso) {
+    if (ocupado.current || !user || dono !== user.id) return;
+    const token = versao.current;
+    ocupado.current=true; setAbrindo(true);
+    try {
+      if (!aviso.read_at) await marcarLido(aviso.id, user.id);
+      if (token !== versao.current) return;
+      setAvisos((atual) => atual.map((a) => a.id === aviso.id ? { ...a, read_at: a.read_at ?? new Date().toISOString() } : a));
+      if (aviso.deep_link) router.push(aviso.deep_link as Href);
+    } catch (e) {
+      if (token === versao.current) Alert.alert('Não foi possível abrir o aviso', e instanceof Error ? e.message : String(e));
+    } finally {
+      if (token === versao.current) { ocupado.current=false; setAbrindo(false); }
     }
-    if (aviso.deep_link) router.push(aviso.deep_link as Href);
   }
 
   const grupos: { titulo: string; itens: Aviso[] }[] = [];
-  for (const aviso of avisos) {
+  for (const aviso of listaAtual) {
     const titulo = grupo(aviso.sent_at);
     const ultimo = grupos[grupos.length - 1];
     if (ultimo?.titulo === titulo) ultimo.itens.push(aviso);
@@ -76,7 +95,7 @@ export default function CaixaAvisos() {
   return (
     <View style={estilos.tela}>
       <HeroiOnda
-        subtitulo={naoLidos === 0 ? 'Tudo lido' : naoLidos === 1 ? '1 novo' : `${naoLidos} novos`}
+        subtitulo={carregando ? 'Consultando avisos' : erro ? 'Consulta indisponível' : naoLidos === 0 ? 'Tudo lido' : naoLidos === 1 ? '1 novo' : `${naoLidos} novos`}
         titulo="Avisos"
         altura={196}
       >
@@ -94,45 +113,15 @@ export default function CaixaAvisos() {
       <ScrollView contentContainerStyle={estilos.conteudo} showsVerticalScrollIndicator={false}>
         {carregando ? (
           <ActivityIndicator color={colors.primaryDeep} style={estilos.carregando} />
-        ) : avisos.length === 0 ? (
+        ) : erro ? (
+          <View><Text accessibilityRole="alert" style={estilos.vazio}>Não foi possível carregar seus avisos. {erro}</Text><Pressable accessibilityRole="button" onPress={recarregar} style={estilos.preferencias}><Text style={estilos.preferenciasTexto}>Tentar novamente</Text></Pressable></View>
+        ) : listaAtual.length === 0 ? (
           <Text style={estilos.vazio}>Nenhum aviso nos últimos 30 dias. Os lembretes e as doses aparecem aqui.</Text>
         ) : (
           grupos.map((g) => (
             <View key={g.titulo} style={estilos.grupo}>
               <Text style={estilos.grupoTitulo}>{g.titulo}</Text>
-              {g.itens.map((aviso, i) => {
-                const visual = VISUAL[aviso.type];
-                const novo = !aviso.read_at;
-                return (
-                  <Surgir key={aviso.id} indice={Math.min(i, 4)}>
-                    <Tocavel
-                      accessibilityRole="button"
-                      accessibilityLabel={`${novo ? 'Novo. ' : ''}${aviso.title}. ${aviso.body ?? ''}`}
-                      onPress={() => abrir(aviso)}
-                      escala={0.98}
-                      style={[estilos.aviso, novo ? estilos.avisoNovo : estilos.avisoLido]}
-                    >
-                      <View style={[estilos.icone, { backgroundColor: visual.fundo }]}>
-                        <Icone nome={visual.icone} size={20} />
-                      </View>
-                      <View style={estilos.flex}>
-                        <Text style={estilos.titulo} numberOfLines={1}>
-                          {aviso.title}
-                        </Text>
-                        {aviso.body ? (
-                          <Text style={estilos.corpo} numberOfLines={2}>
-                            {aviso.body}
-                          </Text>
-                        ) : null}
-                      </View>
-                      <View style={estilos.lado}>
-                        <Text style={estilos.hora}>{hora(aviso.sent_at)}</Text>
-                        {novo ? <View style={estilos.ponto} /> : null}
-                      </View>
-                    </Tocavel>
-                  </Surgir>
-                );
-              })}
+              {g.itens.map((aviso, i) => <ItemAviso key={aviso.id} aviso={aviso} indice={i} abrindo={abrindo} onAbrir={handleAbrir} />)}
             </View>
           ))
         )}
@@ -149,6 +138,24 @@ export default function CaixaAvisos() {
   );
 }
 
+function ItemAviso({ aviso, indice, abrindo, onAbrir }: { aviso: Aviso; indice: number; abrindo: boolean; onAbrir: (aviso: Aviso) => Promise<void> }) {
+  const visual = VISUAL[aviso.type];
+  const novo = !aviso.read_at;
+  return (
+    <Surgir indice={Math.min(indice, 4)}>
+      <Tocavel accessibilityRole="button" accessibilityLabel={`${novo ? 'Novo. ' : ''}${aviso.title}. ${aviso.body ?? ''}`}
+        onPress={() => { void onAbrir(aviso); }} disabled={abrindo} accessibilityState={{ disabled: abrindo, busy: abrindo }} escala={0.98}
+        style={[estilos.aviso, novo ? estilos.avisoNovo : estilos.avisoLido]}>
+        <View style={[estilos.icone, { backgroundColor: visual.fundo }]}><Icone nome={visual.icone} size={20} /></View>
+        <View style={estilos.flex}>
+          <Text style={estilos.titulo} numberOfLines={1}>{aviso.title}</Text>
+          {aviso.body ? <Text style={estilos.corpo} numberOfLines={2}>{aviso.body}</Text> : null}
+        </View>
+        <View style={estilos.lado}><Text style={estilos.hora}>{hora(aviso.sent_at)}</Text>{novo ? <View style={estilos.ponto} /> : null}</View>
+      </Tocavel>
+    </Surgir>
+  );
+}
 const estilos = StyleSheet.create({
   tela: { flex: 1, backgroundColor: colors.surface },
   flex: { flex: 1, minWidth: 0 },
