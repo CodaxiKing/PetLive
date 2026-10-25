@@ -67,6 +67,7 @@ export default function TelaLinhaDoTempo() {
         <ActivityIndicator color={colors.primaryDeep} style={estilos.carregando} />
       ) : (
         <ScrollView style={estilos.flex} contentContainerStyle={estilos.conteudo} showsVerticalScrollIndicator={false}>
+          <BotaoPrimario titulo="Montar álbum do ano" onPress={() => router.push({ pathname: '/pet/[id]/album', params: { id } })} />
           <View style={estilos.filtros}>
             {[
               { rotulo: 'Tudo', valor: false },
