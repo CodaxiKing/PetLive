@@ -21,3 +21,9 @@ Referências: [Marker MapLibre](https://maplibre.org/maplibre-react-native/docs/
 Testes do cliente cobrem hora do servidor/latência, vencimento, dados inválidos, IDs não solicitados, propriedades herdadas, lote vazio, deduplicação, limite e divisão em lotes. PGlite `supabase/tests/testar-destaques-pagos.mjs` reaplica migration e cobre conta/anon, vigência/início/fim, cancelamento/reembolso, sobreposição, projeção pública e bloqueio de autopromoção. Pagamentos fictícios somente no banco em memória.
 
 No Android/iOS, com pagamento real confirmado por integração confiável ou ambiente isolado de homologação: conferir pin comum/selecionado, coroa sem corte, toque/rota/favorito, ficha com e sem foto, texto ampliado e TalkBack/VoiceOver. Testar reduzir movimento, mudança em tempo real dessa preferência, sair/voltar e segundo plano. Conferir vencimento, cancelamento, reembolso, rede indisponível e retomada. Medir desempenho do Google Android com vários destaques. Não usar uma loja real como anúncio fictício para validar o visual. Integração de cobrança e teste nativo permanecem pendentes.
+
+## Implantação — 24/10/2026
+
+Código `49d99a6` enviado à main e regra registrada em BUSINESS.md. Migration `20261213000000_destaques_pagos_lugares.sql` aplicada em produção após validação ROLLBACK. Conferidos RLS, acesso anônimo bloqueado e INSERT/SELECT direto negados ao cliente. Zero destaques/pagamentos cadastrados em produção; ativação automática pelo checkout/webhook permanece pendente.
+
+Cópia limpa: 252 testes/42 arquivos, TypeScript, lint e export Metro Android aprovados. Preview publicado: https://expo.dev/accounts/codaxi/projects/petlive-tutor/updates/77bce15b-19b3-410e-b1dd-65b47b505e60 . Runtime `dff916ce37166d489949d7b3020e4ed90d1755dd`, compatível com APK `efb3cb3b-a260-427c-b501-21dde90e5dd0`. Sem novo APK ou Redeploy do site. Publicação confirmada, homologação visual/nativa pendente.

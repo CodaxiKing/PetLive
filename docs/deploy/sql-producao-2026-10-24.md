@@ -1,5 +1,9 @@
 # Atualização SQL de produção — 24/10/2026
 
+## Destaque pago de lojas: base da coroa
+
+Migration `20261213000000_destaques_pagos_lugares.sql`, fonte `49d99a6`, validada com ROLLBACK e aplicada com COMMIT. Lock timeout 5 s e statement timeout 60 s. Conferidos RLS ativa, INSERT/SELECT direto negados ao cliente e consulta anônima bloqueada. Zero registros de destaque/pagamento foram criados em produção. A tabela depende de alimentação por backend confiável após validar pagamento e vínculo da loja; checkout/webhook não foram implementados nesta entrega. Testes fictícios de vigência/cancelamento/reembolso e bloqueio de autopromoção somente em PGlite isolado.
+
 ## Cadastro e edição de pets da ONG
 
 Migration `20261212000000_ong_salvar_pet.sql`, fonte `8b0dca8`, validada com ROLLBACK e aplicada com COMMIT em produção. Lock timeout 5 s e statement timeout 60 s. Acrescenta versão, leitura/edição por ONG responsável aprovada e IDs das organizações no painel. Novas fotos precisam corresponder a arquivos no Storage do tutor/pet; adota o bucket pets e a pasta plana existentes. Não houve criação de bucket, alteração de dados de pets reais ou publicação de registros de teste. PGlite verificou conflitos, autorização, publicação, arquivos próprios, moderação, retry sem duplicação e LGPD; homologação nativa com ONG real permanece pendente.
