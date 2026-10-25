@@ -6,8 +6,7 @@
 // profiles e todos os dados em cascata. Se algo falhar, o pedido fica
 // "em_andamento" e é retomado na próxima execução.
 import { createClient } from 'npm:@supabase/supabase-js@2';
-
-const BUCKETS = ['pets', 'anexos', 'ong-documentos'];
+import { limparStorageConta } from './limpar-storage.mjs';
 
 Deno.serve(async (req) => {
   const chave = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '';
@@ -27,19 +26,7 @@ Deno.serve(async (req) => {
 
   for (const pedido of (pedidos ?? []) as { id: string; user_id: string }[]) {
     try {
-      // Arquivos ficam em <bucket>/<user_id>/<arquivo> (mesma regra das policies).
-      for (const bucket of BUCKETS) {
-        for (;;) {
-          const { data: arquivos, error: erroLista } = await supabase.storage
-            .from(bucket)
-            .list(pedido.user_id, { limit: 1000 });
-          if (erroLista) throw erroLista;
-          const caminhos = (arquivos ?? []).filter((a) => a.name).map((a) => `${pedido.user_id}/${a.name}`);
-          if (caminhos.length === 0) break;
-          const { error: erroRemover } = await supabase.storage.from(bucket).remove(caminhos);
-          if (erroRemover) throw erroRemover;
-        }
-      }
+      await limparStorageConta(supabase.storage, pedido.user_id);
 
       const { error: erroConcluir } = await supabase.rpc('lgpd_concluir_exclusao', { p_pedido: pedido.id });
       if (erroConcluir) throw erroConcluir;
