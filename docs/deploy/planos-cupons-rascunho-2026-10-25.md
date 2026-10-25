@@ -9,3 +9,5 @@ Esta entrega não publica preços, não aplica cupons, não conta usos, não cri
 Validação: PGlite com admin_papel/admin_exigir/admin_registrar reais para testar papéis/2FA/inatividade, preços indefinidos, versão, duplicidade, tipos, arquivamento, auditoria, isolamento e reaplicação sem reset. `node --experimental-strip-types apps/web/scripts/testar-planos.mjs` testa dinheiro, inteiros e horário local. ESLint, Next typegen, TypeScript e build web passaram com a nova rota. Migration verificada com rollback no schema real antes de instalar.
 
 Pendências: Redeploy da main no Coolify, homologação com 2FA e conclusão da integração comercial. Board permanece Em andamento. Nenhum cupom ou preço de teste foi criado em produção. App do lojista continua por último. Sem mudança no APK, no Firebase ou nos limites de plano.
+
+Produção instalada após `4a2ddfb`. Verificação confirmou acesso anônimo negado, UPDATE direto de planos e SELECT direto de cupons negados, guarda admin presente, dois preços ainda indefinidos e limites desligados. Inseridos somente os dois ciclos de rascunho com preço nulo. Não há venda disponível nem alteração nos contratos do tutor.
