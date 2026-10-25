@@ -12,13 +12,13 @@
   "marca": {
     "preto": "#111111",
     "azulCeu": "#9AD6F8",
-    "azulCabecalho": "#A9DCF6",
+    "azulClaro": "#E0F1FA",
     "branco": "#FFFFFF"
   },
   "pastel": {
     "azul": {
       "fundo": "#E0F1FA",
-      "texto": "#2F6F93"
+      "texto": "#1A5577"
     },
     "lilas": {
       "fundo": "#EADCFB",
@@ -37,19 +37,29 @@
       "texto": "#A3324F"
     }
   },
+  "significado": {
+    "rosa": "Saúde: vacinas, remédios, consultas, peso e alertas de saúde (alergia, perigo, pet perdido)",
+    "lilas": "Rotina: lembretes, rotina, passeios, banho e tosa, hotel, creche e eventos",
+    "azul": "Lugares, serviços, compras e navegação",
+    "verde": "Só estado: em dia, concluído, confirmado, aberto agora",
+    "amarelo": "Só estado: atenção, pendente, em análise, vence em breve",
+    "neutro": "Dados sem assunto (sexo, idade, raça): fundo neutros.card e texto neutros.textoSecundario",
+    "vermelho": "Emergência: só o SOS, com fundo cheio e texto branco"
+  },
   "neutros": {
     "fundoPainel": "#F5F6FA",
     "card": "#F3F5F8",
     "divisor": "#EEF0F4",
     "borda": "#E1E6EE",
     "controleOff": "#D5DAE2",
-    "textoSecundario": "#6A7484",
+    "textoSecundario": "#566070",
     "textoApoio": "#4A5568",
     "textoNoEscuro": "#C9D0DB"
   },
   "estados": {
     "estrela": "#F2A900",
-    "gravando": "#C0392B"
+    "emergencia": "#C0392B",
+    "textoSobreEmergencia": "#FFFFFF"
   },
   "escuro": {
     "superficie": "#111111",
@@ -61,8 +71,7 @@
     "peloEscuro": "#B97A3C",
     "focinho": "#F8E3C0",
     "peloLaranja": "#E88F45",
-    "coleira": "#FF7A7A",
-    "azulIlustracao": "#8ED1FC"
+    "coleira": "#FF7A7A"
   },
   "raios": {
     "pilula": 999,
