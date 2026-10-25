@@ -141,10 +141,19 @@ export default function Mapa() {
   const centro = regiao ?? posicao ?? CENTRO_PADRAO;
   const so24h = categoria === '24h';
 
-  // Consulta por perto muda com a posição, o filtro e a busca.
-  useEffect(() => {
+  const iniciarConsulta = useCallback(() => {
+    setLugares([]);
+    setSelecionado(null);
+    setErroLugares(null);
+    setSemRede(null);
+    setCarregando(true);
+  }, []);
+
+  // Revalida também ao voltar da ficha: os favoritos podem ter mudado lá.
+  useFocusEffect(useCallback(() => {
     if (aba !== 'lugares') return;
     if (!posicao && !regiao && categoria !== 'salvos') return;
+    iniciarConsulta();
     let vivo = true;
     const consultaCache = { usuario: user?.id ?? '', lat: centro.lat, lng: centro.lng, raioKm, categoria, busca: buscaAtiva };
     let parciais: Lugar[] = [];
@@ -201,7 +210,9 @@ export default function Mapa() {
     return () => {
       vivo = false;
     };
-  }, [aba, centro.lat, centro.lng, posicao, regiao, categoria, buscaAtiva, so24h, raioKm, tentativa, user?.id]);
+  // O contador força nova consulta mesmo sem mudança de região/filtro.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [aba, centro.lat, centro.lng, posicao, regiao, categoria, buscaAtiva, so24h, raioKm, tentativa, user?.id, iniciarConsulta]));
 
   useFocusEffect(useCallback(() => {
     if (aba !== 'eventos') return;
@@ -227,7 +238,7 @@ export default function Mapa() {
     if (valor === categoria) return;
     setCategoriaManual(valor);
     setSelecionado(null);
-    setCarregando(true);
+    iniciarConsulta();
   }
 
   // O texto vem do próprio envio: o estado do campo pode ainda não ter chegado.
@@ -245,13 +256,13 @@ export default function Mapa() {
       mapaRef.current?.irPara(ponto, 14, 600);
       setModoRegiao(false);
       setBusca('');
-      setCarregando(true);
+      iniciarConsulta();
       return;
     }
     setBuscaAtiva(enviado.trim());
     if (enviado.trim() === buscaAtiva) setTentativa((n) => n + 1);
     setSelecionado(null);
-    setCarregando(true);
+    iniciarConsulta();
   }
 
   function buscarPorRegiao() {
@@ -270,7 +281,7 @@ export default function Mapa() {
     setCategoriaManual('todos');
     setBusca('');
     setBuscaAtiva('');
-    setCarregando(true);
+    iniciarConsulta();
     setTentativa((n) => n + 1);
   }
 
@@ -287,7 +298,7 @@ export default function Mapa() {
     // O ponto azul anda com o GPS; a primeira posição fica de reserva.
     const agora = mapaRef.current?.posicaoUsuario() ?? posicao;
     if (agora) {
-      setCarregando(true);
+      iniciarConsulta();
       setRegiao(agora);
       setBusca('');
       setBuscaAtiva('');
@@ -370,7 +381,7 @@ export default function Mapa() {
           {(['lugares', 'eventos'] as const).map((item) => {
             const ativo = aba === item;
             return (
-              <Pressable key={item} onPress={() => { if (item === aba) return; setAba(item); setBusca(''); if (item === 'lugares') setCarregando(true); }} accessibilityRole="button"
+              <Pressable key={item} onPress={() => { if (item === aba) return; setAba(item); setBusca(''); if (item === 'lugares') iniciarConsulta(); }} accessibilityRole="button"
                 accessibilityState={{ selected: ativo }} style={[estilos.abaMapa, ativo && estilos.abaMapaAtiva]}>
                 <Text style={[estilos.abaMapaTexto, ativo && estilos.abaMapaTextoAtiva]}>{item === 'lugares' ? 'Lugares' : 'Eventos'}</Text>
               </Pressable>
@@ -499,7 +510,7 @@ export default function Mapa() {
 
       {aba !== 'lugares' ? null : !lugar && !carregando && erroLugares ? (
         <CartaoEstadoMapa icone="local" fundoIcone={colors.primarySurface} titulo="Não foi possível carregar" sub="A consulta de lugares falhou" texto={erroLugares} topoMinimo={alturaTopo + 28}>
-          <AcaoEstado rotulo="Tentar novamente" onPress={() => { setCarregando(true); setTentativa((n) => n + 1); }} />
+          <AcaoEstado rotulo="Tentar novamente" onPress={() => { iniciarConsulta(); setTentativa((n) => n + 1); }} />
           <AcaoEstado rotulo="Abrir o SOS" tipo="link" onPress={() => router.push('/sos')} />
         </CartaoEstadoMapa>
       ) : !lugar && !carregando && semRede ? (
@@ -527,7 +538,7 @@ export default function Mapa() {
           <AcaoEstado
             rotulo="Tentar de novo"
             onPress={() => {
-              setCarregando(true);
+              iniciarConsulta();
               setTentativa((t) => t + 1);
             }}
           />
@@ -570,7 +581,7 @@ export default function Mapa() {
               <AcaoEstado
                 rotulo={`Aumentar a busca para ${RAIO_AMPLO_KM} km`}
                 onPress={() => {
-                  setCarregando(true);
+                  iniciarConsulta();
                   setRaioKm(RAIO_AMPLO_KM);
                 }}
               />

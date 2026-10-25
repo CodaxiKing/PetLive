@@ -56,4 +56,43 @@ describe('filtros do mapa de lugares', () => {
     concluir([]);
     expect(await consulta).toEqual(lista);
   });
+  it('mostra descobertas válidas antes do banco responder e filtra raio, categoria e 24h', async () => {
+    let concluirBanco!: (r: { data: never[]; error: null }) => void;
+    rpc.mockReturnValue(new Promise((resolve) => { concluirBanco = resolve; }));
+    vi.mocked(descobrirLugares).mockResolvedValue([
+      { id: 'a', nome: 'Clínica perto', categoria: 'clinica', lat: 0.001, lng: 0, aberto_24h: true },
+      { id: 'b', nome: 'Clínica distante', categoria: 'clinica', lat: 1, lng: 0, aberto_24h: true },
+      { id: 'c', nome: 'Petshop', categoria: 'petshop', lat: 0.001, lng: 0, aberto_24h: true },
+      { id: 'd', nome: 'Clínica diurna', categoria: 'clinica', lat: 0.001, lng: 0, aberto_24h: false },
+    ] as Awaited<ReturnType<typeof descobrirLugares>>);
+    const aoCarregar = vi.fn();
+    const consulta = buscarLugares({ lat: 0, lng: 0, categoria: 'clinica', raioKm: 3, aberto24h: true, aoCarregar });
+    await vi.waitFor(() => expect(aoCarregar).toHaveBeenCalledOnce());
+    expect(aoCarregar.mock.calls[0][0].map((l: { id: string }) => l.id)).toEqual(['a']);
+    concluirBanco({ data: [], error: null });
+    expect((await consulta).map((l) => l.id)).toEqual(['a']);
+  });
+  it('Todos aplica a busca por nome também aos pins parciais pet friendly', async () => {
+    const parque = { id: 'p', nome: 'Parque do Lago', categoria: 'parque', lat: 0.001, lng: 0 };
+    const restaurante = { id: 'r', nome: 'Restaurante', categoria: 'restaurante', lat: 0.001, lng: 0 };
+    rpc.mockResolvedValue({ data: [parque, restaurante], error: null });
+    let concluir!: (r: Awaited<ReturnType<typeof descobrirLugares>>) => void;
+    const pendente = new Promise<Awaited<ReturnType<typeof descobrirLugares>>>((resolve) => { concluir = resolve; });
+    vi.mocked(descobrirLugares).mockReturnValue(pendente);
+    const aoCarregar = vi.fn();
+    const consulta = buscarLugares({ lat: 0, lng: 0, busca: 'lago', incluirPetFriendly: true, aoCarregar });
+    await vi.waitFor(() => expect(aoCarregar).toHaveBeenCalled());
+    expect(aoCarregar.mock.calls.every(([lista]) => lista.every((l: { id: string }) => l.id === 'p'))).toBe(true);
+    concluir([]);
+    expect((await consulta).map((l) => l.id)).toEqual(['p']);
+  });
+  it('descoberta sem resultado para o filtro não encerra o carregamento com pins de outra categoria', async () => {
+    rpc.mockResolvedValue({ data: [], error: null });
+    vi.mocked(descobrirLugares).mockResolvedValue([
+      { id: 'p', nome: 'Parque', categoria: 'parque', lat: 0.001, lng: 0 },
+    ] as Awaited<ReturnType<typeof descobrirLugares>>);
+    const aoCarregar = vi.fn();
+    expect(await buscarLugares({ lat: 0, lng: 0, categoria: 'clinica', aoCarregar })).toEqual([]);
+    expect(aoCarregar).not.toHaveBeenCalled();
+  });
 });

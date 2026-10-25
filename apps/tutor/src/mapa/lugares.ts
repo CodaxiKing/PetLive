@@ -155,17 +155,22 @@ export async function buscarLugares(opcoes: {
   aoCarregar?: (lugares: Lugar[]) => void;
 }): Promise<Lugar[]> {
   if (opcoes.incluirPetFriendly && !opcoes.categoria && !opcoes.aberto24h) {
+    const termo = opcoes.busca?.trim().toLocaleLowerCase('pt-BR');
+    const filtrar = (lista: Lugar[]) => lista.filter((lugar) => !termo || lugar.nome.toLocaleLowerCase('pt-BR').includes(termo));
+    const publicar = (lista: Lugar[]) => {
+      const visiveis = filtrar(lista);
+      if (visiveis.length) opcoes.aoCarregar?.(visiveis);
+    };
     const resultados = await Promise.allSettled([
-      buscarLugares({ ...opcoes, incluirPetFriendly: false }),
-      buscarPetFriendly(opcoes, opcoes.raioKm ?? 5, opcoes.aoCarregar),
+      buscarLugares({ ...opcoes, incluirPetFriendly: false, aoCarregar: publicar }).then((lista) => { publicar(lista); return lista; }),
+      buscarPetFriendly(opcoes, opcoes.raioKm ?? 5, publicar).then((lista) => { publicar(lista); return lista; }),
     ]);
     const listas = resultados.flatMap((resultado) => resultado.status === 'fulfilled' ? [resultado.value] : []);
     if (!listas.some((lista) => lista.length > 0)) {
       const falha = resultados.find((resultado) => resultado.status === 'rejected');
       if (falha?.status === 'rejected') throw falha.reason;
     }
-    const termo = opcoes.busca?.trim().toLocaleLowerCase('pt-BR');
-    return reunirLugares(listas).filter((lugar) => !termo || lugar.nome.toLocaleLowerCase('pt-BR').includes(termo));
+    return filtrar(reunirLugares(listas));
   }
   if (usarGoogle()) {
     try {
@@ -191,6 +196,12 @@ export async function buscarLugares(opcoes: {
 
 async function buscarDadosAbertos(opcoes: { lat: number; lng: number; categoria?: CategoriaLugar | null; busca?: string | null; aberto24h?: boolean | null; raioKm?: number; aoCarregar?: (lugares: Lugar[]) => void }, petFriendly = false): Promise<Lugar[]> {
   const raio = opcoes.raioKm ?? 10;
+  const termo = opcoes.busca?.trim().toLocaleLowerCase('pt-BR');
+  const filtrarPublicos = (lista: Lugar[]) => lista.map((lugar) => ({ ...lugar, distancia_km: distanciaKm(opcoes, lugar) })).filter((lugar) =>
+    Number.isFinite(lugar.distancia_km) && lugar.distancia_km <= raio &&
+    (opcoes.categoria ? lugar.categoria === opcoes.categoria : CATEGORIAS_PET_FRIENDLY.includes(lugar.categoria as CategoriaPetFriendly) === petFriendly) &&
+    (opcoes.aberto24h == null || lugar.aberto_24h === opcoes.aberto24h) &&
+    (!termo || lugar.nome.toLocaleLowerCase('pt-BR').includes(termo)));
   const [banco, descoberta] = await Promise.allSettled([
     supabase.rpc('lugares_por_perto', {
     p_lat: opcoes.lat,
@@ -205,16 +216,15 @@ async function buscarDadosAbertos(opcoes: { lat: number; lng: number; categoria?
       if (!resultado.error && resultado.data?.length) opcoes.aoCarregar?.(resultado.data as Lugar[]);
       return resultado;
     }),
-    descobrirLugares(opcoes, raio),
+    descobrirLugares(opcoes, raio).then((lista) => {
+      const visiveis = filtrarPublicos(lista);
+      if (visiveis.length) opcoes.aoCarregar?.(visiveis);
+      return lista;
+    }),
   ]);
   const data = banco.status === 'fulfilled' && !banco.value.error ? (banco.value.data ?? []) as Lugar[] : [];
   const publicos = descoberta.status === 'fulfilled' ? descoberta.value : [];
-  const termo = opcoes.busca?.trim().toLocaleLowerCase('pt-BR');
-  const filtrados = publicos.map((lugar) => ({ ...lugar, distancia_km: distanciaKm(opcoes, lugar) })).filter((lugar) =>
-    Number.isFinite(lugar.distancia_km) && lugar.distancia_km <= raio &&
-    (opcoes.categoria ? lugar.categoria === opcoes.categoria : CATEGORIAS_PET_FRIENDLY.includes(lugar.categoria as CategoriaPetFriendly) === petFriendly) &&
-    (opcoes.aberto24h == null || lugar.aberto_24h === opcoes.aberto24h) &&
-    (!termo || lugar.nome.toLocaleLowerCase('pt-BR').includes(termo)));
+  const filtrados = filtrarPublicos(publicos);
   if (descoberta.status === 'rejected' && data.length === 0) throw descoberta.reason;
   if (publicos.length === 0) {
     if (banco.status === 'rejected') throw banco.reason;
