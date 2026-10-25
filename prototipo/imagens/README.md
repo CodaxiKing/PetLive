@@ -12,7 +12,7 @@ Capturas das telas do protótipo, geradas a partir de `prototipo/*.dc.html` e or
 
 # Fase 1 · MVP: pet, saúde, lugares e emergência
 
-## App do tutor (32)
+## App do tutor (33)
 
 | | | | |
 | --- | --- | --- | --- |
@@ -21,9 +21,10 @@ Capturas das telas do protótipo, geradas a partir de `prototipo/*.dc.html` e or
 | <img src="tutor/08-peso.png" width="160"><br>8 · Peso | <img src="tutor/09-consultas.png" width="160"><br>9 · Consultas | <img src="tutor/10-lembretes.png" width="160"><br>10 · Lembretes | <img src="tutor/11-novo-lembrete.png" width="160"><br>11 · Novo lembrete |
 | <img src="tutor/12-novo-remedio.png" width="160"><br>12 · Novo remédio | <img src="tutor/13-medicamentos.png" width="160"><br>13 · Medicamentos | <img src="tutor/14-lembrete-personalizado.png" width="160"><br>14 · Lembrete personalizado | <img src="tutor/15-avisos.png" width="160"><br>15 · Avisos |
 | <img src="tutor/15-caixa-de-avisos.png" width="160"><br>15 · Caixa de avisos | <img src="tutor/16-mapa-sem-internet.png" width="160"><br>16 · Mapa, sem internet | <img src="tutor/16-mapa-sem-localizacao.png" width="160"><br>16 · Mapa, sem localização | <img src="tutor/16-mapa-sem-resultados.png" width="160"><br>16 · Mapa, sem resultados |
-| <img src="tutor/16-mapa.png" width="160"><br>16 · Mapa | <img src="tutor/17-ficha-do-lugar.png" width="160"><br>17 · Ficha do lugar | <img src="tutor/18-perfil-do-tutor.png" width="160"><br>18 · Perfil do tutor | <img src="tutor/46-sos-e-emergencia.png" width="160"><br>46 · SOS e emergência |
-| <img src="tutor/47-primeiros-socorros.png" width="160"><br>47 · Primeiros socorros | <img src="tutor/48-o-que-intoxica-o-pet.png" width="160"><br>48 · O que intoxica o pet | <img src="tutor/49-pet-friendly-no-mapa.png" width="160"><br>49 · Pet friendly no mapa | <img src="tutor/50-calculadoras.png" width="160"><br>50 · Calculadoras |
-| <img src="tutor/51-rotina-de-cuidados.png" width="160"><br>51 · Rotina de cuidados | <img src="tutor/97-termos-e-consentimento.png" width="160"><br>97 · Termos e consentimento | <img src="tutor/98-permissoes-do-app.png" width="160"><br>98 · Permissões do app | <img src="tutor/99-privacidade-e-dados.png" width="160"><br>99 · Privacidade e dados |
+| <img src="tutor/16-mapa.png" width="160"><br>16 · Mapa | <img src="tutor/17-ficha-do-lugar.png" width="160"><br>17 · Ficha do lugar | <img src="tutor/18-perfil-do-tutor.png" width="160"><br>18 · Perfil do tutor | <img src="tutor/18-editar-perfil.png" width="160"><br>18 · Editar perfil |
+| <img src="tutor/46-sos-e-emergencia.png" width="160"><br>46 · SOS e emergência | <img src="tutor/47-primeiros-socorros.png" width="160"><br>47 · Primeiros socorros | <img src="tutor/48-o-que-intoxica-o-pet.png" width="160"><br>48 · O que intoxica o pet | <img src="tutor/49-pet-friendly-no-mapa.png" width="160"><br>49 · Pet friendly no mapa |
+| <img src="tutor/50-calculadoras.png" width="160"><br>50 · Calculadoras | <img src="tutor/51-rotina-de-cuidados.png" width="160"><br>51 · Rotina de cuidados | <img src="tutor/97-termos-e-consentimento.png" width="160"><br>97 · Termos e consentimento | <img src="tutor/98-permissoes-do-app.png" width="160"><br>98 · Permissões do app |
+| <img src="tutor/99-privacidade-e-dados.png" width="160"><br>99 · Privacidade e dados |  |  |  |
 
 # Fase 2 · Premium, eventos, adoção e painel admin
 

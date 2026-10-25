@@ -1449,6 +1449,14 @@
       "h": 844,
       "is_interactive": true,
       "title": "15 · Caixa de avisos"
+    },
+    "EditarPerfil.dc.html": {
+      "w": 390,
+      "h": 844,
+      "is_interactive": true,
+      "x": 3290,
+      "y": 6128,
+      "title": "18 · Editar perfil"
     }
   },
   "createdOnFiles": {
@@ -1761,6 +1769,7 @@
     "PerdidoNotificacao.dc.html",
     "PerdidoVisto.dc.html",
     "Perfil.dc.html",
+    "EditarPerfil.dc.html",
     "PerfilPet.dc.html",
     "Peso.dc.html",
     "Pet.dc.html",
