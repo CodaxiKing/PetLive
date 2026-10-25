@@ -55,7 +55,6 @@ function FormularioPerfil({ tutorId }: { tutorId: string }) {
 
   useEffect(() => {
     let ativo = true
-    setErroCarga(false)
     void Promise.resolve(supabase
       .from('profiles')
       .select('nome, telefone, whatsapp, cidade, contato_emergencia_nome, contato_emergencia_telefone, avatar_url')
@@ -80,8 +79,6 @@ function FormularioPerfil({ tutorId }: { tutorId: string }) {
         })
       }).catch(() => { if (ativo) setErroCarga(true) })
     return () => { ativo = false }
-  // tentativa repete a leitura após erro, sem substituir edições quando o auth atualiza.
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tutorId, tentativa])
 
   if (!dados) {
@@ -89,7 +86,7 @@ function FormularioPerfil({ tutorId }: { tutorId: string }) {
       <View style={[estilos.tela, estilos.centro]}>
         {erroCarga ? <View style={estilos.falhaCarga}>
           <Text accessibilityRole="alert" style={estilos.ajuda}>Não foi possível carregar seu perfil. Confira a conexão e tente novamente.</Text>
-          <BotaoPrimario titulo="Tentar novamente" onPress={() => setTentativa(n => n + 1)} />
+          <BotaoPrimario titulo="Tentar novamente" onPress={() => { setErroCarga(false); setTentativa(n => n + 1) }} />
           <Tocavel accessibilityRole="button" onPress={() => router.back()}><Text style={estilos.fotoTexto}>Voltar</Text></Tocavel>
         </View> : <ActivityIndicator color={colors.primaryDeep} />}
       </View>
