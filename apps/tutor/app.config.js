@@ -5,8 +5,13 @@
 //   e o app segue com o mapa do OpenStreetMap (src/mapa/MapaLugares.tsx).
 module.exports = ({ config }) => ({
   ...config,
+  android: {
+    ...config.android,
+    ...(process.env.GOOGLE_SERVICES_JSON ? { googleServicesFile: process.env.GOOGLE_SERVICES_JSON } : {}),
+  },
   plugins: [
     ...(config.plugins ?? []),
+    ['expo-notifications', { defaultChannel: 'lembretes', enableRemoteNotifications: false }],
     ['expo-sharing', { ios: { enabled: false }, android: { enabled: false } }],
     [
       'react-native-maps',
@@ -18,6 +23,8 @@ module.exports = ({ config }) => ({
   ],
   extra: {
     ...config.extra,
+    // Somente builds Android com a configuração Firebase registram push remoto.
+    push: { android: Boolean(process.env.GOOGLE_SERVICES_JSON) },
     // O app só troca para o mapa do Google se o build tiver a chave da plataforma.
     mapaGoogle: {
       android: Boolean(process.env.GOOGLE_MAPS_ANDROID_KEY),

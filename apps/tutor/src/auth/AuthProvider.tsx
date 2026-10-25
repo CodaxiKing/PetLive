@@ -1,6 +1,9 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
 import type { Session, User } from '@supabase/supabase-js';
 import { supabase } from '../lib/supabase';
+import { AppState } from 'react-native';
+import * as Notifications from 'expo-notifications';
+import { atualizarPush, pushDisponivel, registroPush } from '../notificacoes/push';
 
 type AuthState = {
   /** Sessão atual, null quando deslogado. */
@@ -19,6 +22,21 @@ const AuthContext = createContext<AuthState>({
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [carregando, setCarregando] = useState(true);
+  const tutorId = session?.user.id ?? null;
+
+  useEffect(() => {
+    void registroPush.definirConta(tutorId).catch(() => undefined);
+    if (!tutorId || !pushDisponivel()) return;
+    const estado = AppState.addEventListener('change', (novo) => {
+      if (novo === 'active') atualizarPush();
+    });
+    const token = Notifications.addPushTokenListener(() => atualizarPush());
+    // Retenta falhas temporárias e detecta permissão alterada sem reiniciar o app.
+    const tentativa = setInterval(() => {
+      if (AppState.currentState === 'active') atualizarPush();
+    }, 60_000);
+    return () => { estado.remove(); token.remove(); clearInterval(tentativa); };
+  }, [tutorId]);
 
   useEffect(() => {
     // Restaura a sessão salva no primeiro carregamento.

@@ -3,6 +3,8 @@ import { Linking, Pressable, ScrollView, StyleSheet, Text, View } from 'react-na
 import { router, useFocusEffect, useLocalSearchParams } from 'expo-router';
 import * as Notifications from 'expo-notifications';
 import * as Location from 'expo-location';
+import { garantirCanal } from '../src/notificacoes/notificacoes';
+import { atualizarPush } from '../src/notificacoes/push';
 import { BotaoPrimario } from '../src/components/BotaoPrimario';
 import { HeroiOnda } from '../src/components/HeroiOnda';
 import { Icone, type NomeIcone } from '../src/components/Icone';
@@ -34,7 +36,10 @@ const PERMISSOES: Permissao[] = [
     icone: 'sino',
     fundo: '#FFF0C9',
     consultar: () => Notifications.getPermissionsAsync(),
-    pedir: () => Notifications.requestPermissionsAsync(),
+    pedir: async () => {
+      await garantirCanal();
+      return Notifications.requestPermissionsAsync();
+    },
   },
   {
     chave: 'localizacao',
@@ -111,7 +116,8 @@ export default function Permissoes() {
       setPodePerguntar((atual) => ({ ...atual, [permissao.chave]: resultado.canAskAgain }));
       // Registro do consentimento (LGPD); falha de rede não trava a tela.
       if (estado !== 'pendente') {
-        registrarConsentimento(permissao.consentimento, estado === 'concedida').catch(() => undefined);
+        await registrarConsentimento(permissao.consentimento, estado === 'concedida').catch(() => undefined);
+        if (permissao.chave === 'avisos') atualizarPush();
       }
     } catch {
       // O sistema recusou o pedido (ex.: web); a tela segue com o estado anterior.

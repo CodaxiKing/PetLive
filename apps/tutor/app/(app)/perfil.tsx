@@ -12,6 +12,7 @@ import { mascaraTelefone } from '../../src/lib/mascaras';
 import { useEstadoPlano } from '../../src/lib/plano';
 import { supabase } from '../../src/lib/supabase';
 import { useLembretes } from '../../src/lembretes/LembretesProvider';
+import { pushDisponivel, registroPush } from '../../src/notificacoes/push';
 import { useCidade } from '../../src/mapa/useCidade';
 import { coresDoPet } from '../../src/pets/coresPet';
 import { usePets } from '../../src/pets/PetsProvider';
@@ -37,6 +38,7 @@ export default function Perfil() {
   const { pets, definirPetAtivo } = usePets();
 
   const [nome, setNome] = useState<string | null>(null);
+  const [saindo, setSaindo] = useState(false);
   const [telefone, setTelefone] = useState<string | null>(null);
   const [cidadePerfil, setCidadePerfil] = useState<string | null>(null);
   const [salvos, setSalvos] = useState<number | null>(null);
@@ -78,15 +80,26 @@ export default function Perfil() {
   const inicial = nomeExibido.trim().charAt(0).toUpperCase();
 
   async function sair() {
-    // Dados de saúde guardados para uso sem internet saem junto com a conta.
-    await limparCacheOffline();
-    const { error } = await supabase.auth.signOut();
-    if (error) {
-      Alert.alert('Não foi possível sair', error.message);
-      return;
+    if (saindo || !user) return;
+    setSaindo(true);
+    try {
+      if (pushDisponivel()) await registroPush.prepararSaida(user.id);
+      // Dados de saúde guardados para uso sem internet saem junto com a conta.
+      await limparCacheOffline();
+      const { error } = await supabase.auth.signOut();
+      if (error) {
+        registroPush.retomar();
+        Alert.alert('Não foi possível sair', error.message);
+        return;
+      }
+      // Sem sessão o layout raiz volta para as boas-vindas.
+      router.replace('/welcome');
+    } catch {
+      registroPush.retomar();
+      Alert.alert('Não foi possível sair', 'Confira sua conexão e tente novamente para desativar os avisos deste aparelho.');
+    } finally {
+      setSaindo(false);
     }
-    // Sem sessão o layout raiz volta para as boas-vindas.
-    router.replace('/welcome');
   }
 
   const numeros = [
