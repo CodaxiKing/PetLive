@@ -23,6 +23,7 @@ export default function Premium() {
     <Text style={s.texto}>Mais pets na mesma conta, carteirinha em PDF e histórico completo de despesas.</Text>
     <View style={s.card}><Text style={s.subtitulo}>Assinaturas em breve</Text><Text style={s.texto}>A compra e a restauração de assinaturas ainda não estão disponíveis nesta versão. Quando liberadas, serão feitas pela loja de apps do seu aparelho.</Text></View>
     <Text style={s.texto}>Esta tela não realiza cobranças nem altera sua assinatura.</Text>
+    <Pressable accessibilityRole="button" onPress={() => router.push('/premium/assinatura')}><Text style={s.link}>Minha assinatura</Text></Pressable>
   </ScrollView>;
 }
 const s = StyleSheet.create({

@@ -114,6 +114,7 @@ function RaizProtegida() {
                 <Stack.Screen name="meus-dados" />
                 <Stack.Screen name="alterar-senha" />
                 <Stack.Screen name="alterar-email" />
+                <Stack.Screen name="premium/assinatura" />
                 <Stack.Screen name="despesas/index" />
                 <Stack.Screen name="despesas/nova" options={{ presentation: 'modal', animation: 'slide_from_bottom' }} />
                 <Stack.Screen name="ficha/enviar" />
