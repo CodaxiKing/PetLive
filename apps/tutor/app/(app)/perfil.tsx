@@ -16,6 +16,7 @@ import { pushDisponivel, registroPush } from '../../src/notificacoes/push';
 import { useCidade } from '../../src/mapa/useCidade';
 import { coresDoPet } from '../../src/pets/coresPet';
 import { usePets } from '../../src/pets/PetsProvider';
+import { urlFotoPerfil } from '../../src/perfil/foto';
 import { colors } from '../../src/theme/colors';
 import { spacing } from '../../src/theme/tokens';
 import { fontFamily, typography } from '../../src/theme/typography';
@@ -41,6 +42,7 @@ export default function Perfil() {
   const [saindo, setSaindo] = useState(false);
   const [telefone, setTelefone] = useState<string | null>(null);
   const [cidadePerfil, setCidadePerfil] = useState<string | null>(null);
+  const [fotoUrl, setFotoUrl] = useState<string | null>(null);
   const [salvos, setSalvos] = useState<number | null>(null);
   const [limiteHoje] = useState(fimDeHoje);
   const { lembretes } = useLembretes();
@@ -60,13 +62,14 @@ export default function Perfil() {
       if (!user) return;
       supabase
         .from('profiles')
-        .select('nome, telefone, cidade')
+        .select('nome, telefone, cidade, avatar_url')
         .eq('id', user.id)
         .maybeSingle()
         .then(({ data }) => {
           setNome(data?.nome ?? null);
           setTelefone(data?.telefone ?? null);
           setCidadePerfil(data?.cidade ?? null);
+          urlFotoPerfil(data?.avatar_url).then(setFotoUrl);
         });
     }, [user]),
   );
@@ -109,7 +112,7 @@ export default function Perfil() {
   ];
 
   const linhas: { rotulo: string; icone: NomeIcone; fundo: string; acao: () => void; perigo?: boolean }[] = [
-    { rotulo: 'Meus dados', icone: 'pessoas', fundo: '#FFF0C9', acao: () => router.push('/meus-dados') },
+    { rotulo: 'Editar perfil', icone: 'pessoas', fundo: '#FFF0C9', acao: () => router.push('/meus-dados') },
     { rotulo: 'Notificações', icone: 'sino', fundo: colors.hero, acao: () => router.push('/avisos') },
     { rotulo: 'Meus eventos', icone: 'local', fundo: colors.hero, acao: () => router.push('/eventos/meus') },
     { rotulo: 'Privacidade e dados', icone: 'escudo', fundo: colors.successSurface, acao: () => router.push('/privacidade') },
@@ -122,9 +125,9 @@ export default function Perfil() {
         <HeroiOnda titulo="" semVoltar altura={206}>
           <MarcaPata size={130} style={estilos.pataHeroi} />
           <View style={estilos.identidade}>
-            <View style={estilos.avatar}>
-              <Text style={estilos.avatarLetra}>{inicial}</Text>
-            </View>
+            <Tocavel accessibilityRole="button" accessibilityLabel="Editar perfil" onPress={() => router.push('/meus-dados')} style={estilos.avatar}>
+              {fotoUrl ? <Image source={{ uri: fotoUrl }} style={estilos.avatarFoto} /> : <Text style={estilos.avatarLetra}>{inicial}</Text>}
+            </Tocavel>
             <View style={estilos.flex1}>
               <Text style={estilos.nome} numberOfLines={1}>
                 {nomeExibido}
@@ -138,7 +141,7 @@ export default function Perfil() {
             </View>
             <Tocavel
               accessibilityRole="button"
-              accessibilityLabel="Editar meus dados"
+              accessibilityLabel="Editar perfil"
               onPress={() => router.push('/meus-dados')}
               style={estilos.editar}
             >
@@ -277,6 +280,7 @@ const estilos = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  avatarFoto: { width: 76, height: 76, borderRadius: 38 },
   avatarLetra: { fontSize: 32, fontFamily: fontFamily.semiBold, color: colors.black },
   nome: { fontSize: 32, lineHeight: 36, letterSpacing: -1, fontFamily: fontFamily.medium, color: colors.black },
   cidade: {

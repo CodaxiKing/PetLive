@@ -1,14 +1,20 @@
 import { useEffect, useState } from 'react'
-import { ActivityIndicator, Alert, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, View } from 'react-native'
+import { ActivityIndicator, Alert, Image, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, View } from 'react-native'
 import { router } from 'expo-router'
+import * as Location from 'expo-location'
 import { useAuth } from '../src/auth/AuthProvider'
+import { Tocavel } from '../src/components/Animacoes'
 import { BotaoPrimario } from '../src/components/BotaoPrimario'
 import { Campo } from '../src/components/Campo'
 import { HeroiOnda } from '../src/components/HeroiOnda'
+import { Icone } from '../src/components/Icone'
 import { Interruptor } from '../src/components/Interruptor'
 import { mensagemDeErro } from '../src/lib/cacheOffline'
 import { mascaraTelefone, telefoneValido } from '../src/lib/mascaras'
 import { supabase } from '../src/lib/supabase'
+import { escolherFoto } from '../src/pets/CampoFoto'
+import { enviarFotoPerfil, removerFotoPerfil, urlFotoPerfil } from '../src/perfil/foto'
+import { temSenha } from '../src/perfil/senha'
 import { colors } from '../src/theme/colors'
 import { fontFamily } from '../src/theme/typography'
 
@@ -22,25 +28,33 @@ type Dados = {
 }
 
 /**
- * Meus dados: nome, celular (com WhatsApp), cidade e um contato de
- * emergência. São os contatos que a carteirinha, a ficha de emergência e o
- * acesso de cuidador mostram quando o tutor libera; o e-mail não aparece
- * para ninguém.
+ * Editar perfil: foto, nome, celular (com WhatsApp), cidade e um contato de
+ * emergência, e o acesso à troca de senha. São os contatos que a carteirinha,
+ * a ficha de emergência e o acesso de cuidador mostram quando o tutor libera;
+ * o e-mail não aparece para ninguém.
  */
 export default function MeusDados() {
   const { user } = useAuth()
   const [dados, setDados] = useState<Dados | null>(null)
   const [salvando, setSalvando] = useState(false)
+  // A foto é salva na hora em que é escolhida, sem esperar o botão Salvar.
+  const [foto, setFoto] = useState<string | null>(null)
+  const [fotoUrl, setFotoUrl] = useState<string | null>(null)
+  const [enviandoFoto, setEnviandoFoto] = useState(false)
+  const [localizando, setLocalizando] = useState(false)
 
   useEffect(() => {
     if (!user) return
     supabase
       .from('profiles')
-      .select('nome, telefone, whatsapp, cidade, contato_emergencia_nome, contato_emergencia_telefone')
+      .select('nome, telefone, whatsapp, cidade, contato_emergencia_nome, contato_emergencia_telefone, avatar_url')
       .eq('id', user.id)
       .maybeSingle()
       .then(({ data }) => {
-        const d = (data ?? {}) as Partial<Record<keyof Dados, string | boolean | null>>
+        const d = (data ?? {}) as Partial<Record<keyof Dados | 'avatar_url', string | boolean | null>>
+        const caminho = (d.avatar_url as string) || null
+        setFoto(caminho)
+        urlFotoPerfil(caminho).then(setFotoUrl)
         setDados({
           nome: (d.nome as string) ?? '',
           telefone: mascaraTelefone((d.telefone as string) ?? ''),
@@ -60,6 +74,64 @@ export default function MeusDados() {
     )
   }
   const mudar = (campo: keyof Dados, valor: string | boolean) => setDados((d) => (d ? { ...d, [campo]: valor } : d))
+  const inicial = (dados.nome.trim() || user?.email || '?').charAt(0).toUpperCase()
+
+  function trocarFoto() {
+    if (!user || enviandoFoto) return
+    const usar = (origem: 'galeria' | 'camera') => async () => {
+      const ativo = await escolherFoto(origem)
+      if (!ativo) return
+      setEnviandoFoto(true)
+      try {
+        const caminho = await enviarFotoPerfil(user.id, ativo, foto)
+        setFoto(caminho)
+        // Mostra a foto escolhida já, sem esperar o link assinado.
+        setFotoUrl(ativo.uri)
+      } catch (e) {
+        Alert.alert('Não deu para trocar a foto', e instanceof Error ? e.message : String(e))
+      } finally {
+        setEnviandoFoto(false)
+      }
+    }
+    const remover = async () => {
+      setEnviandoFoto(true)
+      try {
+        await removerFotoPerfil(user.id, foto)
+        setFoto(null)
+        setFotoUrl(null)
+      } catch (e) {
+        Alert.alert('Não deu para remover a foto', e instanceof Error ? e.message : String(e))
+      } finally {
+        setEnviandoFoto(false)
+      }
+    }
+    Alert.alert('Sua foto', 'Ela aparece só para você, no seu perfil.', [
+      foto ? { text: 'Remover', style: 'destructive', onPress: remover } : { text: 'Cancelar', style: 'cancel' },
+      { text: 'Galeria', onPress: usar('galeria') },
+      { text: 'Câmera', onPress: usar('camera') },
+    ])
+  }
+
+  async function usarLocalizacao() {
+    if (localizando) return
+    setLocalizando(true)
+    try {
+      const { granted } = await Location.requestForegroundPermissionsAsync()
+      if (!granted) {
+        Alert.alert('Localização desligada', 'Autorize a localização nas configurações do aparelho ou digite a cidade.')
+        return
+      }
+      const posicao = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Balanced })
+      const [endereco] = await Location.reverseGeocodeAsync(posicao.coords)
+      const cidade = endereco?.city ?? endereco?.subregion
+      if (cidade) mudar('cidade', cidade.slice(0, 60))
+      else Alert.alert('Cidade não encontrada', 'Digite o nome da sua cidade.')
+    } catch {
+      Alert.alert('Não deu para usar a localização', 'Confira o GPS e a internet ou digite a cidade.')
+    } finally {
+      setLocalizando(false)
+    }
+  }
 
   async function salvar() {
     if (!user || !dados) return
@@ -102,8 +174,17 @@ export default function MeusDados() {
 
   return (
     <KeyboardAvoidingView style={estilos.tela} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-      <HeroiOnda subtitulo="Perfil" titulo="Meus dados" altura={200} />
+      <HeroiOnda subtitulo="Perfil" titulo="Editar perfil" altura={200} />
       <ScrollView contentContainerStyle={estilos.conteudo} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
+        <View style={estilos.fotoBloco}>
+          <Tocavel accessibilityRole="button" accessibilityLabel="Trocar foto do perfil" onPress={trocarFoto} style={estilos.foto}>
+            {fotoUrl ? <Image source={{ uri: fotoUrl }} style={estilos.fotoImagem} /> : <Text style={estilos.fotoLetra}>{inicial}</Text>}
+            <View style={estilos.fotoBotao}>
+              {enviandoFoto ? <ActivityIndicator size="small" color={colors.white} /> : <Icone nome="camera" size={16} cor={colors.white} espessura={2.2} />}
+            </View>
+          </Tocavel>
+          <Text style={estilos.fotoTexto}>{foto ? 'Trocar foto' : 'Adicionar foto'}</Text>
+        </View>
         <Campo rotulo="Como você quer ser chamado" variante="roxo" autoCapitalize="words" value={dados.nome} onChangeText={(v) => mudar('nome', v)} maxLength={60} />
         <Campo rotulo="Celular com DDD" variante="amarelo" mascara="telefone" placeholder="(21) 99999-9999" value={dados.telefone} onChangeText={(v) => mudar('telefone', v)} />
         <View style={estilos.linha}>
@@ -114,11 +195,35 @@ export default function MeusDados() {
           <Interruptor ligado={dados.whatsapp} rotulo="Este celular tem WhatsApp" onToggle={() => mudar('whatsapp', !dados.whatsapp)} />
         </View>
         <Campo rotulo="Cidade" variante="azul" autoCapitalize="words" placeholder="Rio de Janeiro" value={dados.cidade} onChangeText={(v) => mudar('cidade', v)} maxLength={60} />
+        <Tocavel accessibilityRole="button" onPress={usarLocalizacao} disabled={localizando} style={estilos.localizacao}>
+          {localizando ? <ActivityIndicator size="small" color={colors.primaryDeep} /> : <Icone nome="mira" size={16} cor={colors.primaryDeep} espessura={2.2} />}
+          <Text style={estilos.localizacaoTexto}>Usar minha localização</Text>
+        </Tocavel>
 
         <Text style={estilos.secao}>Contato de emergência</Text>
         <Text style={estilos.ajuda}>Alguém para a clínica ou o cuidador procurar se não conseguirem falar com você.</Text>
         <Campo rotulo="Nome" variante="verde" autoCapitalize="words" placeholder="Ex.: Ana (irmã)" value={dados.contato_emergencia_nome} onChangeText={(v) => mudar('contato_emergencia_nome', v)} maxLength={60} />
         <Campo rotulo="Celular" variante="verde" mascara="telefone" placeholder="(21) 99999-9999" value={dados.contato_emergencia_telefone} onChangeText={(v) => mudar('contato_emergencia_telefone', v)} />
+
+        <Text style={estilos.secao}>Conta</Text>
+        <View style={estilos.linha}>
+          <View style={estilos.flex}>
+            <Text style={estilos.linhaSub}>E-mail de acesso</Text>
+            <Text style={estilos.linhaTitulo} numberOfLines={1}>{user?.email ?? '—'}</Text>
+          </View>
+          <Icone nome="cadeado" size={18} cor="#5E6878" />
+        </View>
+        {temSenha(user) ? (
+          <Tocavel accessibilityRole="button" onPress={() => router.push('/alterar-senha')} style={estilos.linha}>
+            <View style={estilos.flex}>
+              <Text style={estilos.linhaTitulo}>Alterar senha</Text>
+              <Text style={estilos.linhaSub}>Pede a senha atual antes da nova</Text>
+            </View>
+            <Icone nome="seta" size={18} espessura={2} />
+          </Tocavel>
+        ) : (
+          <Text style={estilos.ajuda}>Você entra com Google ou Apple, então não há senha do PetLive para trocar.</Text>
+        )}
 
         <Text style={estilos.nota}>Seu e-mail não aparece para ninguém. O celular e o contato de emergência só aparecem nos links que você enviar e quando você liberar.</Text>
       </ScrollView>
@@ -141,4 +246,18 @@ const estilos = StyleSheet.create({
   ajuda: { fontFamily: fontFamily.regular, fontSize: 13, lineHeight: 18, color: '#5E6878', marginTop: -6 },
   nota: { fontFamily: fontFamily.regular, fontSize: 12, lineHeight: 17, color: '#6A7484', marginTop: 4 },
   rodape: { paddingHorizontal: 24, paddingTop: 12, paddingBottom: 28 },
+  fotoBloco: { alignItems: 'center', gap: 6, marginTop: -8, marginBottom: 4 },
+  foto: { width: 92, height: 92, borderRadius: 46, backgroundColor: colors.background, alignItems: 'center', justifyContent: 'center' },
+  fotoImagem: { width: 92, height: 92, borderRadius: 46 },
+  fotoLetra: { fontFamily: fontFamily.semiBold, fontSize: 38, color: colors.black },
+  fotoBotao: {
+    position: 'absolute', right: -2, bottom: 2, width: 34, height: 34, borderRadius: 17,
+    backgroundColor: colors.black, borderWidth: 3, borderColor: colors.surface, alignItems: 'center', justifyContent: 'center',
+  },
+  fotoTexto: { fontFamily: fontFamily.bold, fontSize: 13, color: colors.primaryDeep },
+  localizacao: {
+    flexDirection: 'row', alignItems: 'center', alignSelf: 'flex-start', gap: 6, marginTop: -4,
+    height: 40, paddingLeft: 12, paddingRight: 16, borderRadius: 20, backgroundColor: colors.primarySurface,
+  },
+  localizacaoTexto: { fontFamily: fontFamily.bold, fontSize: 13, color: colors.primaryDeep },
 })
