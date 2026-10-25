@@ -360,6 +360,7 @@ O PetLive organiza informações e não substitui o atendimento veterinário. Es
 - Falha de cobrança: novas tentativas por `[3]` dias. Sem sucesso, o plano volta a Grátis no fim do período já pago.
 - Cancelar mantém o Premium até o fim do período pago.
 - Pets além do limite do plano grátis ficam **somente leitura**, sem serem apagados.
+- **Acesso da família:** o tutor Premium compartilha cada pet com o e-mail de uma conta PetLive existente. O acesso começa na hora e pode ser revogado pelo tutor. A família pode ler e atualizar o pet, saúde e lembretes ligados a ele; não pode apagar o pet, transferir sua propriedade, gerenciar outros familiares nem acessar o perfil e pagamentos do tutor. Se o Premium do tutor acabar, o acesso familiar fica suspenso e volta quando o plano for reativado.
 - O que é grátis e o que é Premium, recurso por recurso, está na tabela da seção 10 (proposta a validar).
 
 ### 5.14 Disputas e estornos (Fase 3)

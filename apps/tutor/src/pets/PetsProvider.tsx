@@ -100,9 +100,10 @@ export function PetsProvider({ children }: { children: ReactNode }) {
     if (!tutorId) return null
     setSalvando(true)
     setErro(null)
+    const { tutor_id: _tutorIdNaoAlterado, ...dadosPet } = formParaRegistro(form, tutorId)
     const { data, error } = await supabase
       .from('pets')
-      .update(formParaRegistro(form, tutorId))
+      .update(dadosPet)
       .eq('id', id)
       .select()
       .single()

@@ -12,6 +12,7 @@ import {
 } from 'react-native'
 import Svg, { Path } from 'react-native-svg'
 import { Redirect, router, useFocusEffect, useLocalSearchParams } from 'expo-router'
+import { useAuth } from '../../../src/auth/AuthProvider'
 import { Surgir, Tocavel } from '../../../src/components/Animacoes'
 import { AvisoOffline } from '../../../src/components/AvisoOffline'
 import { BotaoPrimario } from '../../../src/components/BotaoPrimario'
@@ -65,6 +66,7 @@ function BotaoRedondo({ rotulo, onPress, children }: { rotulo: string; onPress: 
 export default function PetDetalhe() {
   const { id } = useLocalSearchParams<{ id: string }>()
   const { width } = useWindowDimensions()
+  const { session } = useAuth()
   const { pets, petsMemoria, seniores, marcarSenior, definirPetAtivo, removerPet } = usePets()
   const { vacinas, removerVacina } = useVacinas()
   const [aba, setAba] = useState<Aba>('Vacinas')
@@ -442,9 +444,11 @@ export default function PetDetalhe() {
             <Pressable accessibilityRole="button" onPress={() => ir('/pet/[id]/partida')} style={estilos.opcao}>
               <Text style={estilos.opcaoTexto}>Registrar a partida</Text>
             </Pressable>
-            <Pressable accessibilityRole="button" onPress={confirmarExclusao} style={estilos.opcao}>
-              <Text style={[estilos.opcaoTexto, estilos.opcaoPerigo]}>Excluir {petAtual.nome}</Text>
-            </Pressable>
+            {petAtual.tutor_id === session?.user.id ? (
+              <Pressable accessibilityRole="button" onPress={confirmarExclusao} style={estilos.opcao}>
+                <Text style={[estilos.opcaoTexto, estilos.opcaoPerigo]}>Excluir {petAtual.nome}</Text>
+              </Pressable>
+            ) : null}
           </View>
         </Pressable>
       </Modal>
