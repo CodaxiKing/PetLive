@@ -27,3 +27,6 @@ Roteiro nativo pendente: abrir Privacidade com e sem rede; comparar contagens
 com os acessos do próprio pet; revogar/desativar e retornar; trocar de conta;
 confirmar que indisponibilidade não vira zero. A implantação do resumo não
 implanta os serviços de compartilhamento ausentes.
+
+### Cuidador reparado — 25/10/2026 — f4bf8b7
+Migration 20261217000000 testada isoladamente, validada em produção com ROLLBACK e aplicada COMMIT. Tabelas/RLS/RPCs de criação, revogação, visão e confirmação de dose disponíveis. Conferidos grants: anon não cria/não lê tabela, cliente não insere direto; endpoint web /cuidador/código-inexistente HTTP200. Sem acessos/doses fictícios em produção. Teste PGlite cobre plano/pets/permissões, fuso, prazo/revogação, horário prescrito, retry, confirmação anterior do tutor, dose pulada e exportação sem tokens. Integração de avisos/push e homologação real permanecem pendentes; não foram enviados avisos de teste. Detalhes supabase/tests/cuidador-reconciliacao.md. A ausência histórica de tabelas foi resolvida para cuidador, não para carteirinha. Mantido Em andamento até validação do fluxo completo e integrações pendentes.
