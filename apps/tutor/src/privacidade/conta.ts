@@ -2,6 +2,38 @@ import { supabase } from '../lib/supabase';
 import { repositorioMetaPasseiosLocal, repositorioPasseiosLocal } from '../passeios/local';
 import { compartilharExportacao } from './arquivoExportacao';
 
+async function conferirConta(esperada?: string): Promise<string> {
+  const { data, error } = await supabase.auth.getUser();
+  if (error || !data.user || (esperada && data.user.id !== esperada)) {
+    throw new Error('A conta mudou. Entre novamente.');
+  }
+  return data.user.id;
+}
+
+export type EstadoPrivacidade = {
+  pedidoId: string | null;
+  executarEm: Date | null;
+  status: string | null;
+  podeSolicitar: boolean;
+  podeCancelar: boolean;
+};
+
+export async function carregarEstadoPrivacidade(tutorId: string): Promise<EstadoPrivacidade> {
+  await conferirConta(tutorId);
+  const { data, error } = await supabase.rpc('privacidade_estado', { p_tutor: tutorId });
+  if (error) throw new Error(error.message);
+  await conferirConta(tutorId);
+  if (!data || typeof data.pode_solicitar !== 'boolean' || typeof data.pode_cancelar !== 'boolean' ||
+      (data.pedido_id !== null && typeof data.pedido_id !== 'string') ||
+      (data.status !== null && typeof data.status !== 'string')) {
+    throw new Error('Não foi possível confirmar o estado do pedido. Atualize a tela.');
+  }
+  const dataPedido = data.executar_em === null ? null : new Date(data.executar_em);
+  if (dataPedido && !Number.isFinite(dataPedido.getTime())) throw new Error('Data de exclusão inválida. Atualize a tela.');
+  return { pedidoId: data.pedido_id, executarEm: dataPedido, status: data.status,
+    podeSolicitar: data.pode_solicitar, podeCancelar: data.pode_cancelar };
+}
+
 /**
  * LGPD (art. 18, V): exporta tudo que pertence ao tutor em JSON e abre
  * a folha de compartilhamento do sistema (salvar, enviar etc.). Cada
@@ -27,7 +59,10 @@ export async function exportarMeusDados(): Promise<void> {
     const { data: atual } = await supabase.auth.getUser();
     if (atual.user?.id !== auth.user.id) throw new Error('A conta mudou durante a exportação. Tente novamente.');
   });
-  await supabase.rpc('registrar_exportacao');
+  // O compartilhamento pode permanecer aberto enquanto o usuário troca de conta.
+  await conferirConta(auth.user.id);
+  const { error: erroRegistro } = await supabase.rpc('privacidade_registrar_exportacao', { p_tutor: auth.user.id });
+  if (erroRegistro) throw new Error('Arquivo preparado, mas não foi possível registrar a exportação. Tente novamente.');
 }
 
 /**
@@ -41,19 +76,9 @@ export async function solicitarExclusaoConta(): Promise<Date> {
   return new Date(data as string);
 }
 
-export async function cancelarExclusaoConta(): Promise<void> {
-  const { error } = await supabase.rpc('cancelar_exclusao_conta');
+export async function cancelarExclusaoConta(tutorId: string, pedidoId: string): Promise<void> {
+  await conferirConta(tutorId);
+  const { error } = await supabase.rpc('privacidade_cancelar_exclusao', { p_tutor: tutorId, p_pedido: pedidoId });
   if (error) throw new Error(error.message);
-}
-
-/** Data da exclusão agendada, ou null quando não há pedido em aberto. */
-export async function exclusaoAgendada(): Promise<Date | null> {
-  const { data, error } = await supabase
-    .from('lgpd_requests')
-    .select('executar_em')
-    .eq('tipo', 'apagar')
-    .eq('status', 'novo')
-    .maybeSingle();
-  if (error) throw new Error(error.message);
-  return data?.executar_em ? new Date(data.executar_em) : null;
+  await conferirConta(tutorId);
 }

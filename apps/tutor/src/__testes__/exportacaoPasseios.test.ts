@@ -25,12 +25,21 @@ describe('exportação dos passeios locais', () => {
     expect(mocks.meta).toHaveBeenCalledWith('tutor-a');
     expect(mocks.share.mock.calls[0][0]).toMatchObject({ passeios_locais: [{ id: 'passeio-local' }], meta_semanal_passeios_km: 5 });
     expect(mocks.share.mock.calls[0][1]).toBe('tutor-a');
-    expect(mocks.rpc).toHaveBeenCalledWith('registrar_exportacao');
+    expect(mocks.rpc).toHaveBeenCalledWith('privacidade_registrar_exportacao', { p_tutor: 'tutor-a' });
   });
   it('interrompe antes de compartilhar se a conta mudou durante a consulta', async () => {
     mocks.getUser.mockResolvedValueOnce({ data: { user: { id: 'tutor-a' } }, error: null })
       .mockResolvedValueOnce({ data: { user: { id: 'tutor-b' } }, error: null });
     await expect(exportarMeusDados()).rejects.toThrow('conta mudou');
     expect(mocks.share).not.toHaveBeenCalled();
+  });
+  it('não registra em outra conta depois de fechar o compartilhamento', async () => {
+    mocks.share.mockImplementationOnce(async () => { mocks.getUser.mockResolvedValue({ data: { user: { id: 'tutor-b' } }, error: null }); });
+    await expect(exportarMeusDados()).rejects.toThrow('conta mudou');
+    expect(mocks.rpc).not.toHaveBeenCalledWith('privacidade_registrar_exportacao', expect.anything());
+  });
+  it('informa falha de registro em vez de ignorar o erro do servidor', async () => {
+    mocks.rpc.mockResolvedValueOnce({ data: { pets: [] }, error: null }).mockResolvedValueOnce({ error: { message: 'offline' } });
+    await expect(exportarMeusDados()).rejects.toThrow('Arquivo preparado');
   });
 });

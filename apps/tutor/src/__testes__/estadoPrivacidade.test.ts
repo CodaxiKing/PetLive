@@ -1,0 +1,12 @@
+import {beforeEach,it,expect,vi} from 'vitest';
+import {carregarEstadoPrivacidade,cancelarExclusaoConta} from '../privacidade/conta';
+const m=vi.hoisted(()=>({user:vi.fn(),rpc:vi.fn()}));
+vi.mock('../lib/supabase',()=>({supabase:{auth:{getUser:m.user},rpc:m.rpc}}));
+vi.mock('../passeios/local',()=>({repositorioMetaPasseiosLocal:vi.fn(),repositorioPasseiosLocal:vi.fn()}));
+vi.mock('../privacidade/arquivoExportacao',()=>({compartilharExportacao:vi.fn()}));
+beforeEach(()=>{vi.resetAllMocks();m.user.mockResolvedValue({data:{user:{id:'a'}},error:null});m.rpc.mockResolvedValue({data:{pedido_id:null,status:null,executar_em:null,pode_solicitar:false,pode_cancelar:false},error:null});});
+it('consulta estado por RPC vinculado à conta sem consulta direta',async()=>{expect(await carregarEstadoPrivacidade('a')).toMatchObject({pedidoId:null,podeSolicitar:false});expect(m.rpc).toHaveBeenCalledWith('privacidade_estado',{p_tutor:'a'});});
+it('recusa resposta incompleta ou data inválida',async()=>{for(const data of [{},{pedido_id:'p',status:'pendente',executar_em:'invalida',pode_solicitar:false,pode_cancelar:true}]){m.rpc.mockResolvedValueOnce({data,error:null});await expect(carregarEstadoPrivacidade('a')).rejects.toThrow();}});
+it('descarta retorno após troca de conta',async()=>{m.user.mockResolvedValueOnce({data:{user:{id:'a'}}}).mockResolvedValueOnce({data:{user:{id:'b'}}});await expect(carregarEstadoPrivacidade('a')).rejects.toThrow('conta mudou');});
+it('cancela somente o pedido explícito da conta esperada',async()=>{await cancelarExclusaoConta('a','pedido');expect(m.rpc).toHaveBeenCalledWith('privacidade_cancelar_exclusao',{p_tutor:'a',p_pedido:'pedido'});m.user.mockResolvedValue({data:{user:{id:'b'}}});await expect(cancelarExclusaoConta('a','pedido')).rejects.toThrow('conta mudou');});
+it('não transforma falha de consulta em ausência de pedido',async()=>{m.rpc.mockResolvedValueOnce({error:{message:'indisponível'}});await expect(carregarEstadoPrivacidade('a')).rejects.toThrow('indisponível');});
