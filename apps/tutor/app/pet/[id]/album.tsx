@@ -22,12 +22,11 @@ export default function AlbumAnual() {
   const [previa, setPrevia] = useState(false);
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState<string | null>(null);
-  const [tentativa, setTentativa] = useState(0);
   const [dono, setDono] = useState('');
   const token = useRef(0);
   const identidade = `${user?.id}/${id}`;
 
-  useFocusEffect(useCallback(() => {
+  const carregar = useCallback(() => {
     const atual = ++token.current;
     setItens([]); setUrls({}); setPrevia(false); setErro(null); setCarregando(true); setEscolhidas(new Set());
     if (!user || !id) { setCarregando(false); return; }
@@ -38,7 +37,8 @@ export default function AlbumAnual() {
     }).catch(e => { if (atual === token.current) setErro(e instanceof Error ? e.message : String(e)); })
       .finally(() => { if (atual === token.current) setCarregando(false); });
     return () => { token.current++; };
-  }, [user, id, identidade, tentativa]));
+  }, [user, id, identidade]);
+  useFocusEffect(carregar);
 
   const lista = dono === identidade ? lembrancasDoAno(itens, ano) : [];
   const anos = [...new Set([new Date().getFullYear(), ...itens.filter(i => /^\d{4}-/.test(i.data)).map(i => Number(i.data.slice(0, 4)))])].sort((a,b) => b-a);
@@ -73,7 +73,7 @@ export default function AlbumAnual() {
         <View style={s.anos}>{anos.map(a => <Pressable key={a} accessibilityRole="radio" accessibilityState={{selected: a===ano,disabled:carregando}} disabled={carregando} onPress={() => trocarAno(a)} style={[s.ano,a===ano && s.ativo]}><Text style={a===ano ? s.branco : s.texto}>{a}</Text></Pressable>)}</View>
         <Text style={s.titulo}>{previa ? `${pet.nome} · ${ano}` : `${escolhidas.size} de ${LIMITE_ALBUM} lembranças selecionadas`}</Text>
         {erro && <Text accessibilityRole="alert" style={s.erro}>{erro}</Text>}
-        {erro && <BotaoPrimario titulo="Tentar novamente" onPress={() => setTentativa(v=>v+1)} />}
+        {erro && <BotaoPrimario titulo="Tentar novamente" onPress={() => { carregar(); }} />}
         {carregando && <ActivityIndicator accessibilityLabel="Carregando álbum" />}
         <BotaoPrimario titulo={previa ? 'Editar seleção' : 'Ver prévia'} carregando={carregando} desabilitado={!previa && !escolhidas.size} onPress={previa ? () => {setPrevia(false);setUrls({});} : abrirPrevia} />
       </View>}
