@@ -778,6 +778,7 @@ O board tem também o campo **Fase** (1, 2 ou 3), para filtrar e agrupar.
 - **Fase 2, Premium (tutor):** assinatura mensal e anual. Preço `[valor]` e `[valor]`.
 - **Fase 3, lojista:** vitrine e agenda gratuitas. Comissão `[x]%` sobre pagamentos pelo app. A taxa de entrega fica inteira com a loja.
 - **Depois:** destaque no mapa, cupons patrocinados, afiliados (ração, antipulgas) e comissão de parceiros de seguro (Fase 5).
+- **Destaque pago de lojas:** coroa dourada girando acima do ícone da loja no mapa e na ficha/perfil, identificada como "Destaque pago". Exibir somente durante a vigência de um pagamento confirmado pelo backend; retirar quando vencer, cancelar ou reembolsar. Com reduzir movimento, a coroa fica estática. Publicidade não representa avaliação nem verificação da loja. Checkout e webhook devem validar o pagamento e o vínculo da loja antes de ativar o destaque; o cliente não pode se autopromover.
 
 ### O que é grátis e o que é Premium (proposta)
 

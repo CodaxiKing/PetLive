@@ -1,4 +1,4 @@
-import { useEffect, useImperativeHandle, useRef, useState, type Ref } from 'react';
+import { useEffect, useImperativeHandle, useRef, useState, type ComponentRef, type Ref } from 'react';
 import { Linking, Platform, Pressable, StyleSheet, Text, View, type StyleProp, type ViewStyle } from 'react-native';
 import Constants from 'expo-constants';
 import * as Location from 'expo-location';
@@ -8,6 +8,8 @@ import { FONTE_LUGARES, type CategoriaLugar } from './lugares';
 import { PinLugar } from './PinLugar';
 import { PinEvento } from './PinEvento';
 import { PontoUsuario } from './PontoUsuario';
+import { useAnimacaoDestaque, useDestaques } from './useDestaques';
+import { destaqueVigente } from './destaques';
 
 /** Estilo de mapa gratuito (OpenFreeMap: tiles OSM, sem chave). */
 const ESTILO_OSM = 'https://tiles.openfreemap.org/styles/liberty';
@@ -104,13 +106,15 @@ export function MapaLugares({
   ref,
 }: Props) {
   const camera = useRef<CameraRef>(null);
+  const destaques = useDestaques(pins.filter((p) => !p.evento).map((p) => p.id));
+  const animarCoroa = useAnimacaoDestaque();
   // No Google o ponto azul é o nativo (showsUserLocation).
   const usuario = usePosicaoAoVivo(mostrarUsuario);
   const google = useRef<MapView>(null);
   // Google no Android desenha o pin como imagem: acompanha as mudanças só
   // logo depois de os pins chegarem (com o desenho pronto), depois congela.
   const [redesenhar, setRedesenhar] = useState(true);
-  const assinaturaPins = pins.map((p) => p.id).join(',');
+  const assinaturaPins = pins.map((p) => `${p.id}:${destaqueVigente(destaques, p.id)}`).join(',');
 
   useEffect(() => {
     if (!MAPA_GOOGLE) return;
@@ -137,7 +141,7 @@ export function MapaLugares({
   }));
 
   if (Google) {
-    const { default: MapaGoogle, Marker: MarcadorGoogle, PROVIDER_GOOGLE } = Google;
+    const { default: MapaGoogle, PROVIDER_GOOGLE } = Google;
     return (
       <MapaGoogle
         ref={google}
@@ -159,22 +163,7 @@ export function MapaLugares({
         showsMyLocationButton={false}
         showsPointsOfInterests={false}
       >
-        {pins.map((pin) => {
-          const ativo = pin.id === selecionado;
-          return (
-            <MarcadorGoogle
-              key={pin.id}
-              identifier={pin.id}
-              coordinate={{ latitude: pin.lat, longitude: pin.lng }}
-              anchor={{ x: 0.5, y: 1 }}
-              onPress={() => onPin?.(pin.id)}
-              tracksViewChanges={redesenhar || ativo}
-              zIndex={ativo ? 2 : 1}
-            >
-              {pin.evento ? <PinEvento /> : <PinLugar categoria={pin.categoria} selecionado={ativo} />}
-            </MarcadorGoogle>
-          );
-        })}
+        {pins.map((pin) => <PinGoogle key={pin.id} pin={pin} selecionado={pin.id === selecionado} destaque={destaqueVigente(destaques, pin.id)} animar={animarCoroa} redesenhar={redesenhar} onPin={onPin} />)}
       </MapaGoogle>
     );
   }
@@ -202,7 +191,7 @@ export function MapaLugares({
         <Camera ref={camera} initialViewState={{ center: [centro.lng, centro.lat], zoom }} />
         {pins.map((pin) => (
           <Marker key={pin.id} id={pin.id} lngLat={[pin.lng, pin.lat]} anchor="bottom" onPress={() => onPin?.(pin.id)}>
-            {pin.evento ? <PinEvento /> : <PinLugar categoria={pin.categoria} selecionado={pin.id === selecionado} />}
+            {pin.evento ? <PinEvento /> : <PinLugar categoria={pin.categoria} selecionado={pin.id === selecionado} destaquePago={destaqueVigente(destaques, pin.id)} animarCoroa={animarCoroa} />}
           </Marker>
         ))}
         {/* O MapLibre empilha na ordem em que os marcadores entram: a chave
@@ -227,6 +216,23 @@ export function MapaLugares({
       </Pressable>
     </View>
   );
+}
+
+function PinGoogle({ pin, selecionado, destaque, animar, redesenhar, onPin }: { pin: PinMapa; selecionado: boolean; destaque: boolean; animar: boolean; redesenhar: boolean; onPin?: (id: string) => void }) {
+  const marcador = useRef<ComponentRef<typeof import('react-native-maps').Marker>>(null);
+  useEffect(() => {
+    if (Platform.OS !== 'android' || !destaque || !animar || pin.evento) return;
+    // Google Android usa snapshots: redraw explícito evita congelar a animação nativa.
+    // Somente pins patrocinados ativos, 10 quadros/s; sem renderizações React por quadro.
+    const intervalo = setInterval(() => marcador.current?.redraw(), 100);
+    return () => clearInterval(intervalo);
+  }, [destaque, animar, pin.evento]);
+  if (!Google) return null;
+  const Marcador = Google.Marker;
+  return <Marcador ref={marcador} identifier={pin.id} coordinate={{ latitude: pin.lat, longitude: pin.lng }} anchor={{ x: 0.5, y: 1 }}
+    onPress={() => onPin?.(pin.id)} tracksViewChanges={redesenhar || selecionado || (Platform.OS === 'ios' && destaque && animar)} zIndex={selecionado ? 4 : destaque ? 3 : 1}>
+    {pin.evento ? <PinEvento /> : <PinLugar categoria={pin.categoria} selecionado={selecionado} destaquePago={destaque} animarCoroa={animar} />}
+  </Marcador>;
 }
 
 const estilos = StyleSheet.create({

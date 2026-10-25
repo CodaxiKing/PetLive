@@ -2,23 +2,27 @@ import { StyleSheet, View } from 'react-native';
 import { colors } from '../theme/colors';
 import { IlustracaoLugar } from './IlustracaoLugar';
 import type { CategoriaLugar } from './lugares';
+import { CoroaDestaque } from './CoroaDestaque';
 
 type Props = {
   categoria: CategoriaLugar;
   /** Pin maior com anel azul quando é o lugar selecionado (protótipo Mapa). */
   selecionado?: boolean;
+  destaquePago?: boolean;
+  animarCoroa?: boolean;
 };
 
 /**
  * Pin do mapa (protótipo Mapa): círculo branco com sombra, a ilustração do
  * lugar dentro e a pontinha embaixo, que marca o ponto (âncora "bottom").
  */
-export function PinLugar({ categoria, selecionado = false }: Props) {
+export function PinLugar({ categoria, selecionado = false, destaquePago = false, animarCoroa = false }: Props) {
   const tamanho = selecionado ? 64 : 49;
   const borda = selecionado ? 5 : 3.5;
   const miolo = tamanho - borda * 2;
   return (
     <View style={estilos.pin}>
+      {destaquePago ? <CoroaDestaque animar={animarCoroa} /> : null}
       <View
         style={[
           estilos.circulo,

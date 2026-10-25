@@ -17,6 +17,9 @@ import { alternarSalvo, estaSalvo } from '../src/mapa/favoritos';
 import { AtribuicaoGoogle } from '../src/mapa/AtribuicaoGoogle';
 import { GaleriaFotos } from '../src/mapa/GaleriaFotos';
 import { GlifoLugar } from '../src/mapa/GlifoLugar';
+import { SeloDestaquePago } from '../src/mapa/CoroaDestaque';
+import { useDestaques } from '../src/mapa/useDestaques';
+import { destaqueVigente } from '../src/mapa/destaques';
 import {
   COR_CATEGORIA,
   lugarPorId,
@@ -65,6 +68,7 @@ export default function Lugar() {
   const [salvo, setSalvo] = useState(false);
   const [salvando, setSalvando] = useState(false);
   const [rotaAberta, setRotaAberta] = useState(false);
+  const destaques = useDestaques(typeof id === 'string' ? [id] : []);
 
   useEffect(() => {
     if (id) estaSalvo(id).then(setSalvo, () => undefined);
@@ -184,6 +188,7 @@ export default function Lugar() {
         <Text style={estilos.nome} numberOfLines={2}>
           {lugar.nome}
         </Text>
+        {destaqueVigente(destaques, lugar.id) ? <SeloDestaquePago /> : null}
         {lugar.nota ? (
           <Text style={estilos.subtitulo}>
             {ROTULO_CATEGORIA[lugar.categoria]} · {lugar.nota.toFixed(1).replace('.', ',')} ★ no Google
