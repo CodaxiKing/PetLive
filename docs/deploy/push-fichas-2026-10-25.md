@@ -10,15 +10,23 @@ Verificação: teste PGlite aplica a migration duas vezes e cobre permissões, t
 
 ## Dependências para Android
 
-O responsável confirmou que ainda não há Firebase configurado. O app atual só agenda notificações locais e ainda não registra Expo Push Tokens. Não considerar push concluído nem validar por OTA do APK existente.
+O responsável confirmou que ainda não há Firebase configurado. O APK instalado só agenda notificações locais. A integração de registro remoto foi preparada no código em 25/10/2026; não considerar push concluído nem validar por OTA do APK existente.
 
 1. Criar projeto no Firebase Console e adicionar aplicativo Android com package `app.petlive.tutor`.
 2. Obter `google-services.json` para esse aplicativo. Ele é configuração do cliente; a chave de conta de serviço FCM é separada e privada.
 3. Configurar credencial FCM v1 nas credenciais Android do projeto EAS `petlive-tutor`, conta `codaxi`. Não inserir chave de conta de serviço no repositório ou no app.
-4. Implementar registro/renovação do token via `push_token_registrar` após permissão e autenticação, e desativação via `push_token_desativar` antes do logout. As RPCs exigem o UUID da conta atual. Não pedir permissão automaticamente na inicialização.
-5. Configurar `expo-notifications` no app config e `android.googleServicesFile`; gerar um novo APK com a configuração nativa. Não forçar compatibilidade com runtime anterior.
+4. O código registra/renova via `push_token_registrar` após permissão e autenticação, e desativa via `push_token_desativar` antes do logout. Serializa operações, descarta resultados de contas anteriores e guarda tentativas de registro antes da rede para poder revogá-las mesmo se a resposta se perder. Falha na revogação impede o logout e permite nova tentativa. Não solicita permissão automaticamente.
+5. Definir no ambiente EAS do build uma variável do tipo arquivo `GOOGLE_SERVICES_JSON` contendo o `google-services.json` do Firebase. O app config já conecta esse caminho a `android.googleServicesFile` e inclui `expo-notifications` com canal `lembretes`. Sem a variável, o registro remoto fica desativado. iOS remoto permanece desativado até uma integração própria de APNs. Gerar novo APK; não forçar compatibilidade com runtime anterior ou publicar essa configuração como OTA para o APK instalado.
 6. Instalar e validar recebimento, toque no aviso, preferências, Não perturbe, troca de conta, logout e token revogado no Android físico. Só então concluir os itens do board.
 
 Referências oficiais: https://docs.expo.dev/push-notifications/fcm-credentials/ e https://docs.expo.dev/versions/v58.0.0/sdk/notifications/.
 
 Aplicação em produção confirmada em 25/10/2026: RPC instalada, job petlive-ficha-push ativo e fila vazia. Os dois itens de push/abertura no Projects permanecem Em andamento, com as dependências acima registradas. Commit de implementação: 9170d91.
+
+## Integração cliente e abertura de avisos
+
+O cliente retenta falhas de registro ao retornar ao primeiro plano e a cada minuto enquanto ativo. Também acompanha renovação do token nativo e remoção da permissão. Tokens não são escritos em logs. Os testes da máquina de registro usam dependências simuladas, sem FCM.
+
+O observador de toques agora aguarda sessão e navegador prontos antes de executar ações ou navegar, preservando o toque inicial enquanto o usuário entra. Recusa URLs externas e caminhos ambíguos, e evita processar duas vezes a mesma resposta. A navegação e as ações de dose ainda exigem validação no Android físico com o novo APK.
+
+Verificação do código: 289 testes em 49 arquivos, TypeScript e lint aprovados. Não foi gerado APK nem publicada OTA nesta etapa, pois a configuração Firebase ainda falta.

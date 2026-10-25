@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
-import { Stack, router } from 'expo-router';
+import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { ActivityIndicator, AppState, StyleSheet, View } from 'react-native';
-import * as Notifications from 'expo-notifications';
 import * as Sentry from '@sentry/react-native';
 import {
   useFonts,
@@ -17,16 +16,13 @@ import { LembretesProvider } from '../src/lembretes/LembretesProvider';
 import { PetsProvider } from '../src/pets/PetsProvider';
 import { RemediosProvider } from '../src/remedios/RemediosProvider';
 import { VacinasProvider } from '../src/saude/VacinasProvider';
-import { registrarCategoriaDose, tratarRespostaDose } from '../src/notificacoes/doses';
-import { registrarTarefaDose } from '../src/notificacoes/tarefaDose';
-import { atualizarPacoteEmergencia } from '../src/sos/pacote';
 import { colors } from '../src/theme/colors';
 import { useConfigApp } from '../src/lib/configApp';
 import { registrarAberturaDiaria } from '../src/lib/eventos';
-import { marcarLido } from '../src/notificacoes/caixa';
 import { TelaAtualizar } from '../src/components/TelaAtualizar';
 import { verificarEAplicarAtualizacao } from '../src/lib/atualizacao';
 import { RetomarAtalho } from '../src/atalhos/RetomarAtalho';
+import { ObservadorNotificacoes } from '../src/notificacoes/ObservadorNotificacoes';
 
 /**
  * Sentry: só liga quando há DSN (sem conta/DSN o app segue normal,
@@ -40,40 +36,6 @@ if (dsnSentry) {
     sendDefaultPii: false,
     tracesSampleRate: 0.2,
   });
-}
-
-/**
- * Ao tocar numa notificação, abre a rota indicada em `data.url`.
- * Segue o padrão da doc do SDK 58 (Expo Router + expo-notifications).
- */
-function useObservadorNotificacoes() {
-  useEffect(() => {
-    // Botões Feito e Adiar da notificação da dose (com o app fechado, quem
-    // trata é a tarefa de segundo plano em src/notificacoes/tarefaDose.ts).
-    registrarCategoriaDose().catch(() => undefined);
-    registrarTarefaDose().catch(() => undefined);
-    // Conteúdo de emergência: baixa versão nova em segundo plano, se houver.
-    atualizarPacoteEmergencia().catch(() => undefined);
-
-    async function tratar(resposta: Notifications.NotificationResponse) {
-      Notifications.clearLastNotificationResponse();
-      const eraBotaoDose = await tratarRespostaDose(resposta).catch(() => true);
-      if (eraBotaoDose) return;
-      const dados = resposta.notification.request.content.data;
-      // Abriu pela notificação: conta como lida (taxa de abertura das campanhas).
-      if (typeof dados?.aviso_id === 'string') marcarLido(dados.aviso_id).catch(() => undefined);
-      const url = dados?.url;
-      if (typeof url === 'string') router.push(url as never);
-    }
-
-    // App aberto a partir de uma notificação já encaminhada.
-    const respostaInicial = Notifications.getLastNotificationResponse();
-    if (respostaInicial?.notification) tratar(respostaInicial);
-
-    const subscricao = Notifications.addNotificationResponseReceivedListener(tratar);
-
-    return () => subscricao.remove();
-  }, []);
 }
 
 /** Decide para onde a rota raiz aponta, conforme a sessão. */
@@ -180,10 +142,6 @@ function RaizProtegida() {
 }
 
 function RootLayout() {
-  // Hook incondicional (antes do early-return das fontes) para manter a
-  // ordem de hooks estável e abrir a rota certa ao tocar na notificação.
-  useObservadorNotificacoes();
-
   // useFonts devolve [carregadas, erro]: true quando as fontes estão prontas.
   const [fontesCarregadas, erroFontes] = useFonts({
     PlusJakartaSans_400Regular,
@@ -215,6 +173,7 @@ function RootLayout() {
       <StatusBar style="dark" />
       <RaizProtegida />
       <RetomarAtalho />
+      <ObservadorNotificacoes />
     </AuthProvider>
   );
 }
