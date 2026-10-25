@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import '../src/passeios/segundoPlano';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { ActivityIndicator, AppState, StyleSheet, View } from 'react-native';

@@ -2,7 +2,7 @@ import { concluirPasseio, novoPasseio, pausarPasseio, registrarPonto, retomarPas
 import type { RepositorioPasseios } from './repositorio';
 import { anotacaoPasseio, type FotosPasseio } from './resumo';
 
-export type GpsPasseio = { observar(ponto: (p: AmostraGps) => void, erro: (mensagem: string) => void): Promise<() => void> };
+export type GpsPasseio = { observar(ponto: (p: AmostraGps) => void | Promise<void>, erro: (mensagem: string) => void | Promise<void>): Promise<() => void | Promise<void>> };
 type Estado = { carregando: boolean; ocupado: boolean; erro: string | null; aviso: string | null; passeios: Passeio[] };
 
 /** Uma fila por sessão mantém pontos, pausa e finalização na ordem em que ocorreram. */
@@ -10,15 +10,30 @@ export class GravadorPasseio {
   private estado: Estado = { carregando: true, ocupado: false, erro: null, aviso: null, passeios: [] };
   private ouvintes = new Set<() => void>();
   private fila = Promise.resolve();
-  private removerGps: (() => void) | null = null;
+  private removerGps: (() => void | Promise<void>) | null = null;
   private geracao = 0;
   private bloqueado = false;
+  private segundoPlano = false;
   constructor(private repo: RepositorioPasseios, private gps: GpsPasseio, private agora: () => number, private id: () => string, private fotos?: FotosPasseio) {}
   snapshot = () => this.estado;
+  permiteSegundoPlano = () => this.segundoPlano;
+  configurarGps(gps: GpsPasseio, segundoPlano: boolean) {
+    if (this.bloqueado || this.atual()?.status === 'gravando') return false;
+    this.gps = gps;
+    this.segundoPlano = segundoPlano;
+    return true;
+  }
   assinar = (fn: () => void) => { this.ouvintes.add(fn); return () => { this.ouvintes.delete(fn); }; };
   private emitir(mudanca: Partial<Estado>) { this.estado = { ...this.estado, ...mudanca }; this.ouvintes.forEach((fn) => fn()); }
   private atual() { return this.estado.passeios.find((p) => p.status !== 'concluido'); }
-  private pararGps() { this.geracao++; this.removerGps?.(); this.removerGps = null; }
+  private pararGps() {
+    this.geracao++;
+    const remover = this.removerGps;
+    if (!remover) return Promise.resolve();
+    return Promise.resolve().then(() => remover()).then(() => {
+      if (this.removerGps === remover) this.removerGps = null;
+    });
+  }
   private enfileirar(fn: () => Promise<void>) {
     const tarefa = this.fila.then(fn);
     this.fila = tarefa.catch(() => undefined);
@@ -47,7 +62,7 @@ export class GravadorPasseio {
     this.bloqueado = true; this.emitir({ ocupado: true, erro: null });
     try { await this.enfileirar(fn); return true; }
     catch (e) {
-      this.pararGps();
+      await this.pararGps().catch(() => undefined);
       this.emitir({ erro: e instanceof Error ? e.message : 'Não foi possível salvar o passeio.' });
       const p = this.atual();
       if (p?.status === 'gravando') {
@@ -58,19 +73,20 @@ export class GravadorPasseio {
     } finally { this.bloqueado = false; this.emitir({ ocupado: false }); }
   }
   private async ligarGps() {
+    await this.pararGps();
     const geracao = ++this.geracao;
     const remover = await this.gps.observar((ponto) => {
       if (geracao !== this.geracao) return;
-      void this.enfileirar(async () => {
+      return this.enfileirar(async () => {
         // Pontos recebidos antes de pausar/finalizar devem ser gravados antes do comando.
         const p = this.atual();
         if (!p || p.status !== 'gravando') return;
         if (p.pontos.length >= 10000) { void this.pausar('O limite de pontos deste passeio foi atingido. Finalize para salvar.'); return; }
         const proximo = registrarPonto(p, ponto, this.agora());
         if (proximo !== p) await this.persistir(proximo);
-      }).catch(() => { void this.pausar('Falha ao salvar o GPS. Passeio pausado; tente retomar.'); });
-    }, (mensagem) => { if (geracao === this.geracao) void this.pausar(mensagem); });
-    if (geracao !== this.geracao) remover();
+      }).catch(async () => { await this.pausar('Falha ao salvar o GPS. Passeio pausado; tente retomar.'); });
+    }, (mensagem) => { if (geracao === this.geracao) return this.pausar(mensagem); });
+    if (geracao !== this.geracao) await remover();
     else this.removerGps = remover;
   }
   iniciar(pet: { id: string; nome: string }) {
@@ -79,7 +95,7 @@ export class GravadorPasseio {
       // Só persistimos uma sessão ativa após a permissão e o observador estarem disponíveis.
       await this.ligarGps();
       await this.persistir(novoPasseio(this.id(), this.repo.tutorId, pet.id, pet.nome, this.agora()));
-      this.emitir({ aviso: 'Mantenha esta tela aberta. Ao sair do app ou desta tela, o passeio será pausado.' });
+      this.emitir({ aviso: this.segundoPlano ? 'Gravando também com a tela apagada. Abra o PetLive para pausar ou finalizar.' : 'Mantenha esta tela aberta. Ao sair do app ou desta tela, o passeio será pausado.' });
     });
   }
   retomar() {
@@ -88,13 +104,14 @@ export class GravadorPasseio {
       if (!p || p.status !== 'pausado') return;
       await this.ligarGps();
       await this.persistir(retomarPasseio(p, this.agora()));
-      this.emitir({ aviso: 'Passeio retomado. Mantenha esta tela aberta.' });
+      this.emitir({ aviso: this.segundoPlano ? 'Passeio retomado, inclusive com a tela apagada.' : 'Passeio retomado. Mantenha esta tela aberta.' });
     });
   }
   pausar(aviso = 'Passeio pausado.') {
     // Cancela imediatamente inclusive uma assinatura que ainda está sendo criada.
-    this.pararGps();
+    const parada = this.pararGps().then(() => null, () => 'Não foi possível encerrar o GPS. Tente pausar novamente.');
     return this.enfileirar(async () => {
+      const erroParada = await parada;
       const p = this.atual();
       if (p) {
         const pausado = pausarPasseio(p, this.agora());
@@ -102,12 +119,13 @@ export class GravadorPasseio {
         try { await this.persistir(pausado); }
         catch { this.emitir({ erro: 'Não foi possível salvar a pausa. Os dados continuam nesta tela. Tente salvar novamente.' }); }
       }
+      if (erroParada) this.emitir({ erro: erroParada });
     });
   }
   finalizar() {
     if (this.bloqueado) return Promise.resolve();
-    this.pararGps();
     return this.comando(async () => {
+      await this.pararGps();
       const p = this.atual();
       if (!p) return;
       await this.persistir(concluirPasseio(p, this.agora()));

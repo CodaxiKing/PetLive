@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from 'react';
-import { ActivityIndicator, Alert, AppState, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Alert, AppState, Pressable, ScrollView, StyleSheet, Switch, Text, View } from 'react-native';
 import { router, useFocusEffect } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useAuth } from '../../src/auth/AuthProvider';
@@ -7,6 +7,8 @@ import { BotaoPrimario } from '../../src/components/BotaoPrimario';
 import { CabecalhoTela } from '../../src/components/CabecalhoTela';
 import { usePets } from '../../src/pets/PetsProvider';
 import { gravadorPasseioLocal } from '../../src/passeios/sessaoLocal';
+import { gpsPasseio } from '../../src/passeios/gps';
+import { gpsSegundoPlano, passeioSegundoPlanoDisponivel } from '../../src/passeios/segundoPlano';
 import { TrajetoPasseio } from '../../src/passeios/TrajetoPasseio';
 import { duracaoPasseio } from '../../src/passeios/passeio';
 import { apagarPasseiosNuvem, limparControlePasseios, sincronizadorPasseios } from '../../src/passeios/nuvem';
@@ -28,6 +30,7 @@ function GravarPasseio({ tutorId }: { tutorId: string }) {
   const [petId, setPetId] = useState<string | null>(null);
   const pet = meusPets.find((p) => p.id === (petId ?? petAtivo?.id)) ?? meusPets[0];
   const [gravador] = useState(() => gravadorPasseioLocal(tutorId));
+  const [segundoPlano, setSegundoPlano] = useState(() => gravador.permiteSegundoPlano());
   const estado = useSyncExternalStore(gravador.assinar, gravador.snapshot, gravador.snapshot);
   const [agora, setAgora] = useState(Date.now);
   const atual = estado.passeios.find((p) => p.status !== 'concluido');
@@ -38,7 +41,7 @@ function GravarPasseio({ tutorId }: { tutorId: string }) {
   useEffect(() => { vivo.current = true; void gravador.carregar(); return () => { vivo.current = false; }; }, [gravador]);
   useFocusEffect(useCallback(() => {
     const assinatura = AppState.addEventListener('change', (proximo) => {
-      if (proximo !== 'active') void gravador.pausar('O app saiu do primeiro plano. Retome o passeio para voltar a gravar.');
+      if (proximo !== 'active' && !gravador.permiteSegundoPlano()) void gravador.pausar('O app saiu do primeiro plano. Retome o passeio para voltar a gravar.');
     });
     const relogio = setInterval(() => setAgora(Date.now()), 1000);
     const checkpoint = setInterval(() => { void gravador.checkpoint(); }, 10000);
@@ -47,6 +50,16 @@ function GravarPasseio({ tutorId }: { tutorId: string }) {
       void gravador.pausar('Você saiu da tela. O passeio foi pausado.');
     };
   }, [gravador]));
+
+  function escolherSegundoPlano(ativar: boolean) {
+    const aplicar = () => {
+      if (gravador.configurarGps(ativar ? gpsSegundoPlano : gpsPasseio, ativar)) setSegundoPlano(ativar);
+    };
+    if (!ativar) { aplicar(); return; }
+    Alert.alert('Gravar com a tela apagada?', 'Durante o passeio, o PetLive usará sua localização precisa mesmo em segundo plano e mostrará um aviso permanente. Ao iniciar, permita a localização o tempo todo nas configurações do Android. O trajeto fica neste aparelho; o envio à nuvem continua opcional. Pausar ou sair desta tela encerra a gravação.', [
+      { text: 'Agora não', style: 'cancel' }, { text: 'Ativar', onPress: aplicar },
+    ]);
+  }
 
   function finalizar() {
     Alert.alert('Revisar passeio?', 'A gravação será pausada para você conferir o resumo, escolher uma foto e salvar.', [
@@ -62,7 +75,12 @@ function GravarPasseio({ tutorId }: { tutorId: string }) {
   return <ScrollView style={s.tela} contentContainerStyle={{ padding: spacing.xl, paddingTop: insets.top, paddingBottom: insets.bottom + spacing.xl, gap: spacing.lg }}>
     <CabecalhoTela titulo="Passeios" />
     <Pressable accessibilityRole="button" onPress={() => router.push('/passeios/historico')} style={s.acao}><Text style={s.link}>Histórico e meta semanal</Text></Pressable>
-    <Text style={s.texto}>Escolha seu pet e registre o passeio com GPS. Mantenha esta tela aberta: sair do app ou apagar a tela pausa a gravação.</Text>
+    <Text style={s.texto}>{segundoPlano ? 'O passeio continua ao apagar a tela ou colocar o app em segundo plano. Sair desta tela, pausar ou finalizar encerra a gravação.' : 'Escolha seu pet e registre o passeio com GPS. Mantenha esta tela aberta: sair do app ou apagar a tela pausa a gravação.'}</Text>
+    {passeioSegundoPlanoDisponivel() ? <View style={s.card}>
+      <Text style={s.titulo}>Gravar com a tela apagada</Text>
+      <Switch accessibilityLabel="Gravar passeio com a tela apagada" value={segundoPlano} disabled={estado.carregando || estado.ocupado || atual?.status === 'gravando'} onValueChange={escolherSegundoPlano} />
+      <Text style={s.texto}>Opcional no Android. Pause para alterar. Se o sistema encerrar o app, retome o passeio manualmente; o último registro fica salvo.</Text>
+    </View> : null}
     <Text style={s.texto}>Grave sem internet. Salve neste aparelho e, quando quiser, sincronize trajetos e anotações com sua conta. Fotos ficam somente aqui.</Text>
     {estado.erro ? <Text accessibilityRole="alert" style={s.erro}>{estado.erro}</Text> : null}
     {estado.carregando ? <>

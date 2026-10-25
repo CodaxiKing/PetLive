@@ -55,6 +55,35 @@ function ambiente() {
 }
 
 describe('persistência e ciclo de vida do passeio', () => {
+  it('aguarda a parada assíncrona do GPS e ignora pontos recebidos depois de pausar', async () => {
+    const a = ambiente();
+    let encerrar!: () => void;
+    const espera = new Promise<void>((r) => { encerrar = r; });
+    vi.mocked(a.gps.observar).mockImplementationOnce(async (fn) => {
+      a.gps.observar = vi.fn(async () => () => undefined);
+      // Usa a referência recebida para simular um lote tardio do serviço.
+      const depois = () => fn(amostra(inicio + 1000));
+      return () => { depois(); return espera; };
+    });
+    await a.gravador.carregar(); await a.gravador.iniciar({ id: 'pet-a', nome: 'Mia' });
+    a.tempo(2000);
+    let terminou = false;
+    const pausa = a.gravador.pausar().then(() => { terminou = true; });
+    await Promise.resolve(); expect(terminou).toBe(false);
+    encerrar(); await pausa;
+    expect((await a.repo.carregar())[0]).toMatchObject({ status: 'pausado', pontos: [] });
+  });
+  it('preserva a função de parada para tentar novamente se o serviço nativo falhar', async () => {
+    const a = ambiente();
+    const remover = vi.fn().mockRejectedValueOnce(new Error('serviço ocupado')).mockResolvedValue(undefined);
+    vi.mocked(a.gps.observar).mockResolvedValueOnce(remover);
+    await a.gravador.carregar(); await a.gravador.iniciar({ id: 'pet-a', nome: 'Mia' });
+    await a.gravador.pausar();
+    expect(a.gravador.snapshot().erro).toContain('encerrar o GPS');
+    expect((await a.repo.carregar())[0].status).toBe('pausado');
+    await a.gravador.pausar();
+    expect(remover).toHaveBeenCalledTimes(2); expect(a.gravador.snapshot().erro).toBeNull();
+  });
   it('preserva os últimos pontos já recebidos quando finalizar vem antes de a escrita terminar', async () => {
     const a = ambiente(); await a.gravador.carregar(); await a.gravador.iniciar({ id: 'pet-a', nome: 'Mia' });
     a.tempo(1000); a.ponto(1000);

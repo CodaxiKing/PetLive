@@ -11,6 +11,7 @@ module.exports = ({ config }) => ({
   },
   plugins: [
     ...(config.plugins ?? []),
+    ['expo-location', { isAndroidBackgroundLocationEnabled: true, isAndroidForegroundServiceEnabled: true, isIosBackgroundLocationEnabled: false }],
     ['expo-notifications', { defaultChannel: 'lembretes', enableRemoteNotifications: false }],
     ['expo-sharing', { ios: { enabled: false }, android: { enabled: false } }],
     [
@@ -23,6 +24,7 @@ module.exports = ({ config }) => ({
   ],
   extra: {
     ...config.extra,
+    passeioSegundoPlano: true,
     // Somente builds Android com a configuração Firebase registram push remoto.
     push: { android: Boolean(process.env.GOOGLE_SERVICES_JSON) },
     // O app só troca para o mapa do Google se o build tiver a chave da plataforma.
