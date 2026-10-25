@@ -123,6 +123,8 @@ function RaizProtegida() {
                 <Stack.Screen name="adocao/[id]" />
                 <Stack.Screen name="ong/index" />
                 <Stack.Screen name="ong/pet" />
+                <Stack.Screen name="ong/cadastros" />
+                <Stack.Screen name="ong/cadastro" />
                 <Stack.Screen name="(app)" options={{ animation: 'fade' }} />
                 <Stack.Screen name="pet/novo" options={{ presentation: 'modal', animation: 'slide_from_bottom' }} />
                 <Stack.Screen name="pet/[id]/index" />

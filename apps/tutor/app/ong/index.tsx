@@ -68,8 +68,9 @@ function PainelDaConta({ tutorId }: { tutorId: string }) {
     <Text style={s.titulo}>{pet ? `Interessados em ${pet.nome}` : 'Pets e interessados'}</Text>
     {pet ? <Pressable accessibilityRole="button" disabled={acao} style={s.voltar} onPress={() => selecionar(null)}><Text style={s.texto}>← Voltar aos pets da ONG</Text></Pressable> : <>
       <Text style={s.texto}>Gerencie os pets das organizações pelas quais você é responsável. O cadastro e a aprovação de ONGs são feitos separadamente.</Text>
+      <BotaoPrimario titulo="Cadastro da ONG" desabilitado={acao || carregando} onPress={() => router.push('/ong/cadastros')} />
       {painel?.ongs.map((g, i) => <View key={g.id ?? i} style={s.grupo}><Text style={s.texto}>{g.nome} · {status[g.status]}</Text>{g.status === 'aprovada' && g.id ? <BotaoPrimario titulo="Novo pet para adoção" desabilitado={acao || carregando} onPress={() => router.push({ pathname: '/ong/pet', params: { ong: g.id } })} /> : null}</View>)}
-      {painel?.ongs.length === 0 ? <Text style={s.texto}>Sua conta ainda não está vinculada a uma ONG. O cadastro de organizações está em preparação.</Text> : null}
+      {painel?.ongs.length === 0 ? <Text style={s.texto}>Sua conta ainda não está vinculada a uma ONG. Abra Cadastro da ONG para enviar os dados e documentos para análise.</Text> : null}
     </>}
     {pet ? <Text style={s.texto}>Responder abre seu aplicativo de e-mail. Revise e envie por lá; o PetLive não envia a mensagem nem confirma a entrega.</Text> : null}
     {erro ? <Text accessibilityRole="alert" style={s.erro}>{erro}</Text> : null}

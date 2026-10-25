@@ -7,7 +7,7 @@
 // "em_andamento" e é retomado na próxima execução.
 import { createClient } from 'npm:@supabase/supabase-js@2';
 
-const BUCKETS = ['pets', 'anexos'];
+const BUCKETS = ['pets', 'anexos', 'ong-documentos'];
 
 Deno.serve(async (req) => {
   const chave = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '';
