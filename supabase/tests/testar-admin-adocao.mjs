@@ -1,0 +1,81 @@
+import { readFile } from 'node:fs/promises';
+import { pathToFileURL } from 'node:url';
+import assert from 'node:assert/strict';
+const { PGlite } = await import(pathToFileURL(process.env.PGLITE_MODULE).href);
+const db=new PGlite();
+const uid=n=>`65000000-0000-4000-8000-${String(n).padStart(12,'0')}`;
+const [admin,dono,outro,ong,semDocs,pet]=[1,2,3,10,11,20].map(uid);
+const docs=Object.fromEntries(['estatuto','comprovante','responsavel'].map((tipo,i)=>[tipo,`${dono}/${ong}-${tipo}-${uid(100+i)}.pdf`]));
+async function entrar(papel,aal='aal2',user=admin,ativo=true) {
+ await db.exec('reset role;delete from admin_members');
+ if(papel)await db.query('insert into admin_members values($1,$2,$3)',[user,papel,ativo]);
+ await db.query("select set_config('request.jwt.claim.sub',$1,false),set_config('request.jwt.claim.aal',$2,false)",[user,aal]);
+ await db.exec('set role authenticated');
+}
+const decidir=(rev,status,motivo='Análise dos documentos concluída',id=ong)=>db.query('select admin_ong_decidir($1,$2,$3,$4)',[id,rev,status,motivo]);
+try {
+ await db.exec(`create role authenticated;create role anon;create role service_role bypassrls;create schema auth;
+ create function auth.uid() returns uuid language sql stable as $$select nullif(current_setting('request.jwt.claim.sub',true),'')::uuid$$;
+ create function auth.jwt() returns jsonb language sql stable as $$select jsonb_build_object('aal',current_setting('request.jwt.claim.aal',true))$$;
+ grant usage on schema public,auth to authenticated,anon,service_role;
+ create table profiles(id uuid primary key);create table admin_members(user_id uuid,papel text,ativo boolean);
+ create table audit_log(admin_id uuid,acao text,alvo_tipo text,alvo_id text,detalhes jsonb);
+ create function exportar_meus_dados() returns jsonb language sql as $$select '{}'::jsonb$$;
+ create schema storage;create table storage.buckets(id text primary key,name text,public boolean,file_size_limit bigint,allowed_mime_types text[]);
+ create table storage.objects(id uuid primary key default gen_random_uuid(),bucket_id text,name text);alter table storage.objects enable row level security;
+ create policy legado_permissivo on storage.objects for all to authenticated using(true) with check(true);
+ grant usage on schema storage to authenticated,anon;grant select,insert,update,delete on storage.objects to authenticated;
+ insert into profiles values('${admin}'),('${dono}'),('${outro}');`);
+ const base=await readFile(new URL('../migrations/20261031000000_painel_admin.sql',import.meta.url),'utf8');
+ await db.exec(base.slice(base.indexOf('create or replace function public.admin_papel()'),base.indexOf('/**\n * Estado da sessão')));
+ for(const f of ['20261206000000_catalogo_adocao.sql','20261212000000_ong_salvar_pet.sql','20261214000000_cadastro_ong_documentos.sql']) await db.exec(await readFile(new URL('../migrations/'+f,import.meta.url),'utf8'));
+ const sql=await readFile(new URL('../migrations/20261231000000_admin_adocao.sql',import.meta.url),'utf8');await db.exec(sql);await db.exec(sql);
+ await db.query(`insert into adocao_ongs(id,responsavel_id,nome,cidade,bairro) values($1,$2,'Abrigo','Cidade','Centro'),($3,$2,'Sem documentos','Cidade','Centro')`,[ong,dono,semDocs]);
+ await db.query(`insert into ong_cadastros(id,responsavel_id,cnpj,nome,cidade,bairro,responsavel_nome,email,telefone,documentos,status,enviado_em)
+ values($1,$2,'11444777000161','Abrigo','Cidade','Centro','Responsável','dono@example.test','21999999999',$3,'enviado',now())`,[ong,dono,docs]);
+ for(const caminho of Object.values(docs))await db.query("insert into storage.objects(bucket_id,name) values('ong-documentos',$1)",[caminho]);
+ for(const papel of [null,'financeiro','suporte','marketing']) {
+  await entrar(papel);await assert.rejects(db.query('select admin_ongs()'),/equipe|função/);
+  assert.equal((await db.query('select ong_documento_permitido($1,false) r',[docs.estatuto])).rows[0].r,false);
+ }
+ await entrar('moderacao','aal1');await assert.rejects(decidir(1,'aprovada'),/duas etapas/);
+ await entrar('super','aal2',admin,false);await assert.rejects(db.query('select admin_ongs()'),/duas etapas/);
+ await entrar('leitura');assert.equal((await db.query('select admin_ongs() r')).rows[0].r.total,2);
+ assert.equal((await db.query("select * from storage.objects where bucket_id='ong-documentos'")).rows.length,0);
+ await assert.rejects(decidir(1,'aprovada'),/função/);await assert.rejects(db.query("select admin_ong_documento($1,'estatuto')",[ong]),/função/);
+ await entrar('moderacao');
+ const lista=(await db.query('select admin_ongs() r')).rows[0].r;
+ assert.equal(JSON.stringify(lista).includes(docs.estatuto),false,'listagem não devolve caminhos privados');
+ assert.equal((await db.query("select admin_ong_documento($1,'estatuto') r",[ong])).rows[0].r,docs.estatuto);
+ assert.equal((await db.query("select * from storage.objects where bucket_id='ong-documentos'")).rows.length,3);
+ await assert.rejects(db.query("insert into storage.objects(bucket_id,name) values('ong-documentos',$1)",[`${dono}/${ong}-estatuto-${uid(200)}.pdf`]),/row-level security/);
+ await assert.rejects(decidir(1,'aprovada','ok'),/motivo/);
+ await assert.rejects(decidir(1,'aprovada','Documentos conferidos',semDocs),/três documentos/);
+ await decidir(1,'aprovada');await assert.rejects(decidir(1,'recusada'),/cadastro mudou/);
+ await decidir(2,'suspensa');await decidir(3,'aprovada');
+ await assert.rejects(decidir(4,'recusada'),/Transição/);
+ await db.exec('reset role');
+ await db.query(`insert into adocao_pets(id,ong_id,nome,especie,porte,sexo,descricao,status) values($1,$2,'Pet','cao','pequeno','macho','Descrição do anúncio','publicado')`,[pet,ong]);
+ await entrar('moderacao');
+ assert.equal((await db.query('select admin_adocao_pets() r')).rows[0].r.total,1);
+ assert.equal((await db.query('select adocao_listar($1) r',[admin])).rows[0].r.itens.length,1);
+ await decidir(4,'suspensa');
+ assert.equal((await db.query('select adocao_listar($1) r',[admin])).rows[0].r.itens.length,0);
+ await decidir(5,'aprovada');
+ assert.equal((await db.query('select adocao_listar($1) r',[admin])).rows[0].r.itens.length,1);
+ await db.query('select admin_adocao_pet_ocultar($1,1,$2)',[pet,'Anúncio precisa de revisão']);
+ await assert.rejects(db.query('select admin_adocao_pet_ocultar($1,1,$2)',[pet,'Anúncio precisa de revisão']),/pet mudou/);
+ assert.equal((await db.query('select admin_adocao_pets() r')).rows[0].r.total,0);
+ await entrar(null,'aal2',dono);
+ assert.equal((await db.query('select ong_documento_permitido($1,false) r',[docs.estatuto])).rows[0].r,true);
+ await assert.rejects(db.query('select ong_pet_salvar($1,$2,$3,2,$4)',[dono,pet,ong,{}]),/ocultos/);
+ await entrar(null,'aal2',outro);
+ assert.equal((await db.query("select * from storage.objects where bucket_id='ong-documentos'")).rows.length,0);
+ await db.exec('reset role');
+ const auditoria=(await db.query('select acao,detalhes from audit_log')).rows;
+ assert.equal(auditoria.filter(x=>x.acao==='ong_decidir').length,5);
+ assert.equal(auditoria.filter(x=>x.acao==='adocao_pet_ocultar').length,1);
+ assert.equal(JSON.stringify(auditoria).includes(docs.estatuto),false);
+ await db.exec('set role anon');await assert.rejects(db.query('select admin_ongs()'),/permission denied/);
+ console.log('OK: papéis/2FA, documentos privados, revisão otimista, aprovação/suspensão, validação de anexos, ocultação sem republicação pelo tutor e auditoria.');
+} finally {await db.close();}
