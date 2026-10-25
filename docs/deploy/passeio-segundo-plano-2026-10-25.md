@@ -20,3 +20,5 @@ Validação automatizada: 305 testes/50 arquivos, TypeScript e lint. Casos novos
 - Sair da tela/trocar conta durante passeio, forçar parada/reabrir e conferir recuperação pausada, sem coleta ou pontos na outra conta.
 
 Status: Em andamento até APK concluído e homologação física. Publicação de loja e iOS em segundo plano continuam pendentes.
+
+Preview solicitado ao EAS a partir do checkout limpo do commit 2c0612064315b169d03463a22c0d1c7df9f4e723: build 60863423-8d78-481c-98e8-87af4f406164, inicialmente NEW. Acompanhar: https://expo.dev/accounts/codaxi/projects/petlive-tutor/builds/60863423-8d78-481c-98e8-87af4f406164 . Cópia limpa aprovada com 305 testes, TypeScript, lint e bundle Android. Contém também as correções da main de mapa, navegação por avisos e exportação privada. Sem Firebase configurado no ambiente preview; push remoto não será habilitado por este APK. A tarefa PVTI_lAHOBmD9fc4BnyqVzhCMN04 foi movida de Todo para In Progress.
