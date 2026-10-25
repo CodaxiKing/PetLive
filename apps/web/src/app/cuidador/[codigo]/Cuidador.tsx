@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
+import { FalhaLinkPublico } from "@/components/FalhaLinkPublico";
 
 const URL_SUPABASE = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
 const CHAVE_ANON = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "";
@@ -76,18 +77,25 @@ export default function Cuidador() {
   const [visao, setVisao] = useState<Visao | null>(null);
   const [marcando, setMarcando] = useState<string | null>(null);
   const [erro, setErro] = useState<string | null>(null);
+  const [falhaRede, setFalhaRede] = useState(false);
   // Hora da última leitura: base de "falta 2 h" e dos dias que restam.
   const [agora, setAgora] = useState(0);
 
   const carregar = useCallback(() => {
-    const pedido: Promise<Visao> =
-      URL_SUPABASE && CHAVE_ANON ? rpc<Visao>("cuidador_visao", { p_codigo: codigo }) : Promise.resolve({ valido: false });
+    const pedido = Promise.resolve().then(() => {
+      if (!URL_SUPABASE || !CHAVE_ANON) throw new Error("Supabase não configurado.");
+      return rpc<Visao>("cuidador_visao", { p_codigo: codigo });
+    });
     pedido.then(
       (v) => {
         setVisao(v);
+        setFalhaRede(false);
         setAgora(Date.now());
       },
-      () => setVisao({ valido: false }),
+      () => {
+        setVisao(null);
+        setFalhaRede(true);
+      },
     );
   }, [codigo]);
 
@@ -111,6 +119,7 @@ export default function Cuidador() {
     }
   }
 
+  if (!visao && falhaRede) return <FalhaLinkPublico onRetry={carregar} />;
   if (!visao) return <main className="flex min-h-screen items-center justify-center text-sm text-cinza">Abrindo…</main>;
   if (!visao.valido) return <Encerrado />;
 

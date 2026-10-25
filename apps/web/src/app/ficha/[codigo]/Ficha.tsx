@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState, type ReactNode } from "react";
 import { Mascote } from "@/components/Mascote";
+import { FalhaLinkPublico } from "@/components/FalhaLinkPublico";
 
 const URL_SUPABASE = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
 const CHAVE_ANON = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "";
@@ -146,27 +147,48 @@ const I = {
 export default function Ficha() {
   const { codigo } = useParams<{ codigo: string }>();
   const [resposta, setResposta] = useState<Resposta | null>(null);
+  const [falhaRede, setFalhaRede] = useState(false);
+  const [tentativa, setTentativa] = useState(0);
   // Hora da leitura: base de "vence em 5 dias" e da idade.
   const [agora, setAgora] = useState(0);
 
   useEffect(() => {
-    const pedido: Promise<Resposta> =
-      URL_SUPABASE && CHAVE_ANON
-        ? fetch(`${URL_SUPABASE}/rest/v1/rpc/carteirinha_publica`, {
-            method: "POST",
-            headers: { apikey: CHAVE_ANON, "Content-Type": "application/json" },
-            body: JSON.stringify({ p_codigo: codigo }),
-          }).then((r) => (r.ok ? r.json() : { valido: false }))
-        : Promise.resolve({ valido: false });
+    const pedido: Promise<Resposta> = Promise.resolve().then(() => {
+      if (!URL_SUPABASE || !CHAVE_ANON) throw new Error("Supabase não configurado.");
+      return fetch(`${URL_SUPABASE}/rest/v1/rpc/carteirinha_publica`, {
+        method: "POST",
+        headers: { apikey: CHAVE_ANON, "Content-Type": "application/json" },
+        body: JSON.stringify({ p_codigo: codigo }),
+      }).then((r) => {
+        if (!r.ok) throw new Error("A consulta do link falhou.");
+        return r.json() as Promise<Resposta>;
+      });
+    });
     pedido.then(
       (r) => {
         setResposta(r);
+        setFalhaRede(false);
         setAgora(Date.now());
       },
-      () => setResposta({ valido: false }),
+      () => {
+        setResposta(null);
+        setFalhaRede(true);
+      },
     );
-  }, [codigo]);
+  }, [codigo, tentativa]);
 
+  if (falhaRede) {
+    return (
+      <FalhaLinkPublico
+        onRetry={() => {
+          setFalhaRede(false);
+          setResposta(null);
+          // A mudança do estado reinicia a tela; a leitura é acionada pelo efeito abaixo.
+          setTentativa((n) => n + 1);
+        }}
+      />
+    );
+  }
   if (!resposta) {
     return <main className="flex min-h-screen items-center justify-center bg-suave text-sm text-cinza">Abrindo a carteirinha…</main>;
   }
