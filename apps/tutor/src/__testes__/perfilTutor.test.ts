@@ -28,6 +28,12 @@ beforeEach(() => {
 afterEach(() => vi.unstubAllGlobals());
 
 describe('foto do tutor', () => {
+  it('distingue bucket ausente e preserva a foto anterior quando o envio falha', async () => {
+    m.upload.mockResolvedValue({ error: { message: 'Bucket not found' } });
+    await expect(enviarFotoPerfil('tutor', { uri: 'file:///f' }, 'tutor/velha.jpg')).rejects.toThrow('indisponível no servidor');
+    expect(m.update).not.toHaveBeenCalled();
+    expect(m.remove).not.toHaveBeenCalled();
+  });
   it('envia para o bucket privado, grava o caminho e apaga a foto antiga', async () => {
     await expect(enviarFotoPerfil('tutor', { uri: 'file:///f', mimeType: 'image/png' }, 'tutor/velha.jpg')).resolves.toBe('tutor/nova.png');
     expect(m.from).toHaveBeenCalledWith('perfis');

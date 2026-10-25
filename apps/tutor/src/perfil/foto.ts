@@ -27,7 +27,10 @@ export async function enviarFotoPerfil(
   const caminho = `${tutorId}/${Crypto.randomUUID()}.${extensao}`;
 
   const { error } = await supabase.storage.from(BUCKET).upload(caminho, bytes, { contentType: tipo, upsert: false });
-  if (error) throw new Error('Não foi possível enviar a foto. Confira sua conexão e tente novamente.');
+  if (error) {
+    if (/bucket.*not found/i.test(error.message)) throw new Error('O envio de fotos está indisponível no servidor. Tente novamente mais tarde.');
+    throw new Error('Não foi possível enviar a foto. Confira sua conexão e tente novamente.');
+  }
 
   const { error: erroPerfil } = await supabase.from('profiles').update({ avatar_url: caminho }).eq('id', tutorId);
   if (erroPerfil) {

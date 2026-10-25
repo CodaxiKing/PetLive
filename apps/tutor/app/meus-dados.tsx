@@ -79,10 +79,10 @@ export default function MeusDados() {
   function trocarFoto() {
     if (!user || enviandoFoto) return
     const usar = (origem: 'galeria' | 'camera') => async () => {
-      const ativo = await escolherFoto(origem)
-      if (!ativo) return
       setEnviandoFoto(true)
       try {
+        const ativo = await escolherFoto(origem)
+        if (!ativo) return
         const caminho = await enviarFotoPerfil(user.id, ativo, foto)
         setFoto(caminho)
         // Mostra a foto escolhida já, sem esperar o link assinado.
@@ -246,7 +246,7 @@ const estilos = StyleSheet.create({
   ajuda: { fontFamily: fontFamily.regular, fontSize: 13, lineHeight: 18, color: '#566070', marginTop: -6 },
   nota: { fontFamily: fontFamily.regular, fontSize: 12, lineHeight: 17, color: '#566070', marginTop: 4 },
   rodape: { paddingHorizontal: 24, paddingTop: 12, paddingBottom: 28 },
-  fotoBloco: { alignItems: 'center', gap: 6, marginTop: -8, marginBottom: 4 },
+  fotoBloco: { alignItems: 'center', gap: 6, paddingTop: 8, marginBottom: 4 },
   foto: { width: 92, height: 92, borderRadius: 46, backgroundColor: colors.background, alignItems: 'center', justifyContent: 'center' },
   fotoImagem: { width: 92, height: 92, borderRadius: 46 },
   fotoLetra: { fontFamily: fontFamily.semiBold, fontSize: 38, color: colors.black },
