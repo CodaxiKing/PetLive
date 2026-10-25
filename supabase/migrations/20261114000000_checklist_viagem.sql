@@ -4,7 +4,7 @@
 -- referência, com data de revisão e link oficial: o app sempre manda
 -- confirmar com a companhia e o destino. Lista e PDF (PDF no Premium).
 
-create table public.viagem_itens (
+create table if not exists public.viagem_itens (
   id uuid primary key default gen_random_uuid(),
   modo text not null check (modo in ('carro', 'aviao', 'ambos')),
   titulo text not null check (char_length(titulo) between 3 and 80),
@@ -18,9 +18,12 @@ create table public.viagem_itens (
 alter table public.viagem_itens enable row level security;
 revoke all on public.viagem_itens from anon, authenticated;
 grant select on public.viagem_itens to authenticated;
+drop policy if exists "viagem_itens: leitura" on public.viagem_itens;
 create policy "viagem_itens: leitura" on public.viagem_itens for select to authenticated using (ativo);
 
-insert into public.viagem_itens (modo, titulo, detalhe, automatico, ordem) values
+-- Carga só em banco vazio: a migration de dependências pode ter feito a mesma.
+insert into public.viagem_itens (modo, titulo, detalhe, automatico, ordem)
+select * from (values
   ('ambos', 'Carteira de vacinação em dia', 'Antirrábica válida', 'antirrabica', 10),
   ('aviao', 'Atestado de saúde do veterinário', 'Confira o prazo exigido pela companhia', null, 20),
   ('aviao', 'Caixa de transporte aprovada', 'Medidas da companhia', null, 30),
@@ -29,9 +32,11 @@ insert into public.viagem_itens (modo, titulo, detalhe, automatico, ordem) value
   ('carro', 'Paradas no caminho', 'Para água, xixi e esticar as patas', null, 40),
   ('ambos', 'Comida, água e remédios', null, null, 50),
   ('ambos', 'Coleira com plaquinha e contato', 'Telefone atualizado', null, 60),
-  ('ambos', 'Endereço de uma clínica no destino', 'Para alguma emergência', null, 70);
+  ('ambos', 'Endereço de uma clínica no destino', 'Para alguma emergência', null, 70)
+) v (modo, titulo, detalhe, automatico, ordem)
+where not exists (select 1 from public.viagem_itens);
 
-create table public.companhias_aereas (
+create table if not exists public.companhias_aereas (
   id uuid primary key default gen_random_uuid(),
   nome text not null unique,
   regras text check (char_length(regras) <= 600),
@@ -41,16 +46,21 @@ create table public.companhias_aereas (
 alter table public.companhias_aereas enable row level security;
 revoke all on public.companhias_aereas from anon, authenticated;
 grant select on public.companhias_aereas to authenticated;
+drop policy if exists "companhias_aereas: leitura" on public.companhias_aereas;
 create policy "companhias_aereas: leitura" on public.companhias_aereas for select to authenticated using (true);
 
 -- Só o link oficial: o resumo das regras entra pelo painel, com a data da revisão.
-insert into public.companhias_aereas (nome, link) values
+-- Carga só em banco vazio: a migration de dependências pode ter feito a mesma.
+insert into public.companhias_aereas (nome, link)
+select * from (values
   ('Azul', 'https://www.voeazul.com.br'),
   ('GOL', 'https://www.voegol.com.br'),
-  ('LATAM', 'https://www.latamairlines.com/br/pt');
+  ('LATAM', 'https://www.latamairlines.com/br/pt')
+) v (nome, link)
+where not exists (select 1 from public.companhias_aereas);
 
 -- Listas salvas do tutor.
-create table public.viagens (
+create table if not exists public.viagens (
   id uuid primary key default gen_random_uuid(),
   tutor_id uuid not null default auth.uid() references public.profiles (id) on delete cascade,
   pet_id uuid not null references public.pets (id) on delete cascade,
@@ -62,16 +72,20 @@ create table public.viagens (
   criado_em timestamptz not null default now(),
   atualizado_em timestamptz not null default now()
 );
-create index viagens_pet on public.viagens (pet_id, criado_em desc);
+create index if not exists viagens_pet on public.viagens (pet_id, criado_em desc);
 alter table public.viagens enable row level security;
 revoke all on public.viagens from anon;
 grant select, insert, update, delete on public.viagens to authenticated;
+drop policy if exists "viagens: tutor lê" on public.viagens;
 create policy "viagens: tutor lê" on public.viagens for select to authenticated using (tutor_id = auth.uid());
+drop policy if exists "viagens: tutor cria" on public.viagens;
 create policy "viagens: tutor cria" on public.viagens for insert to authenticated
   with check (tutor_id = auth.uid() and exists (select 1 from public.pets p where p.id = pet_id and p.tutor_id = auth.uid()));
+drop policy if exists "viagens: tutor muda" on public.viagens;
 create policy "viagens: tutor muda" on public.viagens for update to authenticated
   using (tutor_id = auth.uid())
   with check (tutor_id = auth.uid() and exists (select 1 from public.pets p where p.id = pet_id and p.tutor_id = auth.uid()));
+drop policy if exists "viagens: tutor apaga" on public.viagens;
 create policy "viagens: tutor apaga" on public.viagens for delete to authenticated using (tutor_id = auth.uid());
 
 -- ============================================================

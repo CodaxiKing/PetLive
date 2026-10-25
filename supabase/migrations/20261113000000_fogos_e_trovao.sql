@@ -4,7 +4,7 @@
 -- manter o pet em casa, e o modo calmo silencia os avisos não urgentes
 -- naquela noite. O conteúdo não recomenda remédio.
 
-create table public.datas_fogos (
+create table if not exists public.datas_fogos (
   id uuid primary key default gen_random_uuid(),
   nome text not null check (char_length(nome) between 3 and 60),
   data date not null,
@@ -13,18 +13,23 @@ create table public.datas_fogos (
   revisado_em date,
   criado_em timestamptz not null default now()
 );
-create index datas_fogos_data on public.datas_fogos (data);
+create index if not exists datas_fogos_data on public.datas_fogos (data);
 alter table public.datas_fogos enable row level security;
 revoke all on public.datas_fogos from anon, authenticated;
 grant select on public.datas_fogos to authenticated;
+drop policy if exists "datas_fogos: leitura" on public.datas_fogos;
 create policy "datas_fogos: leitura" on public.datas_fogos for select to authenticated using (true);
 
-insert into public.datas_fogos (nome, data, regiao, dica) values
+-- Carga só em banco vazio: a migration de dependências pode ter feito a mesma.
+insert into public.datas_fogos (nome, data, regiao, dica)
+select nome, data::date, regiao, dica from (values
   ('Réveillon', '2026-12-31', 'Rio de Janeiro', 'Fogos na orla a partir da meia-noite, com barulho também nos bairros.'),
-  ('Réveillon', '2027-12-31', 'Rio de Janeiro', 'Fogos na orla a partir da meia-noite, com barulho também nos bairros.');
+  ('Réveillon', '2027-12-31', 'Rio de Janeiro', 'Fogos na orla a partir da meia-noite, com barulho também nos bairros.')
+) v (nome, data, regiao, dica)
+where not exists (select 1 from public.datas_fogos);
 
 -- Preferências do tutor (sem linha = avisos ligados).
-create table public.fogos_prefs (
+create table if not exists public.fogos_prefs (
   tutor_id uuid primary key references public.profiles (id) on delete cascade,
   avisar boolean not null default true,
   lembrar_em_casa boolean not null default true,
@@ -36,8 +41,11 @@ create table public.fogos_prefs (
 alter table public.fogos_prefs enable row level security;
 revoke all on public.fogos_prefs from anon;
 grant select, insert, update on public.fogos_prefs to authenticated;
+drop policy if exists "fogos_prefs: tutor lê" on public.fogos_prefs;
 create policy "fogos_prefs: tutor lê" on public.fogos_prefs for select to authenticated using (tutor_id = auth.uid());
+drop policy if exists "fogos_prefs: tutor cria" on public.fogos_prefs;
 create policy "fogos_prefs: tutor cria" on public.fogos_prefs for insert to authenticated with check (tutor_id = auth.uid());
+drop policy if exists "fogos_prefs: tutor muda" on public.fogos_prefs;
 create policy "fogos_prefs: tutor muda" on public.fogos_prefs for update to authenticated using (tutor_id = auth.uid()) with check (tutor_id = auth.uid());
 
 /** O tutor está na noite do modo calmo (18h às 7h, no fuso dele)? */
@@ -62,7 +70,7 @@ $$;
 revoke all on function public.em_modo_calmo(uuid) from public, anon, authenticated;
 
 -- Avisos já enviados (um por data e tipo para cada tutor).
-create table public.fogos_avisos (
+create table if not exists public.fogos_avisos (
   tutor_id uuid not null references public.profiles (id) on delete cascade,
   data_id uuid not null references public.datas_fogos (id) on delete cascade,
   tipo text not null check (tipo in ('3_dias', 'no_dia', 'noite')),

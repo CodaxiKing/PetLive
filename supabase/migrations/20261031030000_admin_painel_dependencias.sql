@@ -56,6 +56,8 @@ create table if not exists public.vaccine_schedule (
   ordem int not null default 0,
   obrigatoria boolean not null default false
 );
+-- A tabela já existe desde o schema inicial, sem esta coluna.
+alter table public.vaccine_schedule add column if not exists obrigatoria boolean not null default false;
 create index if not exists vaccine_schedule_especie_idx on public.vaccine_schedule(especie, ordem);
 alter table public.vaccine_schedule enable row level security;
 drop policy if exists "vaccine_schedule: leitura publica" on public.vaccine_schedule;

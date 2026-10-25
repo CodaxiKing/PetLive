@@ -6,14 +6,14 @@
 -- Suporte: as mensagens do site viram chamados
 -- ============================================================
 alter table public.site_contacts
-  add column status text not null default 'aberto' check (status in ('aberto', 'respondido', 'fechado')),
-  add column prioridade text not null default 'normal' check (prioridade in ('normal', 'alta')),
-  add column atribuido_a uuid references auth.users (id) on delete set null,
-  add column respondido_em timestamptz,
-  add column fechado_em timestamptz;
+  add column if not exists status text not null default 'aberto' check (status in ('aberto', 'respondido', 'fechado')),
+  add column if not exists prioridade text not null default 'normal' check (prioridade in ('normal', 'alta')),
+  add column if not exists atribuido_a uuid references auth.users (id) on delete set null,
+  add column if not exists respondido_em timestamptz,
+  add column if not exists fechado_em timestamptz;
 
 -- Notas e respostas do chamado (a resposta ao cliente sai por e-mail).
-create table public.site_contact_notas (
+create table if not exists public.site_contact_notas (
   id bigint generated always as identity primary key,
   contato_id uuid not null references public.site_contacts (id) on delete cascade,
   autor_id uuid references auth.users (id) on delete set null,
@@ -21,7 +21,7 @@ create table public.site_contact_notas (
   texto text not null check (char_length(texto) between 1 and 4000),
   criado_em timestamptz not null default now()
 );
-create index site_contact_notas_contato on public.site_contact_notas (contato_id, criado_em);
+create index if not exists site_contact_notas_contato on public.site_contact_notas (contato_id, criado_em);
 alter table public.site_contact_notas enable row level security;
 revoke all on public.site_contact_notas from anon, authenticated;
 

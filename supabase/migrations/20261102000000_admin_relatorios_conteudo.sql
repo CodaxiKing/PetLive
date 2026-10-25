@@ -103,13 +103,13 @@ $$;
 comment on column public.vaccine_schedule.primeira_dose_meses is 'Idade mínima da primeira dose, em dias.';
 comment on column public.vaccine_schedule.reforco_meses is 'Intervalo entre as doses seguintes, em dias. Null = dose única.';
 
-alter table public.vaccine_schedule add column obrigatoria boolean not null default false;
+alter table public.vaccine_schedule add column if not exists obrigatoria boolean not null default false;
 update public.vaccine_schedule set obrigatoria = true
 where nome in ('V10', 'Antirrábica', 'V4 Felina', 'V5 Felina', 'Vermífugo (rotina)');
 
 -- Cada publicação guarda a foto do calendário inteiro: dá para ver o que
 -- mudou e voltar atrás.
-create table public.conteudo_versoes (
+create table if not exists public.conteudo_versoes (
   id bigint generated always as identity primary key,
   tipo text not null check (tipo in ('calendario_vacinas')),
   versao int not null,
@@ -138,7 +138,8 @@ $$;
 revoke all on function public.calendario_foto() from public, anon, authenticated;
 
 insert into public.conteudo_versoes (tipo, versao, resumo, conteudo)
-select 'calendario_vacinas', 1, 'Calendário inicial', public.calendario_foto();
+select 'calendario_vacinas', 1, 'Calendário inicial', public.calendario_foto()
+on conflict do nothing;
 
 create or replace function public.admin_conteudo()
 returns jsonb

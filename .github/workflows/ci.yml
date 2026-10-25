@@ -82,6 +82,11 @@ jobs:
         working-directory: apps/web
         run: pnpm exec eslint .
 
+      # LayoutProps e PageProps são gerados pelo Next; sem isto o tsc não os encontra.
+      - name: Gerar tipos das rotas
+        working-directory: apps/web
+        run: pnpm exec next typegen
+
       - name: Typecheck
         working-directory: apps/web
         run: pnpm exec tsc --noEmit

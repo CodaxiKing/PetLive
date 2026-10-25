@@ -7,7 +7,7 @@ alter table public.notification_log drop constraint notification_log_type_check;
 alter table public.notification_log add constraint notification_log_type_check
   check (type in ('lembrete', 'vacina', 'dose', 'peso', 'sistema', 'campanha'));
 
-create table public.campanhas (
+create table if not exists public.campanhas (
   id uuid primary key default gen_random_uuid(),
   titulo text not null check (char_length(titulo) between 3 and 65),
   mensagem text not null check (char_length(mensagem) between 3 and 180),
@@ -25,8 +25,8 @@ create table public.campanhas (
 alter table public.campanhas enable row level security;
 revoke all on public.campanhas from anon, authenticated;
 
-alter table public.notification_log add column campanha_id uuid references public.campanhas (id) on delete set null;
-create index notification_log_campanha on public.notification_log (campanha_id) where campanha_id is not null;
+alter table public.notification_log add column if not exists campanha_id uuid references public.campanhas (id) on delete set null;
+create index if not exists notification_log_campanha on public.notification_log (campanha_id) where campanha_id is not null;
 
 /** Quem recebe a campanha agora (consentimento, avisos ligados e limite diário). */
 create or replace function public.campanha_destinatarios(p_publico text)
