@@ -1,10 +1,10 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { enviarFotoPerfil, urlFotoPerfil } from '../perfil/foto';
+import { enviarFotoPerfil, removerFotoPerfil, urlFotoPerfil } from '../perfil/foto';
 import { temSenha, trocarSenha, validarTrocaSenha } from '../perfil/senha';
 
 const m = vi.hoisted(() => ({
   upload: vi.fn(), remove: vi.fn(), signed: vi.fn(), from: vi.fn(), tabela: vi.fn(), update: vi.fn(), eq: vi.fn(),
-  signIn: vi.fn(), updateUser: vi.fn(),
+  signIn: vi.fn(), updateUser: vi.fn(), single: vi.fn(), select: vi.fn(),
 }));
 vi.mock('expo-crypto', () => ({ randomUUID: () => 'nova' }));
 vi.mock('../lib/supabase', () => ({
@@ -22,7 +22,9 @@ beforeEach(() => {
   m.remove.mockResolvedValue({ error: null });
   m.tabela.mockReturnValue({ update: m.update });
   m.update.mockReturnValue({ eq: m.eq });
-  m.eq.mockResolvedValue({ error: null });
+  m.eq.mockReturnValue({ select: m.select });
+  m.select.mockReturnValue({ single: m.single });
+  m.single.mockResolvedValue({ data: { id: 'tutor' }, error: null });
   vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ arrayBuffer: async () => new ArrayBuffer(100) }));
 });
 afterEach(() => vi.unstubAllGlobals());
@@ -42,7 +44,7 @@ describe('foto do tutor', () => {
     expect(m.remove).toHaveBeenCalledWith(['tutor/velha.jpg']);
   });
   it('desfaz o envio quando o perfil não salva', async () => {
-    m.eq.mockResolvedValue({ error: { message: 'falhou' } });
+    m.single.mockResolvedValue({ data: null, error: { message: 'falhou' } });
     await expect(enviarFotoPerfil('tutor', { uri: 'file:///f' }, 'tutor/velha.jpg')).rejects.toThrow('salvar a foto');
     expect(m.remove).toHaveBeenCalledWith(['tutor/nova.jpg']);
     expect(m.remove).not.toHaveBeenCalledWith(['tutor/velha.jpg']);
@@ -52,6 +54,17 @@ describe('foto do tutor', () => {
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ arrayBuffer: async () => new ArrayBuffer(5 * 1024 * 1024 + 1) }));
     await expect(enviarFotoPerfil('tutor', { uri: 'file:///f' }, null)).rejects.toThrow('5 MB');
     expect(m.upload).not.toHaveBeenCalled();
+  });
+  it('não declara foto salva quando o update não afetou o perfil', async () => {
+    m.single.mockResolvedValue({ data: null, error: null });
+    await expect(enviarFotoPerfil('tutor', { uri: 'file:///f' }, 'tutor/velha.jpg')).rejects.toThrow('salvar a foto');
+    expect(m.remove).toHaveBeenCalledWith(['tutor/nova.jpg']);
+    expect(m.remove).not.toHaveBeenCalledWith(['tutor/velha.jpg']);
+  });
+  it('não apaga o arquivo quando a remoção do avatar não foi confirmada', async () => {
+    m.single.mockResolvedValue({ data: null, error: null });
+    await expect(removerFotoPerfil('tutor', 'tutor/velha.jpg')).rejects.toThrow('remover a foto');
+    expect(m.remove).not.toHaveBeenCalled();
   });
   it('mostra a foto com link assinado e nada quando não há foto', async () => {
     m.signed.mockResolvedValue({ data: { signedUrl: 'https://x/assinada' }, error: null });

@@ -32,8 +32,8 @@ export async function enviarFotoPerfil(
     throw new Error('Não foi possível enviar a foto. Confira sua conexão e tente novamente.');
   }
 
-  const { error: erroPerfil } = await supabase.from('profiles').update({ avatar_url: caminho }).eq('id', tutorId);
-  if (erroPerfil) {
+  const { data: perfil, error: erroPerfil } = await supabase.from('profiles').update({ avatar_url: caminho }).eq('id', tutorId).select('id').single();
+  if (erroPerfil || perfil?.id !== tutorId) {
     await supabase.storage.from(BUCKET).remove([caminho]).catch(() => undefined);
     throw new Error('Não foi possível salvar a foto no perfil. Tente novamente.');
   }
@@ -43,8 +43,8 @@ export async function enviarFotoPerfil(
 
 /** Tira a foto do perfil e apaga o arquivo. */
 export async function removerFotoPerfil(tutorId: string, caminho: string | null): Promise<void> {
-  const { error } = await supabase.from('profiles').update({ avatar_url: null }).eq('id', tutorId);
-  if (error) throw new Error('Não foi possível remover a foto. Tente novamente.');
+  const { data, error } = await supabase.from('profiles').update({ avatar_url: null }).eq('id', tutorId).select('id').single();
+  if (error || data?.id !== tutorId) throw new Error('Não foi possível remover a foto. Tente novamente.');
   if (caminho) await supabase.storage.from(BUCKET).remove([caminho]).catch(() => undefined);
 }
 

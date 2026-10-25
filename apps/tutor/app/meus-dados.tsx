@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { ActivityIndicator, Alert, Image, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, View } from 'react-native'
 import { router } from 'expo-router'
 import * as Location from 'expo-location'
@@ -35,6 +35,11 @@ type Dados = {
  */
 export default function MeusDados() {
   const { user } = useAuth()
+  return user ? <FormularioPerfil key={user.id} tutorId={user.id} /> : null
+}
+
+function FormularioPerfil({ tutorId }: { tutorId: string }) {
+  const { user } = useAuth()
   const [dados, setDados] = useState<Dados | null>(null)
   const [salvando, setSalvando] = useState(false)
   // A foto é salva na hora em que é escolhida, sem esperar o botão Salvar.
@@ -42,19 +47,29 @@ export default function MeusDados() {
   const [fotoUrl, setFotoUrl] = useState<string | null>(null)
   const [enviandoFoto, setEnviandoFoto] = useState(false)
   const [localizando, setLocalizando] = useState(false)
+  const [erroCarga, setErroCarga] = useState(false)
+  const [tentativa, setTentativa] = useState(0)
+  const trava = useRef(false)
+  const montado = useRef(true)
+  useEffect(() => { montado.current = true; return () => { montado.current = false } }, [])
 
   useEffect(() => {
-    if (!user) return
-    supabase
+    let ativo = true
+    setErroCarga(false)
+    void Promise.resolve(supabase
       .from('profiles')
       .select('nome, telefone, whatsapp, cidade, contato_emergencia_nome, contato_emergencia_telefone, avatar_url')
-      .eq('id', user.id)
-      .maybeSingle()
-      .then(({ data }) => {
+      .eq('id', tutorId)
+      .single())
+      .then(async ({ data, error }) => {
+        if (!ativo) return
+        if (error || !data) throw new Error('Perfil indisponível')
         const d = (data ?? {}) as Partial<Record<keyof Dados | 'avatar_url', string | boolean | null>>
         const caminho = (d.avatar_url as string) || null
         setFoto(caminho)
-        urlFotoPerfil(caminho).then(setFotoUrl)
+        const url = await urlFotoPerfil(caminho)
+        if (!ativo) return
+        setFotoUrl(url)
         setDados({
           nome: (d.nome as string) ?? '',
           telefone: mascaraTelefone((d.telefone as string) ?? ''),
@@ -63,13 +78,20 @@ export default function MeusDados() {
           contato_emergencia_nome: (d.contato_emergencia_nome as string) ?? '',
           contato_emergencia_telefone: mascaraTelefone((d.contato_emergencia_telefone as string) ?? ''),
         })
-      })
-  }, [user])
+      }).catch(() => { if (ativo) setErroCarga(true) })
+    return () => { ativo = false }
+  // tentativa repete a leitura após erro, sem substituir edições quando o auth atualiza.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tutorId, tentativa])
 
   if (!dados) {
     return (
       <View style={[estilos.tela, estilos.centro]}>
-        <ActivityIndicator color={colors.primaryDeep} />
+        {erroCarga ? <View style={estilos.falhaCarga}>
+          <Text accessibilityRole="alert" style={estilos.ajuda}>Não foi possível carregar seu perfil. Confira a conexão e tente novamente.</Text>
+          <BotaoPrimario titulo="Tentar novamente" onPress={() => setTentativa(n => n + 1)} />
+          <Tocavel accessibilityRole="button" onPress={() => router.back()}><Text style={estilos.fotoTexto}>Voltar</Text></Tocavel>
+        </View> : <ActivityIndicator color={colors.primaryDeep} />}
       </View>
     )
   }
@@ -77,32 +99,40 @@ export default function MeusDados() {
   const inicial = (dados.nome.trim() || user?.email || '?').charAt(0).toUpperCase()
 
   function trocarFoto() {
-    if (!user || enviandoFoto) return
+    if (!user || trava.current || enviandoFoto) return
     const usar = (origem: 'galeria' | 'camera') => async () => {
+      if (trava.current) return
+      trava.current = true
       setEnviandoFoto(true)
       try {
         const ativo = await escolherFoto(origem)
-        if (!ativo) return
+        if (!ativo || !montado.current) return
         const caminho = await enviarFotoPerfil(user.id, ativo, foto)
+        if (!montado.current) return
         setFoto(caminho)
         // Mostra a foto escolhida já, sem esperar o link assinado.
         setFotoUrl(ativo.uri)
       } catch (e) {
-        Alert.alert('Não deu para trocar a foto', e instanceof Error ? e.message : String(e))
+        if (montado.current) Alert.alert('Não deu para trocar a foto', e instanceof Error ? e.message : String(e))
       } finally {
-        setEnviandoFoto(false)
+        trava.current = false
+        if (montado.current) setEnviandoFoto(false)
       }
     }
     const remover = async () => {
+      if (trava.current) return
+      trava.current = true
       setEnviandoFoto(true)
       try {
         await removerFotoPerfil(user.id, foto)
+        if (!montado.current) return
         setFoto(null)
         setFotoUrl(null)
       } catch (e) {
-        Alert.alert('Não deu para remover a foto', e instanceof Error ? e.message : String(e))
+        if (montado.current) Alert.alert('Não deu para remover a foto', e instanceof Error ? e.message : String(e))
       } finally {
-        setEnviandoFoto(false)
+        trava.current = false
+        if (montado.current) setEnviandoFoto(false)
       }
     }
     Alert.alert('Sua foto', 'Ela aparece só para você, no seu perfil.', [
@@ -134,7 +164,7 @@ export default function MeusDados() {
   }
 
   async function salvar() {
-    if (!user || !dados) return
+    if (!user || !dados || trava.current) return
     if (dados.nome.trim().length < 2) {
       Alert.alert('Falta o nome', 'Como você quer ser chamado?')
       return
@@ -147,10 +177,11 @@ export default function MeusDados() {
       Alert.alert('Confira o contato de emergência', 'Use o DDD e o número, como (21) 99999-9999.')
       return
     }
+    trava.current = true
     setSalvando(true)
     try {
       const nome = dados.nome.trim()
-      const { error } = await supabase
+      const { data: salvo, error } = await supabase
         .from('profiles')
         .update({
           nome,
@@ -161,14 +192,16 @@ export default function MeusDados() {
           contato_emergencia_telefone: dados.contato_emergencia_telefone || null,
         })
         .eq('id', user.id)
-      if (error) throw new Error(error.message)
-      // Mantém o nome do auth em dia (aparece em outras telas).
-      await supabase.auth.updateUser({ data: { nome, full_name: nome } }).catch(() => undefined)
-      router.back()
+        .select('id')
+        .single()
+      if (error || salvo?.id !== tutorId) throw new Error(error?.message ?? 'Seu perfil não foi salvo. Tente novamente.')
+      if (!montado.current) return
+      if (montado.current) router.back()
     } catch (e) {
-      Alert.alert('Não deu para salvar', mensagemDeErro(e instanceof Error ? e.message : String(e)))
+      if (montado.current) Alert.alert('Não deu para salvar', mensagemDeErro(e instanceof Error ? e.message : String(e)))
     } finally {
-      setSalvando(false)
+      trava.current = false
+      if (montado.current) setSalvando(false)
     }
   }
 
@@ -228,7 +261,7 @@ export default function MeusDados() {
         <Text style={estilos.nota}>Seu e-mail não aparece para ninguém. O celular e o contato de emergência só aparecem nos links que você enviar e quando você liberar.</Text>
       </ScrollView>
       <View style={estilos.rodape}>
-        <BotaoPrimario titulo="Salvar" carregando={salvando} onPress={salvar} />
+        <BotaoPrimario titulo="Salvar" carregando={salvando} desabilitado={enviandoFoto} onPress={salvar} />
       </View>
     </KeyboardAvoidingView>
   )
@@ -237,6 +270,7 @@ export default function MeusDados() {
 const estilos = StyleSheet.create({
   tela: { flex: 1, backgroundColor: colors.surface },
   centro: { alignItems: 'center', justifyContent: 'center' },
+  falhaCarga: { paddingHorizontal: 24, gap: 20, width: '100%' },
   flex: { flex: 1, minWidth: 0 },
   conteudo: { paddingHorizontal: 24, paddingBottom: 24, gap: 12 },
   linha: { flexDirection: 'row', alignItems: 'center', gap: 12, backgroundColor: colors.background, borderRadius: 24, paddingVertical: 12, paddingHorizontal: 18 },
