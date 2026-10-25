@@ -20,3 +20,5 @@ O responsável confirmou que ainda não há Firebase configurado. O app atual s�
 6. Instalar e validar recebimento, toque no aviso, preferências, Não perturbe, troca de conta, logout e token revogado no Android físico. Só então concluir os itens do board.
 
 Referências oficiais: https://docs.expo.dev/push-notifications/fcm-credentials/ e https://docs.expo.dev/versions/v58.0.0/sdk/notifications/.
+
+Aplicação em produção confirmada em 25/10/2026: RPC instalada, job petlive-ficha-push ativo e fila vazia. Os dois itens de push/abertura no Projects permanecem Em andamento, com as dependências acima registradas. Commit de implementação: 9170d91.
