@@ -35,3 +35,21 @@ normal e com TESTAR_FICHAS_INTEGRADAS=1, usando PGLITE_MODULE. Integração cobr
 quota diária na reutilização da mesma ficha, um link/dez eventos, exportação,
 RLS e funcionamento conjunto dos avisos. Avisos de push e homologação real no
 Android continuam pendentes, sem alegação de entrega no aparelho.
+
+## Entrega do app — 25/10/2026
+
+Fonte 6fafe86127ebffef765c0a381c11d79aebbfc7de: caixa de avisos consulta janela de
+30 dias com desempate por ID, apresenta erro/nova tentativa, confirma leitura
+no servidor e descarta respostas após sair/trocar de conta. Seis testes novos;
+280 testes/47 arquivos, TypeScript e lint aprovados na raiz e no checkout limpo.
+
+OTA Android preview publicada: 7cf7b757-774f-4576-be13-53b668c7b59c.
+https://expo.dev/accounts/codaxi/projects/petlive-tutor/updates/7cf7b757-774f-4576-be13-53b668c7b59c
+Runtime 782d3618069253d333bb21ef58e609d7ef25e74e, igual ao APK74634fba e ao
+fingerprint gerado com perfil preview. Não exige outro APK desse runtime.
+Abrir com internet e reabrir para receber a atualização. Export/bundle Android
+concluído; warnings transitivos do expo-router usaram fallback de resolução.
+
+ADB respondeu sem Android autorizado conectado. Homologação nativa segue
+pendente conforme apps/tutor/lojas/validacao-caixa-avisos.md. Não se afirma
+recebimento da OTA ou push no aparelho apenas por a publicação ter concluído.
