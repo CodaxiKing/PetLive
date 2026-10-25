@@ -11,3 +11,5 @@ Validação: 326 testes do tutor, lint, TypeScript após geração das rotas pel
 Pendente para encerrar o board: instalar uma versão contendo esta tela; solicitar a troca com uma conta de teste; confirmar os e-mails exigidos pelas configurações atuais; voltar ao app e verificar; sair e entrar com o novo endereço. Verificar erro, spam e reenvio sem alterar contas reais de terceiros. A entrega e o redirecionamento dos e-mails dependem da configuração já existente no Supabase. Não foram validados neste desenvolvimento.
 
 Os limites de plano permanecem desligados. Sem alteração em Firebase, push ou cobrança.
+
+Produção: migration aplicada em `qurdqbhjtgapyksrilyk` após o commit `51cb348`. Verificação de metadados confirmou `trigger_ativo=true`, `cliente_executa=false` e `limites_ativos=false`. Nenhuma solicitação de troca foi enviada durante a implantação.
