@@ -173,12 +173,12 @@ export default function TelaCompartilhar() {
         {pet.tutor_id === user?.id ? (
           <Tocavel
             accessibilityRole="button"
-            onPress={() => router.push(`/pet/${pet.id}/familia`)}
+            onPress={() => router.push('/guarda')}
             style={[estilos.emergencia, estilos.familia]}
           >
             <View style={estilos.flex}>
-              <Text style={estilos.emergenciaTitulo}>Acesso da família</Text>
-              <Text style={[estilos.emergenciaSub, estilos.familiaSub]}>Compartilhe este pet com outra conta PetLive</Text>
+              <Text style={estilos.emergenciaTitulo}>Dividir os cuidados</Text>
+              <Text style={[estilos.emergenciaSub, estilos.familiaSub]}>Guarda compartilhada com outra conta PetLive</Text>
             </View>
             <Icone nome="seta" size={18} espessura={2} />
           </Tocavel>

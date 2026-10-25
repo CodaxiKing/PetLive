@@ -165,7 +165,7 @@ export default function Privacidade() {
 
         <Text style={[estilos.secao, estilos.secaoEspaco]}>QUEM VÊ OS DADOS DO PET</Text>
         <Text style={estilos.consentimentoDescricao}>Confira os acessos de cada pet na carteirinha, em Cuidador e no QR da coleira. Links públicos podem ser abertos por quem os recebe.</Text>
-        <LinhaIcone icone={<Icone nome="pessoas" />} rotulo="Família" valor={textoCompartilhamento(acessos?.familia ?? null, 'vínculos com acesso pelo Premium')} />
+        <LinhaIcone icone={<Icone nome="pessoas" />} rotulo="Guarda compartilhada" valor={textoCompartilhamento(acessos?.familia ?? null, 'vínculos com acesso pelo Premium')} />
         <LinhaIcone icone={<Icone nome="pessoas" />} rotulo="Cuidadores" valor={textoCompartilhamento(acessos?.cuidadores ?? null, 'acessos no período vigente')} />
         <LinhaIcone
           icone={<Icone nome="escudo" />}

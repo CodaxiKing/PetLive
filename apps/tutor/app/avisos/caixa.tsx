@@ -10,12 +10,14 @@ import { colors } from '../../src/theme/colors';
 import { fontFamily } from '../../src/theme/typography';
 
 const VISUAL: Record<Aviso['type'], { icone: NomeIcone; fundo: string }> = {
-  vacina: { icone: 'vacina', fundo: colors.premiumSurface },
-  lembrete: { icone: 'sino', fundo: colors.primarySurface },
-  dose: { icone: 'capsula', fundo: colors.warningSurface },
-  peso: { icone: 'balanca', fundo: colors.primarySurface },
-  sistema: { icone: 'escudo', fundo: colors.successSurface },
-  campanha: { icone: 'sino', fundo: colors.premiumSurface },
+  // Cores com significado (prototipo/paleta.json): rosa saúde, lilás rotina, azul o resto.
+  vacina: { icone: 'vacina', fundo: colors.healthSurface },
+  lembrete: { icone: 'sino', fundo: colors.premiumSurface },
+  dose: { icone: 'capsula', fundo: colors.healthSurface },
+  peso: { icone: 'balanca', fundo: colors.healthSurface },
+  sistema: { icone: 'escudo', fundo: colors.background },
+  campanha: { icone: 'sino', fundo: colors.primarySurface },
+  guarda: { icone: 'pessoas', fundo: colors.primarySurface },
 };
 
 function grupo(iso: string): string {

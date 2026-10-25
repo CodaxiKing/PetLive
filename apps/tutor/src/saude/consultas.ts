@@ -8,6 +8,8 @@ export type Consulta = {
   local: string | null
   veterinario: string | null
   observacao: string | null
+  /** Quem registrou (guarda compartilhada). */
+  criado_por?: string | null
 }
 
 export type ConsultaForm = {
@@ -30,7 +32,7 @@ export const CONSULTA_FORM_VAZIO: ConsultaForm = {
 export async function carregarConsultas(petId: string): Promise<Consulta[]> {
   const { data, error } = await supabase
     .from('visits')
-    .select('id, motivo, realizada_em, local, veterinario, observacao')
+    .select('id, motivo, realizada_em, local, veterinario, observacao, criado_por')
     .eq('pet_id', petId)
     .order('realizada_em', { ascending: false })
 

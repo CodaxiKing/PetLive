@@ -114,7 +114,15 @@ export default function TelaMedicamentos() {
         ),
       )
     } catch (e) {
-      Alert.alert('Não foi possível confirmar', e instanceof Error ? e.message : String(e))
+      const msg = e instanceof Error ? e.message : String(e)
+      if (msg.includes('já marcou')) {
+        // Guarda compartilhada: outra pessoa já deu esta dose.
+        setDoses((atual) => atual.map((d) => (d.id === dose.id ? { ...d, confirmada_em: d.confirmada_em ?? new Date().toISOString() } : d)))
+        sincronizarDoses().catch(() => undefined)
+        Alert.alert('Dose já dada', msg)
+      } else {
+        Alert.alert('Não foi possível confirmar', msg)
+      }
     } finally {
       setSalvandoDose(null)
     }

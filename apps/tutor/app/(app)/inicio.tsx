@@ -169,7 +169,15 @@ export default function Inicio() {
               sincronizarDoses().catch(() => undefined);
               return true;
             },
-            () => false,
+            (e: unknown) => {
+              // Guarda compartilhada: outra pessoa já deu esta dose.
+              const msg = e instanceof Error ? e.message : '';
+              if (!msg.includes('já marcou')) return false;
+              setDoses((atual) => atual.filter((d) => d.id !== item.dose.id));
+              sincronizarDoses().catch(() => undefined);
+              Alert.alert('Dose já dada', msg);
+              return true;
+            },
           );
     salvar
       .then((ok) => {

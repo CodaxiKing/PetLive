@@ -93,7 +93,10 @@ function RaizProtegida() {
                 <Stack.Screen name="pet/[id]/index" />
                 <Stack.Screen name="pet/[id]/carteirinha" />
                 <Stack.Screen name="pet/[id]/compartilhar" />
-                <Stack.Screen name="pet/[id]/familia" />
+                <Stack.Screen name="pet/[id]/atualizacoes" />
+                <Stack.Screen name="guarda/index" />
+                <Stack.Screen name="guarda/convidar" />
+                <Stack.Screen name="guarda/convite/[id]" />
                 <Stack.Screen name="pet/[id]/ficha" />
                 <Stack.Screen name="pet/[id]/cuidador" />
                 <Stack.Screen name="pet/[id]/linha-do-tempo" />

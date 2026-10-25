@@ -79,6 +79,20 @@ export function RemediosProvider({ children }: { children: ReactNode }) {
     sincronizarDoses().catch(() => undefined)
   }, [remedios, carregando])
 
+  // Guarda compartilhada: quando outra pessoa marca uma dose, o aviso local
+  // daquela dose não toca mais aqui (BUSINESS.md 5.45).
+  useEffect(() => {
+    const canal = supabase
+      .channel('doses-de-outras-pessoas')
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'pet_activity', filter: 'tipo=eq.dose' }, () => {
+        sincronizarDoses().catch(() => undefined)
+      })
+      .subscribe()
+    return () => {
+      supabase.removeChannel(canal)
+    }
+  }, [])
+
   const criarRemedio = useCallback(
     (form: RemedioForm) => {
       if (!petId) return Promise.resolve(null)

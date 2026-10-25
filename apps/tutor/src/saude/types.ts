@@ -11,6 +11,8 @@ export interface Vacina {
   local: string | null
   observacao: string | null
   criado_em: string
+  /** Quem registrou (guarda compartilhada). */
+  criado_por?: string | null
 }
 
 /** Linha da tabela public.vaccine_schedule (calendário sugerido). */

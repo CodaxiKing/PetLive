@@ -4,6 +4,8 @@ export type RegistroPeso = {
   id: string
   peso: number
   medido_em: string
+  /** Quem registrou (guarda compartilhada). */
+  criado_por?: string | null
 }
 
 /** '28,5' ou '28.5' -> 28.5. Null se inválido (fora de 0,1–299,9). */
@@ -31,15 +33,16 @@ export function hojeIso(): string {
 export async function carregarPesos(petId: string): Promise<RegistroPeso[]> {
   const { data, error } = await supabase
     .from('weights')
-    .select('id, peso, medido_em')
+    .select('id, peso, medido_em, criado_por')
     .eq('pet_id', petId)
     .order('medido_em', { ascending: true })
 
   if (error) throw new Error(error.message)
-  return ((data ?? []) as { id: string; peso: number | string; medido_em: string }[]).map((r) => ({
+  return ((data ?? []) as { id: string; peso: number | string; medido_em: string; criado_por: string | null }[]).map((r) => ({
     id: r.id,
     peso: Number(r.peso),
     medido_em: r.medido_em,
+    criado_por: r.criado_por,
   }))
 }
 

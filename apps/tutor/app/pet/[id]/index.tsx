@@ -13,6 +13,7 @@ import {
 import Svg, { Path } from 'react-native-svg'
 import { Redirect, router, useFocusEffect, useLocalSearchParams } from 'expo-router'
 import { useAuth } from '../../../src/auth/AuthProvider'
+import { carregarCuidadores, nomeAutor, type Cuidadores } from '../../../src/guarda/guarda'
 import { Surgir, Tocavel } from '../../../src/components/Animacoes'
 import { AvisoOffline } from '../../../src/components/AvisoOffline'
 import { BotaoPrimario } from '../../../src/components/BotaoPrimario'
@@ -69,6 +70,10 @@ export default function PetDetalhe() {
   const { session } = useAuth()
   const { pets, petsMemoria, seniores, marcarSenior, definirPetAtivo, removerPet } = usePets()
   const { vacinas, removerVacina } = useVacinas()
+  const [cuidadores, setCuidadores] = useState<Cuidadores | null>(null)
+  // " · por Ana" só quando o pet é dividido e foi outra pessoa que registrou.
+  const porQuem = (autor?: string | null) =>
+    cuidadores?.pessoas.length && autor && autor !== session?.user.id ? ` · por ${nomeAutor(autor, session?.user.id, cuidadores)}` : ''
   const [aba, setAba] = useState<Aba>('Vacinas')
   const [pesos, setPesos] = useState<RegistroPeso[]>([])
   const [consultas, setConsultas] = useState<Consulta[]>([])
@@ -92,6 +97,8 @@ export default function PetDetalhe() {
       // Pode ter virado sênior desde o último job: o servidor confere e cria a rotina.
       conferirSenior(id).then((senior) => senior && marcarSenior(id), () => undefined)
       conferirSelos(id).then(setSelos, () => undefined)
+      // Guarda compartilhada: nomes para o "por Ana" nos registros.
+      carregarCuidadores(id).then(setCuidadores, () => setCuidadores(null))
     }, [id, marcarSenior]),
   )
 
@@ -127,7 +134,7 @@ export default function PetDetalhe() {
   const pesoAtual = pesos.length ? pesos[pesos.length - 1].peso : petAtual.peso_atual
   const idade = idadeEmAnos(petAtual.nascimento)
 
-  function ir(pathname: '/pet/[id]/carteirinha' | '/pet/[id]/editar' | '/pet/[id]/medicamentos' | '/pet/[id]/peso' | '/pet/[id]/consultas' | '/pet/[id]/vacina/nova' | '/pet/[id]/consultas/nova' | '/pet/[id]/linha-do-tempo' | '/pet/[id]/partida' | '/pet/[id]/senior' | '/pet/[id]/viagem' | '/pet/[id]/selos') {
+  function ir(pathname: '/pet/[id]/carteirinha' | '/pet/[id]/editar' | '/pet/[id]/medicamentos' | '/pet/[id]/peso' | '/pet/[id]/consultas' | '/pet/[id]/vacina/nova' | '/pet/[id]/consultas/nova' | '/pet/[id]/linha-do-tempo' | '/pet/[id]/partida' | '/pet/[id]/senior' | '/pet/[id]/viagem' | '/pet/[id]/selos' | '/pet/[id]/atualizacoes') {
     setMenuAberto(false)
     router.push({ pathname, params: { id: petAtual.id } })
   }
@@ -307,7 +314,10 @@ export default function PetDetalhe() {
                         <Text style={estilos.linhaTitulo} numberOfLines={1}>
                           {vacina.nome}
                         </Text>
-                        <Text style={estilos.linhaSub}>Aplicada em {dataCurta(vacina.aplicada_em)}</Text>
+                        <Text style={estilos.linhaSub}>
+                          Aplicada em {dataCurta(vacina.aplicada_em)}
+                          {porQuem(vacina.criado_por)}
+                        </Text>
                       </View>
                       {chip ? (
                         <Text style={[estilos.chip, dose.urgencia === 'vencida' && estilos.chipVencida]}>{chip}</Text>
@@ -326,12 +336,12 @@ export default function PetDetalhe() {
               {[...pesos].reverse().slice(0, 3).map((registro, i) => (
                 <Surgir key={registro.id} indice={i}>
                   <View style={estilos.linha}>
-                    <View style={[estilos.circulo, { backgroundColor: '#D8F2E3' }]}>
+                    <View style={[estilos.circulo, { backgroundColor: colors.healthSurface }]}>
                       <Icone nome="balanca" size={18} />
                     </View>
                     <View style={estilos.flex}>
                       <Text style={estilos.linhaTitulo}>{formatarKg(Number(registro.peso))} kg</Text>
-                      <Text style={estilos.linhaSub}>Pesado em {dataCurta(registro.medido_em)}</Text>
+                      <Text style={estilos.linhaSub}>Pesado em {dataCurta(registro.medido_em)}{porQuem(registro.criado_por)}</Text>
                     </View>
                   </View>
                 </Surgir>
@@ -350,7 +360,7 @@ export default function PetDetalhe() {
               {consultas.slice(0, 4).map((consulta, i) => (
                 <Surgir key={consulta.id} indice={i}>
                   <Pressable accessibilityRole="button" onPress={() => ir('/pet/[id]/consultas')} style={estilos.linha}>
-                    <View style={[estilos.circulo, { backgroundColor: '#E0F1FA' }]}>
+                    <View style={[estilos.circulo, { backgroundColor: colors.healthSurface }]}>
                       <Icone nome="relogio" size={18} />
                     </View>
                     <View style={estilos.flex}>
@@ -359,6 +369,7 @@ export default function PetDetalhe() {
                       </Text>
                       <Text style={estilos.linhaSub} numberOfLines={1}>
                         {[dataCurta(consulta.realizada_em), consulta.local ?? consulta.veterinario].filter(Boolean).join(' · ')}
+                        {porQuem(consulta.criado_por)}
                       </Text>
                     </View>
                   </Pressable>
@@ -441,9 +452,15 @@ export default function PetDetalhe() {
             >
               <Text style={estilos.opcaoTexto}>Calendário sugerido de vacinas</Text>
             </Pressable>
-            <Pressable accessibilityRole="button" onPress={() => ir('/pet/[id]/partida')} style={estilos.opcao}>
-              <Text style={estilos.opcaoTexto}>Registrar a partida</Text>
+            <Pressable accessibilityRole="button" onPress={() => ir('/pet/[id]/atualizacoes')} style={estilos.opcao}>
+              <Text style={estilos.opcaoTexto}>Atualizações e quem cuida</Text>
             </Pressable>
+            {/* Só o titular registra a partida e apaga o pet (guarda compartilhada, BUSINESS.md 5.45). */}
+            {petAtual.tutor_id === session?.user.id ? (
+              <Pressable accessibilityRole="button" onPress={() => ir('/pet/[id]/partida')} style={estilos.opcao}>
+                <Text style={estilos.opcaoTexto}>Registrar a partida</Text>
+              </Pressable>
+            ) : null}
             {petAtual.tutor_id === session?.user.id ? (
               <Pressable accessibilityRole="button" onPress={confirmarExclusao} style={estilos.opcao}>
                 <Text style={[estilos.opcaoTexto, estilos.opcaoPerigo]}>Excluir {petAtual.nome}</Text>
