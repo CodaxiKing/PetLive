@@ -4,7 +4,7 @@ import { conferirContaOng, conferirPaginaOng, type CursorOng } from './ong';
 export const TIPOS_DOCUMENTO = ['estatuto','comprovante','responsavel'] as const;
 export type TipoDocumentoOng = typeof TIPOS_DOCUMENTO[number];
 export type DadosCadastroOng = { cnpj: string; nome: string; cidade: string; bairro: string; responsavel_nome: string; email: string; telefone: string; documentos: Partial<Record<TipoDocumentoOng,string>> };
-export type CadastroOng = DadosCadastroOng & { id: string; versao: number; status: 'rascunho'|'enviado'; criado_em: string; ong_status: string|null };
+export type CadastroOng = DadosCadastroOng & { id: string; versao: number; status: 'rascunho'|'enviado'; criado_em: string; ong_status: string|null; correcao_motivo?: string|null };
 export const CADASTRO_ONG_VAZIO: DadosCadastroOng = { cnpj:'',nome:'',cidade:'',bairro:'',responsavel_nome:'',email:'',telefone:'',documentos:{} };
 export const normalizarCnpj = (v:string) => v.trim().toUpperCase().replace(/[.\s\/-]/g,'');
 export function cnpjValido(valor:string) {
@@ -29,6 +29,7 @@ export function validarCadastroOng(d:DadosCadastroOng,enviar=false,concordo=fals
 export function conferirCadastroOng(valor:unknown):CadastroOng {
  const c=valor as CadastroOng;
  if(!c||typeof c.id!=='string'||['cnpj','nome','cidade','bairro','responsavel_nome','email','telefone'].some(k=>typeof (c as unknown as Record<string,unknown>)[k]!=='string')||!Number.isSafeInteger(c.versao)||c.versao<1||!['rascunho','enviado'].includes(c.status)||!Number.isFinite(Date.parse(c.criado_em))||!c.documentos||typeof c.documentos!=='object'||Array.isArray(c.documentos)||Object.entries(c.documentos).some(([k,v])=>!TIPOS_DOCUMENTO.includes(k as TipoDocumentoOng)||typeof v!=='string')||![null,'pendente','aprovada','suspensa','recusada'].includes(c.ong_status))throw new Error('Cadastro recebido incompleto. Atualize a tela.');
+ if(c.correcao_motivo!==undefined&&c.correcao_motivo!==null&&(typeof c.correcao_motivo!=='string'||c.correcao_motivo.trim().length<5||c.correcao_motivo.length>500))throw new Error('Motivo da correção inválido. Atualize o cadastro.');
  validarCadastroOng(c); return c;
 }
 async function chamar(tutor:string,nome:string,args:Record<string,unknown>) {

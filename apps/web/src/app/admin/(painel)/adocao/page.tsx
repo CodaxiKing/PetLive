@@ -5,9 +5,9 @@ import Image from "next/image";
 import { Cabecalho, useAdmin } from "@/components/admin/Painel";
 import { rpcAdmin, supabaseAdmin } from "@/lib/admin/supabase";
 
-type Ong = { id: string; nome: string; cidade: string; bairro: string; status: string; revisao: number; motivo_decisao: string | null; cnpj: string | null; responsavel_nome: string | null; email: string | null; telefone: string | null; documentos: string[] };
+type Ong = { id: string; nome: string; cidade: string; bairro: string; status: string; revisao: number; motivo_decisao: string | null; cnpj: string | null; responsavel_nome: string | null; email: string | null; telefone: string | null; documentos: string[]; correcao_motivo?: string|null };
 type Pet = { id: string; nome: string; especie: string; descricao: string; fotos: string[]; status: string; versao: number; ong_nome: string; ong_status: string };
-const ROTULOS: Record<string, string> = { pendente: "Em análise", aprovada: "Aprovada", recusada: "Recusada", suspensa: "Suspensa", publicado: "Publicado", oculto: "Oculto" };
+const ROTULOS: Record<string, string> = { pendente: "Em análise", aprovada: "Aprovada", recusada: "Recusada", suspensa: "Suspensa", publicado: "Publicado", oculto: "Oculto", correcao: "Pedir correções" };
 const DOCUMENTOS: Record<string, string> = { estatuto: "Estatuto", comprovante: "Comprovante da ONG", responsavel: "Documento do responsável" };
 const campo = "rounded-2xl border border-[#DDE1E8] bg-white px-4 py-2 text-sm";
 
@@ -69,7 +69,7 @@ function PainelAdocao({ podeDecidir }: { podeDecidir: boolean }) {
     if (trava.current || !confirmo || motivo.trim().length < 5) return;
     trava.current = true; setOcupado(true); setMensagem("");
     try {
-      if (ong) await rpcAdmin("admin_ong_decidir", { p_id: ong.id, p_revisao: ong.revisao, p_status: decisao, p_motivo: motivo.trim() });
+      if (ong) await rpcAdmin(decisao === "correcao" ? "admin_ong_pedir_correcao" : "admin_ong_decidir", { p_id: ong.id, p_revisao: ong.revisao, ...(decisao === "correcao" ? {} : { p_status: decisao }), p_motivo: motivo.trim() });
       else if (pet) await rpcAdmin("admin_adocao_pet_ocultar", { p_id: pet.id, p_versao: pet.versao, p_motivo: motivo.trim() });
       else return;
       if (vivo.current) { limpar(); setMensagem("Decisão registrada com sucesso."); setTentativa(n => n + 1); }
@@ -77,7 +77,7 @@ function PainelAdocao({ podeDecidir }: { podeDecidir: boolean }) {
     finally { trava.current = false; if (vivo.current) setOcupado(false); }
   }
   const estados = aba === "ongs" ? ["pendente", "aprovada", "suspensa", "recusada"] : ["publicado", "oculto"];
-  const acoes = ong?.status === "pendente" ? ["aprovada", "recusada"] : ong?.status === "aprovada" ? ["suspensa"] : ong?.status === "suspensa" ? ["aprovada"] : [];
+  const acoes = ong?.correcao_motivo ? [] : ong?.status === "pendente" ? ["aprovada", "correcao", "recusada"] : ong?.status === "aprovada" ? ["suspensa"] : ong?.status === "suspensa" ? ["aprovada"] : ong?.status === "recusada" ? ["correcao"] : [];
   const dados = consulta?.dados;
   return <>
     <Cabecalho titulo="Adoção e ONGs" subtitulo="Análise de cadastros, documentos privados e anúncios de adoção" />
@@ -98,6 +98,7 @@ function PainelAdocao({ podeDecidir }: { podeDecidir: boolean }) {
       {ong ? <><dl className="grid gap-3 text-sm sm:grid-cols-2">{[["CNPJ", ong.cnpj], ["Responsável", ong.responsavel_nome], ["E-mail", ong.email], ["Telefone", ong.telefone], ["Última decisão", ong.motivo_decisao]].map(([r, v]) => <div key={r}><dt className="text-xs text-cinza">{r}</dt><dd className="whitespace-pre-wrap break-words">{v || "Não informado"}</dd></div>)}</dl>
         <h3 className="mb-2 mt-4 font-bold">Documentos privados</h3>{podeDecidir ? <div className="flex flex-wrap gap-2">{ong.documentos.map(tipo => <button key={tipo} disabled={ocupado} className={campo} onClick={() => verDocumento(tipo)}>{DOCUMENTOS[tipo] ?? tipo}</button>)}{!ong.documentos.length ? <p className="text-sm">Não há documentos enviados para análise.</p> : null}</div> : <p className="text-sm">Documentos e decisões exigem o papel de Moderação ou Super admin.</p>}
         {documento?.id === ong.id ? <p className="mt-3 text-sm"><a className="font-bold underline" target="_blank" rel="noopener noreferrer" href={documento.url}>Abrir {DOCUMENTOS[documento.tipo] ?? "documento"}</a> · Link válido por 60 segundos.</p> : null}
+        {ong.correcao_motivo ? <p className="mt-3 rounded-2xl bg-amarelo-fundo p-3 text-sm">Aguardando correções do responsável: {ong.correcao_motivo}</p> : null}
       </> : <><p className="whitespace-pre-wrap text-sm">{pet?.descricao}</p>
         <div className="mt-4 flex flex-wrap gap-3">{pet?.fotos.filter(fotoDoStorage).map((url, i) => <Image key={url} unoptimized src={url} width={180} height={180} alt={`Foto ${i + 1} de ${pet.nome}`} referrerPolicy="no-referrer" className="h-44 w-44 rounded-2xl object-cover" />)}</div>
         {!pet?.fotos.some(fotoDoStorage) ? <p className="mt-2 text-sm text-cinza">Nenhuma foto do armazenamento disponível neste registro.</p> : null}
@@ -108,6 +109,7 @@ function PainelAdocao({ podeDecidir }: { podeDecidir: boolean }) {
         <label className="flex items-start gap-2 text-sm"><input type="checkbox" checked={confirmo} disabled={ocupado} onChange={e => setConfirmo(e.target.checked)} />Conferi os dados{ong ? " e documentos" : " do anúncio"} e confirmo esta decisão. Ela ficará registrada na auditoria.</label>
         <button className="rounded-full bg-tinta px-5 py-3 font-bold text-white disabled:opacity-50" disabled={ocupado || !confirmo || motivo.trim().length < 5 || (!!ong && !decisao)}>{ocupado ? "Registrando…" : "Registrar decisão"}</button>
         {decisao === "suspensa" ? <p className="text-sm text-cinza">A suspensão tira os pets desta ONG do catálogo público.</p> : null}
+        {decisao === "correcao" ? <p className="text-sm text-cinza">O motivo será exibido ao responsável no app. O cadastro volta a ser editável e precisará ser reenviado para análise; a ONG continua sem aprovação.</p> : null}
       </form> : null}
     </section> : null}
   </>;
