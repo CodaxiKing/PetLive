@@ -2,6 +2,7 @@ import { useCallback, useRef, useState } from 'react';
 import { Alert, Linking, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { router, useFocusEffect } from 'expo-router';
 import { useAuth } from '../src/auth/AuthProvider';
+import { carregarCompartilhamentos, textoCompartilhamento, type ResumoCompartilhamentos } from '../src/privacidade/compartilhamentos';
 import { HeroiOnda } from '../src/components/HeroiOnda';
 import { Icone } from '../src/components/Icone';
 import { Interruptor } from '../src/components/Interruptor';
@@ -41,21 +42,23 @@ export default function Privacidade() {
   const [exclusao, setExclusao] = useState<EstadoPrivacidade | null>(null);
   const [erroConsulta, setErroConsulta] = useState<string | null>(null);
   const [carregando, setCarregando] = useState(true);
+  const [acessos, setAcessos] = useState<ResumoCompartilhamentos | null>(null);
   const geracao = useRef(0);
   const [estados, setEstados] = useState<Record<string, EstadoConsentimento>>({});
   const [processando, setProcessando] = useState(false);
 
   const recarregar = useCallback(() => {
     const token = ++geracao.current;
-    setExclusao(null); setEstados({}); setErroConsulta(null); setCarregando(true); setProcessando(false);
+    setExclusao(null); setEstados({}); setAcessos(null); setErroConsulta(null); setCarregando(true); setProcessando(false);
     if (!user) { setCarregando(false); return; }
-    Promise.all([carregarConsentimentos(), carregarEstadoPrivacidade(user.id)]).then(
-      ([lista, estado]) => {
+    Promise.all([carregarConsentimentos(), carregarEstadoPrivacidade(user.id), carregarCompartilhamentos(user.id)]).then(
+      ([lista, estado, resumo]) => {
         if (token !== geracao.current) return;
         const porTipo: Record<string, EstadoConsentimento> = {};
         for (const estado of lista) porTipo[estado.tipo] = estado;
         setEstados(porTipo);
         setExclusao(estado);
+        setAcessos(resumo);
       },
       (e) => { if (token === geracao.current) setErroConsulta(e instanceof Error ? e.message : String(e)); },
     ).finally(() => { if (token === geracao.current) setCarregando(false); });
@@ -161,12 +164,15 @@ export default function Privacidade() {
         />
 
         <Text style={[estilos.secao, estilos.secaoEspaco]}>QUEM VÊ OS DADOS DO PET</Text>
-        <LinhaIcone icone={<Icone nome="pessoas" />} rotulo="Família e cuidadores" valor="Só você, por enquanto" />
+        <Text style={estilos.consentimentoDescricao}>Confira os acessos de cada pet na carteirinha, em Cuidador e no QR da coleira. Links públicos podem ser abertos por quem os recebe.</Text>
+        <LinhaIcone icone={<Icone nome="pessoas" />} rotulo="Família" valor={textoCompartilhamento(acessos?.familia ?? null, 'vínculos com acesso pelo Premium')} />
+        <LinhaIcone icone={<Icone nome="pessoas" />} rotulo="Cuidadores" valor={textoCompartilhamento(acessos?.cuidadores ?? null, 'acessos no período vigente')} />
         <LinhaIcone
           icone={<Icone nome="escudo" />}
-          rotulo="QR da coleira e ficha de emergência"
-          valor="Nenhuma ficha ativa"
+          rotulo="Fichas e carteirinhas por link"
+          valor={textoCompartilhamento(acessos?.fichas ?? null, 'links ativos')}
         />
+        <LinhaIcone icone={<Icone nome="escudo" />} rotulo="QR da coleira" valor={textoCompartilhamento(acessos?.qrs ?? null, 'pets com QR ativo')} />
 
         <Text style={[estilos.secao, estilos.secaoEspaco]}>MAPAS E LUGARES</Text>
         <LinhaIcone

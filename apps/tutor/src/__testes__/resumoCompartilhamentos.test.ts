@@ -1,0 +1,7 @@
+import {beforeEach,it,expect,vi} from 'vitest';
+import {carregarCompartilhamentos,conferirResumoCompartilhamentos,textoCompartilhamento} from '../privacidade/compartilhamentos';
+const m=vi.hoisted(()=>({user:vi.fn(),rpc:vi.fn()}));vi.mock('../lib/supabase',()=>({supabase:{auth:{getUser:m.user},rpc:m.rpc}}));
+beforeEach(()=>{vi.resetAllMocks();m.user.mockResolvedValue({data:{user:{id:'a'}}});m.rpc.mockResolvedValue({data:{qrs:2,fichas:1,familia:null,cuidadores:0},error:null});});
+it('distingue zero confirmado de serviço indisponível',()=>{expect(textoCompartilhamento(0,'links ativos')).toBe('0 links ativos');expect(textoCompartilhamento(null,'links ativos')).toContain('indisponível');expect(()=>conferirResumoCompartilhamentos({qrs:0})).toThrow('incompleto');expect(()=>conferirResumoCompartilhamentos({qrs:-1,fichas:0,familia:0,cuidadores:0})).toThrow();});
+it('consulta somente a conta esperada e descarta resposta de outra sessão',async()=>{expect(await carregarCompartilhamentos('a')).toMatchObject({qrs:2,familia:null});expect(m.rpc).toHaveBeenCalledWith('privacidade_compartilhamentos',{p_tutor:'a'});m.user.mockResolvedValueOnce({data:{user:{id:'a'}}}).mockResolvedValueOnce({data:{user:{id:'b'}}});await expect(carregarCompartilhamentos('a')).rejects.toThrow('conta mudou');});
+it('propaga erro sem anunciar ausência de acessos',async()=>{m.rpc.mockResolvedValueOnce({error:{message:'offline'}});await expect(carregarCompartilhamentos('a')).rejects.toThrow('offline');});
