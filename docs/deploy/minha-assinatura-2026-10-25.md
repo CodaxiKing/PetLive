@@ -11,3 +11,5 @@ Compra e gestão ainda indisponíveis: mudar para mensal, atualizar pagamento e 
 Validações: 330 testes do tutor; PGlite verifica isolamento, ausência de escrita cliente, retorno sem referência privada, separação do benefício e contrato, ordenação dos contratos e reaplicação. Migration verificada no schema real de produção com rollback antes da instalação.
 
 Pendente no board: integração de gestão e cobrança real; teste no Android. Não considerar a task concluída. O APK anterior (`4c110fc6-2b45-4160-9e46-eccb2b41bbe8`) não contém esta tela. Limites de plano continuam desligados.
+
+Produção instalada após o commit `b2b4b5a`. Metadados confirmados: `rls=true`, `cliente_altera=false`, `cliente_le_tabela=false`, `cliente_consulta_rpc=true`, `anon_consulta=false`, `limites_ativos=false`. Sem criação de contratos ou cobranças de teste em produção. Board Minha assinatura atualizado para Em andamento com as pendências acima. TypeScript e lint passaram após geração das novas rotas pelo Expo.
