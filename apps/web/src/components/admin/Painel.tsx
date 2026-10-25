@@ -34,7 +34,7 @@ const ICONES: Record<string, string[]> = {
 const AREAS: { rotulo: string; href?: string; icone: keyof typeof ICONES; papeis?: Papel[] }[] = [
   { rotulo: "Visão geral", href: "/admin", icone: "visao" },
   { rotulo: "Relatórios", href: "/admin/relatorios", icone: "relatorios", papeis: ["financeiro", "marketing", "leitura"] },
-  { rotulo: "Assinaturas", icone: "breve" },
+  { rotulo: "Assinaturas", href: "/admin/assinaturas", icone: "financeiro", papeis: ["financeiro", "leitura"] },
   { rotulo: "Planos e cupons", icone: "breve" },
   { rotulo: "Financeiro", href: "/admin/financeiro", icone: "financeiro", papeis: ["financeiro", "leitura"] },
   { rotulo: "Avaliações", icone: "breve" },
