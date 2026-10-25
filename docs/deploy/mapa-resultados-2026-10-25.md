@@ -7,3 +7,5 @@ A tela limpa pins, seleção, erro e estado offline da consulta anterior ao muda
 Testes automatizados cobrem descoberta antes do banco, filtros antes da publicação parcial, busca em Todos/pet friendly e descarte de categorias sem correspondência, além das regras já existentes de fallback e deduplicação. Suíte do tutor: 294 testes em 49 arquivos; TypeScript e lint. Não há migration nem dependência nativa nova nesta alteração.
 
 Validação física pendente: alternar rapidamente filtros e regiões; voltar da ficha após salvar/remover favorito; abrir sem rede; confirmar que os pins antigos não reaparecem e que os lugares novos chegam progressivamente. As tarefas de mapa permanecem Em andamento até essa validação. O código da main contém também a preparação nativa de push, que ainda depende do Firebase; não forçar seu runtime no APK já instalado.
+
+Verificação final do commit 5df5299 em checkout limpo: 294 testes/49 arquivos, TypeScript e lint aprovados; export Android concluído em dist/mapa-validacao. Os dois itens de mapa no Projects receberam o registro da entrega e permanecem Em andamento por homologação no aparelho. Não foi enviada OTA nem gerado APK nesta etapa.
