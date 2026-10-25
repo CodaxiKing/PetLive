@@ -8,10 +8,10 @@ import { abrirRota, appsDeMapaInstalados, NOME_APP_MAPA, type AppMapa, type Dest
 import { formatarDistancia } from './lugares';
 
 const VISUAL: Record<AppMapa, { icone: NomeIcone; fundo: string; sub: string }> = {
-  google: { icone: 'local', fundo: '#DDF3E6', sub: 'Abre a rota no app' },
+  google: { icone: 'local', fundo: '#D8F2E3', sub: 'Abre a rota no app' },
   waze: { icone: 'carro', fundo: '#CFE8FB', sub: 'Abre a rota no app' },
-  apple: { icone: 'rota', fundo: '#EBDDFB', sub: 'Abre a rota no app' },
-  navegador: { icone: 'navegador', fundo: '#DDF3E6', sub: 'Google Maps no site, sem instalar nada' },
+  apple: { icone: 'rota', fundo: '#EADCFB', sub: 'Abre a rota no app' },
+  navegador: { icone: 'navegador', fundo: '#D8F2E3', sub: 'Google Maps no site, sem instalar nada' },
 };
 
 type Props = {

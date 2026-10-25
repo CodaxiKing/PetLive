@@ -16,11 +16,11 @@ export function dadosCartaoPet(pet: Pet, selos: Iterable<Selo>) {
 export type DadosCartaoPet = ReturnType<typeof dadosCartaoPet>;
 
 export const TEMAS_CARTAO = [
-  { id: 'azul', nome: 'Céu', fundo: '#E3F3FC', tinta: '#163E56', detalhe: '#FFFFFF' },
-  { id: 'verde', nome: 'Jardim', fundo: '#DDF3E6', tinta: '#194A36', detalhe: '#FFFFFF' },
-  { id: 'lilas', nome: 'Lavanda', fundo: '#EBDDFB', tinta: '#482B69', detalhe: '#FFFFFF' },
-  { id: 'rosa', nome: 'Carinho', fundo: '#FCE1EF', tinta: '#702B4B', detalhe: '#FFFFFF' },
-  { id: 'areia', nome: 'Sol', fundo: '#FFF1C9', tinta: '#614515', detalhe: '#FFFFFF' },
+  { id: 'azul', nome: 'Céu', fundo: '#E0F1FA', tinta: '#163E56', detalhe: '#FFFFFF' },
+  { id: 'verde', nome: 'Jardim', fundo: '#D8F2E3', tinta: '#194A36', detalhe: '#FFFFFF' },
+  { id: 'lilas', nome: 'Lavanda', fundo: '#EADCFB', tinta: '#482B69', detalhe: '#FFFFFF' },
+  { id: 'rosa', nome: 'Carinho', fundo: '#FDE0E6', tinta: '#702B4B', detalhe: '#FFFFFF' },
+  { id: 'areia', nome: 'Sol', fundo: '#FFF0C9', tinta: '#614515', detalhe: '#FFFFFF' },
 ] as const;
 
 export type TemaCartao = typeof TEMAS_CARTAO[number]['id'];

@@ -88,10 +88,10 @@ export function htmlResumo(pet: Pet, registros: RegistroEscala[], idade: string 
     .join('')
   return `<!doctype html><html><head><meta charset="utf-8" /><style>
     body { font-family: -apple-system, Roboto, sans-serif; color: #111; margin: 32px; }
-    h1 { font-size: 26px; margin: 0; } .sub { color: #5E6878; margin: 4px 0 24px; }
+    h1 { font-size: 26px; margin: 0; } .sub { color: #566070; margin: 4px 0 24px; }
     table { border-collapse: collapse; width: 100%; } th, td { border-bottom: 1px solid #E1E6EE; padding: 8px; text-align: center; }
     td:first-child, th:first-child { text-align: left; } .total td { font-weight: bold; }
-    .aviso { background: #E3F3FC; border-radius: 12px; padding: 12px 16px; margin-top: 24px; font-size: 14px; }
+    .aviso { background: #E0F1FA; border-radius: 12px; padding: 12px 16px; margin-top: 24px; font-size: 14px; }
   </style></head><body>
     <h1>Qualidade de vida · ${escaparHtml(pet.nome)}</h1>
     <p class="sub">${[pet.especie === 'gato' ? 'Gato' : 'Cão', pet.raca, idade].filter(Boolean).join(' · ')} · cada item de 0 a 10 (10 = melhor)</p>

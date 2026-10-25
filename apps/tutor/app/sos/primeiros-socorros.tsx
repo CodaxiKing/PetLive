@@ -132,7 +132,7 @@ const estilos = StyleSheet.create({
     fontSize: 11,
     lineHeight: 16,
     fontFamily: typography.small.fontFamily,
-    color: '#6A7484',
+    color: '#566070',
     textAlign: 'center',
     paddingHorizontal: 6,
     marginTop: 4,

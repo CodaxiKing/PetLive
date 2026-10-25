@@ -35,7 +35,7 @@ import { fontFamily, typography } from '../../../src/theme/typography'
 const ABAS = ['Vacinas', 'Peso', 'Consultas'] as const
 type Aba = (typeof ABAS)[number]
 
-const CIRCULOS = ['#A9DCF6', '#EADCFB']
+const CIRCULOS = ['#9AD6F8', '#EADCFB']
 
 /** 'YYYY-MM-DD' -> 'DD/MM/AA', como no protótipo. */
 function dataCurta(iso: string | null | undefined): string {
@@ -216,22 +216,22 @@ export default function PetDetalhe() {
           </View>
 
           <View style={estilos.resumo}>
-            <View style={[estilos.resumoItem, { backgroundColor: '#EBDDFB' }]}>
+            <View style={[estilos.resumoItem, { backgroundColor: '#EADCFB' }]}>
               <Text style={estilos.resumoValor}>{petAtual.sexo === 'femea' ? 'Fêmea' : petAtual.sexo === 'macho' ? 'Macho' : '—'}</Text>
-              <Text style={[estilos.resumoRotulo, { color: '#5B3C8F' }]}>Sexo</Text>
+              <Text style={[estilos.resumoRotulo, { color: '#5B3E8A' }]}>Sexo</Text>
             </View>
-            <View style={[estilos.resumoItem, { backgroundColor: '#FFF1C9' }]}>
+            <View style={[estilos.resumoItem, { backgroundColor: '#FFF0C9' }]}>
               <Text style={estilos.resumoValor}>{idade ?? '—'}</Text>
-              <Text style={[estilos.resumoRotulo, { color: '#7A5F0A' }]}>Idade</Text>
+              <Text style={[estilos.resumoRotulo, { color: '#8A6414' }]}>Idade</Text>
             </View>
             <Pressable
               accessibilityRole="button"
               accessibilityLabel="Ver peso"
               onPress={() => setAba('Peso')}
-              style={[estilos.resumoItem, { backgroundColor: '#DDF3E6' }]}
+              style={[estilos.resumoItem, { backgroundColor: '#D8F2E3' }]}
             >
               <Text style={estilos.resumoValor}>{pesoAtual ? `${formatarKg(Number(pesoAtual))} kg` : '—'}</Text>
-              <Text style={[estilos.resumoRotulo, { color: '#25683F' }]}>Peso</Text>
+              <Text style={[estilos.resumoRotulo, { color: '#1F6B45' }]}>Peso</Text>
             </Pressable>
           </View>
 
@@ -326,7 +326,7 @@ export default function PetDetalhe() {
               {[...pesos].reverse().slice(0, 3).map((registro, i) => (
                 <Surgir key={registro.id} indice={i}>
                   <View style={estilos.linha}>
-                    <View style={[estilos.circulo, { backgroundColor: '#DDF3E6' }]}>
+                    <View style={[estilos.circulo, { backgroundColor: '#D8F2E3' }]}>
                       <Icone nome="balanca" size={18} />
                     </View>
                     <View style={estilos.flex}>
@@ -377,8 +377,8 @@ export default function PetDetalhe() {
           <View style={estilos.atalhos}>
             {[
               { rotulo: 'Medicamentos', icone: 'capsula' as const, fundo: '#FFF0C9', acao: () => ir('/pet/[id]/medicamentos') },
-              { rotulo: 'Carteirinha', icone: 'carteirinha' as const, fundo: '#EBDDFB', acao: () => ir('/pet/[id]/carteirinha') },
-              { rotulo: 'Compartilhar', icone: 'compartilhar' as const, fundo: '#E3F3FC', acao: () => router.push(`/pet/${petAtual.id}/compartilhar`) },
+              { rotulo: 'Carteirinha', icone: 'carteirinha' as const, fundo: '#EADCFB', acao: () => ir('/pet/[id]/carteirinha') },
+              { rotulo: 'Compartilhar', icone: 'compartilhar' as const, fundo: '#E0F1FA', acao: () => router.push(`/pet/${petAtual.id}/compartilhar`) },
             ].map((atalho) => (
               <Tocavel
                 key={atalho.rotulo}
@@ -527,12 +527,12 @@ const estilos = StyleSheet.create({
   selos: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', gap: 6, marginTop: 14 },
   selo: { flexDirection: 'row', alignItems: 'center', gap: 5, borderRadius: 999, paddingVertical: 6, paddingHorizontal: 10 },
   seloTexto: { fontFamily: fontFamily.bold, fontSize: 12, color: colors.black },
-  selosVazio: { fontFamily: fontFamily.bold, fontSize: 13, color: '#6A7484' },
-  selosMais: { fontFamily: fontFamily.bold, fontSize: 18, color: '#6A7484', paddingHorizontal: 4 },
+  selosVazio: { fontFamily: fontFamily.bold, fontSize: 13, color: '#566070' },
+  selosMais: { fontFamily: fontFamily.bold, fontSize: 18, color: '#566070', paddingHorizontal: 4 },
   senior: { flexDirection: 'row', alignItems: 'center', gap: 12, backgroundColor: '#FFF0C9', borderRadius: 26, padding: 12, marginTop: 14 },
   seniorIcone: { width: 44, height: 44, borderRadius: 22, backgroundColor: colors.white, alignItems: 'center', justifyContent: 'center' },
   seniorTitulo: { fontFamily: fontFamily.bold, fontSize: 16, color: '#4A3800' },
-  seniorSub: { fontFamily: fontFamily.regular, fontSize: 13, color: '#7A5A00' },
+  seniorSub: { fontFamily: fontFamily.regular, fontSize: 13, color: '#8A6414' },
   seniorSeta: { fontFamily: fontFamily.bold, fontSize: 24, color: '#4A3800', paddingRight: 6 },
   abas: { flexDirection: 'row', gap: 22, borderBottomWidth: 1.5, borderBottomColor: colors.border },
   aba: { paddingVertical: 8, borderBottomWidth: 3, borderBottomColor: 'transparent', marginBottom: -1.5 },

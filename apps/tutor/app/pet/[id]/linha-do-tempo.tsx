@@ -17,10 +17,10 @@ const VISUAL: Record<ItemLinha['tipo'], { cor: string; icone?: NomeIcone }> = {
   nascimento: { cor: '#FFE9A8', icone: 'bolo' },
   aniversario: { cor: '#FFE9A8', icone: 'bolo' },
   vacina: { cor: '#E4D3FA', icone: 'vacina' },
-  consulta: { cor: '#FBDADF', icone: 'cruz' },
+  consulta: { cor: '#FDE0E6', icone: 'cruz' },
   peso: { cor: '#D2EFDD', icone: 'balanca' },
 }
-const FUNDOS_FOTO = ['#FFF0C9', '#9AD6F8', '#DDF3E6', '#EBDDFB']
+const FUNDOS_FOTO = ['#FFF0C9', '#9AD6F8', '#D8F2E3', '#EADCFB']
 
 function dataCurta(iso: string): string {
   const [a, m, d] = iso.split('-')
@@ -159,12 +159,12 @@ const estilos = StyleSheet.create({
   pontoAuto: { width: 26, height: 26, borderRadius: 13, marginTop: 0 },
   fio: { flex: 1, width: 3, borderRadius: 2, backgroundColor: '#D5DAE2', marginVertical: 4 },
   corpo: { flex: 1, minWidth: 0, paddingBottom: 22 },
-  data: { fontFamily: fontFamily.bold, fontSize: 13, color: '#6A7484' },
+  data: { fontFamily: fontFamily.bold, fontSize: 13, color: '#566070' },
   titulo: { fontFamily: fontFamily.bold, fontSize: 18, color: colors.black, marginTop: 2 },
   tituloAuto: { fontFamily: fontFamily.semiBold, fontSize: 16 },
-  descricao: { fontFamily: fontFamily.regular, fontSize: 14, color: '#5E6878', marginTop: 1 },
+  descricao: { fontFamily: fontFamily.regular, fontSize: 14, color: '#566070', marginTop: 1 },
   foto: { marginTop: 10, height: 170, borderRadius: 26, overflow: 'hidden' },
   fotoImagem: { width: '100%', height: '100%' },
-  nota: { fontFamily: fontFamily.regular, fontSize: 12, lineHeight: 17, color: '#6A7484', marginTop: 4 },
+  nota: { fontFamily: fontFamily.regular, fontSize: 12, lineHeight: 17, color: '#566070', marginTop: 4 },
   rodape: { paddingHorizontal: 24, paddingTop: 12, paddingBottom: 28 },
 })

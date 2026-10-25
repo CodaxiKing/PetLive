@@ -143,7 +143,7 @@ export default function TelaPetFriendly() {
             onChangeText={setTexto}
             onSubmitEditing={(e) => buscarRegiao(e.nativeEvent.text)}
             placeholder="Buscar por bairro ou região"
-            placeholderTextColor="#6A7484"
+            placeholderTextColor="#566070"
             returnKeyType="search"
             accessibilityLabel="Buscar por bairro ou região"
             style={estilos.buscaCampo}
@@ -334,6 +334,6 @@ const estilos = StyleSheet.create({
   indicarTitulo: { fontFamily: fontFamily.bold, fontSize: 14, color: colors.black },
   indicarSub: { fontFamily: fontFamily.regular, fontSize: 12, color: colors.textMuted },
   rodapeLista: { alignItems: 'center', gap: 2, marginTop: 4 },
-  nota: { fontFamily: fontFamily.regular, fontSize: 11, lineHeight: 16, color: '#6A7484', textAlign: 'center', paddingHorizontal: 6, marginTop: 4 },
+  nota: { fontFamily: fontFamily.regular, fontSize: 11, lineHeight: 16, color: '#566070', textAlign: 'center', paddingHorizontal: 6, marginTop: 4 },
   rodape: { paddingHorizontal: 24, paddingTop: 12, paddingBottom: 28 },
 });

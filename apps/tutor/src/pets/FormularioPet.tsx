@@ -13,7 +13,7 @@ import type { Especie, PetForm } from './types';
 
 const ESPECIES: { valor: Especie; rotulo: string; fundo: string }[] = [
   { valor: 'cao', rotulo: 'Cão', fundo: colors.primarySurface },
-  { valor: 'gato', rotulo: 'Gato', fundo: '#EBDDFB' },
+  { valor: 'gato', rotulo: 'Gato', fundo: '#EADCFB' },
 ];
 const SEXOS = ['Macho', 'Fêmea'] as const;
 const CASTRADO = ['Sim', 'Não'] as const;

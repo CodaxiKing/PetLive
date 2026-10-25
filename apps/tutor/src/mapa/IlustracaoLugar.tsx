@@ -23,13 +23,13 @@ function desenho(categoria: CategoriaLugar) {
           <Rect x={9} y={14} width={30} height={24} rx={2} fill="#fff" />
           <Rect x={9} y={14} width={30} height={5} fill="#7CC8F0" />
           <Path d="M24 22v8M20 26h8" stroke="#E5484D" strokeWidth={3} strokeLinecap="round" />
-          <Rect x={21} y={31} width={6} height={7} fill="#A9DCF6" />
+          <Rect x={21} y={31} width={6} height={7} fill="#9AD6F8" />
         </>
       );
     case 'banho_tosa':
       return (
         <>
-          <Rect width={48} height={48} fill="#E3F3FC" />
+          <Rect width={48} height={48} fill="#E0F1FA" />
           <Circle cx={14} cy={14} r={5} fill="#fff" />
           <Circle cx={34} cy={10} r={3.5} fill="#fff" />
           <Circle cx={38} cy={22} r={4.5} fill="#fff" />
@@ -46,7 +46,7 @@ function desenho(categoria: CategoriaLugar) {
     case 'petshop':
       return (
         <>
-          <Rect width={48} height={48} fill="#FFF1C9" />
+          <Rect width={48} height={48} fill="#FFF0C9" />
           <Rect y={36} width={48} height={12} fill="#D9C79A" />
           <Rect x={8} y={16} width={32} height={22} fill="#fff" />
           <Path d="M6 16h36l-3-8H9z" fill="#E88F45" />
@@ -58,7 +58,7 @@ function desenho(categoria: CategoriaLugar) {
     case 'creche':
       return (
         <>
-          <Rect width={48} height={48} fill="#DDF3E6" />
+          <Rect width={48} height={48} fill="#D8F2E3" />
           <Rect y={30} width={48} height={18} fill="#9ACD8E" />
           <Circle cx={40} cy={9} r={5} fill="#FFD966" />
           <Ellipse cx={24} cy={29} rx={9} ry={7} fill="#EDB878" />
@@ -72,7 +72,7 @@ function desenho(categoria: CategoriaLugar) {
     case 'hotelzinho':
       return (
         <>
-          <Rect width={48} height={48} fill="#EBDDFB" />
+          <Rect width={48} height={48} fill="#EADCFB" />
           <Rect y={36} width={48} height={12} fill="#C9B1EA" />
           <Path d="M6 24L24 9l18 15z" fill="#B3478B" />
           <Rect x={10} y={24} width={28} height={14} fill="#fff" />
@@ -106,7 +106,7 @@ function desenho(categoria: CategoriaLugar) {
     case 'restaurante':
       return (
         <>
-          <Rect width={48} height={48} fill="#FFF1C9" />
+          <Rect width={48} height={48} fill="#FFF0C9" />
           <Rect y={36} width={48} height={12} fill="#D9C79A" />
           <Path d="M6 14h36l-3-7H9z" fill="#E5484D" />
           <Path d="M13 7l-2 7M21 7l-1 7M28 7l1 7M35 7l2 7" stroke="#fff" strokeWidth={2.2} />
@@ -119,13 +119,13 @@ function desenho(categoria: CategoriaLugar) {
     case 'hotel':
       return (
         <>
-          <Rect width={48} height={48} fill="#EBDDFB" />
+          <Rect width={48} height={48} fill="#EADCFB" />
           <Rect y={38} width={48} height={10} fill="#C9B1EA" />
           <Rect x={12} y={8} width={24} height={30} fill="#fff" />
-          <Rect x={16} y={12} width={6} height={5} fill="#A9DCF6" />
-          <Rect x={26} y={12} width={6} height={5} fill="#A9DCF6" />
-          <Rect x={16} y={21} width={6} height={5} fill="#A9DCF6" />
-          <Rect x={26} y={21} width={6} height={5} fill="#A9DCF6" />
+          <Rect x={16} y={12} width={6} height={5} fill="#9AD6F8" />
+          <Rect x={26} y={12} width={6} height={5} fill="#9AD6F8" />
+          <Rect x={16} y={21} width={6} height={5} fill="#9AD6F8" />
+          <Rect x={26} y={21} width={6} height={5} fill="#9AD6F8" />
           <Rect x={21} y={30} width={6} height={8} fill="#7A5A9A" />
         </>
       );

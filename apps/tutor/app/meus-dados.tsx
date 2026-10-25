@@ -211,7 +211,7 @@ export default function MeusDados() {
             <Text style={estilos.linhaSub}>E-mail de acesso</Text>
             <Text style={estilos.linhaTitulo} numberOfLines={1}>{user?.email ?? '—'}</Text>
           </View>
-          <Icone nome="cadeado" size={18} cor="#5E6878" />
+          <Icone nome="cadeado" size={18} cor="#566070" />
         </View>
         {temSenha(user) ? (
           <Tocavel accessibilityRole="button" onPress={() => router.push('/alterar-senha')} style={estilos.linha}>
@@ -241,10 +241,10 @@ const estilos = StyleSheet.create({
   conteudo: { paddingHorizontal: 24, paddingBottom: 24, gap: 12 },
   linha: { flexDirection: 'row', alignItems: 'center', gap: 12, backgroundColor: colors.background, borderRadius: 24, paddingVertical: 12, paddingHorizontal: 18 },
   linhaTitulo: { fontFamily: fontFamily.bold, fontSize: 15, color: colors.black },
-  linhaSub: { fontFamily: fontFamily.regular, fontSize: 12, color: '#5E6878' },
+  linhaSub: { fontFamily: fontFamily.regular, fontSize: 12, color: '#566070' },
   secao: { fontFamily: fontFamily.bold, fontSize: 16, color: colors.black, marginTop: 8 },
-  ajuda: { fontFamily: fontFamily.regular, fontSize: 13, lineHeight: 18, color: '#5E6878', marginTop: -6 },
-  nota: { fontFamily: fontFamily.regular, fontSize: 12, lineHeight: 17, color: '#6A7484', marginTop: 4 },
+  ajuda: { fontFamily: fontFamily.regular, fontSize: 13, lineHeight: 18, color: '#566070', marginTop: -6 },
+  nota: { fontFamily: fontFamily.regular, fontSize: 12, lineHeight: 17, color: '#566070', marginTop: 4 },
   rodape: { paddingHorizontal: 24, paddingTop: 12, paddingBottom: 28 },
   fotoBloco: { alignItems: 'center', gap: 6, marginTop: -8, marginBottom: 4 },
   foto: { width: 92, height: 92, borderRadius: 46, backgroundColor: colors.background, alignItems: 'center', justifyContent: 'center' },

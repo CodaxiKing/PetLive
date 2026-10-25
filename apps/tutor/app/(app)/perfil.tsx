@@ -107,7 +107,7 @@ export default function Perfil() {
 
   const numeros = [
     { valor: pets.length, rotulo: pets.length === 1 ? 'Pet' : 'Pets', fundo: colors.premiumSurface, cor: colors.premiumText },
-    { valor: lembretesHoje, rotulo: 'Lembretes hoje', fundo: '#FFF0C9', cor: '#7A5A00' },
+    { valor: lembretesHoje, rotulo: 'Lembretes hoje', fundo: '#FFF0C9', cor: '#8A6414' },
     { valor: salvos ?? '–', rotulo: 'Lugares salvos', fundo: colors.successSurface, cor: '#1F6B45' },
   ];
 
@@ -267,7 +267,7 @@ export default function Perfil() {
 const estilos = StyleSheet.create({
   semCelular: { flexDirection: 'row', alignItems: 'center', gap: 14, backgroundColor: '#FFF0C9', borderRadius: 24, padding: 16, marginBottom: 12 },
   semCelularTitulo: { fontFamily: fontFamily.bold, fontSize: 15, color: '#4A3800' },
-  semCelularTexto: { fontFamily: fontFamily.regular, fontSize: 13, color: '#7A5A00' },
+  semCelularTexto: { fontFamily: fontFamily.regular, fontSize: 13, color: '#8A6414' },
   tela: { flex: 1, backgroundColor: colors.surface },
   conteudo: { paddingBottom: 120 },
   pataHeroi: { position: 'absolute', right: 6, top: 44 },

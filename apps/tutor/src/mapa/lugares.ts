@@ -73,15 +73,15 @@ export const ROTULO_CATEGORIA: Record<CategoriaLugar, string> = {
 /** Cores dos pins por categoria (protótipo Mapa). */
 export const COR_CATEGORIA: Record<CategoriaLugar, string> = {
   clinica: '#CFE8FB',
-  banho_tosa: '#DDF3E6',
-  petshop: '#EBDDFB',
-  creche: '#FFF1C9',
-  hotelzinho: '#FCE1EF',
+  banho_tosa: '#D8F2E3',
+  petshop: '#EADCFB',
+  creche: '#FFF0C9',
+  hotelzinho: '#FDE0E6',
   // Pet friendly: as cores das miniaturas do protótipo PetFriendly.
   parque: '#CFE8FB',
-  praia: '#DDF3E6',
-  restaurante: '#FFF1C9',
-  hotel: '#EBDDFB',
+  praia: '#D8F2E3',
+  restaurante: '#FFF0C9',
+  hotel: '#EADCFB',
 };
 
 /** Centro de reserva (Rio de Janeiro) enquanto a localização não chega. */

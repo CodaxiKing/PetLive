@@ -225,7 +225,7 @@ const estilos = StyleSheet.create({
     ...typography.small,
     fontSize: 11,
     lineHeight: 16,
-    color: '#6A7484',
+    color: '#566070',
     textAlign: 'center',
     paddingHorizontal: 6,
   },

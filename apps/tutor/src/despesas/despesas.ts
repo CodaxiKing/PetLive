@@ -16,7 +16,7 @@ export type Despesa = {
 
 export const CATEGORIAS: { valor: Categoria; rotulo: string; cor: string }[] = [
   { valor: 'racao', rotulo: 'Ração', cor: '#9AD6F8' },
-  { valor: 'veterinario', rotulo: 'Veterinário', cor: '#FBDADF' },
+  { valor: 'veterinario', rotulo: 'Veterinário', cor: '#FDE0E6' },
   { valor: 'banho_tosa', rotulo: 'Banho e tosa', cor: '#FFE9A8' },
   { valor: 'remedios', rotulo: 'Remédios', cor: '#E4D3FA' },
   { valor: 'acessorios', rotulo: 'Acessórios', cor: '#FFD3B5' },

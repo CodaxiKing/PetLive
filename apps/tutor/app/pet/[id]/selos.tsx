@@ -70,5 +70,5 @@ const estilos = StyleSheet.create({
   rotulo: { fontFamily: fontFamily.bold, fontSize: 14, color: colors.black, textAlign: 'center' },
   rotuloApagado: { color: '#8A93A3' },
   como: { fontFamily: fontFamily.regular, fontSize: 11, lineHeight: 14, color: '#8A93A3', textAlign: 'center', marginTop: -4 },
-  nota: { fontFamily: fontFamily.regular, fontSize: 14, lineHeight: 20, color: '#5E6878', backgroundColor: colors.background, borderRadius: 24, overflow: 'hidden', padding: 18 },
+  nota: { fontFamily: fontFamily.regular, fontSize: 14, lineHeight: 20, color: '#566070', backgroundColor: colors.background, borderRadius: 24, overflow: 'hidden', padding: 18 },
 })

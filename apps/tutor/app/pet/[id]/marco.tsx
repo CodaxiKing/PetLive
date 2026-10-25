@@ -159,7 +159,7 @@ const estilos = StyleSheet.create({
   fotoVazia: { backgroundColor: '#FFF0C9' },
   fotoImagem: { width: '100%', height: '100%' },
   fotoTexto: { fontFamily: fontFamily.bold, fontSize: 14, color: colors.black },
-  nota: { fontFamily: fontFamily.regular, fontSize: 12, color: '#6A7484' },
+  nota: { fontFamily: fontFamily.regular, fontSize: 12, color: '#566070' },
   apagar: { alignSelf: 'flex-start', paddingVertical: 8 },
   apagarTexto: { fontFamily: fontFamily.bold, fontSize: 14, color: '#B3173A' },
   rodape: { paddingHorizontal: 24, paddingTop: 12, paddingBottom: 28 },

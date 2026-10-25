@@ -35,7 +35,7 @@ import { radius, spacing } from '../../../src/theme/tokens'
 
 const CARTOES = [
   { fundo: colors.warningSurface, borda: '#F3DC8E', texto: colors.warningText },
-  { fundo: '#FCE1EF', borda: '#F5BFD9', texto: '#8A2E5C' },
+  { fundo: '#FDE0E6', borda: '#F5BFD9', texto: '#A3324F' },
   { fundo: colors.primarySurface, borda: '#BFE3F7', texto: colors.primaryDeep },
 ]
 

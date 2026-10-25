@@ -126,7 +126,7 @@ export default function TelaCarteirinha() {
   const proxima = proximaVacina(vacinas)
   const especie = pet.especie === 'gato' ? 'Gato' : 'Cão'
   const dados = [
-    { rotulo: 'Idade', valor: idadeEmAnos(pet.nascimento) ?? '—', fundo: '#FFF0C9', cor: '#7A5A00' },
+    { rotulo: 'Idade', valor: idadeEmAnos(pet.nascimento) ?? '—', fundo: '#FFF0C9', cor: '#8A6414' },
     { rotulo: 'Sexo', valor: pet.sexo ? (pet.sexo === 'femea' ? 'Fêmea' : 'Macho') : '—', fundo: colors.premiumSurface, cor: colors.premiumText },
     {
       rotulo: 'Peso',
@@ -408,7 +408,7 @@ const estilos = StyleSheet.create({
   },
   remedio: { flexDirection: 'row', alignItems: 'center', gap: 10 },
   remedioNome: { fontFamily: fontFamily.bold, fontSize: 14, color: colors.black },
-  remedioSub: { fontFamily: fontFamily.regular, fontSize: 12, color: '#7A5A00' },
+  remedioSub: { fontFamily: fontFamily.regular, fontSize: 12, color: '#8A6414' },
   remedioDia: {
     fontFamily: fontFamily.bold,
     fontSize: 12,
@@ -424,7 +424,7 @@ const estilos = StyleSheet.create({
   cuidadoRotulo: { fontFamily: fontFamily.semiBold, fontSize: 11, color: '#1F6B45' },
   cuidadoValor: { fontFamily: fontFamily.bold, fontSize: 14, color: colors.black },
   textoLivre: { fontFamily: fontFamily.medium, fontSize: 14, lineHeight: 20, color: colors.black },
-  nota: { fontFamily: fontFamily.regular, fontSize: 11, lineHeight: 16, color: '#6A7484', textAlign: 'center' },
+  nota: { fontFamily: fontFamily.regular, fontSize: 11, lineHeight: 16, color: '#566070', textAlign: 'center' },
   botaoPdf: { minHeight: 48, borderRadius: 24, backgroundColor: colors.disabled, alignItems: 'center', justifyContent: 'center', marginBottom: 16 },
   textoPdf: { fontFamily: fontFamily.bold, fontSize: 14, color: colors.black },
   rodape: { paddingHorizontal: 24, paddingTop: 12, paddingBottom: 28 },

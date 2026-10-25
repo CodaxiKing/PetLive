@@ -172,7 +172,7 @@ const estilos = StyleSheet.create({
   pausado: {
     fontFamily: fontFamily.bold,
     fontSize: 13,
-    color: '#7A5A00',
+    color: '#8A6414',
     backgroundColor: '#FFF0C9',
     borderRadius: 16,
     overflow: 'hidden',
@@ -183,7 +183,7 @@ const estilos = StyleSheet.create({
   item: { backgroundColor: colors.background, borderRadius: 24, paddingVertical: 12, paddingHorizontal: 16, gap: 10 },
   itemLinha: { flexDirection: 'row', alignItems: 'center', gap: 12 },
   itemTitulo: { fontFamily: fontFamily.bold, fontSize: 16, color: colors.black },
-  itemSub: { fontFamily: fontFamily.regular, fontSize: 13, color: '#5E6878' },
+  itemSub: { fontFamily: fontFamily.regular, fontSize: 13, color: '#566070' },
   campo: {
     backgroundColor: colors.white,
     borderRadius: 16,
@@ -193,7 +193,7 @@ const estilos = StyleSheet.create({
     fontSize: 14,
     color: colors.black,
   },
-  nota: { fontFamily: fontFamily.regular, fontSize: 12, lineHeight: 17, color: '#6A7484' },
+  nota: { fontFamily: fontFamily.regular, fontSize: 12, lineHeight: 17, color: '#566070' },
   rodape: { paddingHorizontal: 24, paddingTop: 12, paddingBottom: 28, gap: 10 },
   secundario: { height: 52, borderRadius: 26, backgroundColor: colors.disabled, alignItems: 'center', justifyContent: 'center' },
   secundarioTexto: { fontFamily: fontFamily.bold, fontSize: 15, color: colors.black },

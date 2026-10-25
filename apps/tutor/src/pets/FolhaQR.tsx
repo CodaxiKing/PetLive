@@ -50,7 +50,7 @@ const estilos = StyleSheet.create({
   sub: { fontFamily: fontFamily.regular, fontSize: 14, color: colors.textMuted, textAlign: 'center' },
   qr: { marginVertical: 8 },
   url: { fontFamily: fontFamily.medium, fontSize: 13, color: colors.black, textAlign: 'center' },
-  validade: { fontFamily: fontFamily.bold, fontSize: 13, color: '#7A5F0A' },
+  validade: { fontFamily: fontFamily.bold, fontSize: 13, color: '#8A6414' },
   fechar: { marginTop: 8, height: 48, alignSelf: 'stretch', borderRadius: 24, backgroundColor: colors.black, alignItems: 'center', justifyContent: 'center' },
   fecharTexto: { fontFamily: fontFamily.bold, fontSize: 15, color: colors.white },
 })

@@ -3,8 +3,8 @@
 
 export const colors = {
   // Neutros
-  text: '#2A211C', // títulos e texto principal
-  textMuted: '#5E6878', // textos de apoio, legendas
+  text: '#111111', // títulos e texto principal do canvas
+  textMuted: '#566070', // textos de apoio, legendas
   background: '#F3F5F8', // fundo das telas
   surface: '#FFFFFF', // cards e folhas
   border: '#E1E6EE', // divisórias e bordas de card
@@ -13,22 +13,27 @@ export const colors = {
 
   // Azul PetLive (marca)
   primary: '#9AD6F8', // azul principal: destaques, botões de marca
-  primaryDark: '#28607F', // azul escuro: texto sobre azul claro (#2F6F93 do protótipo, escurecido para contraste AA sobre o herói)
-  primaryDeep: '#1D5F86', // azul mais forte: links e ações
-  primarySurface: '#E3F3FC', // fundo azul claro de card
-  hero: '#A9DCF6', // fundo do herói (boas-vindas)
+  primaryDark: '#1A5577', // azul escuro: texto sobre azul claro (#2F6F93 do protótipo, escurecido para contraste AA sobre o herói)
+  primaryDeep: '#1A5577', // azul mais forte: links e ações
+  primarySurface: '#E0F1FA', // fundo azul claro de card
+  hero: '#9AD6F8', // fundo do herói (boas-vindas)
 
   // Verde: saúde em dia, confirmações
-  successSurface: '#DDF3E6',
-  successText: '#25683F',
+  successSurface: '#D8F2E3',
+  successText: '#1F6B45',
 
   // Roxo: Premium e avisos especiais
-  premiumSurface: '#EBDDFB',
-  premiumText: '#5B3C8F',
+  premiumSurface: '#EADCFB',
+  premiumText: '#5B3E8A',
+
+  // Saúde e emergência: significado definido em prototipo/paleta.json.
+  healthSurface: '#FDE0E6',
+  healthText: '#A3324F',
+  emergency: '#C0392B',
 
   // Amarelo: atenção, vacina vencendo
-  warningSurface: '#FFF1C9',
-  warningText: '#7A5F0A',
+  warningSurface: '#FFF0C9',
+  warningText: '#8A6414',
 
   // Laranja e coral: mascote e ilustrações
   orange: '#E88F45',

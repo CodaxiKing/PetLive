@@ -58,13 +58,13 @@ export async function htmlAlbum(pet: Pet, memorial: Memorial): Promise<string> {
     .capa { text-align: center; padding: 48px 0 32px; page-break-after: always; }
     .capa img { width: 220px; height: 220px; object-fit: cover; border-radius: 50%; }
     h1 { font-size: 44px; margin: 24px 0 4px; font-weight: 500; }
-    .anos { color: #5B3C8F; font-size: 18px; }
+    .anos { color: #5B3E8A; font-size: 18px; }
     .mensagem { font-size: 20px; color: #444; margin-top: 32px; font-style: italic; }
-    .marco { page-break-inside: avoid; border-left: 3px solid #EBDDFB; padding: 0 0 24px 20px; }
+    .marco { page-break-inside: avoid; border-left: 3px solid #EADCFB; padding: 0 0 24px 20px; }
     .marco img { width: 100%; max-height: 360px; object-fit: cover; border-radius: 18px; margin-top: 8px; }
-    .data { color: #6A7484; font-size: 13px; margin: 0; }
+    .data { color: #566070; font-size: 13px; margin: 0; }
     h3 { margin: 2px 0; font-size: 20px; }
-    .rodape { color: #6A7484; font-size: 12px; text-align: center; margin-top: 32px; }
+    .rodape { color: #566070; font-size: 12px; text-align: center; margin-top: 32px; }
   </style></head><body>
     <div class="capa">
       ${pet.foto_url ? `<img src="${pet.foto_url}" />` : ''}

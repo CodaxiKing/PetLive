@@ -51,7 +51,7 @@ export function SeloPasseios({ tutorId, petId }: { tutorId: string; petId: strin
 }
 
 const estilos = StyleSheet.create({
-  card: { padding: 20, borderRadius: 24, backgroundColor: '#E3F3FC', gap: 12 },
+  card: { padding: 20, borderRadius: 24, backgroundColor: '#E0F1FA', gap: 12 },
   titulo: { fontFamily: fontFamily.bold, fontSize: 18, color: colors.black },
-  texto: { fontFamily: fontFamily.regular, fontSize: 14, lineHeight: 21, color: '#5E6878' },
+  texto: { fontFamily: fontFamily.regular, fontSize: 14, lineHeight: 21, color: '#566070' },
 });

@@ -32,7 +32,7 @@ import { fontFamily, typography } from '../../src/theme/typography'
 
 const DIAS_SEMANA = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom']
 const MESES = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro']
-const AMARELO: CoresPet = { fundo: '#FFF1C9', borda: '#F5DE9A', texto: '#7A5F0A' }
+const AMARELO: CoresPet = { fundo: '#FFF0C9', borda: '#F5DE9A', texto: '#8A6414' }
 
 type RemedioDoTutor = Remedio & { pets: { nome: string; especie: Especie } | null }
 

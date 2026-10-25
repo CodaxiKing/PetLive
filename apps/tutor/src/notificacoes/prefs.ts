@@ -14,13 +14,13 @@ export type CartaoAviso = {
 
 /** Cartões da tela, na ordem do protótipo. */
 export const CARTOES_AVISO: CartaoAviso[] = [
-  { tipo: 'vacina', rotulo: 'Vacinas', quando: '7 dias antes e no dia', fundo: '#EBDDFB', icone: 'vacina' },
-  { tipo: 'remedio', rotulo: 'Remédios', quando: 'A cada dose', fundo: '#FFF1C9', icone: 'remedio' },
-  { tipo: 'vermifugo', rotulo: 'Vermífugo e antipulgas', quando: '3 dias antes', fundo: '#DDF3E6', icone: 'relogio' },
-  { tipo: 'consulta', rotulo: 'Consultas', quando: '1 dia antes', fundo: '#E3F3FC', icone: 'mais' },
-  { tipo: 'banho_tosa', rotulo: 'Banho e tosa', quando: 'No dia do agendamento', fundo: '#FCE1EF', icone: 'gota' },
+  { tipo: 'vacina', rotulo: 'Vacinas', quando: '7 dias antes e no dia', fundo: '#EADCFB', icone: 'vacina' },
+  { tipo: 'remedio', rotulo: 'Remédios', quando: 'A cada dose', fundo: '#FFF0C9', icone: 'remedio' },
+  { tipo: 'vermifugo', rotulo: 'Vermífugo e antipulgas', quando: '3 dias antes', fundo: '#D8F2E3', icone: 'relogio' },
+  { tipo: 'consulta', rotulo: 'Consultas', quando: '1 dia antes', fundo: '#E0F1FA', icone: 'mais' },
+  { tipo: 'banho_tosa', rotulo: 'Banho e tosa', quando: 'No dia do agendamento', fundo: '#FDE0E6', icone: 'gota' },
   { tipo: 'outro', rotulo: 'Outros avisos', quando: 'No dia do lembrete', fundo: '#EDEFF3', icone: 'sino' },
-  { tipo: 'eventos', rotulo: 'Eventos', quando: '1 dia antes e 2 horas antes', fundo: '#E3F3FC', icone: 'sino' },
+  { tipo: 'eventos', rotulo: 'Eventos', quando: '1 dia antes e 2 horas antes', fundo: '#E0F1FA', icone: 'sino' },
 ]
 
 /** Janela padrão do "Não perturbe" (protótipo: das 22h às 7h). */

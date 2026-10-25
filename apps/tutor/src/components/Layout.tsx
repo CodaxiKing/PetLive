@@ -34,9 +34,9 @@ export function BotaoRedondo({
 }
 
 /** Onda branca do rodapé dos heróis azuis. */
-export function OndaHeroi({ largura }: { largura: number }) {
+export function OndaHeroi({ largura, altura = 46 }: { largura: number; altura?: number }) {
   return (
-    <Svg width={largura} height={46} viewBox="0 0 390 46" preserveAspectRatio="none" style={estilos.onda}>
+    <Svg width={largura} height={altura} viewBox="0 0 390 46" preserveAspectRatio="none" style={estilos.onda}>
       <Path
         d="M0 46V26C28 8 56 10 80 24C104 38 132 40 154 26C180 8 214 10 238 26C262 42 300 38 322 22C346 6 372 12 390 24V46z"
         fill="#fff"

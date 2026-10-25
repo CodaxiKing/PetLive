@@ -39,11 +39,11 @@ type Escolha = {
 }
 
 const ESCOLHAS: Escolha[] = [
-  { chave: 'vacina', rotulo: 'Vacina', icone: 'vacina', fundo: '#EBDDFB' },
-  { chave: 'remedio', rotulo: 'Remédio', icone: 'capsula', fundo: '#FFF1C9' },
-  { chave: 'vermifugo', rotulo: 'Vermífugo e antipulgas', icone: 'relogio', fundo: '#DDF3E6', tipo: 'vermifugo' },
+  { chave: 'vacina', rotulo: 'Vacina', icone: 'vacina', fundo: '#EADCFB' },
+  { chave: 'remedio', rotulo: 'Remédio', icone: 'capsula', fundo: '#FFF0C9' },
+  { chave: 'vermifugo', rotulo: 'Vermífugo e antipulgas', icone: 'relogio', fundo: '#D8F2E3', tipo: 'vermifugo' },
   { chave: 'consulta', rotulo: 'Consulta', icone: 'cruz', fundo: '#E0F1FA', tipo: 'consulta' },
-  { chave: 'banho', rotulo: 'Banho e tosa', icone: 'gota', fundo: '#FCE1EF', tipo: 'banho_tosa' },
+  { chave: 'banho', rotulo: 'Banho e tosa', icone: 'gota', fundo: '#FDE0E6', tipo: 'banho_tosa' },
   { chave: 'peso', rotulo: 'Pesar o pet', icone: 'balanca', fundo: '#F3F5F8' },
 ]
 

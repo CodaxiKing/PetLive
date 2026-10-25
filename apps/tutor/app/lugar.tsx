@@ -493,7 +493,7 @@ const estilos = StyleSheet.create({
   verNoGoogle: { fontFamily: fontFamily.semiBold, fontSize: 13, color: colors.primaryDeep },
   fonte: {
     ...typography.small,
-    color: '#6A7484',
+    color: '#566070',
     textAlign: 'center',
     marginTop: spacing.xs,
   },

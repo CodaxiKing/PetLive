@@ -4,11 +4,11 @@ import type { Pet } from './types'
 export type CoresPet = { fundo: string; borda: string; texto: string }
 
 const PALETA: CoresPet[] = [
-  { fundo: '#EBDDFB', borda: '#D7BDF5', texto: '#5B3C8F' },
-  { fundo: '#FCE1EF', borda: '#F5BFD9', texto: '#8A2E5C' },
-  { fundo: '#E0F1FA', borda: '#B9DFF3', texto: '#1D5F86' },
-  { fundo: '#DDF3E6', borda: '#BCE5CC', texto: '#25683F' },
-  { fundo: '#FFF1C9', borda: '#F5DE9A', texto: '#7A5F0A' },
+  { fundo: '#EADCFB', borda: '#D7BDF5', texto: '#5B3E8A' },
+  { fundo: '#FDE0E6', borda: '#F5BFD9', texto: '#A3324F' },
+  { fundo: '#E0F1FA', borda: '#B9DFF3', texto: '#1A5577' },
+  { fundo: '#D8F2E3', borda: '#BCE5CC', texto: '#1F6B45' },
+  { fundo: '#FFF0C9', borda: '#F5DE9A', texto: '#8A6414' },
 ]
 
 /**

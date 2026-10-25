@@ -63,10 +63,10 @@ export function htmlChecklist(pet: Pet, viagem: Omit<Viagem, 'id'>, itens: ItemV
     .join('')
   return `<!doctype html><html><head><meta charset="utf-8" /><style>
     body { font-family: -apple-system, Roboto, sans-serif; color: #111; margin: 32px; }
-    h1 { margin: 0; font-size: 26px; } .sub { color: #5E6878; margin: 4px 0 20px; }
+    h1 { margin: 0; font-size: 26px; } .sub { color: #566070; margin: 4px 0 20px; }
     ul { list-style: none; padding: 0; } li { padding: 10px 0; border-bottom: 1px solid #E1E6EE; font-size: 15px; }
-    li span { font-size: 18px; } small { color: #5E6878; margin-left: 26px; } .feito strong { color: #25683F; }
-    .aviso { background: #FFF1C9; border-radius: 12px; padding: 12px 16px; margin-top: 20px; font-size: 13px; }
+    li span { font-size: 18px; } small { color: #566070; margin-left: 26px; } .feito strong { color: #1F6B45; }
+    .aviso { background: #FFF0C9; border-radius: 12px; padding: 12px 16px; margin-top: 20px; font-size: 13px; }
   </style></head><body>
     <h1>Viagem com ${escaparHtml(pet.nome)}</h1>
     <p class="sub">${viagem.modo === 'aviao' ? 'Avião' : 'Carro'}${viagem.destino ? ` · ${escaparHtml(viagem.destino)}` : ''}${data ? ` · ${data}` : ''}${

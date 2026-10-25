@@ -63,5 +63,5 @@ const estilos = StyleSheet.create({
   cvv: { backgroundColor: colors.premiumSurface },
   cvvLinha: { flexDirection: 'row', gap: 14, alignItems: 'center' },
   icone: { width: 44, height: 44, borderRadius: 22, backgroundColor: colors.white, alignItems: 'center', justifyContent: 'center' },
-  nota: { fontFamily: fontFamily.regular, fontSize: 14, color: '#6A7484', textAlign: 'center', marginTop: 8 },
+  nota: { fontFamily: fontFamily.regular, fontSize: 14, color: '#566070', textAlign: 'center', marginTop: 8 },
 })

@@ -72,6 +72,6 @@ function Gato({ recorte }: { recorte: boolean }) {
 
 /** Fundo colorido do avatar, como no protótipo. */
 export const fundoMascote: Record<Especie, string> = {
-  cao: '#A9DCF6',
-  gato: '#EBDDFB',
+  cao: '#9AD6F8',
+  gato: '#EADCFB',
 };

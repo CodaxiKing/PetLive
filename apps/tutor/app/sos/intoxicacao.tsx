@@ -56,12 +56,12 @@ export default function Intoxicacao() {
         keyboardShouldPersistTaps="handled"
       >
         <View style={estilos.busca}>
-          <Icone nome="busca" size={18} cor="#6A7484" />
+          <Icone nome="busca" size={18} cor="#566070" />
           <TextInput
             value={busca}
             onChangeText={setBusca}
             placeholder="Buscar um alimento ou produto"
-            placeholderTextColor="#6A7484"
+            placeholderTextColor="#566070"
             style={estilos.buscaCampo}
             autoCorrect={false}
             returnKeyType="search"
@@ -167,14 +167,14 @@ const estilos = StyleSheet.create({
     paddingVertical: 4,
   },
   detalhe: { backgroundColor: colors.white, borderRadius: 16, padding: 12, gap: 2 },
-  detalheRotulo: { fontSize: 11, fontFamily: typography.h1.fontFamily, color: '#6A7484', marginTop: 4 },
+  detalheRotulo: { fontSize: 11, fontFamily: typography.h1.fontFamily, color: '#566070', marginTop: 4 },
   detalheTexto: { fontSize: 13, lineHeight: 19, fontFamily: typography.caption.fontFamily, color: colors.black },
   vazio: { ...typography.caption, color: colors.textMuted, textAlign: 'center', paddingVertical: spacing.md },
   nota: {
     fontSize: 11,
     lineHeight: 16,
     fontFamily: typography.small.fontFamily,
-    color: '#6A7484',
+    color: '#566070',
     textAlign: 'center',
     paddingHorizontal: 6,
   },

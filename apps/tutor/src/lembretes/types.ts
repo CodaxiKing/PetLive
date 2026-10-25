@@ -47,11 +47,11 @@ export const LEMBRETE_FORM_VAZIO: LembreteForm = {
 }
 
 export const TIPOS: { valor: TipoLembrete; rotulo: string; cor: string; fundo: string }[] = [
-  { valor: 'vacina', rotulo: 'Vacina', cor: '#5B3C8F', fundo: '#EBDDFB' },
-  { valor: 'vermifugo', rotulo: 'Vermífugo', cor: '#25683F', fundo: '#DDF3E6' },
-  { valor: 'consulta', rotulo: 'Consulta', cor: '#1D5F86', fundo: '#E3F3FC' },
-  { valor: 'banho_tosa', rotulo: 'Banho e tosa', cor: '#7A5F0A', fundo: '#FFF1C9' },
-  { valor: 'outro', rotulo: 'Outro', cor: '#5E6878', fundo: '#EEF1F5' },
+  { valor: 'vacina', rotulo: 'Vacina', cor: '#5B3E8A', fundo: '#EADCFB' },
+  { valor: 'vermifugo', rotulo: 'Vermífugo', cor: '#1F6B45', fundo: '#D8F2E3' },
+  { valor: 'consulta', rotulo: 'Consulta', cor: '#1A5577', fundo: '#E0F1FA' },
+  { valor: 'banho_tosa', rotulo: 'Banho e tosa', cor: '#8A6414', fundo: '#FFF0C9' },
+  { valor: 'outro', rotulo: 'Outro', cor: '#566070', fundo: '#EEF1F5' },
 ]
 
 export const REPETICOES: { valor: Repeticao; rotulo: string }[] = [
@@ -135,13 +135,13 @@ export function corUrgencia(u: Urgencia): { fundo: string; texto: string } {
     case 'vencido':
       return { fundo: '#FDECEC', texto: '#C62828' }
     case 'hoje':
-      return { fundo: '#FFF1C9', texto: '#7A5F0A' }
+      return { fundo: '#FFF0C9', texto: '#8A6414' }
     case 'perto':
-      return { fundo: '#FFF1C9', texto: '#7A5F0A' }
+      return { fundo: '#FFF0C9', texto: '#8A6414' }
     case 'mes':
-      return { fundo: '#E3F3FC', texto: '#1D5F86' }
+      return { fundo: '#E0F1FA', texto: '#1A5577' }
     default:
-      return { fundo: '#EEF1F5', texto: '#5E6878' }
+      return { fundo: '#EEF1F5', texto: '#566070' }
   }
 }
 

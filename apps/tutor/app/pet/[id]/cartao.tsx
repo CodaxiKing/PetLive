@@ -140,7 +140,7 @@ const estilos = StyleSheet.create({
   texto: { ...typography.body, color: colors.textMuted },
   link: { ...typography.bodyMedium, color: colors.primaryDeep },
   acao: { minHeight: 44, justifyContent: 'center' },
-  cartao: { padding: spacing.xl, borderRadius: radius.xl, backgroundColor: '#E3F3FC', gap: spacing.md },
+  cartao: { padding: spacing.xl, borderRadius: radius.xl, backgroundColor: '#E0F1FA', gap: spacing.md },
   secao: { ...typography.bodyMedium, color: colors.black },
   opcoes: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
   opcao: { minHeight: 44, justifyContent: 'center', borderWidth: 2, borderColor: 'transparent', borderRadius: radius.pill, paddingHorizontal: spacing.md },

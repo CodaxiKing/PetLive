@@ -5,7 +5,7 @@ import { fontFamily, typography } from '../theme/typography';
 import { spacing } from '../theme/tokens';
 import { aplicarMascara, TAMANHO_MASCARA, type Mascara } from '../lib/mascaras';
 
-type Variante = 'roxo' | 'azul' | 'verde' | 'amarelo' | 'neutro';
+type Variante = 'roxo' | 'azul' | 'verde' | 'amarelo' | 'rosa' | 'neutro';
 
 type Props = TextInputProps & {
   rotulo: string;
@@ -20,7 +20,8 @@ const temaPorVariante: Record<Variante, { fundo: string; texto: string }> = {
   azul: { fundo: colors.primarySurface, texto: colors.primaryDeep },
   verde: { fundo: colors.successSurface, texto: colors.successText },
   amarelo: { fundo: colors.warningSurface, texto: colors.warningText },
-  neutro: { fundo: colors.disabled, texto: colors.textMuted },
+  rosa: { fundo: colors.healthSurface, texto: colors.healthText },
+  neutro: { fundo: colors.background, texto: colors.textMuted },
 };
 
 /**
@@ -57,7 +58,7 @@ const estilos = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: spacing.md,
-    borderRadius: 28,
+    borderRadius: 24,
     paddingHorizontal: spacing.xl,
     minHeight: 62,
   },
@@ -70,7 +71,7 @@ const estilos = StyleSheet.create({
   },
   rotulo: {
     ...typography.label,
-    fontSize: 11,
+    fontSize: 12,
     marginBottom: 2,
   },
   texto: {

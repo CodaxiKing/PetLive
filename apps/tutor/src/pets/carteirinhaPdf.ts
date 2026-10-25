@@ -46,11 +46,11 @@ export function htmlCarteirinha(pet: Pet, tutor: string | null, vacinas: Vacina[
   return `<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>
     *{box-sizing:border-box}body{font-family:Arial,sans-serif;color:#202630;margin:32px;font-size:12px}
     header{border-bottom:3px solid #9ad6f8;padding-bottom:16px;margin-bottom:20px}h1{font-size:25px;margin:0 0 5px}
-    h2{font-size:16px;margin:24px 0 10px;color:#28607f}.sub{color:#5e6878;font-size:13px}
+    h2{font-size:16px;margin:24px 0 10px;color:#1A5577}.sub{color:#566070;font-size:13px}
     .grid{display:grid;grid-template-columns:1fr 1fr;gap:7px 20px}.linha{padding:7px 0;border-bottom:1px solid #e1e6ee;display:flex;justify-content:space-between;gap:12px}
-    .linha span{color:#5e6878}.linha strong{text-align:right;white-space:pre-wrap}
-    table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:9px;border-bottom:1px solid #e1e6ee}th{background:#e3f3fc}
-    ul{padding-left:18px}li{margin:8px 0}.aviso{margin-top:28px;color:#6a7484;font-size:10px}
+    .linha span{color:#566070}.linha strong{text-align:right;white-space:pre-wrap}
+    table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:9px;border-bottom:1px solid #e1e6ee}th{background:#E0F1FA}
+    ul{padding-left:18px}li{margin:8px 0}.aviso{margin-top:28px;color:#566070;font-size:10px}
     @media print{body{margin:16mm}}
   </style></head><body>
     <header><h1>${escaparHtml(pet.nome)}</h1><div class="sub">${escaparHtml(identidade)} · Carteirinha de saúde PetLive · ${dataCurta(new Date().toISOString().slice(0, 10))}</div></header>

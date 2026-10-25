@@ -224,7 +224,7 @@ const estilos = StyleSheet.create({
   tela: { flex: 1, backgroundColor: colors.surface },
   flex: { flex: 1, minWidth: 0 },
   conteudo: { paddingHorizontal: 24, paddingBottom: 40, gap: 8 },
-  secao: { fontSize: 12, fontFamily: typography.h1.fontFamily, color: '#6A7484' },
+  secao: { fontSize: 12, fontFamily: typography.h1.fontFamily, color: '#566070' },
   secaoEspaco: { marginTop: 4 },
   consentimento: {
     flexDirection: 'row',

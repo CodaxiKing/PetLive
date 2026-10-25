@@ -175,7 +175,7 @@ export default function Pets() {
 }
 
 const estilos = StyleSheet.create({
-  chipSenior: { backgroundColor: '#FFF0C9', color: '#7A5A00' },
+  chipSenior: { backgroundColor: '#FFF0C9', color: '#8A6414' },
   memoria: { flexDirection: 'row', alignItems: 'center', gap: 14, backgroundColor: colors.premiumSurface, borderRadius: 28, padding: 14, marginTop: 12 },
   memoriaRetrato: { width: 56, height: 56, borderRadius: 28, overflow: 'hidden', backgroundColor: colors.white, alignItems: 'center', justifyContent: 'center' },
   memoriaFoto: { width: 56, height: 56 },

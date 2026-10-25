@@ -52,7 +52,7 @@ export function Interruptor({ ligado, onToggle, rotulo, desabilitado }: Props) {
       <Animated.View
         style={[
           estilos.trilho,
-          { backgroundColor: valor.interpolate({ inputRange: [0, 1], outputRange: ['#D5DBE3', colors.black] }) },
+          { backgroundColor: valor.interpolate({ inputRange: [0, 1], outputRange: ['#D5DAE2', colors.black] }) },
         ]}
       >
         <Animated.View

@@ -424,7 +424,7 @@ export default function Mapa() {
               Pet friendly
             </Text>
           </Pressable>
-          {/* SOS no fim dos filtros, em rosa (protótipo Mapa, BUSINESS 5.17). */}
+          {/* SOS no fim dos filtros, em vermelho cheio (protótipo Mapa, BUSINESS 5.17). */}
           <Pressable
             onPress={() => router.push('/sos')}
             accessibilityRole="button"
@@ -528,7 +528,7 @@ export default function Mapa() {
             style={({ pressed }) => [estilos.atalhoSos, pressed && { opacity: 0.7 }]}
           >
             <View style={estilos.atalhoSosIcone}>
-              <Icone nome="cruz" size={20} cor="#B3173A" espessura={2.2} />
+              <Icone nome="cruz" size={20} cor={colors.healthText} espessura={2.2} />
             </View>
             <View>
               <Text style={estilos.atalhoSosTitulo}>Primeiros socorros</Text>
@@ -554,7 +554,7 @@ export default function Mapa() {
         >
           <AcaoEstado rotulo={permissao === 'negada' ? 'Permitir localização' : 'Tentar localizar novamente'} onPress={permitirLocalizacao} />
           <AcaoEstado rotulo="Buscar por bairro ou região" tipo="secundaria" onPress={buscarPorRegiao} />
-          <AcaoEstado rotulo="Emergência? Abrir o SOS" tipo="link" cor="#B3173A" onPress={() => router.push('/sos')} />
+          <AcaoEstado rotulo="Emergência? Abrir o SOS" tipo="link" cor={colors.emergency} onPress={() => router.push('/sos')} />
         </CartaoEstadoMapa>
       ) : !lugar && !carregando && lugares.length === 0 ? (
         categoria === 'salvos' ? (
@@ -881,10 +881,11 @@ const estilos = StyleSheet.create({
     backgroundColor: colors.surface,
   },
   pilulaSos: {
-    backgroundColor: '#FDE0E6',
+    backgroundColor: colors.emergency,
   },
   pilulaTextoSos: {
-    color: '#A3324F',
+    color: colors.white,
+    fontFamily: fontFamily.bold,
   },
   pilulaAtiva: {
     backgroundColor: colors.black,
@@ -916,13 +917,13 @@ const estilos = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 12,
-    backgroundColor: '#FBDADF',
+    backgroundColor: colors.healthSurface,
     borderRadius: 22,
     padding: 10,
   },
   atalhoSosIcone: { width: 44, height: 44, borderRadius: 22, backgroundColor: colors.white, alignItems: 'center', justifyContent: 'center' },
   atalhoSosTitulo: { fontFamily: fontFamily.bold, fontSize: 15, color: colors.black },
-  atalhoSosSub: { fontFamily: fontFamily.regular, fontSize: 12, color: '#A3324F' },
+  atalhoSosSub: { fontFamily: fontFamily.regular, fontSize: 12, color: colors.healthText },
   permissaoCartao: {
     position: 'absolute',
     top: 190,
