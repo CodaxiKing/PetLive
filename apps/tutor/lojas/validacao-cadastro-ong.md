@@ -23,3 +23,7 @@ Exportação LGPD inclui os cadastros; a FK remove os registros ao apagar a cont
 ## Homologação
 
 Instalar o novo APK, pois expo-document-picker adiciona módulo nativo. Usar ONG real autorizada e arquivos legíveis completos: salvar rascunho, retomar, anexar/substituir, cancelar seletor, enviar e conferir situação pendente no painel (sem botão de publicar pet). Verificar tipo/tamanho inválidos, offline, duas telas com versões diferentes, resposta perdida e troca de conta. Outra conta não pode listar/baixar documentos ou editar cadastro. Testar teclado/fonte ampliada e PDF no Android/iOS. Não publicar documentos reais de terceiros sem autorização nem cadastrar ONGs fictícias na produção. Homologação nativa e moderação continuam pendentes.
+
+## APK de preview
+
+Build Android em compilação no EAS: https://expo.dev/accounts/codaxi/projects/petlive-tutor/builds/74634fba-1899-4717-ab63-d54033078a75 . Fonte 9436a23999e7089d757005f6770b2f8cd93d91cd, runtime 782d3618069253d333bb21ef58e609d7ef25e74e. Novo APK obrigatório pelo módulo nativo de documentos; não foi publicada OTA para o runtime anterior. Acompanhar o build e instalar quando disponibilizado. Homologação no dispositivo permanece pendente.
