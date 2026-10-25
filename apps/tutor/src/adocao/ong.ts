@@ -1,6 +1,6 @@
 import { supabase } from '../lib/supabase';
 export type CursorOng = { id: string; criado_em: string };
-export type PetOng = CursorOng & { nome: string; status: 'rascunho' | 'publicado' | 'adotado' | 'oculto'; confirmado_em: string; ong_nome: string; ong_status: string; interesses: number };
+export type PetOng = CursorOng & { nome: string; status: 'rascunho' | 'publicado' | 'adotado' | 'oculto'; confirmado_em: string; ong_nome: string; ong_status: string; interesses: number; moderacao_motivo?: string|null };
 export type ContatoOng = CursorOng & { mensagem: string; email_resposta: string | null };
 type Pagina<T> = { itens: T[]; tem_mais: boolean };
 export type PainelOng = Pagina<PetOng> & { ongs: { id?: string; nome: string; status: string }[] };
@@ -28,6 +28,7 @@ export async function carregarPetsOng(tutorId: string, cursor: CursorOng | null 
   const data = await chamar(tutorId, 'ong_pets_listar', paginaParams(cursor));
   const pagina = conferirPaginaOng<PetOng>(data, (i) => cursorValido(i) && typeof i.nome === 'string' && typeof i.ong_nome === 'string' && estados.includes(i.ong_status) && ['rascunho', 'publicado', 'adotado', 'oculto'].includes(i.status) && dataValida(i.confirmado_em) && Number.isSafeInteger(i.interesses) && i.interesses >= 0);
   if (!Array.isArray(data.ongs) || data.ongs.some((g: { nome?: unknown; status?: unknown }) => !g || typeof g.nome !== 'string' || typeof g.status !== 'string' || !estados.includes(g.status))) throw new Error('Cadastro de ONG incompleto. Atualize a tela.');
+  if (pagina.itens.some(i => i.moderacao_motivo !== undefined && i.moderacao_motivo !== null && (typeof i.moderacao_motivo !== 'string' || i.moderacao_motivo.length > 500))) throw new Error('Dados de moderação incompletos. Atualize a tela.');
   return { ...pagina, ongs: data.ongs };
 }
 export async function carregarInteressesOng(tutorId: string, petId: string, cursor: CursorOng | null = null) {
@@ -36,6 +37,9 @@ export async function carregarInteressesOng(tutorId: string, petId: string, curs
 }
 export async function marcarAdotadoOng(tutorId: string, petId: string) {
   if (await chamar(tutorId, 'ong_marcar_adotado', { p_pet: petId }) !== true) throw new Error('Não foi possível confirmar a adoção. Atualize o painel.');
+}
+export async function confirmarDisponibilidadeOng(tutorId: string, petId: string) {
+  await chamar(tutorId, 'adocao_confirmar_pet', { p_pet: petId });
 }
 export function linkRespostaOng(email: string, nome: string) {
   if (email.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) throw new Error('E-mail de resposta inválido.');

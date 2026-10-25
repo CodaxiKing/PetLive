@@ -31,6 +31,7 @@ try {
  for(const f of ['20261206000000_catalogo_adocao.sql','20261212000000_ong_salvar_pet.sql','20261214000000_cadastro_ong_documentos.sql']) await db.exec(await readFile(new URL('../migrations/'+f,import.meta.url),'utf8'));
  const sql=await readFile(new URL('../migrations/20261231000000_admin_adocao.sql',import.meta.url),'utf8');await db.exec(sql);await db.exec(sql);
  const correcao=await readFile(new URL('../migrations/20270101000000_correcao_cadastro_ong.sql',import.meta.url),'utf8');await db.exec(correcao);await db.exec(correcao);
+ const republicacao=await readFile(new URL('../migrations/20270102000000_republicar_adocao_moderacao.sql',import.meta.url),'utf8');await db.exec(republicacao);await db.exec(republicacao);
  await db.query(`insert into adocao_ongs(id,responsavel_id,nome,cidade,bairro) values($1,$2,'Abrigo','Cidade','Centro'),($3,$2,'Sem documentos','Cidade','Centro')`,[ong,dono,semDocs]);
  await db.query(`insert into ong_cadastros(id,responsavel_id,cnpj,nome,cidade,bairro,responsavel_nome,email,telefone,documentos,status,enviado_em)
  values($1,$2,'11444777000161','Abrigo','Cidade','Centro','Responsável','dono@example.test','21999999999',$3,'enviado',now())`,[ong,dono,docs]);
@@ -70,9 +71,29 @@ try {
  await entrar(null,'aal2',dono);
  assert.equal((await db.query('select ong_documento_permitido($1,false) r',[docs.estatuto])).rows[0].r,true);
  await assert.rejects(db.query('select ong_pet_salvar($1,$2,$3,2,$4)',[dono,pet,ong,{}]),/ocultos/);
- await assert.rejects(db.query('select admin_ong_pedir_correcao($1,6,$2)',[ong,'Documento ilegível']),/equipe/);
+ await assert.rejects(db.query('select admin_adocao_pet_republicar($1,2,$2)',[pet,'Anúncio revisado']),/equipe/);
+ await entrar('leitura');await assert.rejects(db.query('select admin_adocao_pet_republicar($1,2,$2)',[pet,'Anúncio revisado']),/função/);
+ await entrar('moderacao','aal1');await assert.rejects(db.query('select admin_adocao_pet_republicar($1,2,$2)',[pet,'Anúncio revisado']),/duas etapas/);
+ await entrar('moderacao');await assert.rejects(db.query('select admin_adocao_pet_republicar($1,2,$2)',[pet,'Anúncio revisado']),/foto válida/);
+ await db.exec('reset role');
+ await db.query("update adocao_pets set fotos=array['https://example.test/foto.jpg'],confirmado_em=now()-interval '90 days' where id=$1",[pet]);
+ await entrar('moderacao');await decidir(6,'suspensa');
+ await assert.rejects(db.query('select admin_adocao_pet_republicar($1,2,$2)',[pet,'Anúncio revisado']),/ONG precisa/);
+ await decidir(7,'aprovada');
+ const antes=(await db.query("select admin_adocao_pets('oculto') r")).rows[0].r.itens.find(x=>x.id===pet).confirmado_em;
+ await db.query('select admin_adocao_pet_republicar($1,2,$2)',[pet,'Anúncio revisado e liberado']);
+ const depois=(await db.query('select admin_adocao_pets() r')).rows[0].r.itens.find(x=>x.id===pet);
+ assert.equal(depois.confirmado_em,antes);assert.equal(depois.versao,3);assert.equal(depois.moderacao_motivo,'Anúncio revisado e liberado');
+ assert.equal((await db.query('select adocao_listar($1) r',[admin])).rows[0].r.itens.length,0,'republicação não confirma disponibilidade antiga');
+ await assert.rejects(db.query('select admin_adocao_pet_republicar($1,2,$2)',[pet,'Anúncio revisado']),/pet mudou/);
+ await entrar(null,'aal2',dono);await db.query('select adocao_confirmar_pet($1,$2)',[dono,pet]);
+ assert.equal((await db.query('select ong_pets_listar($1) r',[dono])).rows[0].r.itens.find(x=>x.id===pet).moderacao_motivo,'Anúncio revisado e liberado');
+ assert.equal((await db.query('select adocao_listar($1) r',[dono])).rows[0].r.itens.length,1);
+ await entrar('moderacao');await db.query('select admin_adocao_pet_ocultar($1,3,$2)',[pet,'Nova revisão necessária']);
+ await entrar(null,'aal2',dono);
+ await assert.rejects(db.query('select admin_ong_pedir_correcao($1,8,$2)',[ong,'Documento ilegível']),/equipe/);
  await entrar('moderacao');
- await assert.rejects(db.query('select admin_ong_pedir_correcao($1,6,$2)',[ong,'Documento ilegível']),/cadastro mudou/);
+ await assert.rejects(db.query('select admin_ong_pedir_correcao($1,8,$2)',[ong,'Documento ilegível']),/cadastro mudou/);
  await db.exec('reset role');
  const docs2=Object.fromEntries(Object.entries(docs).map(([k,v])=>[k,v.replace(ong,semDocs)]));
  await db.query(`insert into ong_cadastros(id,responsavel_id,cnpj,nome,cidade,bairro,responsavel_nome,email,telefone,documentos,status,enviado_em)
@@ -105,9 +126,10 @@ try {
  assert.equal((await db.query("select * from storage.objects where bucket_id='ong-documentos'")).rows.length,0);
  await db.exec('reset role');
  const auditoria=(await db.query('select acao,detalhes from audit_log')).rows;
- assert.equal(auditoria.filter(x=>x.acao==='ong_decidir').length,6);
+ assert.equal(auditoria.filter(x=>x.acao==='ong_decidir').length,8);
  assert.equal(auditoria.filter(x=>x.acao==='ong_pedir_correcao').length,1);
- assert.equal(auditoria.filter(x=>x.acao==='adocao_pet_ocultar').length,1);
+ assert.equal(auditoria.filter(x=>x.acao==='adocao_pet_ocultar').length,2);
+ assert.equal(auditoria.filter(x=>x.acao==='adocao_pet_republicar').length,1);
  assert.equal(JSON.stringify(auditoria).includes(docs.estatuto),false);
  await db.exec('set role anon');await assert.rejects(db.query('select admin_ongs()'),/permission denied/);
  console.log('OK: papéis/2FA, documentos privados, revisão otimista, aprovação/suspensão, validação de anexos, ocultação sem republicação pelo tutor e auditoria.');

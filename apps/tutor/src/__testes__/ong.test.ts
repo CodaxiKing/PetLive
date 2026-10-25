@@ -1,10 +1,23 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { carregarInteressesOng, carregarPetsOng, linkRespostaOng, marcarAdotadoOng, prepararRespostaOng } from '../adocao/ong';
+import { carregarInteressesOng, carregarPetsOng, confirmarDisponibilidadeOng, linkRespostaOng, marcarAdotadoOng, prepararRespostaOng } from '../adocao/ong';
 const m = vi.hoisted(() => ({ user: vi.fn(), rpc: vi.fn() }));
 vi.mock('../lib/supabase', () => ({ supabase: { auth: { getUser: m.user }, rpc: m.rpc } }));
 const pet = { id: 'p', nome: 'Mia', status: 'publicado', confirmado_em: '2026-10-24T12:00:00Z', criado_em: '2026-10-24T12:00:00Z', ong_nome: 'Abrigo', ong_status: 'aprovada', interesses: 2 };
 beforeEach(() => { vi.resetAllMocks(); m.user.mockResolvedValue({ data: { user: { id: 'a' } }, error: null }); m.rpc.mockResolvedValue({ data: null, error: null }); });
 describe('painel da ONG', () => {
+  it('confirma disponibilidade no servidor e bloqueia conta diferente', async () => {
+    await confirmarDisponibilidadeOng('a', 'p');
+    expect(m.rpc).toHaveBeenCalledWith('adocao_confirmar_pet', { p_tutor: 'a', p_pet: 'p' });
+    m.user.mockResolvedValueOnce({ data: { user: { id: 'b' } }, error: null });
+    await expect(confirmarDisponibilidadeOng('a', 'p')).rejects.toThrow('conta mudou');
+    expect(m.rpc).toHaveBeenCalledTimes(1);
+  });
+  it('mostra motivo da moderação apenas quando o retorno tem formato válido', async () => {
+    m.rpc.mockResolvedValue({ data: { itens: [{ ...pet, moderacao_motivo: 'Anúncio revisado' }], tem_mais: false, ongs: [] }, error: null });
+    expect((await carregarPetsOng('a')).itens[0].moderacao_motivo).toBe('Anúncio revisado');
+    m.rpc.mockResolvedValue({ data: { itens: [{ ...pet, moderacao_motivo: 42 }], tem_mais: false, ongs: [] }, error: null });
+    await expect(carregarPetsOng('a')).rejects.toThrow('moderação');
+  });
   it('confere página, metadados e cursor do painel', async () => {
     m.rpc.mockResolvedValue({ data: { itens: [pet], tem_mais: false, ongs: [{ nome: 'Abrigo', status: 'aprovada' }] }, error: null });
     expect((await carregarPetsOng('a', pet)).itens).toEqual([pet]);

@@ -6,7 +6,7 @@ import { Cabecalho, useAdmin } from "@/components/admin/Painel";
 import { rpcAdmin, supabaseAdmin } from "@/lib/admin/supabase";
 
 type Ong = { id: string; nome: string; cidade: string; bairro: string; status: string; revisao: number; motivo_decisao: string | null; cnpj: string | null; responsavel_nome: string | null; email: string | null; telefone: string | null; documentos: string[]; correcao_motivo?: string|null };
-type Pet = { id: string; nome: string; especie: string; descricao: string; fotos: string[]; status: string; versao: number; ong_nome: string; ong_status: string };
+type Pet = { id: string; nome: string; especie: string; descricao: string; fotos: string[]; status: string; versao: number; ong_nome: string; ong_status: string; confirmado_em?: string; moderacao_motivo?: string|null; moderacao_em?: string|null };
 const ROTULOS: Record<string, string> = { pendente: "Em análise", aprovada: "Aprovada", recusada: "Recusada", suspensa: "Suspensa", publicado: "Publicado", oculto: "Oculto", correcao: "Pedir correções" };
 const DOCUMENTOS: Record<string, string> = { estatuto: "Estatuto", comprovante: "Comprovante da ONG", responsavel: "Documento do responsável" };
 const campo = "rounded-2xl border border-[#DDE1E8] bg-white px-4 py-2 text-sm";
@@ -70,7 +70,7 @@ function PainelAdocao({ podeDecidir }: { podeDecidir: boolean }) {
     trava.current = true; setOcupado(true); setMensagem("");
     try {
       if (ong) await rpcAdmin(decisao === "correcao" ? "admin_ong_pedir_correcao" : "admin_ong_decidir", { p_id: ong.id, p_revisao: ong.revisao, ...(decisao === "correcao" ? {} : { p_status: decisao }), p_motivo: motivo.trim() });
-      else if (pet) await rpcAdmin("admin_adocao_pet_ocultar", { p_id: pet.id, p_versao: pet.versao, p_motivo: motivo.trim() });
+      else if (pet) await rpcAdmin(pet.status === "oculto" ? "admin_adocao_pet_republicar" : "admin_adocao_pet_ocultar", { p_id: pet.id, p_versao: pet.versao, p_motivo: motivo.trim() });
       else return;
       if (vivo.current) { limpar(); setMensagem("Decisão registrada com sucesso."); setTentativa(n => n + 1); }
     } catch (e) { if (vivo.current) setMensagem(e instanceof Error ? e.message : "Não foi possível registrar a decisão."); }
@@ -100,16 +100,19 @@ function PainelAdocao({ podeDecidir }: { podeDecidir: boolean }) {
         {documento?.id === ong.id ? <p className="mt-3 text-sm"><a className="font-bold underline" target="_blank" rel="noopener noreferrer" href={documento.url}>Abrir {DOCUMENTOS[documento.tipo] ?? "documento"}</a> · Link válido por 60 segundos.</p> : null}
         {ong.correcao_motivo ? <p className="mt-3 rounded-2xl bg-amarelo-fundo p-3 text-sm">Aguardando correções do responsável: {ong.correcao_motivo}</p> : null}
       </> : <><p className="whitespace-pre-wrap text-sm">{pet?.descricao}</p>
+        {pet?.moderacao_motivo ? <p className="mt-3 whitespace-pre-wrap rounded-2xl bg-amarelo-fundo p-3 text-sm">Última moderação: {pet.moderacao_motivo}{pet.moderacao_em ? ` · ${new Date(pet.moderacao_em).toLocaleString("pt-BR")}` : ""}</p> : null}
+        {pet?.confirmado_em ? <p className="mt-3 text-sm text-cinza">Disponibilidade confirmada pela ONG em {new Date(pet.confirmado_em).toLocaleDateString("pt-BR")}. Sem confirmação há 60 dias, o anúncio fica fora do catálogo mesmo se estiver publicado.</p> : null}
         <div className="mt-4 flex flex-wrap gap-3">{pet?.fotos.filter(fotoDoStorage).map((url, i) => <Image key={url} unoptimized src={url} width={180} height={180} alt={`Foto ${i + 1} de ${pet.nome}`} referrerPolicy="no-referrer" className="h-44 w-44 rounded-2xl object-cover" />)}</div>
         {!pet?.fotos.some(fotoDoStorage) ? <p className="mt-2 text-sm text-cinza">Nenhuma foto do armazenamento disponível neste registro.</p> : null}
       </>}
-      {podeDecidir && (acoes.length > 0 || pet?.status === "publicado") ? <form className="mt-5 flex max-w-xl flex-col gap-3" onSubmit={e => { e.preventDefault(); void aplicar(); }}>
-        {ong ? <label className="flex flex-col gap-1 text-sm">Decisão<select required disabled={ocupado} className={campo} value={decisao} onChange={e => { setDecisao(e.target.value); setConfirmo(false); }}><option value="">Selecione</option>{acoes.map(s => <option key={s} value={s}>{ROTULOS[s]}</option>)}</select></label> : <p className="font-bold">Ocultar anúncio de adoção</p>}
-        <label className="flex flex-col gap-1 text-sm">Motivo da decisão<textarea required minLength={5} maxLength={500} disabled={ocupado} className={campo} value={motivo} onChange={e => setMotivo(e.target.value)} /></label>
+      {podeDecidir && (acoes.length > 0 || pet?.status === "publicado" || (pet?.status === "oculto" && pet.ong_status === "aprovada")) ? <form className="mt-5 flex max-w-xl flex-col gap-3" onSubmit={e => { e.preventDefault(); void aplicar(); }}>
+        {ong ? <label className="flex flex-col gap-1 text-sm">Decisão<select required disabled={ocupado} className={campo} value={decisao} onChange={e => { setDecisao(e.target.value); setConfirmo(false); }}><option value="">Selecione</option>{acoes.map(s => <option key={s} value={s}>{ROTULOS[s]}</option>)}</select></label> : <p className="font-bold">{pet?.status === "oculto" ? "Republicar anúncio após revisão" : "Ocultar anúncio de adoção"}</p>}
+        <label className="flex flex-col gap-1 text-sm">Motivo da decisão{pet ? " (visível ao responsável)" : ""}<textarea required minLength={5} maxLength={500} disabled={ocupado} className={campo} value={motivo} onChange={e => setMotivo(e.target.value)} /></label>
         <label className="flex items-start gap-2 text-sm"><input type="checkbox" checked={confirmo} disabled={ocupado} onChange={e => setConfirmo(e.target.checked)} />Conferi os dados{ong ? " e documentos" : " do anúncio"} e confirmo esta decisão. Ela ficará registrada na auditoria.</label>
         <button className="rounded-full bg-tinta px-5 py-3 font-bold text-white disabled:opacity-50" disabled={ocupado || !confirmo || motivo.trim().length < 5 || (!!ong && !decisao)}>{ocupado ? "Registrando…" : "Registrar decisão"}</button>
         {decisao === "suspensa" ? <p className="text-sm text-cinza">A suspensão tira os pets desta ONG do catálogo público.</p> : null}
         {decisao === "correcao" ? <p className="text-sm text-cinza">O motivo será exibido ao responsável no app. O cadastro volta a ser editável e precisará ser reenviado para análise; a ONG continua sem aprovação.</p> : null}
+        {pet?.status === "oculto" ? <p className="text-sm text-cinza">Republicar não renova a confirmação de disponibilidade. Anúncios antigos continuam fora do catálogo até a ONG confirmar novamente.</p> : null}
       </form> : null}
     </section> : null}
   </>;

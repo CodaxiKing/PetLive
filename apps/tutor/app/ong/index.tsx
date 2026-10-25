@@ -3,7 +3,7 @@ import { ActivityIndicator, Alert, FlatList, Pressable, StyleSheet, Text, View }
 import { Redirect, router, useFocusEffect } from 'expo-router';
 import * as Linking from 'expo-linking';
 import { useAuth } from '../../src/auth/AuthProvider';
-import { carregarInteressesOng, carregarPetsOng, marcarAdotadoOng, prepararRespostaOng, type ContatoOng, type CursorOng, type PainelOng, type PetOng } from '../../src/adocao/ong';
+import { carregarInteressesOng, carregarPetsOng, confirmarDisponibilidadeOng, marcarAdotadoOng, prepararRespostaOng, type ContatoOng, type CursorOng, type PainelOng, type PetOng } from '../../src/adocao/ong';
 import { BotaoPrimario } from '../../src/components/BotaoPrimario';
 import { CabecalhoTela } from '../../src/components/CabecalhoTela';
 import { colors } from '../../src/theme/colors';
@@ -64,6 +64,18 @@ function PainelDaConta({ tutorId }: { tutorId: string }) {
     catch (e) { if (foco.current && epoca.current === inicio) setErro(e instanceof Error ? e.message : 'Atualize o painel.'); }
     finally { acaoRef.current = false; setAcao(false); }
   }
+  function confirmarDisponivel(p: PetOng) {
+    const inicio = epoca.current;
+    Alert.alert('Confirmar disponibilidade?', `Confirma que ${p.nome} continua disponível para adoção?`, [
+      { text: 'Cancelar', style: 'cancel' }, { text: 'Confirmar', onPress: async () => {
+        if (!foco.current || epoca.current !== inicio || acaoRef.current || trava.current) return;
+        acaoRef.current = true; setAcao(true); setErro(null);
+        try { await confirmarDisponibilidadeOng(tutorId, p.id); if (foco.current && epoca.current === inicio) await buscar(null); }
+        catch (e) { if (foco.current && epoca.current === inicio) setErro(e instanceof Error ? e.message : 'Atualize o painel.'); }
+        finally { acaoRef.current = false; setAcao(false); }
+      } },
+    ]);
+  }
   const cabecalho = <View style={s.grupo}>
     <Text style={s.titulo}>{pet ? `Interessados em ${pet.nome}` : 'Pets e interessados'}</Text>
     {pet ? <Pressable accessibilityRole="button" disabled={acao} style={s.voltar} onPress={() => selecionar(null)}><Text style={s.texto}>← Voltar aos pets da ONG</Text></Pressable> : <>
@@ -86,9 +98,10 @@ function PainelDaConta({ tutorId }: { tutorId: string }) {
         ListEmptyComponent={!carregando && (painel?.ongs.length ?? 0) > 0 && !erro ? <Text style={s.texto}>Esta organização ainda não tem pets cadastrados.</Text> : undefined}
         renderItem={({ item }) => <View style={s.card}><Text style={s.titulo}>{item.nome}</Text><Text style={s.texto}>{item.ong_nome} · {status[item.status]} · {item.interesses} interesse(s)</Text>
           <Text style={s.texto}>Última confirmação: {new Date(item.confirmado_em).toLocaleDateString('pt-BR')}. Pets publicados sem confirmação há 60 dias ficam fora do catálogo.</Text>
+          {item.moderacao_motivo ? <Text style={s.texto}>Última moderação: {item.moderacao_motivo}</Text> : null}
           {item.ong_status === 'aprovada' ? <><BotaoPrimario titulo="Ver interessados" desabilitado={acao || carregando} onPress={() => selecionar(item)} />
             {['rascunho', 'publicado'].includes(item.status) ? <BotaoPrimario titulo="Editar dados e fotos" desabilitado={acao || carregando} onPress={() => router.push({ pathname: '/ong/pet', params: { pet: item.id } })} /> : null}
-            {item.status === 'publicado' ? <BotaoPrimario titulo="Marcar como adotado" desabilitado={acao || carregando} onPress={() => confirmarAdocao(item)} /> : null}</> : <Text style={s.texto}>As ações ficam disponíveis quando a ONG está aprovada.</Text>}</View>}
+            {item.status === 'publicado' ? <><BotaoPrimario titulo="Confirmar disponível" desabilitado={acao || carregando} onPress={() => confirmarDisponivel(item)} /><BotaoPrimario titulo="Marcar como adotado" desabilitado={acao || carregando} onPress={() => confirmarAdocao(item)} /></> : null}</> : <Text style={s.texto}>As ações ficam disponíveis quando a ONG está aprovada.</Text>}</View>}
         ListFooterComponent={mais ? <BotaoPrimario titulo="Mais pets" carregando={carregando} desabilitado={acao} onPress={() => { void buscar(null, true); }} /> : undefined} />}
   </View>;
 }
