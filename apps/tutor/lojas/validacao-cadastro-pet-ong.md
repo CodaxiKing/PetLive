@@ -21,3 +21,9 @@ Fotos JPEG/PNG/WebP de até 5 MB no cliente, enviadas com nomes aleatórios sem 
 3. Confirmar publicação do pet real autorizado e conferir a ficha no catálogo como tutor. Verificar descrição, cuidados desconhecidos, data civil, fotos e região da ONG.
 4. Em dois aparelhos, abrir a mesma versão: salvar num deles e conferir que o outro pede atualizar, preservando os dados do primeiro. Simular resposta perdida: atualizar a ficha em vez de criar outro pet.
 5. Conferir bloqueio para outra ONG/conta, ONG não aprovada e pet adotado/oculto. Testar teclado, fonte ampliada e rolagem Android/iOS. Esses testes reais ainda estão pendentes.
+
+## Implantação — 24/10/2026
+
+Código `8b0dca8` enviado à main. Migration `20261212000000_ong_salvar_pet.sql` aplicada em produção (`qurdqbhjtgapyksrilyk`) após ROLLBACK de validação; COMMIT, funções, coluna de versão, RLS e grants conferidos. Nenhum pet/ONG fictício foi inserido ou publicado em produção.
+
+Cópia limpa: 246 testes/41 arquivos, TypeScript, lint e bundle Metro Android aprovados. Preview publicado: https://expo.dev/accounts/codaxi/projects/petlive-tutor/updates/46b92c2a-a8e4-453b-9f8a-02b3cda8cc5f . Runtime `dff916ce37166d489949d7b3020e4ed90d1755dd`, compatível com APK `efb3cb3b-a260-427c-b501-21dde90e5dd0`. Sem novo APK ou Redeploy do site. Publicação confirmada; recebimento e homologação no aparelho com ONG/pets reais seguem pendentes.

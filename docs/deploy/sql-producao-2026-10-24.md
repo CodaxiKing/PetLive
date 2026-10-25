@@ -1,5 +1,9 @@
 # Atualização SQL de produção — 24/10/2026
 
+## Cadastro e edição de pets da ONG
+
+Migration `20261212000000_ong_salvar_pet.sql`, fonte `8b0dca8`, validada com ROLLBACK e aplicada com COMMIT em produção. Lock timeout 5 s e statement timeout 60 s. Acrescenta versão, leitura/edição por ONG responsável aprovada e IDs das organizações no painel. Novas fotos precisam corresponder a arquivos no Storage do tutor/pet; adota o bucket pets e a pasta plana existentes. Não houve criação de bucket, alteração de dados de pets reais ou publicação de registros de teste. PGlite verificou conflitos, autorização, publicação, arquivos próprios, moderação, retry sem duplicação e LGPD; homologação nativa com ONG real permanece pendente.
+
 ## Painel da ONG: interessados e adoção
 
 Migration `20261211000000_painel_ong_interessados.sql`, fonte `92151d4`, validada na produção em transação com ROLLBACK e depois aplicada com COMMIT. Lock timeout 5 s e statement timeout 60 s. Conferidas as funções de painel, interesses, e-mail revalidado e marcar adotado. Acesso anônimo bloqueado; RLS direta dos contatos exige ONG responsável aprovada (ou o próprio tutor remetente). Nenhum contato real foi enviado, pet real foi marcado adotado ou dado fictício foi inserido em produção. Testes funcionais com organizações reais continuam pendentes no aparelho; os testes com dados fictícios ocorreram apenas no PGlite isolado.
