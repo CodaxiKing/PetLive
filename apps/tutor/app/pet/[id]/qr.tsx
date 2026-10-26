@@ -3,7 +3,7 @@ import { ActivityIndicator, Platform, Pressable, ScrollView, StyleSheet, Switch,
 import { router, useFocusEffect, useLocalSearchParams } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { BotaoPrimario } from '../../../src/components/BotaoPrimario';
-import { CodigoQR } from '../../../src/components/CodigoQR';
+import { EtiquetaColeira } from '../../../src/pets/EtiquetaColeira';
 import { usePets } from '../../../src/pets/PetsProvider';
 import { carregarQr, salvarQr, urlQr, type QrPet } from '../../../src/pets/qrColeira';
 import { colors } from '../../../src/theme/colors';
@@ -77,7 +77,7 @@ function EditorQr({ pet, nome }: { pet: string; nome: string }) {
       <BotaoPrimario titulo={salvo ? 'Salvar permissões' : 'Gerar QR'} carregando={ocupado} onPress={() => { void executar(false); }} />
       {salvo?.active ? <>
         <View ref={etiqueta} collapsable={false} onLayout={() => setPronto(true)} style={s.etiqueta}>
-          <Text style={s.titulo}>{nome}</Text><CodigoQR valor={urlQr(salvo.code)} tamanho={230} /><Text style={s.texto}>Encontrou este pet? Escaneie o QR.</Text><Text style={s.link}>PetLive</Text>
+          <EtiquetaColeira nome={nome} url={urlQr(salvo.code)} />
         </View>
         <Text style={s.texto}>Página pública: nome e espécie{salvo.show_photo ? ', foto' : ''}{salvo.show_phone ? ', telefone do tutor' : ''}{salvo.show_allergies ? ', alergias e condições' : ''}. O endereço permanece o mesmo ao salvar.</Text>
         {alterado ? <Text style={s.texto}>Salve as permissões antes de baixar.</Text> : null}
@@ -93,6 +93,6 @@ const s = StyleSheet.create({
   texto: { fontFamily: fontFamily.regular, fontSize: 14, lineHeight: 21, color: colors.black },
   link: { color: colors.primaryDeep, fontFamily: fontFamily.bold, paddingVertical: 10 },
   linha: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
-  etiqueta: { backgroundColor: '#FFFFFF', alignItems: 'center', padding: 20, gap: 8, borderRadius: 20 },
+  etiqueta: { backgroundColor: colors.white, width: '100%', maxWidth: 360, alignSelf: 'center', borderRadius: 28, overflow: 'hidden' },
   erro: { color: '#A32035', fontSize: 14 },
 });
