@@ -8,6 +8,7 @@ import { Icone } from '../../../src/components/Icone'
 import { mensagemDeErro } from '../../../src/lib/cacheOffline'
 import { abrirPdf } from '../../../src/lib/pdf'
 import { usePlano } from '../../../src/lib/plano'
+import { carregarItensEscala } from '../../../src/pets/conteudoCuidado'
 import { usePets } from '../../../src/pets/PetsProvider'
 import { AVISO_ESCALA, carregarEscala, htmlResumo, ITENS_ESCALA, salvarEscala, type ItemEscala, type RegistroEscala } from '../../../src/pets/senior'
 import { idadeEmAnos } from '../../../src/pets/types'
@@ -58,10 +59,13 @@ export default function TelaQualidadeVida() {
   const [observacao, setObservacao] = useState('')
   const [historico, setHistorico] = useState<RegistroEscala[]>([])
   const [salvando, setSalvando] = useState(false)
+  const [itens, setItens] = useState(ITENS_ESCALA)
 
   useFocusEffect(
     useCallback(() => {
       if (!id) return
+      // Textos revisados no conteúdo mestre; sem resposta, ficam os embutidos.
+      carregarItensEscala().then(setItens, () => undefined)
       carregarEscala(id).then((lista) => {
         setHistorico(lista)
         // Começa da última resposta: o tutor muda só o que mudou.
@@ -107,7 +111,7 @@ export default function TelaQualidadeVida() {
     <View style={estilos.tela}>
       <HeroiOnda subtitulo={pet.nome} titulo="Qualidade de vida" altura={200} />
       <ScrollView contentContainerStyle={estilos.conteudo} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
-        {ITENS_ESCALA.map((i) => (
+        {itens.map((i) => (
           <Barra key={i.chave} rotulo={i.rotulo} ajuda={i.pergunta} valor={notas[i.chave]} onMudar={(v) => setNotas((n) => ({ ...n, [i.chave]: v }))} />
         ))}
 

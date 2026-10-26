@@ -1,52 +1,54 @@
+import { useEffect, useState } from 'react'
 import { Linking, ScrollView, StyleSheet, Text, View } from 'react-native'
 import { Tocavel } from '../src/components/Animacoes'
 import { HeroiOnda } from '../src/components/HeroiOnda'
 import { Icone } from '../src/components/Icone'
+import { carregarLuto, linkSeguro, LUTO_PADRAO, type RecursoLuto } from '../src/pets/conteudoCuidado'
 import { colors } from '../src/theme/colors'
 import { fontFamily } from '../src/theme/typography'
 
 /**
  * Apoio ao luto (BUSINESS.md 5.39). Textos curtos, sem conselhos médicos e
- * sem pressa. Os recursos curados e a revisão por profissional ficam no
- * conteúdo mestre; até lá, este texto base e o CVV.
+ * sem pressa. Os textos e contatos vêm do conteúdo mestre, revisados por
+ * profissional; sem internet, o app mostra o texto base e o CVV.
  */
-const TEXTOS = [
-  {
-    titulo: 'O que você sente é real',
-    texto: 'Perder um pet é perder um companheiro de todos os dias. Tristeza, saudade e até culpa são reações comuns. Não existe jeito certo nem prazo para passar por isso.',
-  },
-  {
-    titulo: 'Um passo de cada vez',
-    texto: 'Guardar a coleira, olhar fotos ou mudar a rotina pode levar tempo. Faça no seu ritmo. Conversar com quem conheceu seu pet costuma ajudar.',
-  },
-  {
-    titulo: 'Crianças e outros pets',
-    texto: 'Crianças entendem melhor com palavras simples e verdadeiras. Outros pets da casa também podem estranhar a ausência; manter a rotina deles traz segurança.',
-  },
-]
-
 export default function ApoioLuto() {
+  const [recursos, setRecursos] = useState<RecursoLuto[]>(LUTO_PADRAO)
+  useEffect(() => {
+    let vivo = true
+    carregarLuto().then((r) => vivo && setRecursos(r))
+    return () => {
+      vivo = false
+    }
+  }, [])
   return (
     <View style={estilos.tela}>
       <HeroiOnda fundo={colors.premiumSurface} subtitulo="Em memória" titulo="Apoio ao luto" altura={200} />
       <ScrollView contentContainerStyle={estilos.conteudo} showsVerticalScrollIndicator={false}>
-        {TEXTOS.map((t) => (
-          <View key={t.titulo} style={estilos.cartao}>
-            <Text style={estilos.titulo}>{t.titulo}</Text>
-            <Text style={estilos.texto}>{t.texto}</Text>
-          </View>
-        ))}
-        <Tocavel accessibilityRole="button" onPress={() => Linking.openURL('tel:188').catch(() => undefined)} style={[estilos.cartao, estilos.cvv]}>
-          <View style={estilos.cvvLinha}>
-            <View style={estilos.icone}>
-              <Icone nome="telefone" size={20} />
+        {recursos.map((r) => {
+          const link = linkSeguro(r.link)
+          if (r.tipo === 'contato') {
+            return (
+              <Tocavel key={r.id} accessibilityRole="button" disabled={!link} onPress={() => link && Linking.openURL(link).catch(() => undefined)} style={[estilos.cartao, estilos.cvv]}>
+                <View style={estilos.cvvLinha}>
+                  <View style={estilos.icone}>
+                    <Icone nome="telefone" size={20} />
+                  </View>
+                  <View style={estilos.flex}>
+                    <Text style={estilos.titulo}>{r.titulo}</Text>
+                    <Text style={estilos.texto}>{r.texto}</Text>
+                  </View>
+                </View>
+              </Tocavel>
+            )
+          }
+          return (
+            <View key={r.id} style={estilos.cartao}>
+              <Text style={estilos.titulo}>{r.titulo}</Text>
+              <Text style={estilos.texto}>{r.texto}</Text>
             </View>
-            <View style={estilos.flex}>
-              <Text style={estilos.titulo}>Se a tristeza estiver pesada demais</Text>
-              <Text style={estilos.texto}>CVV, ligação gratuita, 24 horas: 188. Também atende por chat em cvv.org.br.</Text>
-            </View>
-          </View>
-        </Tocavel>
+          )
+        })}
         <Text style={estilos.nota}>Quando quiser, estaremos aqui. Sem pressa.</Text>
       </ScrollView>
     </View>
