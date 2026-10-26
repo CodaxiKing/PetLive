@@ -10,7 +10,7 @@ import { supabase } from './supabase';
  * erro), tudo segue ligado e ninguém é barrado: a última resposta fica
  * guardada no aparelho.
  */
-export type Recurso = 'carteirinha_link' | 'indicar_lugar' | 'achei_foto';
+export type Recurso = 'carteirinha_link' | 'indicar_lugar' | 'achei_foto' | 'comunidade';
 type Config = { versao_minima: { android?: string; ios?: string }; recursos: Partial<Record<Recurso, boolean>> };
 
 const CHAVE = 'petlive-config-app';

@@ -357,3 +357,8 @@ grant execute on function public.comunidade_perfil_configurar(uuid, boolean, tex
   public.comunidade_curtir(uuid), public.comunidade_comentarios(uuid), public.comunidade_comentar(uuid, text),
   public.comunidade_apagar_comentario(uuid), public.comunidade_seguir(uuid), public.comunidade_denunciar(text, uuid, text),
   public.admin_comunidade(), public.admin_comunidade_decidir(text, uuid, boolean) to authenticated;
+
+-- Só abre depois do gate de retenção da Fase 1: o admin liga em Sistema.
+insert into public.recursos (chave, nome, descricao, ligado, ordem) values
+  ('comunidade', 'Comunidade', 'Feed, posts e perfil público dos pets. Ligar depois do gate de retenção da Fase 1.', false, 50)
+on conflict (chave) do nothing;

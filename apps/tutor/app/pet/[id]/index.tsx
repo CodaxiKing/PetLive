@@ -12,6 +12,7 @@ import {
 } from 'react-native'
 import Svg, { Path } from 'react-native-svg'
 import { Redirect, router, useFocusEffect, useLocalSearchParams } from 'expo-router'
+import { useRecurso } from '../../../src/lib/configApp'
 import { useAuth } from '../../../src/auth/AuthProvider'
 import { carregarCuidadores, nomeAutor, type Cuidadores } from '../../../src/guarda/guarda'
 import { Surgir, Tocavel } from '../../../src/components/Animacoes'
@@ -68,6 +69,7 @@ export default function PetDetalhe() {
   const { id } = useLocalSearchParams<{ id: string }>()
   const { width } = useWindowDimensions()
   const { session } = useAuth()
+  const comunidade = useRecurso('comunidade', false)
   const { pets, petsMemoria, seniores, marcarSenior, definirPetAtivo, removerPet } = usePets()
   const { vacinas, removerVacina } = useVacinas()
   const [cuidadores, setCuidadores] = useState<Cuidadores | null>(null)
@@ -462,16 +464,18 @@ export default function PetDetalhe() {
             >
               <Text style={[estilos.opcaoTexto, estilos.opcaoPerigo]}>{petAtual.nome} sumiu</Text>
             </Pressable>
-            <Pressable
-              accessibilityRole="button"
-              onPress={() => {
-                setMenuAberto(false)
-                router.push({ pathname: '/comunidade/pet/[id]', params: { id: petAtual.id } })
-              }}
-              style={estilos.opcao}
-            >
-              <Text style={estilos.opcaoTexto}>Perfil público</Text>
-            </Pressable>
+            {comunidade ? (
+              <Pressable
+                accessibilityRole="button"
+                onPress={() => {
+                  setMenuAberto(false)
+                  router.push({ pathname: '/comunidade/pet/[id]', params: { id: petAtual.id } })
+                }}
+                style={estilos.opcao}
+              >
+                <Text style={estilos.opcaoTexto}>Perfil público</Text>
+              </Pressable>
+            ) : null}
             <Pressable accessibilityRole="button" onPress={() => ir('/pet/[id]/atualizacoes')} style={estilos.opcao}>
               <Text style={estilos.opcaoTexto}>Atualizações e quem cuida</Text>
             </Pressable>

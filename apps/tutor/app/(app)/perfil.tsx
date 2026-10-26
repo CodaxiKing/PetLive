@@ -9,6 +9,7 @@ import { MarcaPata } from '../../src/components/MarcaPata';
 import { Mascote } from '../../src/components/Mascote';
 import { limparCacheOffline } from '../../src/lib/cacheOffline';
 import { mascaraTelefone } from '../../src/lib/mascaras';
+import { useRecurso } from '../../src/lib/configApp';
 import { useEstadoPlano } from '../../src/lib/plano';
 import { supabase } from '../../src/lib/supabase';
 import { useLembretes } from '../../src/lembretes/LembretesProvider';
@@ -33,6 +34,8 @@ function fimDeHoje(): number {
  * os pets; o convite do Premium; e a lista Notificações, Privacidade e Sair.
  */
 export default function Perfil() {
+  // Comunidade só abre depois do gate de retenção (BUSINESS.md 5.28): a equipe liga em Sistema.
+  const comunidade = useRecurso('comunidade', false);
   const router = useRouter();
   const { user } = useAuth();
   const plano = useEstadoPlano();
@@ -116,7 +119,7 @@ export default function Perfil() {
     { rotulo: 'Minha assinatura', icone: 'documento', fundo: colors.premiumSurface, acao: () => router.push('/premium/assinatura') },
     { rotulo: 'Notificações', icone: 'sino', fundo: colors.hero, acao: () => router.push('/avisos') },
     { rotulo: 'Guarda compartilhada', icone: 'pessoas', fundo: colors.primarySurface, acao: () => router.push('/guarda') },
-    { rotulo: 'Comunidade', icone: 'coracao', fundo: colors.premiumSurface, acao: () => router.push('/comunidade') },
+    ...(comunidade ? [{ rotulo: 'Comunidade', icone: 'coracao' as const, fundo: colors.premiumSurface, acao: () => router.push('/comunidade') }] : []),
     { rotulo: 'Meus eventos', icone: 'local', fundo: colors.hero, acao: () => router.push('/eventos/meus') },
     { rotulo: 'Plano e seguro pet', icone: 'escudo', fundo: colors.healthSurface, acao: () => router.push('/parceiros/seguro') },
     { rotulo: 'Privacidade e dados', icone: 'escudo', fundo: colors.successSurface, acao: () => router.push('/privacidade') },
