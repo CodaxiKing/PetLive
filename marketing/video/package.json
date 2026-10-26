@@ -8,7 +8,10 @@
     "render": "remotion render src/index.ts PetLive-Anuncio out/petlive-anuncio.mp4",
     "still": "remotion still src/index.ts PetLive-Anuncio out/still.png",
     "typecheck": "tsc",
-    "audio": "node scripts/gerar-audio.mjs"
+    "audio": "node scripts/gerar-audio.mjs",
+    "render:motion": "remotion render src/index.ts PetLive-Motion-30s out/petlive-motion-ad-30s.mp4 --codec=h264 --crf=16 --pixel-format=yuv420p --image-format=png --color-space=bt709 --muted",
+    "still:motion": "remotion still src/index.ts PetLive-Motion-30s out/petlive-motion-ad-30s-capa.png --frame=880",
+    "quadros:motion": "node scripts/quadros-motion.mjs"
   },
   "dependencies": {
     "@remotion/cli": "4.0.532",

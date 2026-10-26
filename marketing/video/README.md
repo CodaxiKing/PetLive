@@ -35,3 +35,38 @@ npm run audio
 Onde cada efeito toca e o volume ficam em `EFEITOS` no `roteiro.ts`; o volume da
 trilha em `VOLUME_MUSICA`. Para trocar por uma música licenciada, ponha o arquivo
 em `public/` e mude `MUSICA`.
+
+---
+
+# Anúncio motion 30 s (`PetLive-Motion-30s`)
+
+Composição independente, vertical 1080×1920, 30 fps, 30 s, **sem áudio** (nenhum
+`<Audio>`; o MP4 sai com `--muted`, sem faixa de som). Código em `src/motion30/`.
+O anúncio de 40 s acima continua intacto (`PetLive-Anuncio`).
+
+```bash
+npm install
+npm run dev              # Studio: escolha "PetLive-Motion-30s"
+npm run render:motion    # out/petlive-motion-ad-30s.mp4 (H.264, yuv420p, sem áudio)
+npm run still:motion     # capa (quadro 880) em out/petlive-motion-ad-30s-capa.png
+npm run quadros:motion -- 0 150 300   # quadros soltos em out/frames para revisão
+```
+
+## Onde mexer
+
+- `src/motion30/roteiro.ts`: **textos** (`TEXTOS`), início de cada cena (`CENAS`),
+  momentos dos toques e cards (`BATIDAS`) e os dados fictícios das telas (`DADOS`).
+  O tamanho do título se ajusta à linha mais longa; prefira linhas de até ~20 letras.
+- `src/motion30/palco.tsx`: câmera (quadros-chave `POSES` do celular), o aparelho,
+  o fundo e o card que sai do celular (`Destaque`).
+- `src/motion30/telas.tsx`: telas recriadas do código de `apps/tutor` (Início,
+  perfil do pet, Carteirinha, Medicamentos, Mapa).
+- `src/motion30/app.tsx`: cores, ícones, mascotes e peças do app.
+- `src/motion30/textos.tsx`: títulos, cards do gancho e o fechamento.
+- `src/motion30/efeitos.tsx`: rastro de movimento, luz no vidro, bokeh, grão,
+  confirmação de toque, halo do pin e as legendas dos cards ampliados
+  (textos em `TEXTOS.destaques`).
+
+O CTA é neutro ("Conheça o PetLive"): sem lojas, link, QR ou "grátis", porque a
+disponibilidade nas lojas não está confirmada no projeto. Nome da clínica e
+dados são fictícios; o fechamento traz "Telas ilustrativas com dados fictícios".
