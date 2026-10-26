@@ -1,10 +1,10 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react'
-import { mensagemDeErro } from '../lib/cacheOffline'
+import { ehErroDeRede, mensagemDeErro } from '../lib/cacheOffline'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../auth/AuthProvider'
 import { enviarFotoPet } from './foto'
 import { cadastrarPet } from './cadastrarPet'
-import { petsSenior } from './senior'
+import { carregarPetsConta, criarCargaPets } from './carregarPetsConta'
 import type { Pet, PetForm } from './types'
 import { FORM_VAZIO, formParaRegistro } from './types'
 
@@ -49,29 +49,26 @@ export function PetsProvider({ children }: { children: ReactNode }) {
   const [salvando, setSalvando] = useState(false)
   const [erro, setErro] = useState<string | null>(null)
 
-  const recarregar = useCallback(() => {
-    // Sem tutor não há consulta; resolve vazio para o estado também passar
-    // pela fronteira assíncrona (mesmo motivo do .then() no AuthProvider).
-    const consulta = tutorId
-      ? supabase.from('pets').select('*').order('criado_em', { ascending: false })
-      : Promise.resolve({ data: [] as Pet[], error: null })
-
-    if (tutorId) petsSenior().then(setSeniores, () => undefined)
-
-    return Promise.resolve(consulta).then(({ data, error }) => {
-      if (error) {
-        setErro(mensagemDeErro(error.message))
-      } else {
-        setErro(null)
-        setPets((data ?? []) as Pet[])
-      }
+  const carga = useMemo(() => criarCargaPets(
+    () => tutorId ? carregarPetsConta(tutorId) : Promise.resolve({ pets: [], seniores: new Set<string>() }),
+    ({ pets, seniores }) => {
+      setErro(null)
+      setPets(pets)
+      if (seniores) setSeniores(seniores)
       setCarregando(false)
-    })
-  }, [tutorId])
+    },
+    (erro) => {
+      const mensagem = erro instanceof Error ? erro.message : 'Não foi possível carregar seus pets. Tente novamente.'
+      setErro(ehErroDeRede(mensagem) ? 'Sem internet: não foi possível atualizar seus pets. Tente novamente quando a conexão voltar.' : mensagem)
+      setCarregando(false)
+    },
+  ), [tutorId])
+  const recarregar = carga.recarregar
 
   useEffect(() => {
     recarregar()
-  }, [recarregar])
+    return carga.invalidar
+  }, [carga, recarregar])
 
   const criarPet = useCallback(
     async (form: PetForm) => {

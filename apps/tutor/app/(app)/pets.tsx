@@ -41,7 +41,7 @@ function tituloSemPet(titulo: string, nome: string): string {
  * idade, o próximo lembrete e o mascote (ou a foto), e "Adicionar pet".
  */
 export default function Pets() {
-  const { pets, petsMemoria, seniores, carregando, definirPetAtivo, recarregar } = usePets()
+  const { pets, petsMemoria, seniores, carregando, erro, definirPetAtivo, recarregar } = usePets()
   const { lembretes } = useLembretes()
   const [atualizando, setAtualizando] = useState(false)
   const limites = useLimitesPlano()
@@ -57,12 +57,11 @@ export default function Pets() {
 
   const recarregarLista = useCallback(async () => {
     setAtualizando(true)
-    await recarregar()
-    setAtualizando(false)
+    try { await recarregar() } finally { setAtualizando(false) }
   }, [recarregar])
 
   const contagem =
-    pets.length === 0 ? 'Nenhum pet ainda' : pets.length === 1 ? '1 pet cadastrado' : `${pets.length} pets cadastrados`
+    erro && pets.length === 0 ? 'Atualize para ver seus pets' : pets.length === 0 ? 'Nenhum pet ainda' : pets.length === 1 ? '1 pet cadastrado' : `${pets.length} pets cadastrados`
 
   return (
     <View style={estilos.tela}>
@@ -92,7 +91,13 @@ export default function Pets() {
           }
         >
           <AvisoLimitesPlano limites={limites?.dados ?? null} />
-          {pets.length === 0 ? (
+          {erro ? <View style={estilos.falha}>
+            <Text accessibilityRole="alert" style={estilos.falhaTexto}>{erro}</Text>
+            <Pressable accessibilityRole="button" disabled={atualizando} accessibilityState={{ disabled: atualizando, busy: atualizando }} onPress={recarregarLista} hitSlop={8}>
+              <Text style={estilos.repetir}>{atualizando ? 'Atualizando…' : 'Tentar novamente'}</Text>
+            </Pressable>
+          </View> : null}
+          {pets.length === 0 && !erro ? (
             <View style={estilos.vazio}>
               <Flutuar>
                 <Mascote especie="cao" size={140} />
@@ -186,6 +191,9 @@ export default function Pets() {
 }
 
 const estilos = StyleSheet.create({
+  falha: { backgroundColor: colors.warningSurface, borderRadius: 20, padding: 16, gap: 10 },
+  falhaTexto: { ...typography.small, color: colors.warningText },
+  repetir: { ...typography.captionMedium, color: colors.primaryDeep },
   chipSenior: { backgroundColor: '#FFF0C9', color: '#8A6414' },
   memoria: { flexDirection: 'row', alignItems: 'center', gap: 14, backgroundColor: colors.premiumSurface, borderRadius: 28, padding: 14, marginTop: 12 },
   memoriaRetrato: { width: 56, height: 56, borderRadius: 28, overflow: 'hidden', backgroundColor: colors.white, alignItems: 'center', justifyContent: 'center' },

@@ -27,6 +27,14 @@ Premium, gestão de assinatura, webhooks, cupons comerciais e destaques pagos co
 
 ## Evidência
 
+### Continuação: carregamento dos pets
+
+Tasks relacionadas: cadastro com foto (A02), isolamento por tutor (B02) e lista Meus pets. A consulta agora captura a credencial, preserva o cache offline por titular e reconfere a conta ao terminar. O layout já reinicia os providers por conta; esse comportamento foi preservado. Apenas a busca mais recente pode publicar lista/etiquetas ou erro, e o cleanup invalida respostas pendentes.
+
+Falhas de rede/servidor e respostas incompletas encerram o carregamento e oferecem nova tentativa. Não são apresentadas como “Nenhum pet ainda”. Dados já carregados da mesma conta são preservados numa falha de atualização; indisponibilidade das etiquetas sênior não apaga marcações atuais. A leitura de limites permanece sem cache offline.
+
+Validação desta continuação: **406 testes em 67 arquivos**, TypeScript e lint aprovados. Nove casos novos cobrem titular, credencial, contrato, erro/retry, respostas fora de ordem e invalidação. A02/B02 continuam dependendo das verificações de ambiente/aparelho registradas na auditoria; esta entrega não certifica todo o RLS remoto.
+
 - Tutor: 397 testes em 66 arquivos, TypeScript e lint aprovados.
 - Backend: 18 testes Node; SQL isolado para LGPD (formatos legado/app), limites/Storage/quota e diagnóstico admin aprovado.
 - Campanhas: cinco testes, TypeScript e ESLint do web aprovados.

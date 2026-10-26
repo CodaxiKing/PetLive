@@ -7,10 +7,13 @@ const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY;
 
 /** Cliente temporário: nunca persiste nem substitui a conta aberta no app. */
-export function criarClienteTemporario(accessToken?: string) {
+export function criarClienteTemporario(accessToken?: string, usarCacheOffline = false) {
   return createClient(supabaseUrl ?? 'https://invalid.supabase.co', supabaseAnonKey ?? 'anon-placeholder', {
     auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false },
-    ...(accessToken ? { global: { headers: { Authorization: `Bearer ${accessToken}` } } } : {}),
+    global: {
+      ...(accessToken ? { headers: { Authorization: `Bearer ${accessToken}` } } : {}),
+      ...(usarCacheOffline ? { fetch: fetchComCache } : {}),
+    },
   });
 }
 
