@@ -5,7 +5,9 @@ import { Cabecalho, numero } from "@/components/admin/Painel";
 import { rpcAdmin } from "@/lib/admin/supabase";
 
 type Relatorios = {
-  funil: { contas: number; com_pet: number; com_vacina: number; com_lembrete: number; voltou_7d: number };
+  funil: { contas: number; com_pet: number; com_vacina: number; com_lembrete: number; voltou_7d: number; premium_teste: number; premium_pago: number };
+  cidades: { cidade: string; tutores: number; premium: number }[];
+  sem_cidade: number;
   retencao: { mes: string; tutores: number; meses: (number | null)[] }[];
   dias_ate_vacina: number | null;
   pets_com_vacina_pct: number | null;
@@ -30,6 +32,12 @@ function csv(d: Relatorios, periodo: string): string {
     ["Registrou a 1ª vacina", d.funil.com_vacina],
     ["Criou um lembrete", d.funil.com_lembrete],
     ["Voltou depois de 7 dias", d.funil.voltou_7d],
+    ["Começou o teste do Premium", d.funil.premium_teste],
+    ["Assinou o Premium", d.funil.premium_pago],
+    [],
+    ["Cidade", "Tutores", "Premium"],
+    ...d.cidades.map((c) => [c.cidade, c.tutores, c.premium]),
+    ["Sem cidade no perfil", d.sem_cidade, ""],
     [],
     ["Mês de entrada", "Tutores", ...d.retencao[0].meses.map((_, i) => `Mês ${i}`)],
     ...d.retencao.map((r) => [mesCurto(r.mes), r.tutores, ...r.meses.map((m) => (r.tutores && m !== null ? `${m}%` : ""))]),
@@ -55,8 +63,9 @@ function corRetencao(pct: number): string {
 
 /**
  * Relatórios (protótipo AdminRelatorios): como o tutor chega até usar o app
- * de verdade e quanto tempo ele fica. Tudo agregado, sem nomes. O funil do
- * Premium e os bairros entram quando existirem assinatura e endereço.
+ * de verdade, até o Premium, quanto tempo ele fica e em que cidade está.
+ * Tudo agregado, sem nomes; cidades com menos de 5 tutores ficam em "Outras".
+ * Bairro não é coletado: a cidade do perfil é o recorte mais fino.
  */
 export default function RelatoriosPagina() {
   const [dias, setDias] = useState(30);
@@ -86,6 +95,8 @@ export default function RelatoriosPagina() {
     ["Registrou a 1ª vacina", dados.funil.com_vacina, "bg-azul"],
     ["Criou um lembrete", dados.funil.com_lembrete, "bg-roxo-fundo"],
     ["Voltou depois de 7 dias", dados.funil.voltou_7d, "bg-tinta"],
+    ["Começou o teste do Premium", dados.funil.premium_teste, "bg-amarelo-fundo"],
+    ["Assinou o Premium", dados.funil.premium_pago, "bg-verde-texto"],
   ];
   const topo = Math.max(dados.funil.contas, 1);
   const colunas = Math.max(...dados.retencao.map((r) => r.meses.length));
@@ -125,7 +136,7 @@ export default function RelatoriosPagina() {
               </li>
             ))}
           </ul>
-          <p className="mt-4 text-[11px] leading-relaxed text-cinza">Teste e assinatura do Premium entram no funil quando o plano pago existir.</p>
+          <p className="mt-4 text-[11px] leading-relaxed text-cinza">Assinou: pagou ao menos um período (teste grátis cancelado não conta).</p>
         </section>
 
         <section className="min-w-0 overflow-x-auto rounded-[28px] bg-fundo p-6">
@@ -221,6 +232,34 @@ export default function RelatoriosPagina() {
           </dl>
         </section>
       </div>
+      <section className="mt-4 rounded-[28px] bg-fundo p-6">
+        <div className="flex items-baseline justify-between gap-3">
+          <h2 className="font-bold">Tutores por cidade</h2>
+          <span className="text-xs text-cinza">Cidade do perfil · {numero(dados.sem_cidade)} sem cidade</span>
+        </div>
+        {dados.cidades.length === 0 ? (
+          <p className="mt-3 text-sm text-cinza">Nenhum tutor informou a cidade ainda.</p>
+        ) : (
+          <table className="mt-3 w-full text-left text-[13px]">
+            <thead className="text-[11px] font-bold uppercase tracking-wider text-[#6A7484]">
+              <tr>
+                <th className="py-2">Cidade</th>
+                <th className="py-2">Tutores</th>
+                <th className="py-2">Premium</th>
+              </tr>
+            </thead>
+            <tbody>
+              {dados.cidades.map((c) => (
+                <tr key={c.cidade} className="border-t border-[#EEF0F4]">
+                  <td className="py-2.5 font-semibold">{c.cidade}</td>
+                  <td className="py-2.5">{numero(c.tutores)}</td>
+                  <td className="py-2.5">{numero(c.premium)} <span className="text-cinza">({c.tutores ? Math.round((c.premium / c.tutores) * 100) : 0}%)</span></td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </section>
     </>
   );
 }
