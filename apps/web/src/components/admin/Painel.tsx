@@ -45,7 +45,7 @@ const AREAS: { rotulo: string; href?: string; icone: keyof typeof ICONES; papeis
   { rotulo: "Adoção e ONGs", href: "/admin/adocao", icone: "moderacao", papeis: ["moderacao", "leitura"] },
   { rotulo: "Campanhas", href: "/admin/campanhas", icone: "campanhas", papeis: ["marketing", "leitura"] },
   { rotulo: "Conteúdo mestre", href: "/admin/conteudo", icone: "conteudo" },
-  { rotulo: "Integrações", icone: "breve" },
+  { rotulo: "Integrações", href: "/admin/integracoes", icone: "sistema", papeis: ["leitura"] },
   { rotulo: "Sistema", href: "/admin/sistema", icone: "sistema" },
   { rotulo: "Privacidade e LGPD", href: "/admin/lgpd", icone: "lgpd", papeis: ["suporte", "leitura"] },
   { rotulo: "Equipe", href: "/admin/equipe", icone: "equipe", papeis: [] },
