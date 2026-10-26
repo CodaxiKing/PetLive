@@ -94,6 +94,7 @@ function RaizProtegida() {
                 <Stack.Screen name="pet/[id]/carteirinha" />
                 <Stack.Screen name="pet/[id]/compartilhar" />
                 <Stack.Screen name="pet/[id]/atualizacoes" />
+                <Stack.Screen name="pet/[id]/revisar-vacinas" />
                 <Stack.Screen name="guarda/index" />
                 <Stack.Screen name="guarda/convidar" />
                 <Stack.Screen name="guarda/convite/[id]" />

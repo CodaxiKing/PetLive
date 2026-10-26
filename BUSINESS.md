@@ -443,13 +443,13 @@ O PetLive organiza informações e não substitui o atendimento veterinário. Es
 
 ### 5.22 Ler cartão de vacina por foto (Fase 2, Premium)
 
-- O tutor tira uma foto (ou escolhe da galeria) do cartão de vacina. A imagem vai para o backend, que a envia a um **serviço de leitura de imagem** `[a definir]` e recebe uma lista de vacinas com data aplicada e próxima dose.
+- O tutor tira uma foto (ou escolhe da galeria) do cartão de vacina. A imagem vai para o backend, que a envia ao **serviço de leitura de imagem** (Claude, da Anthropic, pela função `scan-vaccine-card`) e recebe uma lista de vacinas com data aplicada e próxima dose.
 - **Nunca salva sozinho.** O app mostra a lista para **revisão**. Linhas com baixa confiança vêm marcadas "Confira a data". O tutor edita ou remove e só então toca em **Salvar [n] novas**.
 - **Sem repetir o que já existe.** Antes de mostrar a revisão, o app compara cada vacina lida com o histórico do pet. É considerada **já cadastrada** a vacina de **mesmo tipo e mesma data de aplicação** (o nome é comparado depois de normalizado, por exemplo "V10" e "V10 (múltipla)" são o mesmo tipo). Essas linhas vão para o grupo **Já cadastradas**, ficam sem caixa de seleção e sem edição, e **nunca são salvas de novo**. As demais vão para **Novas para adicionar**, já marcadas. O topo diz quantas são novas e quantas o pet já tem, e o botão mostra o total a salvar.
 - **Mesma vacina com outra data é dose nova**, por exemplo o reforço do ano seguinte, e entra como nova. Se todas as vacinas lidas já estiverem cadastradas, a tela avisa "O Rex já tem todas estas vacinas" e não há nada a salvar. Se o tutor desmarcar uma nova, ela também não é salva.
 - O app avisa que a leitura pode errar. O histórico salvo é igual ao registrado à mão.
 - A imagem é guardada no armazenamento privado do pet **só se o tutor permitir** (como anexo). A cópia no serviço de leitura é apagada logo após o processamento e **não é usada para treinar modelos**.
-- Limite de `[x]` leituras por mês no Premium. Sem Premium, a tela mostra o convite para assinar. Falha na leitura leva ao registro manual.
+- Limite de **10** leituras por mês no Premium (falha na leitura não conta). Sem Premium, a tela mostra o convite para assinar. Falha na leitura leva ao registro manual.
 
 ### 5.23 Adoção (Fase 2)
 

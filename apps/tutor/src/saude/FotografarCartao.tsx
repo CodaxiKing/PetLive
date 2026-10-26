@@ -8,6 +8,7 @@ import { useEstadoPlano } from '../lib/plano';
 import { colors } from '../theme/colors';
 import { typography } from '../theme/typography';
 import { conferirArquivoCartao, descartarFotoCartao, salvarFotoCartao } from './fotoCartao';
+import { guardarLeitura, lerCartao } from './leituraCartao';
 import { dadosFotoCartao, tamanhoFotoCartao, type FotoCartao } from './fotoCartaoDados';
 
 type Props = { tutorId: string; petId: string; titulo: string; data: string; onSalvo: () => void };
@@ -74,6 +75,19 @@ function Captura({ tutorId, petId, titulo, data, onSalvo, onFechar }: Props & { 
       if (viva.current) setErro(e instanceof Error ? e.message : 'Não foi possível fotografar.');
     } finally { trava.current = false; if (viva.current) setOcupada(false); }
   }
+  // Lê as vacinas da foto e abre a revisão; a foto não é guardada (BUSINESS.md 5.22).
+  async function lerVacinas() {
+    if (!foto || trava.current) return;
+    trava.current = true; setOcupada(true); setErro(null);
+    try {
+      const leitura = await lerCartao(petId, foto.uri);
+      if (!viva.current) return;
+      guardarLeitura(petId, leitura);
+      onFechar();
+      router.push({ pathname: '/pet/[id]/revisar-vacinas', params: { id: petId } });
+    } catch (e) { if (viva.current) setErro(e instanceof Error ? e.message : 'Não foi possível ler o cartão.'); }
+    finally { trava.current = false; if (viva.current) setOcupada(false); }
+  }
   async function salvar() {
     if (!foto || trava.current) return;
     trava.current = true; setOcupada(true); setErro(null);
@@ -85,11 +99,12 @@ function Captura({ tutorId, petId, titulo, data, onSalvo, onFechar }: Props & { 
   }
   return <Modal visible animationType="slide" onRequestClose={() => { if (!trava.current) onFechar(); }}><ScrollView style={s.tela} contentContainerStyle={{ padding: 20, paddingTop: insets.top + 16, paddingBottom: insets.bottom + 24, gap: 16 }}>
     <Text accessibilityRole="header" style={s.titulo}>{foto ? 'Confira a foto do cartão' : 'Fotografar cartão de vacina'}</Text>
-    <Text style={s.texto}>{foto ? 'Confira se nomes e datas estão legíveis e se nenhuma borda foi cortada. A imagem será salva como anexo privado; as vacinas continuam sendo registradas manualmente.' : 'Apoie o cartão aberto em uma superfície plana, ilumine sem reflexos e coloque a página inteira dentro da moldura.'}</Text>
+    <Text style={s.texto}>{foto ? 'Confira se nomes e datas estão legíveis e se nenhuma borda foi cortada. Leia as vacinas para revisar e salvar na carteirinha, ou guarde só a foto como anexo privado.' : 'Apoie o cartão aberto em uma superfície plana, ilumine sem reflexos e coloque a página inteira dentro da moldura.'}</Text>
     {erro ? <Text accessibilityRole="alert" style={s.erro}>{erro}</Text> : null}
     {foto ? <>
       <Image source={{ uri: foto.uri }} resizeMode="contain" style={s.previa} accessibilityLabel="Prévia completa do cartão capturado" />
-      <BotaoPrimario titulo="Salvar foto como anexo" carregando={ocupada} onPress={() => { void salvar(); }} />
+      <BotaoPrimario titulo="Ler as vacinas desta foto" carregando={ocupada} onPress={() => { void lerVacinas(); }} />
+      <BotaoPrimario titulo="Só salvar a foto como anexo" desabilitado={ocupada} onPress={() => { void salvar(); }} />
       <BotaoPrimario titulo="Refazer foto" desabilitado={ocupada} onPress={refazer} />
     </> : !permissao ? <ActivityIndicator accessibilityLabel="Consultando permissão da câmera" /> : !permissao.granted ? <>
       <Text style={s.texto}>Autorize a câmera para fotografar o cartão. A foto só é enviada quando você confirmar o salvamento.</Text>
