@@ -46,6 +46,17 @@ test('pagina mais de mil arquivos e pastas sem pular ao remover', async () => {
   assert.equal(s.removidos.length, 2002);
   assert.equal(s.objetos.get('pets').size, 0);
 });
+
+test('descobre buckets novos e limpa perfil, eventos, avistamentos e comunidade da própria conta', async () => {
+  const nomes = ['perfis', 'eventos', 'avistamentos', 'comunidade', 'bucket-novo'];
+  const s = servidor(Object.fromEntries(nomes.map(nome => [nome, [`${uid}/foto.jpg`, `${outro}/foto.jpg`]])));
+  s.storage.listBuckets = async () => ({ data: nomes.map(id => ({ id })), error: null });
+  let renovacoes = 0;
+  await limparStorageConta(s.storage, uid, async () => { renovacoes++; });
+  assert.equal(s.removidos.length, nomes.length);
+  for (const nome of nomes) assert.deepEqual([...s.objetos.get(nome)], [`${outro}/foto.jpg`]);
+  assert.ok(renovacoes >= 1 + nomes.length * 3);
+});
 test('recusa UID ou nomes que escapem da pasta e resposta incompleta', async () => {
   await assert.rejects(limparStorageConta({}, '../outra'), /inválido/);
   for (const data of [null, [{ name: '../outro', id: 'x' }], [{ name: '..', id: null, metadata: null }], [{ name: 'x' }]]) {

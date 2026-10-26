@@ -13,5 +13,8 @@
     "guard:chaves-google": "node scripts/verificar-sem-chaves-commitadas.mjs",
     "monitor": "node scripts/monitorar.mjs"
   },
-  "packageManager": "pnpm@11.5.2"
+  "packageManager": "pnpm@11.5.2",
+  "devDependencies": {
+    "@electric-sql/pglite": "0.3.14"
+  }
 }

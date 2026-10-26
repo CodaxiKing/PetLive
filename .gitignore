@@ -9,6 +9,8 @@ dist/
 web-build/
 ios/
 android/
+!apps/tutor/modules/petlive-shortcuts/ios/
+!apps/tutor/modules/petlive-shortcuts/ios/**
 *.jks
 *.p8
 *.p12

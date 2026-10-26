@@ -27,6 +27,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const tutorId = session?.user.id ?? null;
 
   useEffect(() => {
+    void import('../widget/tarefaWidget').then((w) => w.atualizarWidget()).catch(() => undefined);
+    return () => {
+      void import('../widget/proximo').then((w) => w.limparCacheWidget(tutorId ?? undefined)).catch(() => undefined);
+    };
+  }, [tutorId]);
+
+  useEffect(() => {
     void registroPush.definirConta(tutorId).catch(() => undefined);
     if (!tutorId || !pushDisponivel()) return;
     const estado = AppState.addEventListener('change', (novo) => {

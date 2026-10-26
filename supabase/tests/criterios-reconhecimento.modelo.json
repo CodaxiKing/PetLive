@@ -1,0 +1,10 @@
+{
+  "especies": ["cao", "gato"],
+  "minPositivos": null,
+  "minNegativos": null,
+  "minRecall": null,
+  "minTop1": null,
+  "maxFalsoPositivo": null,
+  "maxFalhas": null,
+  "maxRecusas": null
+}

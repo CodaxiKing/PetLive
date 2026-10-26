@@ -87,6 +87,10 @@ jobs:
         working-directory: apps/web
         run: pnpm exec next typegen
 
+      - name: Testar agendamento de campanhas
+        working-directory: apps/web
+        run: pnpm test:campanhas
+
       - name: Typecheck
         working-directory: apps/web
         run: pnpm exec tsc --noEmit
@@ -101,6 +105,30 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Configurar Node.js para os testes isolados
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Configurar pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11.5.2
+
+      - name: Instalar dependências
+        run: pnpm install --frozen-lockfile
+
+      - name: Testar worker, limpeza e métricas sem produção
+        run: node --test supabase/tests/*.test.mjs
+
+      - name: Testar fila de exclusão e permissões no PostgreSQL isolado
+        env:
+          PGLITE_MODULE: ${{ github.workspace }}/node_modules/@electric-sql/pglite/dist/index.js
+        run: |
+          node supabase/tests/testar-lgpd-worker.mjs
+          node supabase/tests/testar-limites-plano.mjs
+          node supabase/tests/testar-admin-integracoes.mjs
 
       - name: Configurar Supabase CLI
         uses: supabase/setup-cli@v1

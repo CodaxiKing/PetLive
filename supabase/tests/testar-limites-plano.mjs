@@ -6,6 +6,7 @@ const db=new PGlite();
 const a='53000000-0000-4000-8000-000000000001',b='53000000-0000-4000-8000-000000000002';
 const p1='54000000-0000-4000-8000-000000000001',p2='54000000-0000-4000-8000-000000000002',p3='54000000-0000-4000-8000-000000000003';
 const sql=await readFile(new URL('../migrations/20261226000000_limites_plano_desativados.sql',import.meta.url),'utf8');
+const sqlCadastro=await readFile(new URL('../migrations/20270109040000_limites_cadastro_pet.sql',import.meta.url),'utf8');
 async function usuario(id=a){await db.exec(`reset role;select set_config('request.jwt.claim.sub','${id}',false);set role authenticated`);}
 try{
  await db.exec(`create role authenticated;create role anon;create role service_role;create schema auth;
@@ -20,8 +21,13 @@ try{
  grant select,insert,update,delete on pets,medications,medication_doses,weights,reminders to authenticated;
  insert into pets(id,tutor_id,nome,criado_em) values('${p1}','${a}','Primeiro','2026-01-01'),('${p2}','${a}','Excedente','2026-01-02');`);
  await db.exec(sql);await db.exec(sql);
+ await db.exec(`create schema storage;create table storage.objects(bucket_id text,name text);grant usage on schema storage to authenticated;grant insert,update,select on storage.objects to authenticated;`);
+ const sqlStorage=await readFile(new URL('../migrations/20270109020000_limites_storage.sql',import.meta.url),'utf8');
+ await db.exec(sqlStorage);await db.exec(sqlStorage);
+ await db.exec(sqlCadastro);await db.exec(sqlCadastro);
  await usuario();
- assert.equal((await db.query('select limites_meu_plano($1) r',[a])).rows[0].r.limites_ativos,false);
+ const desligado=(await db.query('select limites_meu_plano($1) r',[a])).rows[0].r;
+ assert.equal(desligado.limites_ativos,false);assert.equal(desligado.pets_ativos,2);assert.equal(desligado.pode_cadastrar_pet,true);
  await db.query("insert into pets(id,tutor_id,nome) values($1,$2,'Terceiro')",[p3,a]);
  await db.query("insert into weights(pet_id,nome) values($1,'peso anterior')",[p2]);
  await assert.rejects(db.query('update plano_limites_config set ativo=true'),/permission denied/);
@@ -29,9 +35,19 @@ try{
  await assert.rejects(db.query('select limites_meu_plano($1)',[b]),/conta mudou/);
  await db.exec('reset role;update plano_limites_config set ativo=true');
  await db.exec(sql); // Reaplicar não muda uma configuração deliberada.
+ await db.exec(sqlCadastro);
  await usuario();
  const r=(await db.query('select limites_meu_plano($1) r',[a])).rows[0].r;
  assert.equal(r.pets_limite,1);assert.deepEqual(r.pets_somente_leitura,[p2,p3]);
+ assert.equal(r.pets_ativos,3);assert.equal(r.pode_cadastrar_pet,false);
+ await usuario(b);
+ const premium=(await db.query('select limites_meu_plano($1) r',[b])).rows[0].r;
+ assert.equal(premium.pets_limite,null);assert.equal(premium.pets_ativos,0);assert.equal(premium.pode_cadastrar_pet,true);
+ await usuario();
+ await db.query('insert into storage.objects values($1,$2)',['pets',`${a}/${p1}.jpg`]);
+ await assert.rejects(db.query('insert into storage.objects values($1,$2)',['pets',`${a}/${p2}.jpg`]),/somente em leitura/);
+ await assert.rejects(db.query('insert into storage.objects values($1,$2)',['anexos',`${a}/saude/${p2}/exame.jpg`]),/somente em leitura/);
+ await assert.rejects(db.query('update storage.objects set name=$1',[`${a}/${p2}.jpg`]),/somente em leitura/);
  await assert.rejects(db.query("insert into pets(tutor_id,nome) values($1,'Quarto')",[a]),/limite de pets/);
  await db.query("update pets set nome='Editado' where id=$1",[p1]);
  await assert.rejects(db.query("update pets set nome='Bloqueado' where id=$1",[p2]),/somente em leitura/);
@@ -50,6 +66,8 @@ try{
  // Memorial é gratuito e não consome vaga; não aceita outras edições junto.
  await assert.rejects(db.query("update pets set em_memoria=true,nome='contorno' where id=$1",[p2]),/somente em leitura/);
  await db.query('update pets set em_memoria=true where id=$1',[p1]);
+ const memorial=(await db.query('select limites_meu_plano($1) r',[a])).rows[0].r;
+ assert.equal(memorial.pets_ativos,2);assert.equal(memorial.pode_cadastrar_pet,false);
  await db.query("update pets set nome='Agora editável' where id=$1",[p2]);
  await assert.rejects(db.query('update pets set em_memoria=false where id=$1',[p1]),/limite de pets/);
  // Usa o plano do titular, não o de quem está executando a escrita.

@@ -22,6 +22,9 @@ import { idadeEmAnos } from '../../src/pets/types'
 import type { Pet } from '../../src/pets/types'
 import { colors } from '../../src/theme/colors'
 import { fontFamily, typography } from '../../src/theme/typography'
+import { useLimitesPlano } from '../../src/premium/useLimitesPlano'
+import { AvisoLimitesPlano } from '../../src/premium/AvisoLimitesPlano'
+import { limiteCadastroAtingido } from '../../src/premium/limites'
 
 /** "Vermífugo da Mia" -> "Vermífugo": no cartão da Mia o nome já está no topo. */
 function tituloSemPet(titulo: string, nome: string): string {
@@ -41,6 +44,8 @@ export default function Pets() {
   const { pets, petsMemoria, seniores, carregando, definirPetAtivo, recarregar } = usePets()
   const { lembretes } = useLembretes()
   const [atualizando, setAtualizando] = useState(false)
+  const limites = useLimitesPlano()
+  const cadastroBloqueado = limiteCadastroAtingido(limites?.dados)
 
   const abrirPet = useCallback(
     (pet: Pet) => {
@@ -66,9 +71,11 @@ export default function Pets() {
         <Pressable
           accessibilityRole="button"
           accessibilityLabel="Cadastrar novo pet"
+          disabled={cadastroBloqueado}
+          accessibilityState={{ disabled: cadastroBloqueado }}
           hitSlop={8}
           onPress={() => router.push('/pet/novo')}
-          style={({ pressed }) => [estilos.mais, pressed && { opacity: 0.7 }]}
+          style={({ pressed }) => [estilos.mais, (pressed || cadastroBloqueado) && { opacity: 0.5 }]}
         >
           <Text style={estilos.maisSinal}>+</Text>
         </Pressable>
@@ -84,6 +91,7 @@ export default function Pets() {
             <RefreshControl refreshing={atualizando} onRefresh={recarregarLista} tintColor={colors.primaryDeep} />
           }
         >
+          <AvisoLimitesPlano limites={limites?.dados ?? null} />
           {pets.length === 0 ? (
             <View style={estilos.vazio}>
               <Flutuar>
@@ -117,6 +125,7 @@ export default function Pets() {
                         {raca}
                       </Text>
                       {idade ? <Text style={estilos.chip}>{idade}</Text> : null}
+                      {limites?.dados?.petsSomenteLeitura.includes(pet.id) ? <Text style={estilos.chip}>Somente leitura</Text> : null}
                       {seniores.has(pet.id) ? <Text style={[estilos.chip, estilos.chipSenior]}>Sênior</Text> : null}
                     </View>
                     {proximo ? (
@@ -163,8 +172,10 @@ export default function Pets() {
 
           <Pressable
             accessibilityRole="button"
+            disabled={cadastroBloqueado}
+            accessibilityState={{ disabled: cadastroBloqueado }}
             onPress={() => router.push('/pet/novo')}
-            style={({ pressed }) => [estilos.adicionar, pressed && { opacity: 0.7 }]}
+            style={({ pressed }) => [estilos.adicionar, (pressed || cadastroBloqueado) && { opacity: 0.5 }]}
           >
             <Text style={estilos.adicionarTexto}>+   Adicionar pet</Text>
           </Pressable>

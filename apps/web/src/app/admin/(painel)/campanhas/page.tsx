@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { Cabecalho, CartaoNumero, haQuanto, numero, useAdmin } from "@/components/admin/Painel";
 import { rpcAdmin } from "@/lib/admin/supabase";
+import { amanha9h, criarTravaCampanha, horarioEnvio, horarioLocal } from "@/lib/admin/campanhas";
 
 type Publico = "todos" | "caes" | "gatos" | "sem_pet" | "vacina_vencendo" | "inativos";
 type Link = "/inicio" | "/mapa" | "/lembretes" | "/ferramentas/calculadoras" | "/sos";
@@ -60,13 +61,6 @@ function dataCurta(iso: string | null): string {
   return d.toLocaleDateString("pt-BR", { day: "numeric", month: "short" }).replace(".", "");
 }
 
-/** Valor do <input type="datetime-local"> para amanhã às 9h. */
-function amanha9h(): string {
-  const d = new Date(Date.now() + 86_400_000);
-  d.setHours(9, 0, 0, 0);
-  return new Date(d.getTime() - d.getTimezoneOffset() * 60_000).toISOString().slice(0, 16);
-}
-
 function pct(parte: number, total: number | null): string {
   return total ? `${Math.round((parte / total) * 100)}%` : "—";
 }
@@ -81,9 +75,11 @@ export default function CampanhasPagina() {
   const admin = useAdmin();
   const [dados, setDados] = useState<Dados | null>(null);
   const [form, setForm] = useState<Form>(VAZIO);
-  const [alcance, setAlcance] = useState<number | null>(null);
+  const [estimativa, setEstimativa] = useState<{ publico: Publico; total: number | null } | null>(null);
   const [aviso, setAviso] = useState<string | null>(null);
   const [erro, setErro] = useState<string | null>(null);
+  const [ocupado, setOcupado] = useState(false);
+  const [executar] = useState(criarTravaCampanha);
   const pode = admin.papel === "super" || admin.papel === "marketing";
 
   const carregar = useCallback(() => {
@@ -94,38 +90,50 @@ export default function CampanhasPagina() {
   }, [carregar]);
 
   useEffect(() => {
-    rpcAdmin<number>("admin_campanha_publico", { p_publico: form.publico }).then(setAlcance, () => setAlcance(null));
+    let atual = true;
+    rpcAdmin<number>("admin_campanha_publico", { p_publico: form.publico }).then(
+      (total) => { if (atual) setEstimativa({ publico: form.publico, total }); },
+      () => { if (atual) setEstimativa({ publico: form.publico, total: null }); },
+    );
+    return () => { atual = false; };
   }, [form.publico]);
 
-  async function agir(acao: () => Promise<unknown>, sucesso: string) {
-    setErro(null);
-    setAviso(null);
-    try {
-      await acao();
-      setAviso(sucesso);
-      carregar();
-      return true;
-    } catch (e) {
-      setErro((e as Error).message);
-      return false;
-    }
+  async function agir(acao: () => Promise<unknown>, sucesso: string | (() => string), limpar = false) {
+    if (!pode) return;
+    await executar(async () => {
+      setOcupado(true);
+      setErro(null);
+      setAviso(null);
+      try {
+        await acao();
+        setAviso(typeof sucesso === "function" ? sucesso() : sucesso);
+        if (limpar) setForm(VAZIO);
+        carregar();
+      } catch (e) {
+        setErro(e instanceof Error ? e.message : "Não foi possível concluir a operação. Tente novamente.");
+      } finally {
+        setOcupado(false);
+      }
+    });
   }
 
   async function salvar(agendar: boolean) {
-    const quando = agendar ? new Date(form.quando || amanha9h()).toISOString() : null;
-    const ok = await agir(
-      () =>
-        rpcAdmin("admin_campanha_salvar", {
+    let quando: string | null = null;
+    await agir(
+      () => {
+        quando = agendar ? horarioEnvio(form.quando || amanha9h()) : null;
+        return rpcAdmin("admin_campanha_salvar", {
           p_id: form.id,
           p_titulo: form.titulo,
           p_mensagem: form.mensagem,
           p_publico: form.publico,
           p_link: form.link,
           p_agendar_para: quando,
-        }),
-      agendar ? `Agendada para ${dataCurta(quando)}. Dá para cancelar até a hora do envio.` : "Rascunho salvo.",
+        });
+      },
+      () => agendar ? `Agendada para ${dataCurta(quando)}. Dá para cancelar até a hora do envio.` : "Rascunho salvo.",
+      true,
     );
-    if (ok) setForm(VAZIO);
   }
 
   function testar() {
@@ -136,18 +144,20 @@ export default function CampanhasPagina() {
   }
 
   function editar(c: Campanha) {
+    if (ocupado) return;
     if (c.status !== "rascunho" && c.status !== "agendada") return;
-    const quando = c.agendada_para ? new Date(new Date(c.agendada_para).getTime() - new Date().getTimezoneOffset() * 60_000).toISOString().slice(0, 16) : "";
+    const quando = c.agendada_para ? horarioLocal(new Date(c.agendada_para)) : "";
     setForm({ id: c.id, titulo: c.titulo, mensagem: c.mensagem, publico: c.publico, link: c.link ?? "/inicio", quando });
     setAviso(null);
   }
 
   function cancelar() {
-    if (!form.id || !window.confirm(`Cancelar "${form.titulo}"? Ela não será enviada.`)) return;
-    agir(() => rpcAdmin("admin_campanha_cancelar", { p_id: form.id }), "Campanha cancelada.").then((ok) => ok && setForm(VAZIO));
+    if (ocupado || !form.id || !window.confirm(`Cancelar "${form.titulo}"? Ela não será enviada.`)) return;
+    agir(() => rpcAdmin("admin_campanha_cancelar", { p_id: form.id }), "Campanha cancelada.", true);
   }
 
   if (!dados) return <p className="text-sm text-cinza">{erro ?? "Carregando…"}</p>;
+  const alcance = estimativa?.publico === form.publico ? estimativa : null;
   const valido = form.titulo.trim().length >= 3 && form.mensagem.trim().length >= 3;
   const campo = "w-full rounded-2xl bg-suave px-4 pb-2.5 pt-6 text-[13px] font-semibold outline-none disabled:text-cinza";
   const rotulo = "pointer-events-none absolute left-4 top-2 text-[11px] font-semibold text-cinza";
@@ -156,13 +166,13 @@ export default function CampanhasPagina() {
     <>
       <Cabecalho titulo="Campanhas e notificações" subtitulo="Avisos para os tutores, com público e horário">
         {pode ? (
-          <button onClick={() => setForm({ ...VAZIO, quando: amanha9h() })} className="h-10 rounded-full bg-tinta px-5 text-[13px] font-bold text-white">
+          <button disabled={ocupado} onClick={() => setForm({ ...VAZIO, quando: amanha9h() })} className="h-10 rounded-full bg-tinta px-5 text-[13px] font-bold text-white disabled:opacity-40">
             Nova campanha
           </button>
         ) : null}
       </Cabecalho>
-      {erro ? <p className="mb-3 rounded-2xl bg-perigo-fundo p-3 text-sm text-perigo">{erro}</p> : null}
-      {aviso ? <p className="mb-3 rounded-2xl bg-verde-fundo p-3 text-sm text-verde-texto">{aviso}</p> : null}
+      {erro ? <p role="alert" className="mb-3 rounded-2xl bg-perigo-fundo p-3 text-sm text-perigo">{erro}</p> : null}
+      {aviso ? <p role="status" className="mb-3 rounded-2xl bg-verde-fundo p-3 text-sm text-verde-texto">{aviso}</p> : null}
 
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         <CartaoNumero rotulo="Enviadas (30d)" valor={numero(dados.enviadas_30d)} apoio="Push no celular" fundo="bg-azul-fundo" cor="text-azul-escuro" />
@@ -196,7 +206,7 @@ export default function CampanhasPagina() {
                 </tr>
               ) : (
                 dados.campanhas.map((c) => {
-                  const editavel = pode && (c.status === "rascunho" || c.status === "agendada");
+                  const editavel = pode && !ocupado && (c.status === "rascunho" || c.status === "agendada");
                   return (
                     <tr
                       key={c.id}
@@ -227,16 +237,16 @@ export default function CampanhasPagina() {
           </table>
         </section>
 
-        <section className="h-fit min-w-0 rounded-[28px] bg-fundo p-6">
+        <section aria-busy={ocupado} className="h-fit min-w-0 rounded-[28px] bg-fundo p-6">
           <div className="flex items-center justify-between gap-3">
             <h2 className="font-bold">{form.id ? "Editar campanha" : "Nova campanha"}</h2>
             {form.id ? (
-              <button onClick={() => setForm(VAZIO)} className="text-xs font-bold text-azul-escuro underline">
+              <button disabled={ocupado} onClick={() => setForm(VAZIO)} className="text-xs font-bold text-azul-escuro underline disabled:opacity-40">
                 Nova campanha
               </button>
             ) : null}
           </div>
-          <fieldset disabled={!pode} className="mt-3 space-y-2.5">
+          <fieldset disabled={!pode || ocupado} className="mt-3 space-y-2.5">
             <div className="relative">
               <label htmlFor="c-publico" className={rotulo}>Público</label>
               <select id="c-publico" value={form.publico} onChange={(e) => setForm({ ...form, publico: e.target.value as Publico })} className={campo}>
@@ -246,7 +256,7 @@ export default function CampanhasPagina() {
               </select>
             </div>
             <p className="px-1 text-[11px] text-cinza">
-              {alcance === null ? "Calculando o alcance…" : `${numero(alcance)} ${alcance === 1 ? "tutor recebe" : "tutores recebem"} hoje (com aceite e sem campanha nas últimas 20 h).`}
+              {!alcance ? "Calculando o alcance…" : alcance.total === null ? "Não foi possível calcular o alcance. Ele será conferido novamente na hora do envio." : `${numero(alcance.total)} ${alcance.total === 1 ? "tutor recebe" : "tutores recebem"} hoje (com aceite e sem campanha nas últimas 20 h).`}
             </p>
             <div className="relative">
               <label htmlFor="c-titulo" className={rotulo}>Título ({form.titulo.length}/65)</label>
@@ -279,23 +289,24 @@ export default function CampanhasPagina() {
           {pode ? (
             <>
               <div className="mt-4 flex flex-wrap gap-2">
-                <button disabled={!valido} onClick={() => salvar(true)} className="h-11 rounded-full bg-tinta px-5 text-[13px] font-bold text-white disabled:opacity-40">
+                <button disabled={!valido || ocupado} onClick={() => salvar(true)} className="h-11 rounded-full bg-tinta px-5 text-[13px] font-bold text-white disabled:opacity-40">
                   Agendar envio
                 </button>
-                <button disabled={!valido} onClick={testar} className="h-11 rounded-full border border-[#DDE1E8] px-5 text-[13px] font-bold disabled:opacity-40">
+                <button disabled={!valido || ocupado} onClick={testar} className="h-11 rounded-full border border-[#DDE1E8] px-5 text-[13px] font-bold disabled:opacity-40">
                   Testar no meu celular
                 </button>
               </div>
               <div className="mt-2 flex flex-wrap gap-3 text-xs font-bold">
-                <button disabled={!valido} onClick={() => salvar(false)} className="text-azul-escuro underline disabled:opacity-40">
+                <button disabled={!valido || ocupado} onClick={() => salvar(false)} className="text-azul-escuro underline disabled:opacity-40">
                   Salvar rascunho
                 </button>
                 {form.id ? (
-                  <button onClick={cancelar} className="text-perigo underline">
+                  <button disabled={ocupado} onClick={cancelar} className="text-perigo underline disabled:opacity-40">
                     Cancelar campanha
                   </button>
                 ) : null}
               </div>
+              {ocupado ? <p role="status" className="mt-3 text-xs text-cinza">Processando…</p> : null}
             </>
           ) : (
             <p className="mt-3 text-[11px] text-cinza">Só marketing e super admin enviam campanhas.</p>

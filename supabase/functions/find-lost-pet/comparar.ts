@@ -6,6 +6,7 @@ import { zodOutputFormat } from 'npm:@anthropic-ai/sdk@1.3.0/helpers/zod';
 import { z } from 'npm:zod@4.6.7';
 
 export const TIPOS = ['image/jpeg', 'image/png', 'image/webp'] as const;
+export const MODELO_COMPARACAO = 'claude-opus-5-5';
 export type Imagem = { data: string; tipo: (typeof TIPOS)[number] };
 
 export const NIVEIS = ['muito_parecido', 'parecido', 'pouco_parecido', 'diferente'] as const;
@@ -39,7 +40,7 @@ export async function comparar(client: Anthropic, achado: Imagem, alertas: (Imag
     conteudo.push({ type: 'image', source: { type: 'base64', media_type: foto.tipo, data: foto.data } });
   });
   const resposta = await client.messages.parse({
-    model: 'claude-opus-5-5',
+    model: MODELO_COMPARACAO,
     max_tokens: 16000,
     output_config: { effort: 'low', format: zodOutputFormat(Comparacao) },
     system: INSTRUCOES,

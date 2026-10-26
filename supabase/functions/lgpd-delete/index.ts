@@ -6,9 +6,10 @@
 // profiles e todos os dados em cascata. Se algo falhar, o pedido fica
 // "em_andamento" e é retomado na próxima execução.
 import { createClient } from 'npm:@supabase/supabase-js@2';
-import { limparStorageConta } from './limpar-storage.mjs';
+import { processarExclusao } from './processar.mjs';
 
 Deno.serve(async (req) => {
+  if (req.method !== 'POST') return new Response('Use POST.', { status: 405 });
   const chave = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '';
   // Só o cron (com a service_role) pode disparar.
   if (!chave || req.headers.get('Authorization') !== `Bearer ${chave}`) {
@@ -19,22 +20,10 @@ Deno.serve(async (req) => {
     auth: { persistSession: false },
   });
 
-  const { data: pedidos, error } = await supabase.rpc('lgpd_exclusoes_vencidas');
-  if (error) return Response.json({ erro: error.message }, { status: 500 });
-
-  const resultado: { pedido: string; ok: boolean; erro?: string }[] = [];
-
-  for (const pedido of (pedidos ?? []) as { id: string; user_id: string }[]) {
-    try {
-      await limparStorageConta(supabase.storage, pedido.user_id);
-
-      const { error: erroConcluir } = await supabase.rpc('lgpd_concluir_exclusao', { p_pedido: pedido.id });
-      if (erroConcluir) throw erroConcluir;
-      resultado.push({ pedido: pedido.id, ok: true });
-    } catch (e) {
-      resultado.push({ pedido: pedido.id, ok: false, erro: e instanceof Error ? e.message : String(e) });
-    }
+  try {
+    const resultado = await processarExclusao(supabase);
+    return Response.json(resultado, { status: resultado.retentar ? 503 : 200 });
+  } catch {
+    return Response.json({ erro: 'Não foi possível processar a fila.' }, { status: 503 });
   }
-
-  return Response.json({ processados: resultado.length, resultado });
 });

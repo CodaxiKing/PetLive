@@ -11,6 +11,12 @@ const remedio = (horarios: string[], p: Record<string, unknown> = {}) => ({
 const vacina = (nome: string, proxima_dose: string) => ({ pet_id: 'pet', nome, proxima_dose, pets: { nome: 'Rex' } });
 
 describe('widget: próxima dose ou vacina', () => {
+  it('mantém a dose de ontem dentro de duas horas, inclusive no último dia do tratamento', () => {
+    const madrugada = new Date(2026, 9, 26, 0, 30);
+    const p = escolherProximo([remedio(['23:30'], { fim: '2026-10-25' })], new Set(), [], madrugada);
+    expect(p).toMatchObject({ tipo: 'dose', prevista_para: new Date(2026, 9, 25, 23, 30).toISOString() });
+    expect(escolherProximo([remedio(['21:00'], { fim: '2026-10-25' })], new Set(), [], madrugada)).toEqual({ tipo: 'nada' });
+  });
   it('mostra a dose atrasada há menos de 2 horas antes da próxima', () => {
     const p = escolherProximo([remedio(['12:00', '20:00'])], new Set(), [], agora);
     expect(p).toMatchObject({ tipo: 'dose', remedio: 'Amoxicilina' });

@@ -9,7 +9,8 @@ import { criarRegistroPush, type RegistroPush } from './registroPush';
 const CHAVE = 'petlive:push:dispositivo:v1';
 export const pushDisponivel = () =>
   Constants.executionEnvironment !== ExecutionEnvironment.StoreClient &&
-  Platform.OS === 'android' && Constants.expoConfig?.extra?.push?.android === true;
+  ((Platform.OS === 'android' && Constants.expoConfig?.extra?.push?.android === true) ||
+    (Platform.OS === 'ios' && Constants.expoConfig?.extra?.push?.ios === true));
 
 export const registroPush = criarRegistroPush({
   permitido: async () => pushDisponivel() && await permissaoConcedida(),

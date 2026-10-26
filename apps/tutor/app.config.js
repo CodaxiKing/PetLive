@@ -11,8 +11,12 @@ module.exports = ({ config }) => ({
   },
   plugins: [
     ...(config.plugins ?? []),
-    ['expo-location', { isAndroidBackgroundLocationEnabled: true, isAndroidForegroundServiceEnabled: true, isIosBackgroundLocationEnabled: false }],
-    ['expo-notifications', { defaultChannel: 'lembretes', enableRemoteNotifications: false }],
+    ['expo-location', { isAndroidBackgroundLocationEnabled: true, isAndroidForegroundServiceEnabled: true, isIosBackgroundLocationEnabled: true,
+      locationAlwaysAndWhenInUsePermission: 'Durante um passeio iniciado por você, o PetLive grava o trajeto mesmo com a tela apagada. Pause ou finalize para encerrar a localização.' }],
+    ['expo-notifications', { defaultChannel: 'lembretes', enableRemoteNotifications: process.env.PETLIVE_IOS_PUSH === 'true' }],
+    './plugins/atalhos-ios',
+    ['expo-widgets', { enableAndroid: false, groupIdentifier: 'group.app.petlive.tutor', widgets: [{ name: 'ProximoPetIOS',
+      displayName: 'Próxima dose', description: 'Próxima dose ou vacina do seu pet', ios: { supportedFamilies: ['systemSmall', 'systemMedium'], initialLayout: './src/widget/WidgetPetIOS.tsx' } }] }],
     ['expo-sharing', { ios: { enabled: false }, android: { enabled: false } }],
     [
       'react-native-maps',
@@ -26,7 +30,7 @@ module.exports = ({ config }) => ({
     ...config.extra,
     passeioSegundoPlano: true,
     // Somente builds Android com a configuração Firebase registram push remoto.
-    push: { android: Boolean(process.env.GOOGLE_SERVICES_JSON) },
+    push: { android: Boolean(process.env.GOOGLE_SERVICES_JSON), ios: process.env.PETLIVE_IOS_PUSH === 'true' },
     // O app só troca para o mapa do Google se o build tiver a chave da plataforma.
     mapaGoogle: {
       android: Boolean(process.env.GOOGLE_MAPS_ANDROID_KEY),

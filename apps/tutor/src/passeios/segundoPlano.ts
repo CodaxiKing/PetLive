@@ -18,7 +18,7 @@ async function pararNativo() {
     await Location.stopLocationUpdatesAsync(TAREFA_PASSEIO);
   }
 }
-export const passeioSegundoPlanoDisponivel = () => Platform.OS === 'android' &&
+export const passeioSegundoPlanoDisponivel = () => (Platform.OS === 'android' || Platform.OS === 'ios') &&
   Constants.executionEnvironment !== ExecutionEnvironment.StoreClient &&
   Constants.expoConfig?.extra?.passeioSegundoPlano === true;
 
@@ -44,11 +44,12 @@ TaskManager.defineTask<{ locations: Location.LocationObject[] }>(TAREFA_PASSEIO,
 
 export const gpsSegundoPlano: GpsPasseio = {
   async observar(ponto, erro) {
-    if (!passeioSegundoPlanoDisponivel()) throw new Error('Instale a versão Android com suporte a passeio com tela apagada.');
+    if (!passeioSegundoPlanoDisponivel()) throw new Error('Instale a versão do app com suporte a passeio com tela apagada.');
     if (AppState.currentState !== 'active') throw new Error('Volte ao app para iniciar ou retomar o passeio.');
     const primeiro = await Location.requestForegroundPermissionsAsync();
     if (!primeiro.granted) throw new Error('Autorize a localização para gravar o passeio.');
-    if (primeiro.android?.accuracy !== 'fine') throw new Error('Ative a localização precisa para gravar o trajeto.');
+    if ((Platform.OS === 'android' && primeiro.android?.accuracy !== 'fine') ||
+      (Platform.OS === 'ios' && primeiro.ios?.accuracy !== 'full')) throw new Error('Ative a localização precisa para gravar o trajeto.');
     if (!await Location.hasServicesEnabledAsync()) throw new Error('Ative o GPS do aparelho e tente novamente.');
     const fundo = await Location.requestBackgroundPermissionsAsync();
     if (!fundo.granted) throw new Error('Para gravar com a tela apagada, permita a localização o tempo todo. Você também pode usar o modo com a tela aberta.');
@@ -63,9 +64,10 @@ export const gpsSegundoPlano: GpsPasseio = {
         await Location.startLocationUpdatesAsync(TAREFA_PASSEIO, {
           accuracy: Location.Accuracy.High, timeInterval: 5000, distanceInterval: 3,
           deferredUpdatesInterval: 0,
-          foregroundService: { notificationTitle: 'PetLive · passeio em andamento',
+          ...(Platform.OS === 'ios' ? { activityType: Location.ActivityType.Fitness,
+            pausesUpdatesAutomatically: false, showsBackgroundLocationIndicator: true } : { foregroundService: { notificationTitle: 'PetLive · passeio em andamento',
             notificationBody: 'Gravando seu trajeto. Abra o PetLive para pausar ou finalizar.',
-            notificationColor: '#9AD6F8', killServiceOnDestroy: true },
+            notificationColor: '#9AD6F8', killServiceOnDestroy: true } }),
         });
       });
     } catch (e) {

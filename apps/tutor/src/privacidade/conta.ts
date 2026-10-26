@@ -73,10 +73,15 @@ export async function exportarMeusDados(): Promise<void> {
  * 30 dias pela função lgpd-delete, e até lá o tutor pode cancelar.
  * Devolve a data da exclusão.
  */
-export async function solicitarExclusaoConta(): Promise<Date> {
-  const { data, error } = await supabase.rpc('solicitar_exclusao_conta');
+export async function solicitarExclusaoConta(tutorId: string): Promise<Date> {
+  await conferirConta(tutorId);
+  const { data, error } = await supabase.rpc('privacidade_solicitar_exclusao', { p_tutor: tutorId });
   if (error) throw new Error(error.message);
-  return new Date(data as string);
+  await conferirConta(tutorId);
+  if (typeof data !== 'string' || !Number.isFinite(Date.parse(data)) || Date.parse(data) <= Date.now()) {
+    throw new Error('Não foi possível confirmar o agendamento. Atualize a tela antes de tentar novamente.');
+  }
+  return new Date(data);
 }
 
 export async function cancelarExclusaoConta(tutorId: string, pedidoId: string): Promise<void> {

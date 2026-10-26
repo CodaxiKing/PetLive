@@ -91,7 +91,7 @@ export default function Privacidade() {
   }
 
   function excluirConta() {
-    if (processando || !exclusao?.podeSolicitar) return;
+    if (processando || !user || !exclusao?.podeSolicitar) return;
     const token = geracao.current;
     Alert.alert(
       'Excluir conta?',
@@ -104,7 +104,7 @@ export default function Privacidade() {
           onPress: () => {
             if (token !== geracao.current) return;
             setProcessando(true);
-            solicitarExclusaoConta()
+            solicitarExclusaoConta(user.id)
               .then(() => { if (token === geracao.current) recarregar(); })
               .catch((e) =>
                 token === geracao.current && Alert.alert('Não foi possível pedir', e instanceof Error ? e.message : String(e)),

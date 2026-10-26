@@ -1,4 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
+import { useLimitesPlano } from '../../../src/premium/useLimitesPlano'
+import { AvisoLimitesPlano } from '../../../src/premium/AvisoLimitesPlano'
 import {
   Alert,
   Image,
@@ -69,6 +71,8 @@ export default function PetDetalhe() {
   const { id } = useLocalSearchParams<{ id: string }>()
   const { width } = useWindowDimensions()
   const { session } = useAuth()
+  const limites = useLimitesPlano()
+  const somenteLeitura = limites?.dados?.petsSomenteLeitura.includes(id) === true
   const comunidade = useRecurso('comunidade', false)
   const { pets, petsMemoria, seniores, marcarSenior, definirPetAtivo, removerPet } = usePets()
   const { vacinas, removerVacina } = useVacinas()
@@ -212,6 +216,7 @@ export default function PetDetalhe() {
         </View>
 
         <View style={estilos.corpo}>
+          <AvisoLimitesPlano limites={limites?.dados ?? null} petId={id} />
           <AvisoOffline />
           <View style={estilos.linhaNome}>
             <Text style={estilos.nome} numberOfLines={1} accessibilityRole="header">
@@ -413,6 +418,7 @@ export default function PetDetalhe() {
       <View style={estilos.rodape}>
         <BotaoPrimario
           titulo={cta.titulo}
+          desabilitado={somenteLeitura}
           icone={<Text style={estilos.ctaMais}>+</Text>}
           onPress={cta.acao}
         />
@@ -422,7 +428,7 @@ export default function PetDetalhe() {
       <Modal visible={menuAberto} transparent animationType="fade" onRequestClose={() => setMenuAberto(false)}>
         <Pressable style={estilos.fundoModal} onPress={() => setMenuAberto(false)} accessibilityLabel="Fechar menu">
           <View style={estilos.folha}>
-            <Pressable accessibilityRole="button" onPress={() => ir('/pet/[id]/editar')} style={estilos.opcao}>
+            <Pressable accessibilityRole="button" disabled={somenteLeitura} accessibilityState={{ disabled: somenteLeitura }} onPress={() => ir('/pet/[id]/editar')} style={estilos.opcao}>
               <Text style={estilos.opcaoTexto}>Editar {petAtual.nome}</Text>
             </Pressable>
             <Pressable accessibilityRole="button" onPress={() => ir('/pet/[id]/medicamentos')} style={estilos.opcao}>

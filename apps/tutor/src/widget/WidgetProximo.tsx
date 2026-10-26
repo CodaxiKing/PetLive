@@ -10,7 +10,7 @@ const COR = { fundo: '#FDE0E6', fundoVacina: '#E0F1FA', texto: '#17212F', apoio:
 
 export function WidgetProximo({ proximo, ocultar, agora = new Date(), largura = 250 }: { proximo: Proximo | null; ocultar: boolean; agora?: Date; largura?: number }) {
   const estreito = largura < 200
-  if (!proximo || proximo.tipo === 'sem_conta' || proximo.tipo === 'nada') {
+  if (!proximo || proximo.tipo === 'sem_conta' || proximo.tipo === 'nada' || proximo.tipo === 'erro') {
     return (
       <FlexWidget
         clickAction="OPEN_APP"
@@ -19,7 +19,7 @@ export function WidgetProximo({ proximo, ocultar, agora = new Date(), largura = 
       >
         <TextWidget text="PetLive" style={{ fontSize: 12, color: COR.apoio, fontWeight: '700' }} />
         <TextWidget
-          text={proximo?.tipo === 'sem_conta' ? 'Entre no app para ver a próxima dose' : 'Nada para hoje. Tudo em dia!'}
+          text={!proximo ? 'Abra o app para atualizar' : proximo.tipo === 'erro' ? proximo.mensagem : proximo.tipo === 'sem_conta' ? 'Entre no app para ver a próxima dose' : proximo.offline ? 'Sem conexão. Abra o app para atualizar.' : 'Nada para hoje. Tudo em dia!'}
           maxLines={2}
           style={{ fontSize: 15, color: COR.texto, fontWeight: '700', marginTop: 4 }}
         />
@@ -56,12 +56,12 @@ export function WidgetProximo({ proximo, ocultar, agora = new Date(), largura = 
         {!ocultar && proximo.dose ? <TextWidget text={proximo.dose} maxLines={1} truncate="END" style={{ fontSize: 13, color: COR.texto, marginTop: 2 }} /> : null}
       </FlexWidget>
       <FlexWidget
-        clickAction="FEITO"
-        clickActionData={{ medication_id: proximo.medication_id, prevista_para: proximo.prevista_para }}
-        accessibilityLabel="Feito: marcar a dose como dada"
+        clickAction={proximo.offline || !proximo.tutor_id ? 'OPEN_APP' : 'FEITO'}
+        clickActionData={{ medication_id: proximo.medication_id, prevista_para: proximo.prevista_para, tutor_id: proximo.tutor_id ?? '' }}
+        accessibilityLabel={proximo.offline ? 'Sem conexão: abrir o app para conferir a dose' : 'Feito: marcar a dose como dada'}
         style={{ backgroundColor: COR.botao, borderRadius: 20, paddingHorizontal: 18, paddingVertical: 10, marginLeft: estreito ? 0 : 10, marginTop: estreito ? 8 : 0 }}
       >
-        <TextWidget text="Feito" style={{ fontSize: 14, color: COR.branco, fontWeight: '700' }} />
+        <TextWidget text={proximo.offline || !proximo.tutor_id ? 'Ver no app' : 'Feito'} style={{ fontSize: 14, color: COR.branco, fontWeight: '700' }} />
       </FlexWidget>
     </FlexWidget>
   )

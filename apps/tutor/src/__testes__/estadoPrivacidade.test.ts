@@ -1,5 +1,5 @@
 import {beforeEach,it,expect,vi} from 'vitest';
-import {carregarEstadoPrivacidade,cancelarExclusaoConta} from '../privacidade/conta';
+import {carregarEstadoPrivacidade,cancelarExclusaoConta,solicitarExclusaoConta} from '../privacidade/conta';
 const m=vi.hoisted(()=>({user:vi.fn(),rpc:vi.fn()}));
 vi.mock('../lib/supabase',()=>({supabase:{auth:{getUser:m.user},rpc:m.rpc}}));
 vi.mock('../passeios/local',()=>({repositorioMetaPasseiosLocal:vi.fn(),repositorioPasseiosLocal:vi.fn()}));
@@ -10,3 +10,9 @@ it('recusa resposta incompleta ou data inválida',async()=>{for(const data of [{
 it('descarta retorno após troca de conta',async()=>{m.user.mockResolvedValueOnce({data:{user:{id:'a'}}}).mockResolvedValueOnce({data:{user:{id:'b'}}});await expect(carregarEstadoPrivacidade('a')).rejects.toThrow('conta mudou');});
 it('cancela somente o pedido explícito da conta esperada',async()=>{await cancelarExclusaoConta('a','pedido');expect(m.rpc).toHaveBeenCalledWith('privacidade_cancelar_exclusao',{p_tutor:'a',p_pedido:'pedido'});m.user.mockResolvedValue({data:{user:{id:'b'}}});await expect(cancelarExclusaoConta('a','pedido')).rejects.toThrow('conta mudou');});
 it('não transforma falha de consulta em ausência de pedido',async()=>{m.rpc.mockResolvedValueOnce({error:{message:'indisponível'}});await expect(carregarEstadoPrivacidade('a')).rejects.toThrow('indisponível');});
+it('solicita exclusão vinculada à conta e exige data futura confirmada',async()=>{
+ const data=new Date(Date.now()+30*86400000).toISOString();m.rpc.mockResolvedValueOnce({data,error:null});
+ expect((await solicitarExclusaoConta('a')).toISOString()).toBe(data);
+ expect(m.rpc).toHaveBeenCalledWith('privacidade_solicitar_exclusao',{p_tutor:'a'});
+ for(const invalida of [null,'texto','2000-01-01']){m.rpc.mockResolvedValueOnce({data:invalida});await expect(solicitarExclusaoConta('a')).rejects.toThrow('confirmar');}
+});

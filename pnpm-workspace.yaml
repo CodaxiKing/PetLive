@@ -5,6 +5,11 @@ packages:
 # (CMake/ninja) falha com caminhos acima de 260 caracteres.
 virtualStoreDirMaxLength: 30
 
+# Expo UI traz React DOM como peer opcional; manter a mesma versão de React
+# usada pelo SDK 58 e pelo web, sem instalar 19.3.1 com React 19.3.0.
+overrides:
+  react-dom: 19.3.0
+
 # Builds de dependências com script de instalação.
 # unrs-resolver é o resolver nativo do ESLint (eslint-config-expo).
 allowBuilds:

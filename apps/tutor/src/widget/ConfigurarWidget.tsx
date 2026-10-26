@@ -12,12 +12,12 @@ export function ConfigurarWidget() {
   useEffect(() => {
     ocultarRemedio().then(setOcultar, () => setOcultar(false))
   }, [])
-  if (Platform.OS !== 'android' || ocultar === null) return null
+  if (!['android', 'ios'].includes(Platform.OS) || ocultar === null) return null
   return (
     <View style={s.card}>
       <View style={s.flex}>
         <Text accessibilityRole="header" style={s.titulo}>Widget da tela inicial</Text>
-        <Text style={s.texto}>Mostra a próxima dose ou vacina com o botão Feito. Segure a tela inicial do celular e escolha Widgets para adicionar.</Text>
+        <Text style={s.texto}>Mostra a próxima dose ou vacina. No iPhone, o botão abre o app para confirmar a dose. Segure a tela inicial e escolha Widgets para adicionar.</Text>
       </View>
       <View style={s.linha}>
         <Text style={[s.texto, s.flex]}>Esconder o nome do remédio no widget</Text>

@@ -10,6 +10,8 @@ import type { PetForm } from '../../src/pets/types'
 import { FORM_VAZIO, validarFormularioPet } from '../../src/pets/types'
 import { colors } from '../../src/theme/colors'
 import { fontFamily } from '../../src/theme/typography'
+import { useLimitesPlano } from '../../src/premium/useLimitesPlano'
+import { limiteCadastroAtingido } from '../../src/premium/limites'
 
 /**
  * Cadastro do pet (protótipo PerfilPet; board P0 "Cadastro do pet com foto
@@ -20,6 +22,8 @@ export default function NovoPet() {
   // Primeiro acesso: veio de Permissões e segue para o Início (BUSINESS.md 5.43).
   const { primeiroAcesso } = useLocalSearchParams<{ primeiroAcesso?: string }>()
   const { criarPet, salvarFoto, salvando, erro } = usePets()
+  const limites = useLimitesPlano()
+  const cadastroBloqueado = limiteCadastroAtingido(limites?.dados)
   const trava = useRef(false)
   const [enviando, setEnviando] = useState(false)
   const [form, setForm] = useState<PetForm>(FORM_VAZIO)
@@ -40,6 +44,7 @@ export default function NovoPet() {
 
   const salvar = async () => {
     if (trava.current) return
+    if (cadastroBloqueado) return
     const erroFormulario = validarFormularioPet(form)
     if (erroFormulario) { Alert.alert('Confira os dados', erroFormulario); return }
     trava.current = true
@@ -77,14 +82,16 @@ export default function NovoPet() {
       />
 
       <View style={estilos.rodape}>
+        {cadastroBloqueado ? <Text accessibilityRole="alert" style={estilos.erro}>O limite de cadastro do seu plano foi atingido. Seus pets e históricos continuam disponíveis.</Text> : null}
         {erro ? <Text accessibilityRole="alert" style={estilos.erro}>{erro}</Text> : null}
         {passo === 1 ? (
-          <BotaoPrimario titulo="Continuar" icone={<MarcaPata size={24} cor={colors.black} />} onPress={continuar} />
+          <BotaoPrimario titulo="Continuar" desabilitado={cadastroBloqueado} icone={<MarcaPata size={24} cor={colors.black} />} onPress={continuar} />
         ) : (
           <BotaoPrimario
             titulo="Salvar pet"
             icone={<Text style={estilos.check}>✓</Text>}
             onPress={salvar}
+            desabilitado={cadastroBloqueado}
             carregando={salvando || enviando}
           />
         )}

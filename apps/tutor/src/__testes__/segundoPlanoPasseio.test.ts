@@ -14,7 +14,7 @@ vi.mock('expo-task-manager', () => ({
 vi.mock('expo-location', () => ({
   requestForegroundPermissionsAsync: m.frente, requestBackgroundPermissionsAsync: m.fundo,
   hasServicesEnabledAsync: m.servicos, hasStartedLocationUpdatesAsync: async () => m.rodando,
-  startLocationUpdatesAsync: m.iniciar, stopLocationUpdatesAsync: m.parar, Accuracy: { High: 4 },
+  startLocationUpdatesAsync: m.iniciar, stopLocationUpdatesAsync: m.parar, Accuracy: { High: 4 }, ActivityType: { Fitness: 3 },
 }));
 beforeEach(() => {
   vi.resetModules(); vi.resetAllMocks(); m.rodando = false; m.tarefa = null;
@@ -35,15 +35,26 @@ describe('GPS Android com tela apagada', () => {
     expect(m.iniciar).toHaveBeenCalledWith('petlive-passeio-gps-v1', expect.objectContaining({ foregroundService: expect.objectContaining({ killServiceOnDestroy: true }), timeInterval: 5000 }));
     await remover(); expect(m.parar).toHaveBeenCalledOnce();
   });
-  it('não pede permissão em APK sem suporte, Expo Go ou iOS', async () => {
+  it('não pede permissão em binário sem suporte, Expo Go ou web', async () => {
     const { gpsSegundoPlano } = await import('../passeios/segundoPlano');
     m.constants.expoConfig.extra.passeioSegundoPlano = false;
-    await expect(gpsSegundoPlano.observar(vi.fn(), vi.fn())).rejects.toThrow('versão Android');
+    await expect(gpsSegundoPlano.observar(vi.fn(), vi.fn())).rejects.toThrow('versão do app');
     m.constants.expoConfig.extra.passeioSegundoPlano = true; m.constants.executionEnvironment = 'storeClient';
-    await expect(gpsSegundoPlano.observar(vi.fn(), vi.fn())).rejects.toThrow('versão Android');
-    m.constants.executionEnvironment = 'standalone'; m.plataforma.OS = 'ios';
-    await expect(gpsSegundoPlano.observar(vi.fn(), vi.fn())).rejects.toThrow('versão Android');
+    await expect(gpsSegundoPlano.observar(vi.fn(), vi.fn())).rejects.toThrow('versão do app');
+    m.constants.executionEnvironment = 'standalone'; m.plataforma.OS = 'web';
+    await expect(gpsSegundoPlano.observar(vi.fn(), vi.fn())).rejects.toThrow('versão do app');
     expect(m.frente).not.toHaveBeenCalled();
+  });
+  it('iOS exige precisão completa e usa indicador de GPS, sem serviço Android', async () => {
+    m.plataforma.OS = 'ios';
+    m.frente.mockResolvedValueOnce({ granted: true, ios: { accuracy: 'reduced' } });
+    const { gpsSegundoPlano } = await import('../passeios/segundoPlano');
+    await expect(gpsSegundoPlano.observar(vi.fn(), vi.fn())).rejects.toThrow('precisa');
+    m.frente.mockResolvedValue({ granted: true, ios: { accuracy: 'full' } });
+    const parar = await gpsSegundoPlano.observar(vi.fn(), vi.fn());
+    expect(m.iniciar.mock.calls[0][1]).toMatchObject({ showsBackgroundLocationIndicator: true, pausesUpdatesAutomatically: false });
+    expect(m.iniciar.mock.calls[0][1]).not.toHaveProperty('foregroundService');
+    await parar();
   });
   it('recusa permissão negada, imprecisa e de segundo plano sem criar serviço', async () => {
     const { gpsSegundoPlano } = await import('../passeios/segundoPlano');

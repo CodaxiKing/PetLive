@@ -19,8 +19,11 @@ try {
   await db.exec(admin.slice(admin.indexOf('create or replace function public.admin_papel()'),admin.indexOf('create or replace function public.admin_registrar(')));
   const sql=await readFile(new URL('../migrations/20270104000000_admin_integracoes.sql',import.meta.url),'utf8');
   await db.exec(sql);await db.exec(sql);
+  const diagnostico=await readFile(new URL('../migrations/20270109010000_diagnostico_integracoes.sql',import.meta.url),'utf8');
+  await db.exec(diagnostico);await db.exec(diagnostico);
   for(const papel of [null,'suporte','moderacao','marketing','financeiro']) {
     await sessao(papel);await assert.rejects(db.query('select admin_integracoes()'),/equipe|função/);
+    await assert.rejects(db.query('select admin_integracoes_diagnostico()'),/equipe|função/);
   }
   await sessao('super','aal1');await assert.rejects(db.query('select admin_integracoes()'),/duas etapas/);
   await sessao('super','aal2',false);await assert.rejects(db.query('select admin_integracoes()'),/duas etapas/);
@@ -39,7 +42,21 @@ try {
   assert.equal(r.componentes.assinaturas,true);assert.equal(r.componentes.mapa,true);
   assert.equal(r.componentes.push_fila,false);
   assert.equal(JSON.stringify(r).includes('NAO_EXPOR'),false);
+  const semCron=(await db.query('select admin_integracoes_diagnostico() r')).rows[0].r;
+  assert.equal(semCron.jobs.length,6);assert.ok(semCron.jobs.every(j=>j.instalado===false));assert.equal(semCron.push,null);
+  await db.exec(`reset role;create schema cron;create table cron.job(jobid bigint,jobname text,active boolean);
+    create table cron.job_run_details(jobid bigint,status text,start_time timestamptz,return_message text);
+    insert into cron.job values(1,'petlive-ficha-push',true);
+    insert into cron.job_run_details values(1,'failed',now(),'NAO_EXPOR');
+    create table ficha_push_fila(estado text,criado_em timestamptz,atualizado_em timestamptz,token text);
+    insert into ficha_push_fila values('falhou',now(),now(),'TOKEN_PRIVADO'),('pendente',now(),now(),'TOKEN_PRIVADO');`);
+  await sessao('leitura');
+  const saude=(await db.query('select admin_integracoes_diagnostico() r')).rows[0].r;
+  assert.equal(saude.jobs[0].ultimo_estado,'failed');assert.equal(saude.jobs[0].ativo,true);
+  assert.equal(saude.push.pendentes,1);assert.equal(saude.push.falhas_24h,1);
+  assert.ok(!JSON.stringify(saude).includes('TOKEN_PRIVADO')&&!JSON.stringify(saude).includes('NAO_EXPOR'));
   await assert.rejects(db.query('select * from subscriptions'),/permission denied/);
   await db.exec('reset role;set role anon');await assert.rejects(db.query('select admin_integracoes()'),/permission denied/);
+  await assert.rejects(db.query('select admin_integracoes_diagnostico()'),/permission denied/);
   console.log('OK: guarda real de papel/2FA/ativo, anon negado, inventário atualizado e sem dados privados.');
 } finally { await db.close(); }

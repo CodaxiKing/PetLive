@@ -56,7 +56,7 @@ function GravarPasseio({ tutorId }: { tutorId: string }) {
       if (gravador.configurarGps(ativar ? gpsSegundoPlano : gpsPasseio, ativar)) setSegundoPlano(ativar);
     };
     if (!ativar) { aplicar(); return; }
-    Alert.alert('Gravar com a tela apagada?', 'Durante o passeio, o PetLive usará sua localização precisa mesmo em segundo plano e mostrará um aviso permanente. Ao iniciar, permita a localização o tempo todo nas configurações do Android. O trajeto fica neste aparelho; o envio à nuvem continua opcional. Pausar ou sair desta tela encerra a gravação.', [
+    Alert.alert('Gravar com a tela apagada?', 'Durante o passeio, o PetLive usará sua localização precisa mesmo em segundo plano. O sistema mostrará um indicador de localização ou aviso permanente. Ao iniciar, autorize a localização em segundo plano nas configurações do aparelho. O trajeto fica neste aparelho; o envio à nuvem continua opcional. Pausar ou sair desta tela encerra a gravação.', [
       { text: 'Agora não', style: 'cancel' }, { text: 'Ativar', onPress: aplicar },
     ]);
   }
@@ -79,7 +79,7 @@ function GravarPasseio({ tutorId }: { tutorId: string }) {
     {passeioSegundoPlanoDisponivel() ? <View style={s.card}>
       <Text style={s.titulo}>Gravar com a tela apagada</Text>
       <Switch accessibilityLabel="Gravar passeio com a tela apagada" value={segundoPlano} disabled={estado.carregando || estado.ocupado || atual?.status === 'gravando'} onValueChange={escolherSegundoPlano} />
-      <Text style={s.texto}>Opcional no Android. Pause para alterar. Se o sistema encerrar o app, retome o passeio manualmente; o último registro fica salvo.</Text>
+      <Text style={s.texto}>Opcional. Pause para alterar. Se o sistema encerrar o app, retome o passeio manualmente; o último registro fica salvo.</Text>
     </View> : null}
     <Text style={s.texto}>Grave sem internet. Salve neste aparelho e, quando quiser, sincronize trajetos e anotações com sua conta. Fotos ficam somente aqui.</Text>
     {estado.erro ? <Text accessibilityRole="alert" style={s.erro}>{estado.erro}</Text> : null}
