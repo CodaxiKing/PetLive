@@ -4,7 +4,7 @@
     "slug": "petlive-tutor",
     "version": "0.1.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/logo-petlive-original.png",
     "scheme": "petlive",
     "userInterfaceStyle": "light",
     "ios": {
@@ -19,10 +19,8 @@
     "android": {
       "package": "app.petlive.tutor",
       "adaptiveIcon": {
-        "backgroundColor": "#A9DCF6",
-        "foregroundImage": "./assets/android-icon-foreground.png",
-        "backgroundImage": "./assets/android-icon-background.png",
-        "monochromeImage": "./assets/android-icon-monochrome.png"
+        "backgroundColor": "#FFFFFF",
+        "foregroundImage": "./assets/logo-petlive-original.png"
       },
       "predictiveBackGestureEnabled": false,
       "blockedPermissions": [
@@ -35,7 +33,7 @@
       ]
     },
     "web": {
-      "favicon": "./assets/favicon.png",
+      "favicon": "./assets/logo-petlive-original.png",
       "bundler": "metro"
     },
     "plugins": [
@@ -54,7 +52,7 @@
         "expo-splash-screen",
         {
           "backgroundColor": "#A9DCF6",
-          "image": "./assets/splash-icon.png",
+          "image": "./assets/logo-petlive-original.png",
           "imageWidth": 200,
           "resizeMode": "contain"
         }
