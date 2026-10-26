@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { Cabecalho, CartaoNumero, haQuanto, numero, useAdmin } from "@/components/admin/Painel";
 import { DatasFogos } from "./DatasFogos";
 import { Viagem } from "./Viagem";
+import { Racas } from "./Racas";
 import { rpcAdmin } from "@/lib/admin/supabase";
 
 type Vacina = {
@@ -30,9 +31,10 @@ type Pacote = {
 };
 type Conteudo = { vacinas: Vacina[]; versoes: Versao[]; pacotes: Pacote[] };
 
-type Aba = "vacinas" | "versoes" | "pacotes" | "fogos" | "viagem";
+type Aba = "vacinas" | "versoes" | "pacotes" | "fogos" | "viagem" | "racas";
 const ABAS: { valor: Aba; rotulo: string }[] = [
   { valor: "vacinas", rotulo: "Vacinas" },
+  { valor: "racas", rotulo: "Raças" },
   { valor: "versoes", rotulo: "Versões publicadas" },
   { valor: "pacotes", rotulo: "Pacotes offline" },
   { valor: "fogos", rotulo: "Datas com fogos" },
@@ -243,6 +245,8 @@ export default function ConteudoPagina() {
                 </li>
               ))}
             </ul>
+          ) : aba === "racas" ? (
+            <Racas pode={pode} />
           ) : aba === "viagem" ? (
             <Viagem pode={admin.papel === "super" || admin.papel === "marketing"} onErro={setErro} />
           ) : aba === "fogos" ? (
@@ -315,7 +319,7 @@ export default function ConteudoPagina() {
           )}
         </section>
 
-        <section className="h-fit min-w-0 rounded-[28px] bg-fundo p-6">
+        {aba === "vacinas" ? <section className="h-fit min-w-0 rounded-[28px] bg-fundo p-6">
           <div className="flex items-center justify-between gap-3">
             <h2 className="font-bold">{form.id ? "Editar vacina" : "Nova vacina"}</h2>
             {form.id ? (
@@ -372,7 +376,7 @@ export default function ConteudoPagina() {
               ) : null}
             </div>
           ) : null}
-        </section>
+        </section> : null}
       </div>
     </>
   );

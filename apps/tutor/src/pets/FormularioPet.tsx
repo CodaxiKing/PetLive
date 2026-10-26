@@ -10,6 +10,7 @@ import { colors } from '../theme/colors';
 import { fontFamily } from '../theme/typography';
 import { pedirFoto, type AtivoFoto } from './CampoFoto';
 import type { Especie, PetForm } from './types';
+import { SugestoesRaca } from './SugestoesRaca';
 
 const ESPECIES: { valor: Especie; rotulo: string; fundo: string }[] = [
   { valor: 'cao', rotulo: 'Cão', fundo: colors.primarySurface },
@@ -151,6 +152,7 @@ export function FormularioPet({ form, onChange, titulo, passo, foto, onFoto, onV
                 />
               </View>
             </View>
+            <SugestoesRaca especie={form.especie} busca={form.raca} onSelecionar={(nome) => onChange('raca', nome)} />
           </>
         ) : null}
 
