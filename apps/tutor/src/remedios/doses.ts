@@ -112,6 +112,8 @@ export async function confirmarDose(doseId: string): Promise<void> {
     .eq('id', doseId)
 
   if (error) throw new Error(error.message)
+  // Widget da tela inicial passa para a próxima dose.
+  void import('../widget/tarefaWidget').then((w) => w.atualizarWidget()).catch(() => undefined)
 }
 
 /** '2026-10-20T11:00:00+00:00' -> '11:00'. */

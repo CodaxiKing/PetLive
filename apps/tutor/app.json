@@ -25,7 +25,9 @@
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
       "predictiveBackGestureEnabled": false,
-      "blockedPermissions": ["android.permission.RECORD_AUDIO"],
+      "blockedPermissions": [
+        "android.permission.RECORD_AUDIO"
+      ],
       "permissions": [
         "android.permission.ACCESS_COARSE_LOCATION",
         "android.permission.ACCESS_FINE_LOCATION",
@@ -70,7 +72,27 @@
       "expo-web-browser",
       "expo-apple-authentication",
       "./plugins/apps-de-mapa",
-      "./plugins/atalhos-android"
+      "./plugins/atalhos-android",
+      [
+        "react-native-android-widget",
+        {
+          "widgets": [
+            {
+              "name": "ProximaDose",
+              "label": "Próxima dose",
+              "description": "A próxima dose ou vacina do pet, com o botão Feito",
+              "minWidth": "180dp",
+              "minHeight": "110dp",
+              "targetCellWidth": 3,
+              "targetCellHeight": 2,
+              "maxResizeWidth": "320dp",
+              "maxResizeHeight": "180dp",
+              "resizeMode": "horizontal|vertical",
+              "updatePeriodMillis": 1800000
+            }
+          ]
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true

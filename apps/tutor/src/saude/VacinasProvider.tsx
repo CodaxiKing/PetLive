@@ -1,3 +1,4 @@
+import { atualizarWidget } from '../widget/tarefaWidget'
 import {
   createContext,
   useCallback,
@@ -41,6 +42,11 @@ export function VacinasProvider({ children }: { children: ReactNode }) {
   const [carregando, setCarregando] = useState(true)
   const [salvando, setSalvando] = useState(false)
   const [erro, setErro] = useState<string | null>(null)
+
+  // Widget da tela inicial: a próxima vacina muda quando as vacinas mudam.
+  useEffect(() => {
+    atualizarWidget()
+  }, [vacinas])
 
   const petId = pet?.id ?? null
   const especie = pet?.especie ?? null

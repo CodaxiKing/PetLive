@@ -10,6 +10,7 @@ import {
 import { mensagemDeErro } from '../lib/cacheOffline'
 import { supabase } from '../lib/supabase'
 import { sincronizarDoses } from '../notificacoes/doses'
+import { atualizarWidget } from '../widget/tarefaWidget'
 import { usePets } from '../pets/PetsProvider'
 import type { Remedio, RemedioForm } from './types'
 import { REMEDIO_FORM_VAZIO, formParaRegistro, normalizarHorarios } from './types'
@@ -77,6 +78,7 @@ export function RemediosProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (carregando) return
     sincronizarDoses().catch(() => undefined)
+    atualizarWidget()
   }, [remedios, carregando])
 
   // Guarda compartilhada: quando outra pessoa marca uma dose, o aviso local
@@ -86,6 +88,7 @@ export function RemediosProvider({ children }: { children: ReactNode }) {
       .channel('doses-de-outras-pessoas')
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'pet_activity', filter: 'tipo=eq.dose' }, () => {
         sincronizarDoses().catch(() => undefined)
+        atualizarWidget()
       })
       .subscribe()
     return () => {
