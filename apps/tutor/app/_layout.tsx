@@ -24,6 +24,7 @@ import { TelaAtualizar } from '../src/components/TelaAtualizar';
 import { verificarEAplicarAtualizacao } from '../src/lib/atualizacao';
 import { RetomarAtalho } from '../src/atalhos/RetomarAtalho';
 import { ObservadorNotificacoes } from '../src/notificacoes/ObservadorNotificacoes';
+import { renovarRegiaoPerdidosSeLigada } from '../src/perdido/perdido';
 
 /**
  * Sentry: só liga quando há DSN (sem conta/DSN o app segue normal,
@@ -49,6 +50,8 @@ function RaizProtegida() {
   useEffect(() => {
     if (!logado) return;
     registrarAberturaDiaria();
+    // Região dos alertas de pet perdido: renova ao abrir, sem pedir permissão (BUSINESS.md 5.29).
+    renovarRegiaoPerdidosSeLigada().catch(() => undefined);
     const assinatura = AppState.addEventListener('change', (estado) => {
       if (estado === 'active') registrarAberturaDiaria();
     });
@@ -96,6 +99,10 @@ function RaizProtegida() {
                 <Stack.Screen name="pet/[id]/atualizacoes" />
                 <Stack.Screen name="pet/[id]/revisar-vacinas" />
                 <Stack.Screen name="pet/[id]/achado" />
+                <Stack.Screen name="pet-perdido/index" />
+                <Stack.Screen name="pet-perdido/[id]" />
+                <Stack.Screen name="alerta/[id]/index" />
+                <Stack.Screen name="alerta/[id]/visto" options={{ presentation: 'modal', animation: 'slide_from_bottom' }} />
                 <Stack.Screen name="guarda/index" />
                 <Stack.Screen name="guarda/convidar" />
                 <Stack.Screen name="guarda/convite/[id]" />

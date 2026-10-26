@@ -452,6 +452,16 @@ export default function PetDetalhe() {
             >
               <Text style={estilos.opcaoTexto}>Calendário sugerido de vacinas</Text>
             </Pressable>
+            <Pressable
+              accessibilityRole="button"
+              onPress={() => {
+                setMenuAberto(false)
+                router.push({ pathname: '/pet-perdido', params: { pet: petAtual.id } })
+              }}
+              style={estilos.opcao}
+            >
+              <Text style={[estilos.opcaoTexto, estilos.opcaoPerigo]}>{petAtual.nome} sumiu</Text>
+            </Pressable>
             <Pressable accessibilityRole="button" onPress={() => ir('/pet/[id]/atualizacoes')} style={estilos.opcao}>
               <Text style={estilos.opcaoTexto}>Atualizações e quem cuida</Text>
             </Pressable>

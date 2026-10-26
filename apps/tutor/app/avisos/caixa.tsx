@@ -18,6 +18,7 @@ const VISUAL: Record<Aviso['type'], { icone: NomeIcone; fundo: string }> = {
   sistema: { icone: 'escudo', fundo: colors.background },
   campanha: { icone: 'sino', fundo: colors.primarySurface },
   guarda: { icone: 'pessoas', fundo: colors.primarySurface },
+  perdido: { icone: 'local', fundo: colors.healthSurface },
 };
 
 function grupo(iso: string): string {

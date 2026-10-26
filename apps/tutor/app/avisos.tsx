@@ -24,6 +24,7 @@ import { colors } from '../src/theme/colors'
 import { radius, spacing } from '../src/theme/tokens'
 import { fontFamily, typography } from '../src/theme/typography'
 import { ConfigurarRegiaoEventos } from '../src/notificacoes/ConfigurarRegiaoEventos'
+import { ConfigurarRegiaoPerdidos } from '../src/perdido/ConfigurarRegiaoPerdidos'
 
 /** Opções do "Horário dos avisos": de 30 em 30 minutos. */
 const HORARIOS = Array.from({ length: 48 }, (_, i) => {
@@ -211,6 +212,7 @@ export default function TelaAvisos() {
             })}
 
             <ConfigurarRegiaoEventos eventosLigados={estado.ativos.eventos} />
+            <ConfigurarRegiaoPerdidos />
 
             <Pressable
               accessibilityRole="button"
