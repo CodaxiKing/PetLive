@@ -1,4 +1,5 @@
-import { supabase } from '../lib/supabase'
+import { criarClienteTemporario } from '../lib/supabase'
+import { conferirContaPet } from './conta'
 
 export type ResultadoFoto =
   | { url: string; erro: null }
@@ -15,35 +16,44 @@ type EnvioFoto = {
 /**
  * Envia a foto do pet para o bucket `pets` e devolve a URL pública.
  * O caminho é `<tutorId>/<petId>.<ext>`, que atende às policies de storage
- * (primeira pasta = uid do dono) e mantém um arquivo por pet.
+ * (primeira pasta = uid do dono). Não apaga versões de outro formato antes
+ * de o chamador confirmar o vínculo da nova foto no banco.
  */
 export async function enviarFotoPet({ tutorId, petId, uri, mimeType }: EnvioFoto): Promise<ResultadoFoto> {
-  const extensao = extensaoDe(mimeType)
-  const tipo = mimeType ?? `image/${extensao === 'jpg' ? 'jpeg' : extensao}`
-  const nome = `${petId}.${extensao}`
-  const caminho = `${tutorId}/${nome}`
-
-  // Os bytes do arquivo, e não FormData com { uri }: o fetch novo do React
-  // Native recusa esse item ("Unsupported FormDataPart implementation").
-  let conteudo: ArrayBuffer
+  if (![tutorId, petId].every(id => /^[a-zA-Z0-9_-]+$/.test(id))) return { url: null, erro: 'Pet inválido. Atualize a lista.' }
   try {
-    conteudo = await (await fetch(uri)).arrayBuffer()
-  } catch {
-    return { url: null, erro: 'Não deu para ler a foto escolhida. Tente outra.' }
+    const sessao = await conferirContaPet(tutorId)
+    const cliente = criarClienteTemporario(sessao.access_token)
+    const extensao = extensaoDe(mimeType)
+    const tipo = mimeType ?? `image/${extensao === 'jpg' ? 'jpeg' : extensao}`
+    const nome = `${petId}.${extensao}`
+    const caminho = `${tutorId}/${nome}`
+
+    // Bytes do arquivo: o fetch nativo não aceita FormData com { uri }.
+    let conteudo: ArrayBuffer
+    try {
+      conteudo = await (await fetch(uri)).arrayBuffer()
+    } catch {
+      return { url: null, erro: 'Não deu para ler a foto escolhida. Tente outra.' }
+    }
+    if (!conteudo.byteLength) return { url: null, erro: 'A foto está vazia. Escolha outra imagem.' }
+    await conferirContaPet(tutorId)
+
+    const { error } = await cliente.storage.from('pets').upload(caminho, conteudo, {
+      contentType: tipo,
+      upsert: true,
+    })
+    if (error) return { url: null, erro: traduzirErroUpload(error.message) }
+
+    await conferirContaPet(tutorId)
+    const { data } = cliente.storage.from('pets').getPublicUrl(caminho)
+    if (typeof data?.publicUrl !== 'string' || !data.publicUrl) return { url: null, erro: 'Não foi possível confirmar o endereço da foto. Atualize o pet antes de tentar novamente.' }
+    // O caminho é sempre o mesmo: o ?v= evita reapresentar a foto anterior do cache.
+    return { url: `${data.publicUrl}?v=${Date.now()}`, erro: null }
+  } catch (erro) {
+    const mensagem = erro instanceof Error ? erro.message : ''
+    return { url: null, erro: mensagem.includes('A conta mudou') ? mensagem : traduzirErroUpload(mensagem) }
   }
-
-  const { error } = await supabase.storage.from('pets').upload(caminho, conteudo, {
-    contentType: tipo,
-    upsert: true,
-  })
-  if (error) return { url: null, erro: traduzirErroUpload(error.message) }
-
-  // Limpeza best-effort de versões antigas com outra extensão.
-  await limparFotosAntigas(tutorId, petId, nome)
-
-  const { data } = supabase.storage.from('pets').getPublicUrl(caminho)
-  // O caminho é sempre o mesmo: o ?v= faz a foto nova aparecer em vez da antiga em cache.
-  return { url: `${data.publicUrl}?v=${Date.now()}`, erro: null }
 }
 
 function extensaoDe(mimeType?: string): string {
@@ -51,16 +61,6 @@ function extensaoDe(mimeType?: string): string {
   if (mimeType?.includes('webp')) return 'webp'
   if (mimeType?.includes('heic')) return 'heic'
   return 'jpg'
-}
-
-async function limparFotosAntigas(tutorId: string, petId: string, manter: string) {
-  try {
-    const { data } = await supabase.storage.from('pets').list(tutorId, { search: `${petId}.` })
-    const antigas = (data ?? []).filter((f) => f.name !== manter).map((f) => `${tutorId}/${f.name}`)
-    if (antigas.length) await supabase.storage.from('pets').remove(antigas)
-  } catch {
-    // A limpeza é opcional: falha aqui não pode impedir o cadastro.
-  }
 }
 
 function traduzirErroUpload(mensagem: string): string {

@@ -27,6 +27,14 @@ Premium, gestão de assinatura, webhooks, cupons comerciais e destaques pagos co
 
 ## Evidência
 
+### Continuação: cadastro e upload da foto
+
+Task relacionada: cadastro do pet com foto (A02). Cadastro e envio binário agora capturam a credencial da conta inicial; conferem o titular antes de usar o resultado e, no upload, também após ler o arquivo local. O cadastro exige recibo com ID e titular corretos. Caminhos inválidos, arquivo vazio, URL incompleta e falhas de leitura/upload têm retorno de erro sem simular confirmação.
+
+Removida a limpeza antecipada de fotos de outros formatos: ela podia apagar a versão ainda referenciada quando a gravação do novo vínculo falhava. Esses objetos permanecem no Storage e são abrangidos pela limpeza de conta já preparada; esta alteração não adiciona job de coleta. O nome do arquivo por pet/formato e o upsert foram mantidos: substituir o mesmo formato ainda pode alterar o objeto antes de gravar o vínculo. Não há transação atômica entre Storage e banco nesta entrega.
+
+Validação atual: **424 testes em 69 arquivos**, TypeScript e lint aprovados. Dez casos novos de cadastro/upload, além da regressão dos fluxos existentes. A02 permanece In Progress até homologar câmera/galeria, RLS e falhas no aparelho; nenhuma imagem real foi enviada nem dado de produção alterado.
+
 ### Continuação: edição e exclusão de pets
 
 Tasks relacionadas: editar/excluir pet, cadastro com foto (A02) e isolamento por tutor (B02). Edição de dados, vínculo/remoção de foto e exclusão usam cliente com credencial capturada, com conferência da conta antes/depois. A exclusão exige o retorno do ID removido: zero linhas ou resposta incompleta não são apresentados como sucesso.

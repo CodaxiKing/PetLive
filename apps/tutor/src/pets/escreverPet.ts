@@ -1,11 +1,6 @@
-import { criarClienteTemporario, supabase } from '../lib/supabase'
+import { criarClienteTemporario } from '../lib/supabase'
 import type { Pet } from './types'
-
-async function conferirConta(tutor: string) {
-  const { data, error } = await supabase.auth.getSession()
-  if (error || !tutor || data.session?.user.id !== tutor) throw new Error('A conta mudou. Entre novamente para continuar.')
-  return data.session
-}
+import { conferirContaPet as conferirConta } from './conta'
 
 export async function escreverPet(tutor: string, id: string, dados: Partial<Omit<Pet, 'id' | 'tutor_id' | 'criado_em'>>): Promise<Pet> {
   if (!id) throw new Error('Pet inválido. Atualize a lista.')
