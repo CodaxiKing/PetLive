@@ -27,6 +27,16 @@ Premium, gestão de assinatura, webhooks, cupons comerciais e destaques pagos co
 
 ## Evidência
 
+### Continuação: edição e exclusão de pets
+
+Tasks relacionadas: editar/excluir pet, cadastro com foto (A02) e isolamento por tutor (B02). Edição de dados, vínculo/remoção de foto e exclusão usam cliente com credencial capturada, com conferência da conta antes/depois. A exclusão exige o retorno do ID removido: zero linhas ou resposta incompleta não são apresentados como sucesso.
+
+Edição, remoção de foto e exclusão tratam rejeição de rede e liberam o estado de salvamento em `finally`. Escritas concluídas invalidam consultas de lista iniciadas anteriormente. A limpeza opcional de documentos ocorre após confirmar a exclusão, em lotes de até mil caminhos restritos a `tutor/saude/pet/`; falha nessa limpeza não desfaz a exclusão confirmada. O envio binário da foto e a atomicidade entre Storage/banco continuam com o fluxo anterior e não são certificados por esta alteração.
+
+Oito testes novos cobrem credencial, troca de conta, retorno ausente/ID errado, falhas de rede/servidor, exclusão sem linha removida e limpeza restrita/best effort. Homologação com contas descartáveis e aparelho continua pendente; nenhum pet real foi excluído nesta rodada.
+
+Validação atual: **414 testes em 68 arquivos**, TypeScript e lint aprovados. Nenhuma migration ou dependência nova.
+
 ### Continuação: carregamento dos pets
 
 Tasks relacionadas: cadastro com foto (A02), isolamento por tutor (B02) e lista Meus pets. A consulta agora captura a credencial, preserva o cache offline por titular e reconfere a conta ao terminar. O layout já reinicia os providers por conta; esse comportamento foi preservado. Apenas a busca mais recente pode publicar lista/etiquetas ou erro, e o cleanup invalida respostas pendentes.

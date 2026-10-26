@@ -1,10 +1,10 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react'
 import { ehErroDeRede, mensagemDeErro } from '../lib/cacheOffline'
-import { supabase } from '../lib/supabase'
 import { useAuth } from '../auth/AuthProvider'
 import { enviarFotoPet } from './foto'
 import { cadastrarPet } from './cadastrarPet'
 import { carregarPetsConta, criarCargaPets } from './carregarPetsConta'
+import { escreverPet, excluirPet } from './escreverPet'
 import type { Pet, PetForm } from './types'
 import { FORM_VAZIO, formParaRegistro } from './types'
 
@@ -80,6 +80,8 @@ export function PetsProvider({ children }: { children: ReactNode }) {
       setErro(null)
       try {
         const pet = await cadastrarPet(form, tutorId)
+        carga.invalidar()
+        setCarregando(false)
         setPets((atual) => [pet, ...atual])
         setPetAtivoId(pet.id)
         return pet
@@ -90,29 +92,25 @@ export function PetsProvider({ children }: { children: ReactNode }) {
         setSalvando(false)
       }
     },
-    [tutorId],
+    [tutorId, carga],
   )
 
   const atualizarPet = useCallback(async (id: string, form: PetForm) => {
     if (!tutorId) return null
     setSalvando(true)
     setErro(null)
-    const { tutor_id: _tutorIdNaoAlterado, ...dadosPet } = formParaRegistro(form, tutorId)
-    const { data, error } = await supabase
-      .from('pets')
-      .update(dadosPet)
-      .eq('id', id)
-      .select()
-      .single()
-    setSalvando(false)
-    if (error) {
-      setErro(mensagemDeErro(error.message))
+    try {
+      const { tutor_id: _tutorIdNaoAlterado, ...dadosPet } = formParaRegistro(form, tutorId)
+      const pet = await escreverPet(tutorId, id, dadosPet)
+      carga.invalidar()
+      setCarregando(false)
+      setPets((atual) => atual.map((p) => (p.id === id ? pet : p)))
+      return pet
+    } catch (e) {
+      setErro(mensagemDeErro(e instanceof Error ? e.message : 'Não foi possível salvar o pet. Tente novamente.'))
       return null
-    }
-    const pet = data as Pet
-    setPets((atual) => atual.map((p) => (p.id === id ? pet : p)))
-    return pet
-  }, [tutorId])
+    } finally { setSalvando(false) }
+  }, [tutorId, carga])
 
   const salvarFoto = useCallback(
     async (id: string, foto: { uri: string; mimeType?: string }) => {
@@ -130,17 +128,9 @@ export function PetsProvider({ children }: { children: ReactNode }) {
           setErro(resultado.erro)
           return null
         }
-        const { data, error } = await supabase
-          .from('pets')
-          .update({ foto_url: resultado.url })
-          .eq('id', id)
-          .select()
-          .single()
-        if (error) {
-          setErro(mensagemDeErro(error.message))
-          return null
-        }
-        const pet = data as Pet
+        const pet = await escreverPet(tutorId, id, { foto_url: resultado.url })
+        carga.invalidar()
+        setCarregando(false)
         setPets((atual) => atual.map((p) => (p.id === id ? pet : p)))
         return resultado.url
       } catch (e) {
@@ -148,62 +138,46 @@ export function PetsProvider({ children }: { children: ReactNode }) {
         return null
       } finally { setSalvando(false) }
     },
-    [tutorId],
+    [tutorId, carga],
   )
 
   const removerFoto = useCallback(
     async (id: string) => {
+      if (!tutorId) return false
       setSalvando(true)
       setErro(null)
-      const { data, error } = await supabase
-        .from('pets')
-        .update({ foto_url: null })
-        .eq('id', id)
-        .select()
-        .single()
-      setSalvando(false)
-      if (error) {
-        setErro(mensagemDeErro(error.message))
+      try {
+        const pet = await escreverPet(tutorId, id, { foto_url: null })
+        carga.invalidar()
+        setCarregando(false)
+        setPets((atual) => atual.map((p) => (p.id === id ? pet : p)))
+        return true
+      } catch (e) {
+        setErro(mensagemDeErro(e instanceof Error ? e.message : 'Não foi possível remover a foto. Tente novamente.'))
         return false
-      }
-      const pet = data as Pet
-      setPets((atual) => atual.map((p) => (p.id === id ? pet : p)))
-      return true
+      } finally { setSalvando(false) }
     },
-    [],
+    [tutorId, carga],
   )
 
   const removerPet = useCallback(
     async (id: string) => {
+      if (!tutorId) return false
       setSalvando(true)
       setErro(null)
-      // Salva os caminhos antes da cascata apagar os metadados. Se a tabela
-      // ainda não existir no ambiente, a exclusão do pet continua funcionando.
-      let caminhosDocumentos: string[] = []
       try {
-        const { data: documentos, error: erroDocumentos } = await supabase
-          .from('documentos_saude')
-          .select('arquivo_path')
-          .eq('pet_id', id)
-        if (!erroDocumentos) caminhosDocumentos = (documentos ?? []).map((doc) => doc.arquivo_path)
-      } catch {
-        // A tabela pode não ter sido criada neste ambiente ainda.
-      }
-      const { error } = await supabase.from('pets').delete().eq('id', id)
-      setSalvando(false)
-      if (error) {
-        setErro(mensagemDeErro(error.message))
+        await excluirPet(tutorId, id)
+        carga.invalidar()
+        setCarregando(false)
+        setPets((atual) => atual.filter((p) => p.id !== id))
+        if (petAtivoId === id) setPetAtivoId(null)
+        return true
+      } catch (e) {
+        setErro(mensagemDeErro(e instanceof Error ? e.message : 'Não foi possível excluir o pet. Tente novamente.'))
         return false
-      }
-      // Remover arquivos é best effort; não reverte a exclusão do pet.
-      if (caminhosDocumentos.length) {
-        await supabase.storage.from('anexos').remove(caminhosDocumentos).catch(() => undefined)
-      }
-      setPets((atual) => atual.filter((p) => p.id !== id))
-      if (petAtivoId === id) setPetAtivoId(null)
-      return true
+      } finally { setSalvando(false) }
     },
-    [petAtivoId],
+    [petAtivoId, tutorId, carga],
   )
 
   // Sem escolha do tutor, o primeiro pet é o ativo (título do Início,
