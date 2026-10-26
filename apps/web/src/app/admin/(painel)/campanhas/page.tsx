@@ -9,6 +9,7 @@ type Publico = "todos" | "caes" | "gatos" | "sem_pet" | "vacina_vencendo" | "ina
 type Link = "/inicio" | "/mapa" | "/lembretes" | "/ferramentas/calculadoras" | "/sos";
 type Campanha = {
   id: string;
+  revisao: number;
   titulo: string;
   mensagem: string;
   publico: Publico;
@@ -45,8 +46,8 @@ const STATUS: Record<Campanha["status"], { rotulo: string; cor: string }> = {
   cancelada: { rotulo: "Cancelada", cor: "bg-suave text-cinza line-through" },
 };
 
-type Form = { id: string | null; titulo: string; mensagem: string; publico: Publico; link: Link; quando: string };
-const VAZIO: Form = { id: null, titulo: "", mensagem: "", publico: "todos", link: "/inicio", quando: "" };
+type Form = { id: string | null; revisao: number | null; titulo: string; mensagem: string; publico: Publico; link: Link; quando: string };
+const VAZIO: Form = { id: null, revisao: null, titulo: "", mensagem: "", publico: "todos", link: "/inicio", quando: "" };
 
 /** "amanhã 9h", "qui 18h", "12 out". */
 function dataCurta(iso: string | null): string {
@@ -83,7 +84,7 @@ export default function CampanhasPagina() {
   const pode = admin.papel === "super" || admin.papel === "marketing";
 
   const carregar = useCallback(() => {
-    rpcAdmin<Dados>("admin_campanhas").then(setDados, (e: Error) => setErro(e.message));
+    rpcAdmin<Dados>("admin_campanhas_v2").then(setDados, (e: Error) => setErro(e.message));
   }, []);
   useEffect(() => {
     carregar();
@@ -111,6 +112,7 @@ export default function CampanhasPagina() {
         carregar();
       } catch (e) {
         setErro(e instanceof Error ? e.message : "Não foi possível concluir a operação. Tente novamente.");
+        carregar();
       } finally {
         setOcupado(false);
       }
@@ -122,8 +124,9 @@ export default function CampanhasPagina() {
     await agir(
       () => {
         quando = agendar ? horarioEnvio(form.quando || amanha9h()) : null;
-        return rpcAdmin("admin_campanha_salvar", {
+        return rpcAdmin("admin_campanha_salvar_v2", {
           p_id: form.id,
+          p_revisao: form.revisao,
           p_titulo: form.titulo,
           p_mensagem: form.mensagem,
           p_publico: form.publico,
@@ -146,14 +149,15 @@ export default function CampanhasPagina() {
   function editar(c: Campanha) {
     if (ocupado) return;
     if (c.status !== "rascunho" && c.status !== "agendada") return;
+    if (!Number.isSafeInteger(c.revisao) || c.revisao < 1) { setErro("Atualize o painel para editar esta campanha."); return; }
     const quando = c.agendada_para ? horarioLocal(new Date(c.agendada_para)) : "";
-    setForm({ id: c.id, titulo: c.titulo, mensagem: c.mensagem, publico: c.publico, link: c.link ?? "/inicio", quando });
+    setForm({ id: c.id, revisao: c.revisao, titulo: c.titulo, mensagem: c.mensagem, publico: c.publico, link: c.link ?? "/inicio", quando });
     setAviso(null);
   }
 
   function cancelar() {
     if (ocupado || !form.id || !window.confirm(`Cancelar "${form.titulo}"? Ela não será enviada.`)) return;
-    agir(() => rpcAdmin("admin_campanha_cancelar", { p_id: form.id }), "Campanha cancelada.", true);
+    agir(() => rpcAdmin("admin_campanha_cancelar_v2", { p_id: form.id, p_revisao: form.revisao }), "Campanha cancelada.", true);
   }
 
   if (!dados) return <p className="text-sm text-cinza">{erro ?? "Carregando…"}</p>;
@@ -165,6 +169,7 @@ export default function CampanhasPagina() {
   return (
     <>
       <Cabecalho titulo="Campanhas e notificações" subtitulo="Avisos para os tutores, com público e horário">
+        <button disabled={ocupado} onClick={carregar} className="h-10 rounded-full bg-suave px-5 text-[13px] font-bold disabled:opacity-40">Atualizar lista</button>
         {pode ? (
           <button disabled={ocupado} onClick={() => setForm({ ...VAZIO, quando: amanha9h() })} className="h-10 rounded-full bg-tinta px-5 text-[13px] font-bold text-white disabled:opacity-40">
             Nova campanha

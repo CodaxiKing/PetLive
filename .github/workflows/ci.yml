@@ -129,6 +129,7 @@ jobs:
           node supabase/tests/testar-lgpd-worker.mjs
           node supabase/tests/testar-limites-plano.mjs
           node supabase/tests/testar-admin-integracoes.mjs
+          node supabase/tests/testar-campanhas-revisao.mjs
 
       - name: Configurar Supabase CLI
         uses: supabase/setup-cli@v1
