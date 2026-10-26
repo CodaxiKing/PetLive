@@ -12,7 +12,7 @@ import { Pose } from "./palco";
 
 /** Borrão proporcional à velocidade do celular entre dois quadros. */
 export const borraoMovimento = (agora: Pose, antes: Pose) => {
-  const v = Math.hypot(agora.cx - antes.cx, agora.cy - antes.cy) + Math.abs(agora.s - antes.s) * 900 + Math.abs(agora.ry - antes.ry) * 3;
+  const v = Math.hypot(agora.cx - antes.cx, agora.cy - antes.cy) + Math.abs(agora.s - antes.s) * 900 + Math.abs(agora.ry - antes.ry) * 1.6;
   return Math.min(2.5, Math.max(0, (v - 10) * 0.14));
 };
 

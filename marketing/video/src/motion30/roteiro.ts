@@ -67,7 +67,7 @@ export const BATIDAS = {
   cardSai: 662,
   cardVolta: 712,
   // Fechamento: o celular volta ao Início enquanto mostra o verso.
-  voltaInicioFinal: 758,
+  voltaInicioFinal: 744,
 };
 
 /**

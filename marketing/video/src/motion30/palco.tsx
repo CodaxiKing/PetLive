@@ -1,6 +1,6 @@
 import React from "react";
 import { AbsoluteFill, interpolate, interpolateColors } from "remotion";
-import { cor, MarcaPata } from "./app";
+import { cor, MarcaPata, SeloMarca } from "./app";
 import { chaves, CLAMP, lerp, SAI_RAPIDO, SUAVE } from "./movimento";
 import { BATIDAS, CENAS } from "./roteiro";
 
@@ -14,7 +14,7 @@ export const ALTURA = 844 * K + BORDA * 2;
 
 export type Pose = { cx: number; cy: number; s: number; ry: number; rx: number; rz: number };
 
-type Chave = { f: number } & Omit<Pose, "rz"> & { rz?: number };
+type Chave = { f: number; e?: "volta" } & Omit<Pose, "rz"> & { rz?: number };
 
 /**
  * Quadros-chave do celular (centro, escala e giro em graus). Chega girando,
@@ -22,54 +22,59 @@ type Chave = { f: number } & Omit<Pose, "rz"> & { rz?: number };
  * no fechamento, mostrando o verso.
  */
 const POSES: Chave[] = [
-  // Chegada: sobe do rodapé girando em três eixos até ficar de frente.
-  { f: 0, cx: 540, cy: 1540, s: 0.8, ry: -58, rx: 24, rz: -9 },
-  { f: 52, cx: 540, cy: 1205, s: 1, ry: -6, rx: 4, rz: 0 },
-  { f: 94, cx: 540, cy: 1195, s: 1, ry: 4, rx: 2 },
-  // Marca: aproxima no herói do Início (nome e foto do pet).
-  { f: 140, cx: 540, cy: 1340, s: 1.32, ry: 0, rx: 0 },
+  // Chegada: sobe do rodapé girando forte e assenta passando um pouco do ponto.
+  { f: 0, cx: 540, cy: 1520, s: 0.8, ry: -52, rx: 26, rz: -12 },
+  { f: 32, cx: 540, cy: 1205, s: 1, ry: -4, rx: 4, rz: 0, e: "volta" },
+  { f: 66, cx: 540, cy: 1195, s: 1, ry: 7, rx: 2 },
+  { f: 92, cx: 540, cy: 1195, s: 1, ry: -4, rx: 2 },
+  // Marca: inclina e mergulha no herói do Início (nome e foto do pet).
+  { f: 104, cx: 555, cy: 1215, s: 1.04, ry: 12, rx: 2, rz: 2 },
+  { f: 128, cx: 540, cy: 1340, s: 1.32, ry: 0, rx: 0, e: "volta" },
   { f: 176, cx: 540, cy: 1330, s: 1.32, ry: 0, rx: 0 },
-  // Saúde: volta para o toque e recua quando o card sai.
-  { f: 197, cx: 540, cy: 1195, s: 1, ry: -2, rx: 1 },
+  // Saúde: recua com um giro rápido e volta para o toque.
+  { f: 186, cx: 520, cy: 1240, s: 1.06, ry: -20, rx: 3, rz: -3 },
+  { f: 200, cx: 540, cy: 1195, s: 1, ry: 0, rx: 1, e: "volta" },
   { f: BATIDAS.vacinasSai, cx: 540, cy: 1195, s: 1, ry: 0, rx: 0 },
-  { f: BATIDAS.vacinasSai + 18, cx: 540, cy: 1230, s: 0.94, ry: 0, rx: 0 },
+  { f: BATIDAS.vacinasSai + 14, cx: 540, cy: 1230, s: 0.94, ry: 0, rx: 0, e: "volta" },
   { f: BATIDAS.vacinasVolta, cx: 540, cy: 1230, s: 0.94, ry: 0, rx: 0 },
-  { f: BATIDAS.vacinasVolta + 18, cx: 540, cy: 1195, s: 1, ry: 3, rx: 1 },
+  { f: BATIDAS.vacinasVolta + 14, cx: 540, cy: 1195, s: 1, ry: 5, rx: 1, e: "volta" },
   // Passagem rápida para a rotina (com rastro de movimento).
-  { f: CENAS.rotina - 2, cx: 540, cy: 1195, s: 1, ry: 3, rx: 1 },
-  { f: CENAS.rotina + 10, cx: 515, cy: 1215, s: 0.95, ry: -14, rx: 3, rz: -2 },
+  { f: CENAS.rotina - 2, cx: 540, cy: 1195, s: 1, ry: 5, rx: 1 },
+  { f: CENAS.rotina + 8, cx: 495, cy: 1225, s: 0.92, ry: -26, rx: 4, rz: -4 },
   // Rotina: aproxima no aviso do topo, volta para o toque na dose.
-  { f: BATIDAS.avisoEntra, cx: 540, cy: 1300, s: 1.18, ry: 0, rx: 0 },
+  { f: BATIDAS.avisoEntra, cx: 540, cy: 1300, s: 1.18, ry: 0, rx: 0, e: "volta" },
   { f: BATIDAS.avisoSai, cx: 540, cy: 1300, s: 1.18, ry: 0, rx: 0 },
-  { f: BATIDAS.toqueDose - 4, cx: 540, cy: 1195, s: 1, ry: 0, rx: 0 },
+  { f: BATIDAS.toqueDose - 6, cx: 540, cy: 1195, s: 1, ry: 0, rx: 0, e: "volta" },
   { f: BATIDAS.doseSai, cx: 540, cy: 1195, s: 1, ry: 0, rx: 0 },
-  { f: BATIDAS.doseSai + 18, cx: 540, cy: 1230, s: 0.94, ry: 0, rx: 0 },
+  { f: BATIDAS.doseSai + 14, cx: 540, cy: 1230, s: 0.94, ry: 0, rx: 0, e: "volta" },
   { f: BATIDAS.doseVolta, cx: 540, cy: 1230, s: 0.94, ry: 0, rx: 0 },
-  { f: BATIDAS.doseVolta + 18, cx: 540, cy: 1195, s: 1, ry: -3, rx: 1 },
-  // Lugares.
-  { f: BATIDAS.abreMapa + 2, cx: 565, cy: 1215, s: 0.95, ry: 14, rx: 3, rz: 2 },
-  { f: BATIDAS.abreMapa + 16, cx: 540, cy: 1195, s: 1, ry: 2, rx: 1 },
+  { f: BATIDAS.doseVolta + 14, cx: 540, cy: 1195, s: 1, ry: -5, rx: 1, e: "volta" },
+  // Lugares: giro rápido para o outro lado.
+  { f: BATIDAS.abreMapa + 4, cx: 585, cy: 1225, s: 0.92, ry: 26, rx: 4, rz: 4 },
+  { f: BATIDAS.abreMapa + 18, cx: 540, cy: 1195, s: 1, ry: 0, rx: 1, e: "volta" },
   { f: BATIDAS.toquePino - 6, cx: 540, cy: 1195, s: 1, ry: 0, rx: 0 },
   { f: BATIDAS.cardSai, cx: 540, cy: 1195, s: 1, ry: 0, rx: 0 },
-  { f: BATIDAS.cardSai + 18, cx: 540, cy: 1230, s: 0.94, ry: 0, rx: 0 },
+  { f: BATIDAS.cardSai + 14, cx: 540, cy: 1230, s: 0.94, ry: 0, rx: 0, e: "volta" },
   { f: BATIDAS.cardVolta, cx: 540, cy: 1230, s: 0.94, ry: 0, rx: 0 },
-  // Fechamento: recua e dá uma volta lenta, mostrando o verso.
-  { f: CENAS.fechamento - 2, cx: 540, cy: 1270, s: 0.84, ry: -4, rx: 3 },
-  { f: CENAS.fechamento + 90, cx: 540, cy: 1345, s: 0.74, ry: 352, rx: 5 },
-  { f: 900, cx: 540, cy: 1335, s: 0.74, ry: 356, rx: 3 },
+  // Fechamento: recua e dá uma volta de 360° mostrando o verso, com um
+  // pequeno passar do ponto antes de assentar.
+  { f: CENAS.fechamento - 2, cx: 540, cy: 1270, s: 0.84, ry: -6, rx: 3 },
+  { f: CENAS.fechamento + 50, cx: 540, cy: 1345, s: 0.74, ry: 366, rx: 6 },
+  { f: CENAS.fechamento + 68, cx: 540, cy: 1340, s: 0.74, ry: 354, rx: 4, e: "volta" },
+  { f: 900, cx: 540, cy: 1335, s: 0.74, ry: 358, rx: 3 },
 ];
 
 export const pose = (f: number): Pose => {
-  const v = (k: keyof Pose) => chaves(f, POSES.map((p) => ({ f: p.f, v: p[k] ?? 0 })));
+  const v = (k: keyof Pose) => chaves(f, POSES.map((p) => ({ f: p.f, v: p[k] ?? 0, e: p.e })));
   // Balanço lento e contínuo; some nos momentos de leitura (destaques).
   const calma = 1 - Math.max(...DESTAQUES.map((d) => (f >= d.de - 6 && f <= d.ate + 22 ? 1 : 0)));
   return {
     cx: v("cx"),
-    cy: v("cy") + Math.sin(f * 0.045) * 7 * calma,
+    cy: v("cy") + Math.sin(f * 0.06) * 9 * calma,
     s: v("s"),
-    ry: v("ry") + Math.sin(f * 0.028) * 2.6 * calma,
-    rx: v("rx") + Math.cos(f * 0.024) * 1.2 * calma,
-    rz: v("rz") + Math.sin(f * 0.02 + 1) * 0.6 * calma,
+    ry: v("ry") + Math.sin(f * 0.05) * 4.5 * calma,
+    rx: v("rx") + Math.cos(f * 0.04) * 1.8 * calma,
+    rz: v("rz") + Math.sin(f * 0.035 + 1) * 0.9 * calma,
   };
 };
 
@@ -164,9 +169,7 @@ export const Celular: React.FC<{ p: Pose; children: React.ReactNode }> = ({ p, c
         </div>
         {/* Marca */}
         <div style={{ position: "absolute", left: 0, right: 0, top: ALTURA * 0.46, display: "flex", flexDirection: "column", alignItems: "center", gap: 22 }}>
-          <div style={{ width: 150, height: 150, borderRadius: 150, background: cor.texto, display: "flex", alignItems: "center", justifyContent: "center" }}>
-            <MarcaPata t={100} c={cor.branco} e={1.9} />
-          </div>
+          <SeloMarca t={170} />
           <span style={{ fontSize: 64, fontWeight: 800, letterSpacing: -2.4, color: cor.texto }}>PetLive</span>
         </div>
         <div style={{ position: "absolute", inset: 0, background: `linear-gradient(${120 - ang * 0.6}deg, rgba(255,255,255,0) 30%, rgba(255,255,255,0.45) 48%, rgba(255,255,255,0) 62%)` }} />

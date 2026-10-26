@@ -1,5 +1,5 @@
 import React from "react";
-import { Avatar, Barra, BotaoPrimario, BotaoRedondo, Cao, cor, Icone, MarcaPata, MenuInferior, NomeIcone, Onda } from "./app";
+import { Avatar, Barra, BotaoPrimario, BotaoRedondo, Cao, cor, Icone, MarcaPata, MenuInferior, NomeIcone, Onda, SeloMarca } from "./app";
 import { DADOS } from "./roteiro";
 
 /*
@@ -431,9 +431,7 @@ export const TelaRemedios: React.FC<{ dada?: number; apertado?: number; cartaoFo
 /** Notificação da dose (notificacoes/doses.ts: "Hora do remédio do Rex"). */
 export const AvisoDose: React.FC = () => (
   <div style={{ width: 366, boxSizing: "border-box", borderRadius: 24, background: "rgba(246,247,249,0.97)", padding: "12px 14px", display: "flex", gap: 11, alignItems: "center", boxShadow: "0 14px 34px rgba(17,17,17,0.18)" }}>
-    <div style={{ width: 38, height: 38, borderRadius: 10, background: cor.texto, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-      <MarcaPata t={26} e={1.9} />
-    </div>
+    <SeloMarca t={38} style={{ filter: "none" }} />
     <div style={{ flex: 1 }}>
       <div style={{ display: "flex", justifyContent: "space-between" }}>
         <span style={{ fontSize: 14, fontWeight: 700 }}>Hora do remédio do {DADOS.pet.nome}</span>

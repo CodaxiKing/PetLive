@@ -157,18 +157,20 @@ export const CardsGancho: React.FC<{ f: number; alvo: { x: number; y: number } }
 
 /* ── Fechamento ──────────────────────────────────────────────────────────── */
 
-/** Selo da marca que se desenha: o círculo cresce e a pata é traçada. */
+/** Logo do fechamento: entra girando com mola, quica e recebe um brilho. */
 const SeloDesenhado: React.FC<{ f: number; t: number }> = ({ f, t }) => {
-  const circulo = mola(f, 4, { damping: 14, stiffness: 150 });
-  const traco = rampa(f, 10, 34, SAI_RAPIDO);
-  const formas = ["M6 10m-1.8 0a1.8 1.8 0 1 0 3.6 0a1.8 1.8 0 1 0 -3.6 0", "M10 6m-1.8 0a1.8 1.8 0 1 0 3.6 0a1.8 1.8 0 1 0 -3.6 0", "M14 6m-1.8 0a1.8 1.8 0 1 0 3.6 0a1.8 1.8 0 1 0 -3.6 0", "M18 10m-1.8 0a1.8 1.8 0 1 0 3.6 0a1.8 1.8 0 1 0 -3.6 0", "M12 12c-3 0-5 2.5-5 4.5 0 1.5 1.2 2 2.6 2 1 0 1.6-.4 2.4-.4s1.4.4 2.4.4c1.4 0 2.6-.5 2.6-2 0-2-2-4.5-5-4.5z"];
+  const e = mola(f, 2, { damping: 11, stiffness: 160, mass: 0.8 });
+  const brilho = rampa(f, 26, 46);
+  const anel = rampa(f, 8, 34, SAI_RAPIDO);
   return (
-    <div style={{ width: t, height: t, borderRadius: t, background: cor.texto, display: "flex", alignItems: "center", justifyContent: "center", transform: `scale(${circulo}) rotate(${(1 - circulo) * -40}deg)`, flexShrink: 0, boxShadow: `0 0 0 ${10 * (1 - traco)}px rgba(154,214,248,${0.6 * circulo * (1 - traco)})` }}>
-      <svg width={t * 0.66} height={t * 0.66} viewBox="0 0 24 24" fill="none" stroke={cor.branco} strokeWidth={1.9} strokeLinecap="round">
-        {formas.map((d, i) => (
-          <path key={i} d={d} pathLength={1} strokeDasharray={1} strokeDashoffset={1 - rampa(traco, i * 0.1, 0.6 + i * 0.1)} />
-        ))}
-      </svg>
+    <div style={{ position: "relative", width: t, height: t, flexShrink: 0, transform: `scale(${e}) rotate(${(1 - e) * -160}deg)` }}>
+      <div style={{ position: "absolute", inset: -t * 0.1, borderRadius: t * 0.32, border: `4px solid ${cor.azul}`, opacity: (1 - anel) * Math.min(1, e * 2), transform: `scale(${0.85 + anel * 0.5})` }} />
+      <SeloMarca t={t} />
+      {brilho > 0 && brilho < 1 ? (
+        <div style={{ position: "absolute", inset: 0, borderRadius: t * 0.235, overflow: "hidden" }}>
+          <div style={{ position: "absolute", inset: 0, background: `linear-gradient(115deg, rgba(255,255,255,0) ${brilho * 180 - 50}%, rgba(255,255,255,0.75) ${brilho * 180 - 30}%, rgba(255,255,255,0) ${brilho * 180 - 10}%)` }} />
+        </div>
+      ) : null}
     </div>
   );
 };

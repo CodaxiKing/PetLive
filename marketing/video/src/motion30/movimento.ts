@@ -23,11 +23,17 @@ export const idaEVolta = (f: number, de: number, volta: number, ida = 18, dur = 
 /** Apertar de botão: 0 → 1 → 0 em volta do quadro do toque. */
 export const aperto = (f: number, em: number) => interpolate(f, [em - 3, em, em + 6], [0, 1, 0], CLAMP);
 
-/** Quadros-chave numéricos com SUAVE entre cada par. */
-export const chaves = (f: number, qs: { f: number; v: number }[]) => {
+/** Chega rápido, passa um pouco do ponto e volta. */
+export const VOLTA = Easing.bezier(0.3, 1.5, 0.55, 1);
+
+/**
+ * Quadros-chave numéricos. Entre cada par usa SUAVE, ou VOLTA quando o
+ * quadro de destino pede `e: "volta"`.
+ */
+export const chaves = (f: number, qs: { f: number; v: number; e?: "volta" }[]) => {
   if (f <= qs[0].f) return qs[0].v;
   for (let i = 1; i < qs.length; i++) {
-    if (f <= qs[i].f) return lerp(qs[i - 1].v, qs[i].v, rampa(f, qs[i - 1].f, qs[i].f));
+    if (f <= qs[i].f) return lerp(qs[i - 1].v, qs[i].v, rampa(f, qs[i - 1].f, qs[i].f, qs[i].e === "volta" ? VOLTA : SUAVE));
   }
   return qs[qs.length - 1].v;
 };

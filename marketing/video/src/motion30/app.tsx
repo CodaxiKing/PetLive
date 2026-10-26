@@ -1,4 +1,5 @@
 import React from "react";
+import { Img, staticFile } from "remotion";
 
 /*
  * Peças do app redesenhadas para a web, com as mesmas medidas, cores e
@@ -208,9 +209,7 @@ export const Barra: React.FC<{ fracao: number; c: string; fundo: string; altura?
   </div>
 );
 
-/** Selo de marca usado fora do app (pata branca num círculo preto). */
-export const SeloMarca: React.FC<{ t: number }> = ({ t }) => (
-  <div style={{ width: t, height: t, borderRadius: t, background: cor.texto, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-    <MarcaPata t={t * 0.66} c={cor.branco} e={1.9} />
-  </div>
+/** Logo oficial do app (apps/tutor/assets/logo-petlive-original.png, recortado em public/). */
+export const SeloMarca: React.FC<{ t: number; style?: React.CSSProperties }> = ({ t, style }) => (
+  <Img src={staticFile("logo-petlive.png")} style={{ width: t, height: t, display: "block", flexShrink: 0, filter: `drop-shadow(0 ${t * 0.08}px ${t * 0.12}px rgba(26,85,119,0.28))`, ...style }} />
 );
