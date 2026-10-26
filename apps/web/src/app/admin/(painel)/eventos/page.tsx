@@ -3,6 +3,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Cabecalho, useAdmin } from "@/components/admin/Painel";
 import { rpcAdmin } from "@/lib/admin/supabase";
+import { EventoOficial } from "./EventoOficial";
+import { Organizadores } from "./Organizadores";
 
 type Status = "em_analise" | "publicado" | "ajuste_solicitado" | "recusado" | "cancelado" | "encerrado" | "oculto";
 type Item = {
@@ -72,6 +74,7 @@ export default function EventosAdmin() {
   } satisfies Record<Status, { acao: Acao; rotulo: string; motivo: boolean }[]>)[selecionado.status] : [];
   return <>
     <Cabecalho titulo="Eventos" subtitulo="Revise eventos enviados, trate denúncias e mantenha o mapa seguro." />
+    {pode ? <EventoOficial onPublicado={() => { requisicao.current++; setStatus("publicado"); void carregar("publicado"); }} /> : null}
     {erro ? <p role="alert" className="mb-4 rounded-2xl bg-perigo-fundo p-3 text-sm text-perigo">{erro}</p> : null}
     <button disabled={salvando || carregando} onClick={() => void carregar(status)} className="mb-4 rounded-full bg-fundo px-4 py-2 text-sm disabled:opacity-50">Atualizar fila</button>
     <div className="mb-4 grid grid-cols-2 gap-3">
@@ -99,5 +102,6 @@ export default function EventosAdmin() {
         </>}
       </section>
     </div>
+    <Organizadores pode={pode} />
   </>;
 }
