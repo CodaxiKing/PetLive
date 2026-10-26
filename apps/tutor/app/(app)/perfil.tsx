@@ -117,6 +117,7 @@ export default function Perfil() {
     { rotulo: 'Notificações', icone: 'sino', fundo: colors.hero, acao: () => router.push('/avisos') },
     { rotulo: 'Guarda compartilhada', icone: 'pessoas', fundo: colors.primarySurface, acao: () => router.push('/guarda') },
     { rotulo: 'Meus eventos', icone: 'local', fundo: colors.hero, acao: () => router.push('/eventos/meus') },
+    { rotulo: 'Plano e seguro pet', icone: 'escudo', fundo: colors.healthSurface, acao: () => router.push('/parceiros/seguro') },
     { rotulo: 'Privacidade e dados', icone: 'escudo', fundo: colors.successSurface, acao: () => router.push('/privacidade') },
     { rotulo: 'Sair', icone: 'sair', fundo: '#FBDADF', acao: sair, perigo: true },
   ];
