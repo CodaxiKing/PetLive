@@ -462,6 +462,16 @@ export default function PetDetalhe() {
             >
               <Text style={[estilos.opcaoTexto, estilos.opcaoPerigo]}>{petAtual.nome} sumiu</Text>
             </Pressable>
+            <Pressable
+              accessibilityRole="button"
+              onPress={() => {
+                setMenuAberto(false)
+                router.push({ pathname: '/comunidade/pet/[id]', params: { id: petAtual.id } })
+              }}
+              style={estilos.opcao}
+            >
+              <Text style={estilos.opcaoTexto}>Perfil público</Text>
+            </Pressable>
             <Pressable accessibilityRole="button" onPress={() => ir('/pet/[id]/atualizacoes')} style={estilos.opcao}>
               <Text style={estilos.opcaoTexto}>Atualizações e quem cuida</Text>
             </Pressable>

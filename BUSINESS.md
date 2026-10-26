@@ -495,6 +495,10 @@ O PetLive organiza informações e não substitui o atendimento veterinário. Es
 
 - Perfil público **opcional** do pet, com foto, raça, idade e cidade. **Tudo privado por padrão.**
 - Posts com foto, curtir, comentar, seguir e feed. Moderação com denúncia e remoção. Menores de idade não são o público.
+- **Quem liga:** só o titular do pet liga ou desliga o perfil público (e escolhe mostrar ou não a cidade). Com o perfil desligado, a página do pet aparece só para o titular e não dá para publicar.
+- **Feed:** posts dos pets que a pessoa segue e dos próprios; quem ainda não segue ninguém vê os mais recentes da comunidade. Só quem tem conta vê; as fotos ficam num bucket privado com link assinado.
+- **Limites:** 10 posts por dia e 30 comentários por hora por conta. Aviso na Caixa para novo seguidor e novo comentário.
+- **Denúncia:** com **3 denúncias** de pessoas diferentes, o post ou comentário some do app até a equipe decidir em Moderação (remover ou manter). Quem publicou apaga o próprio post; quem publicou o post também apaga comentários nele.
 - Só começa depois do gate de retenção da Fase 1.
 
 ### 5.29 Pet perdido (Fase 5)

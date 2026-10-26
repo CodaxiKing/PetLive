@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { Cabecalho, CartaoNumero, haQuanto, numero, useAdmin } from "@/components/admin/Painel";
 import { rpcAdmin } from "@/lib/admin/supabase";
 import { PetsPerdidos } from "./PetsPerdidos";
+import { Comunidade } from "./Comunidade";
 
 type Item = {
   id: string;
@@ -37,8 +38,9 @@ const MOTIVOS = ["Não aceita pets", "Endereço errado ou não encontrado", "Lug
 /**
  * Moderação (protótipo AdminModeracao): indicações de lugares pet friendly
  * feitas pelos tutores, que só vão para o mapa depois de aprovadas (mesma
- * regra dos eventos, BUSINESS.md 5.16), e os alertas de pet perdido (5.29).
- * Denúncias de eventos ficam em Eventos; anúncios entram com a Fase 3.
+ * regra dos eventos, BUSINESS.md 5.16), os alertas de pet perdido (5.29) e as
+ * denúncias da comunidade (5.28). Denúncias de eventos ficam em Eventos;
+ * anúncios entram com a Fase 3.
  */
 export default function ModeracaoPagina() {
   const admin = useAdmin();
@@ -206,6 +208,7 @@ export default function ModeracaoPagina() {
       </div>
 
       <PetsPerdidos pode={pode} />
+      <Comunidade pode={pode} />
     </>
   );
 }
