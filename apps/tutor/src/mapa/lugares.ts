@@ -58,17 +58,7 @@ export type Lugar = {
   area_caes?: boolean;
 };
 
-export const ROTULO_CATEGORIA: Record<CategoriaLugar, string> = {
-  clinica: 'Clínica',
-  banho_tosa: 'Banho e tosa',
-  petshop: 'Petshop',
-  creche: 'Creche',
-  hotelzinho: 'Hotelzinho',
-  parque: 'Parque',
-  praia: 'Praia',
-  restaurante: 'Restaurante',
-  hotel: 'Hotel',
-};
+export { ROTULO_CATEGORIA } from './categorias';
 
 /** Cores dos pins por categoria (protótipo Mapa). */
 export const COR_CATEGORIA: Record<CategoriaLugar, string> = {

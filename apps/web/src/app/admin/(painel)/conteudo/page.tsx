@@ -5,6 +5,7 @@ import { Cabecalho, CartaoNumero, haQuanto, numero, useAdmin } from "@/component
 import { DatasFogos } from "./DatasFogos";
 import { Viagem } from "./Viagem";
 import { Racas } from "./Racas";
+import { Categorias } from "./Categorias";
 import { rpcAdmin } from "@/lib/admin/supabase";
 
 type Vacina = {
@@ -31,10 +32,11 @@ type Pacote = {
 };
 type Conteudo = { vacinas: Vacina[]; versoes: Versao[]; pacotes: Pacote[] };
 
-type Aba = "vacinas" | "versoes" | "pacotes" | "fogos" | "viagem" | "racas";
+type Aba = "vacinas" | "versoes" | "pacotes" | "fogos" | "viagem" | "racas" | "categorias";
 const ABAS: { valor: Aba; rotulo: string }[] = [
   { valor: "vacinas", rotulo: "Vacinas" },
   { valor: "racas", rotulo: "Raças" },
+  { valor: "categorias", rotulo: "Categorias do mapa" },
   { valor: "versoes", rotulo: "Versões publicadas" },
   { valor: "pacotes", rotulo: "Pacotes offline" },
   { valor: "fogos", rotulo: "Datas com fogos" },
@@ -247,6 +249,8 @@ export default function ConteudoPagina() {
             </ul>
           ) : aba === "racas" ? (
             <Racas pode={pode} />
+          ) : aba === "categorias" ? (
+            <Categorias pode={pode} />
           ) : aba === "viagem" ? (
             <Viagem pode={admin.papel === "super" || admin.papel === "marketing"} onErro={setErro} />
           ) : aba === "fogos" ? (

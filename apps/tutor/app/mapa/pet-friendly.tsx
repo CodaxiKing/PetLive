@@ -12,15 +12,16 @@ import { acharEndereco } from '../../src/mapa/geocodificar';
 import { IlustracaoLugar } from '../../src/mapa/IlustracaoLugar';
 import {
   CENTRO_PADRAO,
-  ROTULO_CATEGORIA,
   buscarPetFriendly,
   formatarDistancia,
   seloPetFriendly,
   type CategoriaPetFriendly,
+  type CategoriaLugar,
   type Lugar,
 } from '../../src/mapa/lugares';
 import { useRecurso } from '../../src/lib/configApp';
 import { useLocalizacao } from '../../src/mapa/useLocalizacao';
+import { useCategoriasMapa } from '../../src/mapa/useCategoriasMapa';
 import { colors } from '../../src/theme/colors';
 import { fontFamily } from '../../src/theme/typography';
 
@@ -34,23 +35,16 @@ const FILTROS: { valor: Filtro; rotulo: string }[] = [
   { valor: 'hotel', rotulo: 'Hotéis' },
 ];
 
-const NOME_PLURAL: Record<Filtro, string> = {
-  todos: 'lugares pet friendly',
-  parque: 'parques pet friendly',
-  praia: 'praias pet friendly',
-  restaurante: 'restaurantes pet friendly',
-  hotel: 'hotéis pet friendly',
-};
-
 /**
  * Lista vazia: nos dados abertos, restaurantes, hotéis e praias quase nunca
  * vêm marcados como "aceita cães" — melhor dizer isso do que só "nada".
  */
-function textoVazio(filtro: Filtro, google: boolean): string {
+function textoVazio(filtro: Filtro, google: boolean, plurais: Record<CategoriaLugar, string>): string {
+  const nome = filtro === 'todos' ? 'lugares pet friendly' : `${plurais[filtro].toLocaleLowerCase('pt-BR')} pet friendly`;
   if (!google && (filtro === 'restaurante' || filtro === 'hotel' || filtro === 'praia')) {
-    return `Ainda não temos ${NOME_PLURAL[filtro]} nesta região: os mapas abertos quase não marcam quem aceita pets. Conhece algum? Indique abaixo.`;
+    return `Ainda não temos ${nome} nesta região: os mapas abertos quase não marcam quem aceita pets. Conhece algum? Indique abaixo.`;
   }
-  return `Nenhum dos ${NOME_PLURAL[filtro]} por perto. Tente outro bairro.`;
+  return `Não encontramos ${nome} por perto. Tente outro bairro.`;
 }
 
 /** Região buscada pelo tutor: nome e ponto (geocodificação do aparelho, sem custo). */
@@ -62,6 +56,7 @@ type Regiao = { nome: string; lat: number; lng: number };
  * Uma busca traz as quatro categorias; os filtros só recortam a lista.
  */
 export default function TelaPetFriendly() {
+  const { nomes, plurais } = useCategoriasMapa();
   const { posicao } = useLocalizacao();
   const podeIndicar = useRecurso('indicar_lugar');
   const [filtro, setFiltro] = useState<Filtro>('todos');
@@ -178,7 +173,7 @@ export default function TelaPetFriendly() {
                 onPress={() => setFiltro(opcao.valor)}
                 style={[estilos.chip, ativo ? estilos.chipAtivo : estilos.chipInativo]}
               >
-                <Text style={[estilos.chipTexto, ativo && estilos.chipTextoAtivo]}>{opcao.rotulo}</Text>
+                <Text style={[estilos.chipTexto, ativo && estilos.chipTextoAtivo]}>{opcao.valor === 'todos' ? opcao.rotulo : plurais[opcao.valor]}</Text>
               </Tocavel>
             );
           })}
@@ -190,9 +185,9 @@ export default function TelaPetFriendly() {
           ) : erro ? (
             <Text style={estilos.vazio}>{erro}</Text>
           ) : visiveis.length === 0 ? (
-            <Text style={estilos.vazio}>{textoVazio(filtro, Boolean(lugares.some((l) => l.fonte === 'google')))}</Text>
+            <Text style={estilos.vazio}>{textoVazio(filtro, Boolean(lugares.some((l) => l.fonte === 'google')), plurais)}</Text>
           ) : (
-            visiveis.map((lugar, i) => <CartaoLugar key={lugar.id} lugar={lugar} indice={i} />)
+            visiveis.map((lugar, i) => <CartaoLugar key={lugar.id} lugar={lugar} indice={i} nomes={nomes} />)
           )}
 
           <View style={estilos.rodapeLista}>
@@ -236,10 +231,10 @@ export default function TelaPetFriendly() {
   );
 }
 
-function CartaoLugar({ lugar, indice }: { lugar: Lugar; indice: number }) {
+function CartaoLugar({ lugar, indice, nomes }: { lugar: Lugar; indice: number; nomes: Record<CategoriaLugar, string> }) {
   const selo = seloPetFriendly(lugar);
   const linha = [
-    ROTULO_CATEGORIA[lugar.categoria],
+    nomes[lugar.categoria],
     formatarDistancia(lugar.distancia_km),
     lugar.nota ? `${lugar.nota.toFixed(1).replace('.', ',')} ★` : null,
   ]

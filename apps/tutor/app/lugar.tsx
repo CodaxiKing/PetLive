@@ -19,11 +19,11 @@ import { GaleriaFotos } from '../src/mapa/GaleriaFotos';
 import { GlifoLugar } from '../src/mapa/GlifoLugar';
 import { SeloDestaquePago } from '../src/mapa/CoroaDestaque';
 import { useDestaques } from '../src/mapa/useDestaques';
+import { useCategoriasMapa } from '../src/mapa/useCategoriasMapa';
 import { destaqueVigente } from '../src/mapa/destaques';
 import {
   COR_CATEGORIA,
   lugarPorId,
-  ROTULO_CATEGORIA,
   type CategoriaLugar,
   type Lugar as LugarRegistro,
 } from '../src/mapa/lugares';
@@ -59,6 +59,7 @@ function CardInfo({
  * horário e contato, com a barra de ações embaixo.
  */
 export default function Lugar() {
+  const { nomes: rotulosCategoria } = useCategoriasMapa();
   const { id, categoria } = useLocalSearchParams<{ id: string; categoria?: CategoriaLugar }>();
   const { pets, petAtivo } = usePets();
   const { width } = useWindowDimensions();
@@ -191,7 +192,7 @@ export default function Lugar() {
         {destaqueVigente(destaques, lugar.id) ? <SeloDestaquePago /> : null}
         {lugar.nota ? (
           <Text style={estilos.subtitulo}>
-            {ROTULO_CATEGORIA[lugar.categoria]} · {lugar.nota.toFixed(1).replace('.', ',')} ★ no Google
+            {rotulosCategoria[lugar.categoria]} · {lugar.nota.toFixed(1).replace('.', ',')} ★ no Google
             {lugar.avaliacoes ? ` (${lugar.avaliacoes} avaliações)` : ''}
           </Text>
         ) : null}
@@ -201,7 +202,7 @@ export default function Lugar() {
             style={[estilos.selinha, { backgroundColor: COR_CATEGORIA[lugar.categoria] }]}
           >
             <GlifoLugar categoria={lugar.categoria} tamanho={13} />
-            <Text style={estilos.selinhaTexto}>{ROTULO_CATEGORIA[lugar.categoria]}</Text>
+            <Text style={estilos.selinhaTexto}>{rotulosCategoria[lugar.categoria]}</Text>
           </View>
           {lugar.aberto_24h && (
             <View style={[estilos.selinha, { backgroundColor: colors.successSurface }]}>

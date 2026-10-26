@@ -34,11 +34,12 @@ import {
   CENTRO_PADRAO,
   formatarDistancia,
   resumoStatus,
-  ROTULO_CATEGORIA,
   type CategoriaLugar,
   type Lugar,
 } from '../../src/mapa/lugares';
 import { useLocalizacao } from '../../src/mapa/useLocalizacao';
+import { useCategoriasMapa } from '../../src/mapa/useCategoriasMapa';
+import { ehCategoria } from '../../src/mapa/categorias';
 import { dataHoraEvento, eventosPorPerto, TIPO_EVENTO, type EventoMapa } from '../../src/mapa/eventos';
 import { colors } from '../../src/theme/colors';
 import { radius, shadow, spacing } from '../../src/theme/tokens';
@@ -97,6 +98,7 @@ function haQuanto(data: Date): string {
  * card do lugar selecionado com ligar, rota e atalho para a ficha.
  */
 export default function Mapa() {
+  const { nomes: rotulosCategoria, plurais } = useCategoriasMapa();
   const { user } = useAuth();
   const insets = useSafeAreaInsets();
   const [alturaTopo, setAlturaTopo] = useState(200);
@@ -409,7 +411,7 @@ export default function Mapa() {
               >
                 {ativo ? <Icone nome="check" size={15} cor={colors.white} /> : null}
                 <Text style={[estilos.pilulaTexto, ativo && estilos.pilulaTextoAtiva]}>
-                  {opcao.rotulo}
+                  {ehCategoria(opcao.valor) ? plurais[opcao.valor] : opcao.rotulo}
                 </Text>
               </Pressable>
             );
@@ -575,7 +577,7 @@ export default function Mapa() {
             fundoIcone={colors.premiumSurface}
             titulo="Nada por perto"
             sub={`Com estes filtros, em ${raioKm} km`}
-            texto={`Não achamos ${NOME_NO_PLURAL[categoria]}${buscaAtiva ? ` com "${buscaAtiva}"` : ''} perto de você. Tente um destes caminhos.`}
+            texto={`Não achamos ${ehCategoria(categoria) ? plurais[categoria].toLocaleLowerCase('pt-BR') : NOME_NO_PLURAL[categoria]}${buscaAtiva ? ` com "${buscaAtiva}"` : ''} perto de você. Tente um destes caminhos.`}
           >
             {raioKm < RAIO_AMPLO_KM ? (
               <AcaoEstado
@@ -640,7 +642,7 @@ export default function Mapa() {
                 </Text>
                 <Text style={estilos.fichaLinha} numberOfLines={1}>
                   {[
-                    ROTULO_CATEGORIA[lugar.categoria],
+                    rotulosCategoria[lugar.categoria],
                     formatarDistancia(lugar.distancia_km),
                     lugar.nota ? `${lugar.nota.toFixed(1).replace('.', ',')} ★` : null,
                   ]
@@ -659,7 +661,7 @@ export default function Mapa() {
               ) : null}
               <View style={[estilos.selinha, { backgroundColor: colors.premiumSurface }]}>
                 <Text style={[estilos.selinhaTexto, { color: colors.premiumText }]}>
-                  {ROTULO_CATEGORIA[lugar.categoria]}
+                  {rotulosCategoria[lugar.categoria]}
                 </Text>
               </View>
             </View>
