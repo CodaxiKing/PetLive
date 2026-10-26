@@ -19,16 +19,18 @@ type Visao = {
   sos_30d: number;
   sos_ligacoes_30d: number;
   com_lembrete_ativo: number;
-  atencao: { indicacoes_em_analise: number; lgpd_pendentes: number; contatos_7d: number; lojistas_interessados: number };
+  assinantes: number;
+  perdidos: { ativos: number; encontrados_30d: number; avistamentos_7d: number };
+  atencao: { indicacoes_em_analise: number; lgpd_pendentes: number; contatos_7d: number; lojistas_interessados: number; perdidos_ativos: number };
   ativos_por_semana: { semana: string; tutores: number }[];
 };
 
 const pct = (parte: number, todo: number) => (todo ? `${Math.round((parte / todo) * 100)}%` : "—");
 
 /**
- * Visão geral (protótipo AdminVisao). Os números do protótipo que dependem
- * de Premium, lojas e avaliações das lojas entram quando essas partes
- * existirem; aqui ficam os da Fase 1, que já medem o Gate 1 (BUSINESS.md 14).
+ * Visão geral (protótipo AdminVisao): números do Gate 1 (BUSINESS.md 14),
+ * assinantes Premium e pets perdidos. Lojas e avaliações das lojas de apps
+ * entram quando essas partes existirem.
  */
 export default function VisaoGeral() {
   const [visao, setVisao] = useState<Visao | null>(null);
@@ -55,6 +57,7 @@ export default function VisaoGeral() {
     { n: visao.atencao.indicacoes_em_analise, texto: "indicações de lugares para analisar", cor: "bg-[#B9862F]" },
     { n: visao.atencao.contatos_7d, texto: "mensagens do site nos últimos 7 dias", cor: "bg-azul-escuro" },
     { n: visao.atencao.lojistas_interessados, texto: "lojas interessadas no PetLive", cor: "bg-roxo-texto" },
+    { n: visao.atencao.perdidos_ativos, texto: "alertas de pet perdido ativos", cor: "bg-[#C0392B]" },
   ];
 
   return (
@@ -79,7 +82,7 @@ export default function VisaoGeral() {
         <CartaoNumero rotulo="Tutores" valor={numero(visao.tutores)} apoio={`+${numero(visao.tutores_novos_30d)} no mês`} fundo="bg-roxo-fundo" cor="text-roxo-texto" />
         <CartaoNumero rotulo="Ativos em 7 dias" valor={numero(visao.ativos_7d)} apoio={`${pct(visao.ativos_7d, visao.tutores)} da base`} fundo="bg-verde-fundo" cor="text-verde-texto" />
         <CartaoNumero rotulo="Ativos em 30 dias" valor={numero(visao.ativos_30d)} apoio={`${pct(visao.ativos_30d, visao.tutores)} da base`} fundo="bg-azul-fundo" cor="text-azul-escuro" />
-        <CartaoNumero rotulo="Com lembrete ligado" valor={pct(visao.com_lembrete_ativo, visao.tutores)} apoio="Vacina, remédio e rotina" fundo="bg-amarelo-fundo" cor="text-amarelo-texto" />
+        <CartaoNumero rotulo="Assinantes Premium" valor={numero(visao.assinantes)} apoio={`${pct(visao.assinantes, visao.tutores)} da base · ${pct(visao.com_lembrete_ativo, visao.tutores)} com lembrete`} fundo="bg-amarelo-fundo" cor="text-amarelo-texto" />
       </div>
 
       <div className="mt-4 grid gap-4 xl:grid-cols-[1.6fr_1fr]">
@@ -127,7 +130,7 @@ export default function VisaoGeral() {
         </section>
       </div>
 
-      <div className="mt-4 grid gap-4 md:grid-cols-3">
+      <div className="mt-4 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         <section className="rounded-[24px] bg-fundo p-5">
           <h3 className="font-bold">Pets cadastrados</h3>
           <p className="mt-2 text-[30px] font-medium tracking-tight">{numero(visao.pets)}</p>
@@ -148,6 +151,13 @@ export default function VisaoGeral() {
           <p className="mt-2 text-[30px] font-medium tracking-tight">{numero(visao.sos_30d)}</p>
           <p className="text-xs text-cinza">{numero(visao.sos_ligacoes_30d)} ligaram para a clínica pelo app</p>
         </section>
+        <Link href="/admin/moderacao" className="rounded-[24px] bg-fundo p-5 hover:bg-suave">
+          <h3 className="font-bold">Pets perdidos</h3>
+          <p className="mt-2 text-[30px] font-medium tracking-tight">{numero(visao.perdidos.ativos)}</p>
+          <p className="text-xs text-cinza">
+            alertas ativos · {numero(visao.perdidos.encontrados_30d)} encontrados no mês · {numero(visao.perdidos.avistamentos_7d)} avistamentos em 7 dias
+          </p>
+        </Link>
       </div>
     </>
   );
