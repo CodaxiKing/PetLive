@@ -17,6 +17,7 @@ import { Campo } from '../../src/components/Campo';
 import { HeroiOnda } from '../../src/components/HeroiOnda';
 import { Icone } from '../../src/components/Icone';
 import { LinhaIcone } from '../../src/components/LinhaIcone';
+import { useRecurso } from '../../src/lib/configApp';
 import { registrarEvento } from '../../src/lib/eventos';
 import { ligarPara, tracarRota } from '../../src/mapa/acoes';
 import { formatarDistancia } from '../../src/mapa/lugares';
@@ -44,6 +45,8 @@ const ROSA_TEXTO = '#A3324F';
  * rodapé. Sem sinal, mostra a última clínica 24 h guardada no aparelho.
  */
 export default function Sos() {
+  // Achei um pet por foto: começa desligado até a equipe medir a precisão (BUSINESS.md 5.38).
+  const acheiFoto = useRecurso('achei_foto', false);
   const [clinica, setClinica] = useState<ClinicaEmergencia | null>(null);
   const [buscando, setBuscando] = useState(true);
   const [semLocalizacao, setSemLocalizacao] = useState(false);
@@ -219,6 +222,15 @@ export default function Sos() {
           fundo="#FFF0C9"
           onPress={() => router.push('/sos/intoxicacao')}
         />
+        {acheiFoto ? (
+          <LinhaIcone
+            icone={<Icone nome="camera" />}
+            rotulo="Achei um pet"
+            valor="Compare a foto com alertas por perto"
+            fundo={colors.primarySurface}
+            onPress={() => router.push('/achei')}
+          />
+        ) : null}
         <LinhaIcone
           icone={<Icone nome="telefone" />}
           rotulo="Meu veterinário"

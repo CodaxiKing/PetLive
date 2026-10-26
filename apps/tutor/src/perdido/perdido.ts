@@ -52,10 +52,10 @@ export async function posicaoAtual(): Promise<{ lat: number; lng: number; precis
   return { lat: p.coords.latitude, lng: p.coords.longitude, precisao: p.coords.accuracy ?? null };
 }
 
-export async function alertar(petId: string, lat: number, lng: number, vistoEm: Date, raio: number, mensagem: string, mostrarTelefone: boolean) {
+export async function alertar(petId: string, lat: number, lng: number, vistoEm: Date, raio: number, mensagem: string, mostrarTelefone: boolean, reconhecimento = false) {
   const { data, error } = await supabase.rpc('perdido_alertar', {
     p_pet_id: petId, p_lat: lat, p_lng: lng, p_visto_em: vistoEm.toISOString(), p_raio: raio,
-    p_mensagem: mensagem.trim() || null, p_mostrar_telefone: mostrarTelefone,
+    p_mensagem: mensagem.trim() || null, p_mostrar_telefone: mostrarTelefone, p_reconhecimento: reconhecimento,
   });
   falha(error);
   return data as { id: string; avisados: number };
@@ -182,4 +182,36 @@ export function haQuanto(iso: string, agora = Date.now()): string {
 /** Abre o ponto no app de mapas. */
 export function linkMapa(lat: number, lng: number): string {
   return `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
+}
+
+/** Achei um pet (BUSINESS.md 5.38): candidatos com o nível em palavras, nunca porcentagem. */
+export type NivelSemelhanca = 'muito_parecido' | 'parecido' | 'pouco_parecido';
+export type Candidato = {
+  alert_id: string;
+  nome: string;
+  especie: Especie;
+  foto_url: string;
+  visto_em: string;
+  distancia_km: number;
+  nivel: NivelSemelhanca;
+};
+
+export const TEXTO_NIVEL: Record<NivelSemelhanca, string> = {
+  muito_parecido: 'Muito parecido',
+  parecido: 'Parecido',
+  pouco_parecido: 'Pouco parecido',
+};
+
+/** Envia a foto (não fica guardada) e a posição de agora para comparar com alertas por perto. */
+export async function buscarPorFoto(base64: string, tipo: string, lat: number, lng: number): Promise<Candidato[]> {
+  if (!['image/jpeg', 'image/png', 'image/webp'].includes(tipo)) throw new Error('Escolha uma imagem JPEG, PNG ou WebP.');
+  if (base64.length * 0.75 > 5 * 1024 * 1024) throw new Error('A foto deve ter até 5 MB.');
+  const { data, error } = await supabase.functions.invoke('find-lost-pet', { body: { imagem: base64, tipo, lat, lng } });
+  if (error) {
+    const corpo = await (error as { context?: Response }).context?.json?.().catch(() => null);
+    throw new Error((corpo as { erro?: string } | null)?.erro ?? 'Não deu para comparar agora. Tente de novo.');
+  }
+  const lista = (data as { candidatos?: Candidato[] } | null)?.candidatos;
+  if (!Array.isArray(lista)) throw new Error('Resposta inválida. Tente de novo.');
+  return lista.filter((c) => c.nivel in TEXTO_NIVEL).slice(0, 5);
 }

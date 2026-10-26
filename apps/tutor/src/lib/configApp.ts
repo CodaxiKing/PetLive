@@ -10,7 +10,7 @@ import { supabase } from './supabase';
  * erro), tudo segue ligado e ninguém é barrado: a última resposta fica
  * guardada no aparelho.
  */
-export type Recurso = 'carteirinha_link' | 'indicar_lugar';
+export type Recurso = 'carteirinha_link' | 'indicar_lugar' | 'achei_foto';
 type Config = { versao_minima: { android?: string; ios?: string }; recursos: Partial<Record<Recurso, boolean>> };
 
 const CHAVE = 'petlive-config-app';
@@ -68,8 +68,8 @@ export function useConfigApp() {
   return { precisaAtualizar: Boolean(minima && versaoMenor(VERSAO_APP, minima)) };
 }
 
-/** Recurso ligado no painel? Sem resposta ainda, considera ligado. */
-export function useRecurso(recurso: Recurso): boolean {
+/** Recurso ligado no painel? Sem resposta ainda, vale o padrão (ligado, salvo recurso novo que começa desligado). */
+export function useRecurso(recurso: Recurso, padrao = true): boolean {
   const config = useSyncExternalStore(assinar, () => atual);
-  return config?.recursos[recurso] !== false;
+  return config?.recursos[recurso] ?? padrao;
 }

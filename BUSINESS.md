@@ -603,11 +603,11 @@ O PetLive organiza informações e não substitui o atendimento veterinário. Es
 
 ### 5.38 Reconhecer o pet por foto (Fase 5)
 
-- Quem achou um pet toca em **Achei um pet** e fotografa o **rosto, o focinho ou o corpo**. O backend gera uma **representação da imagem** (serviço `[a definir]`) e compara **somente com as fotos de alertas de pet perdido ativos**, perto de quem buscou. Não compara com todos os pets do app.
+- Quem achou um pet toca em **Achei um pet** (no SOS) e fotografa o **rosto, o focinho ou o corpo**. A função `find-lost-pet` compara a foto **somente com as fotos de alertas de pet perdido ativos** a até 15 km de quem buscou (no máximo 8, os mais perto). Não compara com todos os pets do app. A comparação é feita pelo **Claude (Anthropic)**, o mesmo serviço da leitura do cartão de vacina: a foto vai junto com as fotos dos alertas e volta o nível de semelhança. Não há vetores guardados.
 - O resultado são até `[5]` **candidatos**, cada um com a foto do alerta, o nome, onde e quando sumiu e um nível de semelhança em palavras (**muito parecido**, **parecido**, **pouco parecido**). Não mostra porcentagem exata.
 - **O app nunca afirma que é o pet.** A tela diz que pode estar errado e manda falar com o tutor pelo alerta antes de entregar o pet a alguém. O contato do tutor só aparece se o tutor liberou, como no alerta normal.
-- **Privacidade:** o tutor precisa **aceitar** esse uso das fotos ao criar o alerta. A foto de quem buscou é **apagada em 24 horas**, a menos que a pessoa envie um "Vi este pet". Fotos com pessoas são recortadas ou o app pede outra foto.
-- **Qualidade:** a precisão é medida internamente antes do lançamento. Se não for boa o bastante para pets parecidos, a função não sobe. Há limite diário de buscas por pessoa.
+- **Privacidade:** o tutor precisa **aceitar** esse uso das fotos ao criar o alerta (Busca por foto, em Meu pet sumiu). A foto de quem buscou **não é guardada**: vai só para a comparação. A busca (região aproximada e candidatos) é **apagada em 24 horas**. Para mandar foto ao tutor, a pessoa usa o "Vi este pet". A foto é recortada em quadrado e, se o rosto de uma pessoa aparecer em destaque, o app pede outra.
+- **Qualidade:** a precisão é medida internamente antes do lançamento com `supabase/tests/achei-precisao.ts` (casos com o pet certo e pets parecidos). Se não for boa o bastante para pets parecidos, a função não sobe: o recurso **Achei um pet por foto** começa **desligado** em Sistema no admin. Limite de **5 buscas por dia** por pessoa; busca que falha não conta.
 
 ### 5.39 Modo memorial (Fase 2)
 
@@ -766,7 +766,7 @@ Acesso protegido por regras de linha (RLS) no Supabase: cada tutor só vê os da
 | GPS dos passeios (Fase 2) | expo-location, com gravação em segundo plano só se o tutor ativar |
 | Widget e atalhos (Fase 2) | Módulo nativo ou plugin de configuração do Expo `[conferir na implementação]` |
 | Cartão do pet e gráficos (Fase 2) | Imagem gerada no aparelho (captura de view e compartilhamento do sistema) e biblioteca leve de gráficos |
-| Reconhecimento de pets por imagem (Fase 5) | Representação das imagens guardada no próprio Postgres (extensão de vetores) `[a definir]` |
+| Reconhecimento de pets por imagem (Fase 5) | Claude (Anthropic) compara a foto com as fotos dos alertas ativos por perto; nada de vetores guardados |
 | Compartilhar a ficha de emergência | Menu de compartilhar do sistema, sem depender de API do WhatsApp |
 | Leitura do cartão de vacina (Fase 2) | Serviço de leitura de imagem `[a definir]`, chamado só pelo backend |
 | Clima e tempestades (Fase 2, opcional) | Serviço de clima `[a definir]` |
@@ -2201,7 +2201,7 @@ Regras do banco: `pet_walks` e `expenses` só são lidos pelo dono (e pela famí
 | `calc_tables`, tipo `idade_senior` (F2) | Idade sênior por espécie e porte, no conteúdo mestre |
 | `emergency_arrivals` (F3) | `card_id`, `pet_id`, `clinic_store_id`, `user_id`, `status`, `eta_at`, `sent_at`, `seen_at`, `ready_at`, `arrived_at`, `completed_at`, `reason_refused` |
 | `album_orders` (F3) | `user_id`, `pet_id`, `year`, `photos[]`, `cover`, `pages`, `size`, `price_cents`, `shipping_cents`, `status`, `address_id`, `print_vendor_ref`, `tracking`, `payment_id` |
-| `pet_photo_embeddings` (F5) | `alert_id`, `photo_url`, `embedding` (vetor, no Postgres), `created_at`. Só de alertas ativos |
+| `achei_buscas` (F5) | `user_id`, região aproximada (`lat`, `lng` com 3 casas), `status`, `candidatos` (alerta e nível em palavras), `criado_em`. Apagada em 24 h. `lost_alerts.reconhecimento` guarda o aceite do tutor |
 | `find_searches` (F5) | `user_id`, `photo_hash`, `results`, `at`. A foto é apagada em 24 h |
 
 Regras do banco: o link da ficha só devolve os campos de `includes` e só antes de `expires_at`; a clínica só lê `emergency_arrivals` dela; embeddings são apagados quando o alerta encerra; a busca por foto só enxerga alertas ativos dentro do raio.
@@ -2434,7 +2434,7 @@ Chat (`messages`), status da entrega (`deliveries`), trajeto do passeio (`walk_p
 | Sentry | Erros dos apps e painéis | |
 | Serviço de leitura de imagem `[a definir]` | Ler o cartão de vacina por foto (Fase 2) | Apagar a imagem após o processamento e não usar para treinar modelos |
 | Gráfica parceira `[a definir]` | Impressão e envio do álbum (Fase 3) | Arquivo por link com validade, apagado em 30 dias |
-| Reconhecimento de imagem `[a definir]` | Representação das fotos de pets (Fase 5) | Só de alertas ativos, sem treinar modelos com as fotos |
+| Reconhecimento de imagem: Claude (Anthropic) | Comparar a foto de quem achou com as fotos dos alertas (Fase 5) | Só de alertas ativos com aceite do tutor; a foto de quem buscou não é guardada |
 | Provedor de e-mail `[a definir]` | Recibos, recuperação de senha, campanhas | |
 
 ---

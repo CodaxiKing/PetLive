@@ -31,6 +31,7 @@ export default function PetPerdido() {
   const [raio, setRaio] = useState<number>(2);
   const [mensagem, setMensagem] = useState('');
   const [telefone, setTelefone] = useState(false);
+  const [reconhecimento, setReconhecimento] = useState(true);
   const [enviando, setEnviando] = useState(false);
   const [erro, setErro] = useState<string | null>(null);
 
@@ -60,7 +61,7 @@ export default function PetPerdido() {
     setEnviando(true);
     setErro(null);
     try {
-      const r = await alertar(pet.id, local.lat, local.lng, new Date(Date.now() - QUANDO[quando].min * 60000), raio, mensagem, telefone);
+      const r = await alertar(pet.id, local.lat, local.lng, new Date(Date.now() - QUANDO[quando].min * 60000), raio, mensagem, telefone, reconhecimento && Boolean(pet.foto_url));
       Alert.alert(
         'Alerta enviado',
         r.avisados
@@ -136,6 +137,15 @@ export default function PetPerdido() {
           </View>
           <Interruptor ligado={telefone} rotulo="Mostrar meu telefone" onToggle={() => setTelefone((v) => !v)} />
         </View>
+        {pet?.foto_url ? (
+          <View style={estilos.linha}>
+            <View style={estilos.flex}>
+              <Text style={estilos.linhaTitulo}>Busca por foto</Text>
+              <Text style={estilos.linhaSub}>Quem achar um pet pode comparar a foto dele com a foto do {pet.nome}. O app só sugere; ninguém vê seus dados por isso.</Text>
+            </View>
+            <Interruptor ligado={reconhecimento} rotulo="Permitir busca por foto" onToggle={() => setReconhecimento((v) => !v)} />
+          </View>
+        ) : null}
         {erro ? <Text style={estilos.erro} accessibilityRole="alert">{erro}</Text> : null}
         <Text style={estilos.nota}>O alerta vale 7 dias e você pode renovar. Só você encerra.</Text>
       </ScrollView>

@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { alertar, avistar, distanciaKm, haQuanto, ligarRegiaoPerdidos, renovarRegiaoPerdidosSeLigada, textoDistancia } from '../perdido/perdido';
+import { alertar, avistar, buscarPorFoto, distanciaKm, haQuanto, ligarRegiaoPerdidos, renovarRegiaoPerdidosSeLigada, textoDistancia } from '../perdido/perdido';
 
-const m = vi.hoisted(() => ({ rpc: vi.fn(), pedir: vi.fn(), ver: vi.fn(), atual: vi.fn(), ultima: vi.fn() }));
+const m = vi.hoisted(() => ({ invoke: vi.fn(), rpc: vi.fn(), pedir: vi.fn(), ver: vi.fn(), atual: vi.fn(), ultima: vi.fn() }));
 vi.mock('expo-crypto', () => ({ randomUUID: () => 'uuid' }));
 vi.mock('expo-location', () => ({
   Accuracy: { High: 4 },
@@ -10,7 +10,7 @@ vi.mock('expo-location', () => ({
   getCurrentPositionAsync: m.atual,
   getLastKnownPositionAsync: m.ultima,
 }));
-vi.mock('../lib/supabase', () => ({ supabase: { rpc: m.rpc } }));
+vi.mock('../lib/supabase', () => ({ supabase: { rpc: m.rpc, functions: { invoke: m.invoke } } }));
 
 beforeEach(() => {
   vi.clearAllMocks();
@@ -61,5 +61,19 @@ describe('pet perdido', () => {
     expect(haQuanto('2026-10-25T11:45:00Z', agora)).toBe('há 15 min');
     expect(haQuanto('2026-10-25T09:00:00Z', agora)).toBe('há 3 h');
     expect(haQuanto('2026-10-24T12:00:00Z', agora)).toBe('há 1 dia');
+  });
+
+  it('busca por foto devolve só níveis conhecidos, até 5', async () => {
+    const c = (n: number, nivel: string) => ({ alert_id: `a${n}`, nome: `Pet ${n}`, especie: 'cao', foto_url: 'https://x', visto_em: '2026-10-25T10:00:00Z', distancia_km: n, nivel });
+    m.invoke.mockResolvedValue({ data: { candidatos: [c(1, 'muito_parecido'), c(2, '87%'), c(3, 'parecido'), c(4, 'parecido'), c(5, 'pouco_parecido'), c(6, 'parecido'), c(7, 'parecido')] }, error: null });
+    const lista = await buscarPorFoto('AAAA', 'image/jpeg', -22.9, -43.1);
+    expect(lista.map((x) => x.alert_id)).toEqual(['a1', 'a3', 'a4', 'a5', 'a6']);
+    expect(m.invoke).toHaveBeenCalledWith('find-lost-pet', { body: { imagem: 'AAAA', tipo: 'image/jpeg', lat: -22.9, lng: -43.1 } });
+  });
+
+  it('busca por foto mostra a explicação da função', async () => {
+    m.invoke.mockResolvedValue({ data: null, error: { context: { json: async () => ({ erro: 'Tire outra foto só do pet, sem o rosto de pessoas.' }) } } });
+    await expect(buscarPorFoto('AAAA', 'image/jpeg', 0, 0)).rejects.toThrow('sem o rosto');
+    await expect(buscarPorFoto('AAAA', 'image/gif', 0, 0)).rejects.toThrow('JPEG');
   });
 });
