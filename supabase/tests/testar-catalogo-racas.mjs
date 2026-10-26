@@ -50,6 +50,16 @@ try {
   assert.equal(logs.length,3);assert.equal(logs[1].detalhes.antes.ativo,true);assert.equal(logs[1].detalhes.depois.ativo,false);
   await db.exec(sql);
   assert.equal((await db.query('select versao from catalogo_racas where id=$1',[id])).rows[0].versao,3);
+  await db.exec("insert into catalogo_racas(especie,nome) select 'cao','Exemplo '||lpad(g::text,3,'0') from generate_series(1,55) g");
+  await sessao('leitura');
+  const pagina0=(await db.query("select admin_racas('Exemplo',0) r")).rows[0].r;
+  const pagina1=(await db.query("select admin_racas('Exemplo',1) r")).rows[0].r;
+  assert.equal(pagina0.total,55);assert.equal(pagina0.itens.length,50);assert.equal(pagina1.itens.length,5);
+  assert.equal(pagina0.itens.some(x=>pagina1.itens.some(y=>y.id===x.id)),false);
+  assert.equal((await db.query("select racas_sugerir('cao','Exemplo') r")).rows[0].r.length,8);
+  await assert.rejects(db.query("select admin_racas('',-1)"),/inválida/);
+  await assert.rejects(db.query("select admin_racas('',null)"),/inválida/);
+  await db.exec('reset role');
   await db.exec("set role authenticated;select set_config('request.jwt.claim.sub','',false)");
   await assert.rejects(db.query("select racas_sugerir('cao')"),/Entre/);
   await db.exec('reset role;set role anon');
