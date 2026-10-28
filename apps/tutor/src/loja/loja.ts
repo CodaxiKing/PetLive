@@ -112,6 +112,9 @@ export const abrirProduto = (id: string) =>
 export const minhasSolicitacoes = () => rpc<Solicitacao[]>('minhas_solicitacoes')
 export const abrirSolicitacao = (id: string) =>
   rpc<{ disponivel: false } | { disponivel: true; solicitacao: Solicitacao }>('solicitacao_detalhe', { p_id: id })
+export const MOTIVOS_DENUNCIA_LOJA = ['Produto falsificado ou ilegal', 'Medicamento sem receita', 'Preço ou descrição enganosa', 'Outro problema']
+export const denunciarItem = (tipo: 'produto' | 'avaliacao' | 'loja', id: string, motivo: string) =>
+  rpc<void>('loja_denunciar', { p_kind: tipo, p_target: id, p_motivo: motivo })
 export const cancelarSolicitacao = (id: string) => rpc<void>('solicitacao_mudar', { p_id: id, p_para: 'cancelada', p_motivo: 'Cancelada pelo tutor' })
 
 /** Loja que assumiu o lugar do mapa (só lugares do PetLive têm id uuid). */

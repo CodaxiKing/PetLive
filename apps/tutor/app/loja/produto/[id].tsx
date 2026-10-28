@@ -6,7 +6,7 @@ import { BotaoPrimario } from '../../../src/components/BotaoPrimario'
 import { Icone } from '../../../src/components/Icone'
 import { reais } from '../../../src/despesas/despesas'
 import { mensagemDeErro } from '../../../src/lib/cacheOffline'
-import { abrirProduto, adicionarAoCarrinho, esvaziarCarrinho, type Loja, type Produto } from '../../../src/loja/loja'
+import { abrirProduto, adicionarAoCarrinho, denunciarItem, esvaziarCarrinho, MOTIVOS_DENUNCIA_LOJA, type Loja, type Produto } from '../../../src/loja/loja'
 import { tracarRota } from '../../../src/mapa/acoes'
 import { colors } from '../../../src/theme/colors'
 import { fontFamily } from '../../../src/theme/typography'
@@ -95,6 +95,21 @@ export default function ProdutoLoja() {
             </View>
             <Text style={estilos.seta}>›</Text>
           </Tocavel>
+          <Tocavel
+            accessibilityRole="button"
+            onPress={() =>
+              Alert.alert('Denunciar este anúncio', 'A equipe do PetLive revisa.', [
+                ...MOTIVOS_DENUNCIA_LOJA.map((m) => ({
+                  text: m,
+                  onPress: () => denunciarItem('produto', produto.id, m).then(() => Alert.alert('Obrigado', 'Recebemos a denúncia.'), (e: Error) => Alert.alert('Não deu certo', e.message)),
+                })),
+                { text: 'Cancelar', style: 'cancel' as const },
+              ])
+            }
+            style={estilos.denunciar}
+          >
+            <Text style={estilos.denunciarTexto}>Denunciar este anúncio</Text>
+          </Tocavel>
         </View>
       </ScrollView>
 
@@ -162,4 +177,6 @@ const estilos = StyleSheet.create({
   botaoQtd: { width: 44, height: 44, borderRadius: 22, alignItems: 'center', justifyContent: 'center' },
   qtdTexto: { fontFamily: fontFamily.bold, fontSize: 22, color: colors.black },
   qtd: { fontFamily: fontFamily.bold, fontSize: 16, color: colors.black, minWidth: 24, textAlign: 'center' },
+  denunciar: { alignSelf: 'center', padding: 8 },
+  denunciarTexto: { fontFamily: fontFamily.semiBold, fontSize: 12, color: colors.textMuted, textDecorationLine: 'underline' },
 })

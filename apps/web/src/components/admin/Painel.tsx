@@ -40,6 +40,7 @@ const AREAS: { rotulo: string; href?: string; icone: keyof typeof ICONES; papeis
   { rotulo: "Financeiro", href: "/admin/financeiro", icone: "financeiro", papeis: ["financeiro", "leitura"] },
   { rotulo: "Avaliações", href: "/admin/avaliacoes", icone: "avaliacoes", papeis: ["suporte", "marketing", "leitura"] },
   { rotulo: "Usuários e pets", href: "/admin/usuarios", icone: "usuarios", papeis: ["suporte", "moderacao", "leitura"] },
+  { rotulo: "Lojistas", href: "/admin/lojistas", icone: "moderacao", papeis: ["moderacao", "suporte", "leitura"] },
   { rotulo: "Suporte", href: "/admin/suporte", icone: "suporte", papeis: ["suporte", "leitura"] },
   { rotulo: "Moderação", href: "/admin/moderacao", icone: "moderacao", papeis: ["moderacao", "leitura"] },
   { rotulo: "Eventos", href: "/admin/eventos", icone: "moderacao", papeis: ["moderacao", "leitura"] },
