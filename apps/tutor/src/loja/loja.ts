@@ -93,6 +93,10 @@ export type Solicitacao = {
   codigo_entrega: string | null
   expira_em: string | null
   criado_em: string
+  starts_at: string | null
+  ends_at: string | null
+  pet: { id: string; nome: string } | null
+  service_id: string | null
   loja: { id: string; name: string; phone: string | null; address: string | null; lat: number | null; lng: number | null; pickup_prepare_min: number; cancel_until_min: number }
   itens: { nome: string; qty: number; unit_cents: number; product_id: string | null }[]
   eventos: { status: StatusSolicitacao; at: string; reason: string | null }[]

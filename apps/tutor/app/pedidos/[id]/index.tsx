@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
-import { ActivityIndicator, Alert, ScrollView, StyleSheet, Text, View } from 'react-native'
+import { ActivityIndicator, Alert, Linking, ScrollView, StyleSheet, Text, View } from 'react-native'
 import { router, useFocusEffect, useLocalSearchParams } from 'expo-router'
 import { Tocavel } from '../../../src/components/Animacoes'
 import { BotaoPrimario } from '../../../src/components/BotaoPrimario'
@@ -9,6 +9,7 @@ import { mensagemDeErro } from '../../../src/lib/cacheOffline'
 import { avaliacaoDoPedido } from '../../../src/loja/avaliacoes'
 import { abrirSolicitacao, cancelarSolicitacao, podeCancelar, STATUS_FINAIS, TEXTO_STATUS, type Solicitacao, type StatusSolicitacao } from '../../../src/loja/loja'
 import { ligarPara, tracarRota } from '../../../src/mapa/acoes'
+import { hhmm, linkAgenda } from '../../../src/loja/reservas'
 import { colors } from '../../../src/theme/colors'
 import { fontFamily } from '../../../src/theme/typography'
 
@@ -73,6 +74,28 @@ export default function AcompanharPedido() {
     <View style={estilos.tela}>
       <HeroiOnda subtitulo={`Nº ${s.numero} · ${s.loja.name}`} titulo={TEXTO_STATUS[s.status]} altura={190} />
       <ScrollView contentContainerStyle={estilos.conteudo} showsVerticalScrollIndicator={false}>
+        {s.kind === 'servico' && s.starts_at ? (
+          <View style={estilos.ticket}>
+            <Text style={estilos.ticketServico}>{s.itens[0]?.nome ?? 'Serviço'}{s.pet ? ` · ${s.pet.nome}` : ''}</Text>
+            <Text style={estilos.ticketData}>{new Date(s.starts_at).toLocaleDateString('pt-BR', { weekday: 'short', day: 'numeric', month: 'short' })}</Text>
+            <Text style={estilos.ticketHora}>{hhmm(s.starts_at)}{s.ends_at ? ` às ${hhmm(s.ends_at)}` : ''}</Text>
+            <Text style={estilos.sub}>{[s.loja.name, s.loja.address].filter(Boolean).join(' · ')}</Text>
+            {!final ? (
+              <View style={estilos.ticketAcoes}>
+                <Tocavel accessibilityRole="link" onPress={() => Linking.openURL(linkAgenda(`${s.itens[0]?.nome ?? 'Serviço'} · ${s.loja.name}`, s.starts_at as string, s.ends_at ?? (s.starts_at as string), s.loja.address)).catch(() => undefined)} style={estilos.acao}>
+                  <Text style={estilos.acaoTexto}>Adicionar à agenda</Text>
+                </Tocavel>
+                {podeCancelar(s) && s.service_id ? (
+                  <Tocavel accessibilityRole="button" onPress={() => router.push({ pathname: '/loja/agendar', params: { loja: s.loja.id, servico: s.service_id as string, remarcar: s.id } })} style={estilos.acao}>
+                    <Text style={estilos.acaoTexto}>Remarcar</Text>
+                  </Tocavel>
+                ) : null}
+              </View>
+            ) : null}
+            {!final ? <Text style={estilos.sub}>Cancelamento grátis até {Math.round(s.loja.cancel_until_min / 60)}h antes. Você recebe um lembrete antes do horário.</Text> : null}
+          </View>
+        ) : null}
+
         {s.codigo_entrega ? (
           <View style={estilos.codigo}>
             <Text style={estilos.codigoRotulo}>Código de entrega</Text>
@@ -185,4 +208,9 @@ const estilos = StyleSheet.create({
   conversa: { flexDirection: 'row', alignItems: 'center', backgroundColor: colors.primarySurface, borderRadius: 22, paddingHorizontal: 16, height: 54 },
   conversaTexto: { flex: 1, fontFamily: fontFamily.bold, fontSize: 15, color: colors.primaryDeep },
   conversaSeta: { fontFamily: fontFamily.bold, fontSize: 22, color: colors.primaryDeep },
+  ticket: { backgroundColor: colors.primarySurface, borderRadius: 24, padding: 16, gap: 4 },
+  ticketServico: { fontFamily: fontFamily.bold, fontSize: 14, color: colors.primaryDeep },
+  ticketData: { fontFamily: fontFamily.medium, fontSize: 22, color: colors.black, textTransform: 'capitalize' },
+  ticketHora: { fontFamily: fontFamily.bold, fontSize: 18, color: colors.black },
+  ticketAcoes: { flexDirection: 'row', gap: 10, marginTop: 8 },
 })

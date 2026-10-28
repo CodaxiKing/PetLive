@@ -67,3 +67,24 @@ describe('chat', () => {
     expect(juntarMensagens([b], [a, b, { ...a, lida: true }]).map((m) => [m.id, m.lida])).toEqual([[1, true], [2, false]])
   })
 })
+
+describe('reservas', () => {
+  it('dias, duração e link da agenda', async () => {
+    const { diaIso, duracaoTexto, linkAgenda, proximosDias } = await import('../loja/reservas')
+    const dias = proximosDias(3, new Date(2026, 9, 30, 15))
+    expect(dias.map(diaIso)).toEqual(['2026-10-30', '2026-10-31', '2026-11-01'])
+    expect(duracaoTexto(90)).toBe('1h30')
+    expect(duracaoTexto(120)).toBe('2h')
+    expect(duracaoTexto(45)).toBe('45 min')
+    const link = linkAgenda('Banho · Loja', '2026-10-30T12:00:00.000Z', '2026-10-30T13:30:00.000Z', 'Rua A')
+    expect(link).toContain('dates=20261030T120000Z%2F20261030T133000Z')
+    expect(link.startsWith('https://calendar.google.com/')).toBe(true)
+  })
+
+  it('reserva manda o horário e o pet', async () => {
+    const { reservar } = await import('../loja/reservas')
+    m.rpc.mockResolvedValue({ data: { id: 'r1', status: 'enviada' }, error: null })
+    await reservar('s1', '2026-10-30T12:00:00Z', 'pet1', ' ')
+    expect(m.rpc).toHaveBeenCalledWith('servico_reservar', { p_service: 's1', p_inicio: '2026-10-30T12:00:00Z', p_pet: 'pet1', p_message: null, p_vagas: 1 })
+  })
+})

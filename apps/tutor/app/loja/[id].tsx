@@ -116,16 +116,26 @@ export default function LojaVitrine() {
         ) : (
           <View style={estilos.servicos}>
             {servicos.length === 0 ? <Text style={estilos.vazio}>Nenhum serviço cadastrado ainda.</Text> : null}
-            {servicos.map((s) => (
-              <View key={s.id} style={estilos.servico}>
-                <View style={estilos.flex}>
-                  <Text style={estilos.produtoNome}>{s.name}</Text>
-                  <Text style={estilos.sub}>{[s.duration_min ? `${s.duration_min} min` : null, s.description].filter(Boolean).join(' · ')}</Text>
-                </View>
-                <Text style={estilos.preco}>{s.price_cents === null ? 'Sob consulta' : reais(s.price_cents)}</Text>
-              </View>
-            ))}
-            {servicos.length ? <Text style={estilos.nota}>Agendar pelo app chega em breve. Por enquanto, combine com a loja por telefone.</Text> : null}
+            {servicos.map((s) => {
+              const agenda = s.modelo === 'horario'
+              return (
+                <Tocavel
+                  key={s.id}
+                  accessibilityRole="button"
+                  disabled={!agenda}
+                  onPress={() => router.push({ pathname: '/loja/agendar', params: { loja: loja.id, servico: s.id } })}
+                  style={estilos.servico}
+                >
+                  <View style={estilos.flex}>
+                    <Text style={estilos.produtoNome}>{s.name}</Text>
+                    <Text style={estilos.sub}>{[s.duration_min ? `${s.duration_min} min` : null, s.description].filter(Boolean).join(' · ')}</Text>
+                    <Text style={estilos.preco}>{s.price_cents === null ? 'Sob consulta' : reais(s.price_cents)}</Text>
+                  </View>
+                  <Text style={agenda ? estilos.agendar : estilos.sub}>{agenda ? 'Agendar' : 'Em breve'}</Text>
+                </Tocavel>
+              )
+            })}
+            {servicos.some((s) => s.modelo !== 'horario') ? <Text style={estilos.nota}>Creche, hotelzinho e passeio pelo app chegam em breve. Por enquanto, combine com a loja.</Text> : null}
           </View>
         )}
         {avaliacoes && avaliacoes.itens.length ? (
@@ -192,4 +202,5 @@ const estilos = StyleSheet.create({
   secao: { fontFamily: fontFamily.bold, fontSize: 15, color: colors.black },
   avaliacao: { backgroundColor: colors.background, borderRadius: 20, padding: 12, gap: 2 },
   resposta: { fontFamily: fontFamily.regular, fontSize: 13, color: colors.primaryDeep, marginTop: 4 },
+  agendar: { fontFamily: fontFamily.bold, fontSize: 14, color: colors.white, backgroundColor: colors.black, paddingHorizontal: 14, paddingVertical: 8, borderRadius: 16, overflow: 'hidden' },
 })
