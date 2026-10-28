@@ -88,3 +88,22 @@ describe('reservas', () => {
     expect(m.rpc).toHaveBeenCalledWith('servico_reservar', { p_service: 's1', p_inicio: '2026-10-30T12:00:00Z', p_pet: 'pet1', p_message: null, p_vagas: 1 })
   })
 })
+
+describe('creche, hotel e passeio', () => {
+  it('porte, preço da creche e do hotel', async () => {
+    const { porteDoPet, precoCreche, precoHotel, noitesEntre } = await import('../loja/servicos')
+    expect([porteDoPet(null), porteDoPet(9.9), porteDoPet(10), porteDoPet(25), porteDoPet(25.1)]).toEqual(['pequeno', 'pequeno', 'medio', 'medio', 'grande'])
+    const planos = [
+      { id: 'a', period: 'dia' as const, price_cents: 6000, package_days: null, package_cents: null },
+      { id: 'b', period: 'dia' as const, price_cents: 6000, package_days: 8, package_cents: 40000 },
+    ]
+    expect(precoCreche(planos, 'dia', 3, false)).toBe(18000)
+    expect(precoCreche(planos, 'dia', 8, true)).toBe(40000)
+    expect(precoCreche(planos, 'dia', 3, true)).toBeNull()
+    expect(precoCreche(planos, 'meio', 2, false)).toBeNull()
+    expect(noitesEntre(new Date(2026, 9, 22), new Date(2026, 9, 25))).toBe(3)
+    const extras = [{ id: 'x', nome: 'Banho', price_cents: 5000, por_dia: false }, { id: 'y', nome: 'Passeio', price_cents: 1000, por_dia: true }]
+    expect(precoHotel(12000, 3, extras, ['x', 'y'])).toBe(36000 + 5000 + 3000)
+    expect(precoHotel(undefined, 3, extras, [])).toBeNull()
+  })
+})

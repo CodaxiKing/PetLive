@@ -107,6 +107,9 @@ function RaizProtegida() {
                 <Stack.Screen name="loja/produto/[id]" />
                 <Stack.Screen name="loja/solicitar" />
                 <Stack.Screen name="loja/agendar" />
+                <Stack.Screen name="loja/creche" />
+                <Stack.Screen name="loja/hotel" />
+                <Stack.Screen name="loja/passeio" />
                 <Stack.Screen name="pedidos/index" />
                 <Stack.Screen name="pedidos/[id]/index" />
                 <Stack.Screen name="pedidos/[id]/conversa" />

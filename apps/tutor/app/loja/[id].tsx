@@ -117,13 +117,19 @@ export default function LojaVitrine() {
           <View style={estilos.servicos}>
             {servicos.length === 0 ? <Text style={estilos.vazio}>Nenhum serviço cadastrado ainda.</Text> : null}
             {servicos.map((s) => {
-              const agenda = s.modelo === 'horario'
+              const abrir = () =>
+                s.modelo === 'horario'
+                  ? router.push({ pathname: '/loja/agendar', params: { loja: loja.id, servico: s.id } })
+                  : s.modelo === 'dia'
+                    ? router.push({ pathname: '/loja/creche', params: { servico: s.id } })
+                    : s.modelo === 'diarias'
+                      ? router.push({ pathname: '/loja/hotel', params: { servico: s.id } })
+                      : router.push({ pathname: '/loja/passeio', params: { servico: s.id } })
               return (
                 <Tocavel
                   key={s.id}
                   accessibilityRole="button"
-                  disabled={!agenda}
-                  onPress={() => router.push({ pathname: '/loja/agendar', params: { loja: loja.id, servico: s.id } })}
+                  onPress={abrir}
                   style={estilos.servico}
                 >
                   <View style={estilos.flex}>
@@ -131,11 +137,10 @@ export default function LojaVitrine() {
                     <Text style={estilos.sub}>{[s.duration_min ? `${s.duration_min} min` : null, s.description].filter(Boolean).join(' · ')}</Text>
                     <Text style={estilos.preco}>{s.price_cents === null ? 'Sob consulta' : reais(s.price_cents)}</Text>
                   </View>
-                  <Text style={agenda ? estilos.agendar : estilos.sub}>{agenda ? 'Agendar' : 'Em breve'}</Text>
+                  <Text style={estilos.agendar}>{s.modelo === 'horario' || s.modelo === 'passeio' ? 'Agendar' : 'Reservar'}</Text>
                 </Tocavel>
               )
             })}
-            {servicos.some((s) => s.modelo !== 'horario') ? <Text style={estilos.nota}>Creche, hotelzinho e passeio pelo app chegam em breve. Por enquanto, combine com a loja.</Text> : null}
           </View>
         )}
         {avaliacoes && avaliacoes.itens.length ? (
