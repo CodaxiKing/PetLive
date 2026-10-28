@@ -29,6 +29,7 @@ import {
 } from '../src/mapa/lugares';
 import { MapaLugares } from '../src/mapa/MapaLugares';
 import { usePets } from '../src/pets/PetsProvider';
+import { lojaDoLugar } from '../src/loja/loja';
 import { colors } from '../src/theme/colors';
 import { radius, shadow, spacing } from '../src/theme/tokens';
 import { fontFamily, typography } from '../src/theme/typography';
@@ -69,6 +70,12 @@ export default function Lugar() {
   const [salvo, setSalvo] = useState(false);
   const [salvando, setSalvando] = useState(false);
   const [rotaAberta, setRotaAberta] = useState(false);
+  const [lojaId, setLojaId] = useState<string | null>(null);
+
+  // Lugar assumido por uma loja do PetLive: mostra a vitrine (BUSINESS.md 5.1).
+  useEffect(() => {
+    if (id) lojaDoLugar(id).then(setLojaId, () => undefined);
+  }, [id]);
   const destaques = useDestaques(typeof id === 'string' ? [id] : []);
 
   useEffect(() => {
@@ -305,6 +312,16 @@ export default function Lugar() {
               }
             />
           )}
+
+          {lojaId ? (
+            <Pressable accessibilityRole="button" onPress={() => router.push(`/loja/${lojaId}`)} style={estilos.verLoja}>
+              <View style={estilos.flexMin}>
+                <Text style={estilos.verLojaTitulo}>Ver a loja no PetLive</Text>
+                <Text style={estilos.verLojaSub}>Produtos, preços e solicitação com retirada ou entrega</Text>
+              </View>
+              <Text style={estilos.enviarFichaSeta}>›</Text>
+            </Pressable>
+          ) : null}
 
           {/* Clínica: enviar a ficha de emergência do pet (protótipo FichaLugar). */}
           {lugar.categoria === 'clinica' && pets.length > 0 ? (
@@ -660,4 +677,7 @@ const estilos = StyleSheet.create({
     textAlign: 'center',
     marginRight: 52,
   },
+  verLoja: { flexDirection: 'row', alignItems: 'center', gap: 12, backgroundColor: colors.primarySurface, borderRadius: 22, padding: 16, marginTop: 12 },
+  verLojaTitulo: { fontFamily: fontFamily.bold, fontSize: 15, color: colors.black },
+  verLojaSub: { fontFamily: fontFamily.regular, fontSize: 13, color: colors.textMuted },
 });

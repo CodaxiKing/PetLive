@@ -4,7 +4,7 @@ import { supabase } from '../lib/supabase';
 export type Aviso = {
   id: string;
   pet_id: string | null;
-  type: 'lembrete' | 'vacina' | 'dose' | 'peso' | 'sistema' | 'campanha' | 'guarda' | 'perdido' | 'comunidade';
+  type: 'lembrete' | 'vacina' | 'dose' | 'peso' | 'sistema' | 'campanha' | 'guarda' | 'perdido' | 'comunidade' | 'pedido';
   title: string;
   body: string | null;
   deep_link: string | null;
