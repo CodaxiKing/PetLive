@@ -1,15 +1,15 @@
 import { useCallback, useEffect, useState } from 'react'
 import { ActivityIndicator, Alert, ScrollView, StyleSheet, Text, View } from 'react-native'
 import { router, useFocusEffect, useLocalSearchParams } from 'expo-router'
-import { Tocavel } from '../../src/components/Animacoes'
-import { BotaoPrimario } from '../../src/components/BotaoPrimario'
-import { HeroiOnda } from '../../src/components/HeroiOnda'
-import { reais } from '../../src/despesas/despesas'
-import { mensagemDeErro } from '../../src/lib/cacheOffline'
-import { abrirSolicitacao, cancelarSolicitacao, podeCancelar, STATUS_FINAIS, TEXTO_STATUS, type Solicitacao, type StatusSolicitacao } from '../../src/loja/loja'
-import { ligarPara, tracarRota } from '../../src/mapa/acoes'
-import { colors } from '../../src/theme/colors'
-import { fontFamily } from '../../src/theme/typography'
+import { Tocavel } from '../../../src/components/Animacoes'
+import { BotaoPrimario } from '../../../src/components/BotaoPrimario'
+import { HeroiOnda } from '../../../src/components/HeroiOnda'
+import { reais } from '../../../src/despesas/despesas'
+import { mensagemDeErro } from '../../../src/lib/cacheOffline'
+import { abrirSolicitacao, cancelarSolicitacao, podeCancelar, STATUS_FINAIS, TEXTO_STATUS, type Solicitacao, type StatusSolicitacao } from '../../../src/loja/loja'
+import { ligarPara, tracarRota } from '../../../src/mapa/acoes'
+import { colors } from '../../../src/theme/colors'
+import { fontFamily } from '../../../src/theme/typography'
 
 const quando = (iso: string) => new Date(iso).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })
 
@@ -116,6 +116,11 @@ export default function AcompanharPedido() {
           {s.message ? <Text style={estilos.recado}>“{s.message}”</Text> : null}
         </View>
 
+        <Tocavel accessibilityRole="button" onPress={() => router.push(`/pedidos/${s.id}/conversa`)} style={estilos.conversa}>
+          <Text style={estilos.conversaTexto}>Falar com a loja</Text>
+          <Text style={estilos.conversaSeta}>›</Text>
+        </Tocavel>
+
         <View style={estilos.acoes}>
           {s.loja.phone ? (
             <Tocavel accessibilityRole="button" onPress={() => ligarPara(s.loja.phone as string).catch(() => undefined)} style={estilos.acao}>
@@ -170,4 +175,7 @@ const estilos = StyleSheet.create({
   acao: { flex: 1, height: 48, borderRadius: 24, borderWidth: 1.5, borderColor: colors.border, alignItems: 'center', justifyContent: 'center' },
   acaoTexto: { fontFamily: fontFamily.semiBold, fontSize: 14, color: colors.black },
   rodape: { paddingHorizontal: 24, paddingTop: 12, paddingBottom: 28 },
+  conversa: { flexDirection: 'row', alignItems: 'center', backgroundColor: colors.primarySurface, borderRadius: 22, paddingHorizontal: 16, height: 54 },
+  conversaTexto: { flex: 1, fontFamily: fontFamily.bold, fontSize: 15, color: colors.primaryDeep },
+  conversaSeta: { fontFamily: fontFamily.bold, fontSize: 22, color: colors.primaryDeep },
 })

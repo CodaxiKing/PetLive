@@ -58,3 +58,12 @@ describe('loja', () => {
     expect(horarioDeHoje({ horarios: [] }, segunda)).toBeNull()
   })
 })
+
+describe('chat', () => {
+  it('junta mensagens sem repetir e em ordem', async () => {
+    const { juntarMensagens } = await import('../loja/chat')
+    const a = { id: 1, da_loja: false, body: 'oi', at: '2026-10-28T10:00:00Z', lida: false }
+    const b = { id: 2, da_loja: true, body: 'olá', at: '2026-10-28T10:01:00Z', lida: false }
+    expect(juntarMensagens([b], [a, b, { ...a, lida: true }]).map((m) => [m.id, m.lida])).toEqual([[1, true], [2, false]])
+  })
+})
