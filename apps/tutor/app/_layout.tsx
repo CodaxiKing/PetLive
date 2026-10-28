@@ -113,6 +113,7 @@ function RaizProtegida() {
                 <Stack.Screen name="pedidos/index" />
                 <Stack.Screen name="pedidos/[id]/index" />
                 <Stack.Screen name="pedidos/[id]/conversa" />
+                <Stack.Screen name="pedidos/[id]/passeio" />
                 <Stack.Screen name="pedidos/[id]/avaliar" options={{ presentation: 'modal', animation: 'slide_from_bottom' }} />
                 <Stack.Screen name="comunidade/novo" options={{ presentation: 'modal', animation: 'slide_from_bottom' }} />
                 <Stack.Screen name="comunidade/pet/[id]" />

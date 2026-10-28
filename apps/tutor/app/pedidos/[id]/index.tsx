@@ -142,6 +142,12 @@ export default function AcompanharPedido() {
           {s.message ? <Text style={estilos.recado}>“{s.message}”</Text> : null}
         </View>
 
+        {s.modelo === 'passeio' && ['em_andamento', 'concluida'].includes(s.status) ? (
+          <Tocavel accessibilityRole="button" onPress={() => router.push(`/pedidos/${s.id}/passeio`)} style={[estilos.conversa, estilos.aoVivo]}>
+            <Text style={estilos.conversaTexto}>{s.status === 'em_andamento' ? '● Acompanhar passeio ao vivo' : 'Ver o resumo do passeio'}</Text>
+            <Text style={estilos.conversaSeta}>›</Text>
+          </Tocavel>
+        ) : null}
         <Tocavel accessibilityRole="button" onPress={() => router.push(`/pedidos/${s.id}/conversa`)} style={estilos.conversa}>
           <Text style={estilos.conversaTexto}>Falar com a loja</Text>
           <Text style={estilos.conversaSeta}>›</Text>
@@ -213,4 +219,5 @@ const estilos = StyleSheet.create({
   ticketData: { fontFamily: fontFamily.medium, fontSize: 22, color: colors.black, textTransform: 'capitalize' },
   ticketHora: { fontFamily: fontFamily.bold, fontSize: 18, color: colors.black },
   ticketAcoes: { flexDirection: 'row', gap: 10, marginTop: 8 },
+  aoVivo: { backgroundColor: colors.successSurface },
 })

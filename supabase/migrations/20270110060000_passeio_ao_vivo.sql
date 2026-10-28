@@ -250,3 +250,23 @@ begin
     perform cron.schedule('petlive-passeios-perdidos', '*/10 * * * *', 'select public.passeios_perdidos()');
   end if;
 end $$;
+
+-- O detalhe da solicitação diz o modelo do serviço (para abrir o passeio ao vivo) e os extras da reserva.
+create or replace function public.solicitacao_json(r requests)
+returns jsonb language sql stable security definer set search_path = public as $$
+  select jsonb_build_object(
+    'id', r.id, 'numero', r.numero, 'status', r.status, 'kind', r.kind, 'fulfillment', r.fulfillment,
+    'subtotal_cents', r.subtotal_cents, 'delivery_fee_cents', r.delivery_fee_cents, 'discount_cents', r.discount_cents, 'total_cents', r.total_cents,
+    'pay_method', r.pay_method, 'message', r.message, 'motivo', r.motivo, 'endereco', r.endereco_texto,
+    'codigo_entrega', case when r.user_id = auth.uid() and r.fulfillment = 'entrega' and r.status in ('confirmada', 'pronta', 'em_entrega') then r.codigo_entrega end,
+    'expira_em', r.expira_em, 'criado_em', r.criado_em, 'starts_at', r.starts_at, 'ends_at', r.ends_at,
+    'service_id', r.service_id, 'modelo', (select modelo from services where id = r.service_id), 'extras', r.extras, 'pet', (select jsonb_build_object('id', p.id, 'nome', p.nome) from pets p where p.id = r.pet_id),
+    'loja', jsonb_build_object('id', s.id, 'name', s.name, 'phone', s.phone, 'address', s.address, 'lat', s.lat, 'lng', s.lng,
+                               'pickup_prepare_min', s.pickup_prepare_min, 'cancel_until_min', s.cancel_until_min),
+    'itens', coalesce((select jsonb_agg(jsonb_build_object('nome', ri.nome, 'qty', ri.qty, 'unit_cents', ri.unit_cents, 'product_id', ri.product_id) order by ri.id)
+                       from request_items ri where ri.request_id = r.id), '[]'::jsonb),
+    'eventos', coalesce((select jsonb_agg(jsonb_build_object('status', e.to_status, 'at', e.at, 'reason', e.reason) order by e.at)
+                         from request_events e where e.request_id = r.id), '[]'::jsonb))
+  from stores s where s.id = r.store_id;
+$$;
+revoke all on function public.solicitacao_json(requests) from public, anon, authenticated;

@@ -107,3 +107,14 @@ describe('creche, hotel e passeio', () => {
     expect(precoHotel(undefined, 3, extras, [])).toBeNull()
   })
 })
+
+describe('passeio ao vivo', () => {
+  it('tempos e trajeto', async () => {
+    const { paraTrajeto, tempos } = await import('../loja/passeioAoVivo')
+    const agora = Date.parse('2026-10-28T10:32:00Z')
+    expect(tempos('2026-10-28T10:00:00Z', null, '2026-10-28T11:00:00Z', agora)).toEqual({ minutos: 32, faltam: 28 })
+    expect(tempos('2026-10-28T10:00:00Z', '2026-10-28T10:34:00Z', '2026-10-28T11:00:00Z', agora)).toEqual({ minutos: 34, faltam: null })
+    expect(tempos(null, null, null, agora)).toEqual({ minutos: 0, faltam: null })
+    expect(paraTrajeto([{ lat: -22.9, lng: -43.1, at: '2026-10-28T10:00:00Z' }])[0]).toMatchObject({ trecho: 0, instante: Date.parse('2026-10-28T10:00:00Z') })
+  })
+})
