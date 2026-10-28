@@ -120,6 +120,33 @@ export const abrirSolicitacao = (id: string) =>
 export const MOTIVOS_DENUNCIA_LOJA = ['Produto falsificado ou ilegal', 'Medicamento sem receita', 'Preço ou descrição enganosa', 'Outro problema']
 export const denunciarItem = (tipo: 'produto' | 'avaliacao' | 'loja', id: string, motivo: string) =>
   rpc<void>('loja_denunciar', { p_kind: tipo, p_target: id, p_motivo: motivo })
+export type Entrega = {
+  status: 'preparando' | 'pronta_para_sair' | 'em_rota' | 'entregue' | 'falhou' | 'devolvida'
+  eta_at: string | null
+  left_at: string | null
+  delivered_at: string | null
+  fail_reason: string | null
+  tentativas: number
+  entregador: string | null
+  posicao: { lat: number; lng: number; em: string } | null
+}
+export const TEXTO_ENTREGA: Record<Entrega['status'], string> = {
+  preparando: 'Separando o pedido',
+  pronta_para_sair: 'Pronto para sair',
+  em_rota: 'Saiu para entrega',
+  entregue: 'Entregue',
+  falhou: 'Tentativa sem sucesso',
+  devolvida: 'Devolvido à loja',
+}
+export const entregaDetalhe = (id: string) => rpc<Entrega | null>('entrega_detalhe', { p_request: id })
+
+/** "Chega em 12 min" a partir do prazo da entrega. */
+export function textoChegada(etaIso: string | null, agora = Date.now()): string | null {
+  if (!etaIso) return null
+  const min = Math.round((Date.parse(etaIso) - agora) / 60000)
+  return min > 1 ? `Chega em até ${min} min` : 'Chegando'
+}
+
 export const cancelarSolicitacao = (id: string) => rpc<void>('solicitacao_mudar', { p_id: id, p_para: 'cancelada', p_motivo: 'Cancelada pelo tutor' })
 
 /** Loja que assumiu o lugar do mapa (só lugares do PetLive têm id uuid). */

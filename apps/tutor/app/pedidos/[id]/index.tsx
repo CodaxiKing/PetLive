@@ -7,7 +7,7 @@ import { HeroiOnda } from '../../../src/components/HeroiOnda'
 import { reais } from '../../../src/despesas/despesas'
 import { mensagemDeErro } from '../../../src/lib/cacheOffline'
 import { avaliacaoDoPedido } from '../../../src/loja/avaliacoes'
-import { abrirSolicitacao, cancelarSolicitacao, podeCancelar, STATUS_FINAIS, TEXTO_STATUS, type Solicitacao, type StatusSolicitacao } from '../../../src/loja/loja'
+import { abrirSolicitacao, cancelarSolicitacao, entregaDetalhe, textoChegada, TEXTO_ENTREGA, type Entrega, podeCancelar, STATUS_FINAIS, TEXTO_STATUS, type Solicitacao, type StatusSolicitacao } from '../../../src/loja/loja'
 import { ligarPara, tracarRota } from '../../../src/mapa/acoes'
 import { hhmm, linkAgenda } from '../../../src/loja/reservas'
 import { colors } from '../../../src/theme/colors'
@@ -27,10 +27,12 @@ export default function AcompanharPedido() {
   const [erro, setErro] = useState<string | null>(null)
   const [cancelando, setCancelando] = useState(false)
   const [avaliado, setAvaliado] = useState<boolean | null>(null)
+  const [entrega, setEntrega] = useState<Entrega | null>(null)
 
   const carregar = useCallback(() => {
     if (!id) return
     avaliacaoDoPedido(id).then((a) => setAvaliado(a !== null), () => setAvaliado(null))
+    entregaDetalhe(id).then(setEntrega, () => undefined)
     abrirSolicitacao(id).then((r) => setS(r.disponivel ? r.solicitacao : 'indisponivel'), (e: unknown) => setErro(mensagemDeErro(e instanceof Error ? e.message : String(e))))
   }, [id])
   useFocusEffect(carregar)
@@ -93,6 +95,20 @@ export default function AcompanharPedido() {
               </View>
             ) : null}
             {!final ? <Text style={estilos.sub}>Cancelamento grátis até {Math.round(s.loja.cancel_until_min / 60)}h antes. Você recebe um lembrete antes do horário.</Text> : null}
+          </View>
+        ) : null}
+
+        {entrega && entrega.status !== 'entregue' ? (
+          <View style={estilos.entrega}>
+            <Text style={estilos.entregaStatus}>{TEXTO_ENTREGA[entrega.status]}</Text>
+            {entrega.status === 'em_rota' && textoChegada(entrega.eta_at) ? <Text style={estilos.entregaPrazo}>{textoChegada(entrega.eta_at)}</Text> : null}
+            {entrega.entregador && entrega.status === 'em_rota' ? <Text style={estilos.sub}>Entregador: {entrega.entregador} · {s.loja.name}</Text> : null}
+            {entrega.status === 'falhou' && entrega.fail_reason ? <Text style={estilos.sub}>{entrega.fail_reason}. A loja vai tentar de novo.</Text> : null}
+            {entrega.posicao ? (
+              <Tocavel accessibilityRole="link" onPress={() => Linking.openURL(`https://www.google.com/maps/search/?api=1&query=${entrega.posicao!.lat},${entrega.posicao!.lng}`).catch(() => undefined)}>
+                <Text style={estilos.link}>Ver onde o entregador está</Text>
+              </Tocavel>
+            ) : null}
           </View>
         ) : null}
 
@@ -220,4 +236,8 @@ const estilos = StyleSheet.create({
   ticketHora: { fontFamily: fontFamily.bold, fontSize: 18, color: colors.black },
   ticketAcoes: { flexDirection: 'row', gap: 10, marginTop: 8 },
   aoVivo: { backgroundColor: colors.successSurface },
+  entrega: { backgroundColor: colors.primarySurface, borderRadius: 24, padding: 16, gap: 4 },
+  entregaStatus: { fontFamily: fontFamily.bold, fontSize: 14, color: colors.primaryDeep },
+  entregaPrazo: { fontFamily: fontFamily.medium, fontSize: 22, color: colors.black },
+  link: { fontFamily: fontFamily.bold, fontSize: 14, color: colors.primaryDeep, marginTop: 4 },
 })

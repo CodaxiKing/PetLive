@@ -118,3 +118,13 @@ describe('passeio ao vivo', () => {
     expect(paraTrajeto([{ lat: -22.9, lng: -43.1, at: '2026-10-28T10:00:00Z' }])[0]).toMatchObject({ trecho: 0, instante: Date.parse('2026-10-28T10:00:00Z') })
   })
 })
+
+describe('entrega', () => {
+  it('texto de chegada', async () => {
+    const { textoChegada } = await import('../loja/loja')
+    const agora = Date.parse('2026-10-28T10:00:00Z')
+    expect(textoChegada('2026-10-28T10:12:00Z', agora)).toBe('Chega em até 12 min')
+    expect(textoChegada('2026-10-28T10:00:30Z', agora)).toBe('Chegando')
+    expect(textoChegada(null, agora)).toBeNull()
+  })
+})
