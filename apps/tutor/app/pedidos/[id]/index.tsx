@@ -6,6 +6,7 @@ import { BotaoPrimario } from '../../../src/components/BotaoPrimario'
 import { HeroiOnda } from '../../../src/components/HeroiOnda'
 import { reais } from '../../../src/despesas/despesas'
 import { mensagemDeErro } from '../../../src/lib/cacheOffline'
+import { avaliacaoDoPedido } from '../../../src/loja/avaliacoes'
 import { abrirSolicitacao, cancelarSolicitacao, podeCancelar, STATUS_FINAIS, TEXTO_STATUS, type Solicitacao, type StatusSolicitacao } from '../../../src/loja/loja'
 import { ligarPara, tracarRota } from '../../../src/mapa/acoes'
 import { colors } from '../../../src/theme/colors'
@@ -24,9 +25,11 @@ export default function AcompanharPedido() {
   const [s, setS] = useState<Solicitacao | null | 'indisponivel'>(null)
   const [erro, setErro] = useState<string | null>(null)
   const [cancelando, setCancelando] = useState(false)
+  const [avaliado, setAvaliado] = useState<boolean | null>(null)
 
   const carregar = useCallback(() => {
     if (!id) return
+    avaliacaoDoPedido(id).then((a) => setAvaliado(a !== null), () => setAvaliado(null))
     abrirSolicitacao(id).then((r) => setS(r.disponivel ? r.solicitacao : 'indisponivel'), (e: unknown) => setErro(mensagemDeErro(e instanceof Error ? e.message : String(e))))
   }, [id])
   useFocusEffect(carregar)
@@ -137,6 +140,10 @@ export default function AcompanharPedido() {
       {!final && podeCancelar(s) ? (
         <View style={estilos.rodape}>
           <BotaoPrimario titulo="Cancelar solicitação" carregando={cancelando} onPress={cancelar} />
+        </View>
+      ) : s.status === 'concluida' && avaliado === false ? (
+        <View style={estilos.rodape}>
+          <BotaoPrimario titulo="Avaliar a loja" onPress={() => router.push({ pathname: '/pedidos/[id]/avaliar', params: { id: s.id, loja: s.loja.name } })} />
         </View>
       ) : final ? (
         <View style={estilos.rodape}>

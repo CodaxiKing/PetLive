@@ -6,6 +6,8 @@ import { BotaoPrimario } from '../../src/components/BotaoPrimario'
 import { Icone } from '../../src/components/Icone'
 import { reais } from '../../src/despesas/despesas'
 import { mensagemDeErro } from '../../src/lib/cacheOffline'
+import { avaliacoesDaLoja, type AvaliacoesLoja } from '../../src/loja/avaliacoes'
+import { haQuanto } from '../../src/perdido/perdido'
 import { abrirVitrine, CATEGORIAS_PRODUTO, horarioDeHoje, subtotalCarrinho, useCarrinho, type CategoriaProduto, type Vitrine } from '../../src/loja/loja'
 import { colors } from '../../src/theme/colors'
 import { fontFamily } from '../../src/theme/typography'
@@ -18,10 +20,12 @@ export default function LojaVitrine() {
   const [aba, setAba] = useState<'produtos' | 'servicos'>('produtos')
   const [categoria, setCategoria] = useState<CategoriaProduto | null>(null)
   const carrinho = useCarrinho()
+  const [avaliacoes, setAvaliacoes] = useState<AvaliacoesLoja | null>(null)
 
   useFocusEffect(
     useCallback(() => {
       if (!id) return
+      avaliacoesDaLoja(id).then(setAvaliacoes, () => undefined)
       abrirVitrine(id).then(setVitrine, (e: unknown) => setErro(mensagemDeErro(e instanceof Error ? e.message : String(e))))
     }, [id]),
   )
@@ -124,6 +128,19 @@ export default function LojaVitrine() {
             {servicos.length ? <Text style={estilos.nota}>Agendar pelo app chega em breve. Por enquanto, combine com a loja por telefone.</Text> : null}
           </View>
         )}
+        {avaliacoes && avaliacoes.itens.length ? (
+          <View style={estilos.avaliacoes}>
+            <Text style={estilos.secao}>Avaliações · ★ {String(avaliacoes.media ?? '').replace('.', ',')} ({avaliacoes.total})</Text>
+            {avaliacoes.itens.slice(0, 5).map((a) => (
+              <View key={a.id} style={estilos.avaliacao}>
+                <Text style={estilos.produtoNome}>{'★'.repeat(a.rating)}{'☆'.repeat(5 - a.rating)} · {a.autor}</Text>
+                {a.text ? <Text style={estilos.sub}>{a.text}</Text> : null}
+                <Text style={estilos.sub}>{haQuanto(a.criado_em)}</Text>
+                {a.reply_text ? <Text style={estilos.resposta}>Resposta da loja: {a.reply_text}</Text> : null}
+              </View>
+            ))}
+          </View>
+        ) : null}
       </ScrollView>
       {noCarrinho ? (
         <View style={estilos.rodape}>
@@ -171,4 +188,8 @@ const estilos = StyleSheet.create({
   vazio: { fontFamily: fontFamily.regular, fontSize: 14, color: colors.textMuted, paddingHorizontal: 24, paddingTop: 16, textAlign: 'center' },
   voltar: { alignSelf: 'stretch', marginTop: 16 },
   rodape: { paddingHorizontal: 24, paddingTop: 12, paddingBottom: 28 },
+  avaliacoes: { paddingHorizontal: 24, paddingTop: 20, gap: 8 },
+  secao: { fontFamily: fontFamily.bold, fontSize: 15, color: colors.black },
+  avaliacao: { backgroundColor: colors.background, borderRadius: 20, padding: 12, gap: 2 },
+  resposta: { fontFamily: fontFamily.regular, fontSize: 13, color: colors.primaryDeep, marginTop: 4 },
 })
