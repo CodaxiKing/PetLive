@@ -386,7 +386,10 @@ export default function Home() {
                     >
                       {p.aba}
                     </span>
-                    <span className="flex min-h-[64px] items-center justify-between gap-4 rounded-[var(--raio-p)] bg-[var(--cor)] px-5 text-[17px] font-semibold group-open:rounded-b-none md:px-7 md:text-[22px]">
+                    {/* Sem canto redondo onde a aba encosta na ficha (a primeira à esquerda, a última à direita). */}
+                    <span
+                      className={`flex min-h-[64px] items-center justify-between gap-4 rounded-[var(--raio-p)] bg-[var(--cor)] px-5 text-[17px] font-semibold group-open:rounded-b-none md:px-7 md:text-[22px] ${i === 0 ? "rounded-tl-none" : ""} ${i === PERGUNTAS.length - 1 ? "rounded-tr-none" : ""}`}
+                    >
                       {p.pergunta}
                       <span aria-hidden="true" className="text-[22px] font-medium transition-transform duration-300 group-open:rotate-45">
                         +
