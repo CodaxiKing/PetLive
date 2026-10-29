@@ -110,6 +110,30 @@ html {
 }
 @media (min-width: 640px) { .pontilhado { display: block; } }
 
+/*
+ * Campo de formulário: branco com borda firme, para se ver onde escrever
+ * em qualquer fundo. Ao focar, a borda escurece e ganha o azul por fora.
+ */
+.campo {
+  min-height: 52px;
+  width: 100%;
+  padding-inline: 16px;
+  border: 2px solid #b9c4d1;
+  border-radius: var(--raio-p);
+  background: var(--papel);
+  color: var(--tinta);
+  font-size: 17px;
+  transition: border-color 160ms var(--ease-saida), box-shadow 160ms var(--ease-saida);
+}
+.campo::placeholder { color: #7a8594; }
+.campo:hover { border-color: #8d9aab; }
+.campo:focus, .campo:focus-visible {
+  outline: none;
+  border-color: var(--tinta);
+  box-shadow: 0 0 0 4px var(--ceu); /* taste-skill-ignore: anel de foco do campo */
+}
+.campo:user-invalid { border-color: #c62828; }
+
 /* Botão da página: uma pílula de uma cor só. */
 .botao {
   display: inline-flex;

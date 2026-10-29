@@ -32,7 +32,7 @@ export function NovoPet() {
         value={nome}
         onChange={(e) => setNome(e.target.value.slice(0, 24))}
         autoComplete="off"
-        className="mt-2 min-h-[52px] w-full rounded-[var(--raio-p)] bg-[var(--tom)] px-4 text-[17px]"
+        className="campo mt-2"
       />
       <p className="t-pequeno mt-5 font-semibold" id={`${idNome}-especie`}>
         Espécie

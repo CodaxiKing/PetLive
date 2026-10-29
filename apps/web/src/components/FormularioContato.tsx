@@ -26,8 +26,7 @@ const MENSAGENS: Record<Exclude<ResultadoContato, "ok">, string> = {
   erro: "Não deu para enviar agora.",
 };
 
-const campo =
-  "min-h-[52px] w-full rounded-[var(--raio-p)] bg-[var(--tom)] px-4 text-[17px] text-[var(--tinta)] outline-none focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[var(--ceu)]";
+const campo = "campo";
 
 /**
  * Formulário do site: "contato" (página Contato) ou "lojista" (interesse de

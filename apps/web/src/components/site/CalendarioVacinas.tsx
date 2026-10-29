@@ -152,7 +152,7 @@ export function CalendarioVacinas() {
             max={hoje ? paraIso(hoje) : undefined}
             onChange={(ev) => setEscolhido(ev.target.value)}
             aria-describedby={idNota}
-            className="mt-2 min-h-[52px] w-full max-w-[280px] rounded-[var(--raio-p)] bg-[var(--tom)] px-4 text-[17px] tabular-nums"
+            className="campo mt-2 max-w-[280px] tabular-nums"
           />
           <p id={idNota} className="t-pequeno mt-3 max-w-[42ch] text-[var(--apagado)]">
             É uma sugestão do calendário do app. Confirme as datas com o veterinário.
