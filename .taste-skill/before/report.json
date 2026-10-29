@@ -1,0 +1,2678 @@
+{
+ "url": "http://localhost:3300/",
+ "at": "2026-10-29T19:28:33.259Z",
+ "allow": [],
+ "viewports": [
+  {
+   "width": 1440,
+   "height": 900,
+   "load": "load",
+   "screens": 5,
+   "filled": [
+    0.81,
+    0.73,
+    0.78,
+    0.52,
+    0.86
+   ],
+   "motion": {
+    "elements": 1,
+    "css": 0,
+    "transitions": 0,
+    "scripted": 1,
+    "videos": 0,
+    "playingVideos": 0
+   },
+   "metrics": {
+    "viewport": {
+     "w": 1440,
+     "h": 900
+    },
+    "page": {
+     "height": 4272,
+     "screens": 4.7,
+     "words": 489,
+     "img": 0,
+     "video": 0,
+     "canvas": 0,
+     "svg": 12,
+     "sections": 7,
+     "horizontalOverflow": 0,
+     "overflowCulprits": [],
+     "uiFragments": 0,
+     "uiAbuse": false,
+     "realPictures": 0,
+     "videoCount": 0,
+     "uiPictures": 0,
+     "pictureSamples": [],
+     "blendText": 0,
+     "sideScrollers": 0,
+     "brokenImages": [],
+     "emoji": [
+      "✓"
+     ],
+     "videosNoPoster": 0
+    },
+    "hero": {
+     "text": "A saúde do seu pet, sempre em dia",
+     "words": 8,
+     "chars": 33,
+     "lines": 2,
+     "size": 66,
+     "vw": 4.6,
+     "font": "Plus Jakarta Sans",
+     "weight": 500,
+     "tracking": -0.025,
+     "leading": 1.06,
+     "upper": false,
+     "italic": false,
+     "mono": false,
+     "align": "left",
+     "position": "left",
+     "widthRatio": 0.53,
+     "top": 228,
+     "tag": "h1",
+     "kind": "heading"
+    },
+    "h1": {
+     "text": "A saúde do seu pet, sempre em dia",
+     "words": 8,
+     "lines": 2,
+     "size": 66,
+     "font": "Plus Jakarta Sans"
+    },
+    "headings": [
+     {
+      "text": "A saúde do seu pet, sempre em dia",
+      "words": 8,
+      "chars": 33,
+      "lines": 2,
+      "size": 66,
+      "vw": 4.6,
+      "font": "Plus Jakarta Sans",
+      "weight": 500,
+      "tracking": -0.025,
+      "leading": 1.06,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.53,
+      "top": 228,
+      "tag": "h1",
+      "kind": "heading"
+     },
+     {
+      "text": "Tudo do seu pet em um só lugar",
+      "words": 8,
+      "chars": 30,
+      "lines": 1,
+      "size": 54,
+      "vw": 3.8,
+      "font": "Plus Jakarta Sans",
+      "weight": 500,
+      "tracking": -0.025,
+      "leading": 1.11,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "center",
+      "position": "center",
+      "widthRatio": 0.53,
+      "top": 870,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Pronto em três passos",
+      "words": 4,
+      "chars": 21,
+      "lines": 1,
+      "size": 46,
+      "vw": 3.2,
+      "font": "Plus Jakarta Sans",
+      "weight": 500,
+      "tracking": -0.025,
+      "leading": 1.11,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "center",
+      "position": "center",
+      "widthRatio": 0.83,
+      "top": 1485,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Clínicas, petshops, banho e tosa, passeio, creche e hotelzinho",
+      "words": 9,
+      "chars": 62,
+      "lines": 3,
+      "size": 46,
+      "vw": 3.2,
+      "font": "Plus Jakarta Sans",
+      "weight": 500,
+      "tracking": -0.025,
+      "leading": 1.06,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.47,
+      "top": 1891,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Tem uma loja ou clínica? Venda e agende pelo PetLive.",
+      "words": 10,
+      "chars": 53,
+      "lines": 2,
+      "size": 38,
+      "vw": 2.6,
+      "font": "Plus Jakarta Sans",
+      "weight": 500,
+      "tracking": -0.025,
+      "leading": 1.25,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.35,
+      "top": 2491,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Comece grátis, evolua quando quiser",
+      "words": 5,
+      "chars": 35,
+      "lines": 1,
+      "size": 46,
+      "vw": 3.2,
+      "font": "Plus Jakarta Sans",
+      "weight": 500,
+      "tracking": -0.025,
+      "leading": 1.11,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "center",
+      "position": "center",
+      "widthRatio": 0.83,
+      "top": 2818,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Perguntas frequentes",
+      "words": 2,
+      "chars": 20,
+      "lines": 1,
+      "size": 44,
+      "vw": 3.1,
+      "font": "Plus Jakarta Sans",
+      "weight": 500,
+      "tracking": -0.025,
+      "leading": 1.11,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "center",
+      "position": "center",
+      "widthRatio": 0.62,
+      "top": 3374,
+      "tag": "h2",
+      "kind": "heading"
+     }
+    ],
+    "headingSummary": {
+     "count": 7,
+     "maxLines": 3,
+     "over2Lines": 1,
+     "statements": 0,
+     "centered": 4,
+     "medianWords": 8,
+     "mixedFontHeadings": 0
+    },
+    "type": {
+     "families": [
+      {
+       "family": "Plus Jakarta Sans",
+       "share": 1,
+       "mono": false
+      }
+     ],
+     "familyCount": 1,
+     "sizes": [
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      18,
+      20,
+      22,
+      24,
+      38,
+      44,
+      46,
+      54,
+      66
+     ],
+     "sizeCount": 16,
+     "notLoaded": [],
+     "body": {
+      "font": "Plus Jakarta Sans",
+      "size": 16,
+      "leading": 1.63,
+      "weight": 400,
+      "tracking": 0,
+      "contrast": 5.6
+     },
+     "measureChars": 106,
+     "max": {
+      "size": 66,
+      "vw": 4.6,
+      "font": "Plus Jakarta Sans",
+      "text": "A saúde do seu pet, sempre em dia"
+     },
+     "monoShare": 0,
+     "monoProseShare": 0,
+     "monoFamilies": [],
+     "monoSamples": [],
+     "microLabels": 0,
+     "microLabelShare": 0,
+     "microSamples": [],
+     "upperShare": 0,
+     "centerShare": 0.08,
+     "smallText": 7
+    },
+    "eyebrows": [
+     {
+      "text": "Grátis para começar",
+      "above": "A saúde do seu pet, sempre em dia",
+      "upper": false,
+      "tracked": false,
+      "mono": false,
+      "pill": true,
+      "size": 13,
+      "top": 168
+     },
+     {
+      "text": "Recursos",
+      "above": "Tudo do seu pet em um só lugar",
+      "upper": false,
+      "tracked": false,
+      "mono": false,
+      "pill": false,
+      "size": 14,
+      "top": 838
+     },
+     {
+      "text": "Como funciona",
+      "above": "Pronto em três passos",
+      "upper": false,
+      "tracked": false,
+      "mono": false,
+      "pill": false,
+      "size": 14,
+      "top": 1453
+     },
+     {
+      "text": "Para lojas e clínicas",
+      "above": "Tem uma loja ou clínica? Venda e agende ",
+      "upper": false,
+      "tracked": false,
+      "mono": false,
+      "pill": false,
+      "size": 14,
+      "top": 2463
+     },
+     {
+      "text": "Planos",
+      "above": "Comece grátis, evolua quando quiser",
+      "upper": false,
+      "tracked": false,
+      "mono": false,
+      "pill": false,
+      "size": 14,
+      "top": 2786
+     }
+    ],
+    "numbered": [],
+    "color": {
+     "bodyBg": "#ffffff",
+     "bodyBgHsl": {
+      "h": 0,
+      "s": 0,
+      "l": 1
+     },
+     "dark": false,
+     "sectionBgs": [
+      {
+       "color": "#a9dcf6",
+       "top": 88,
+       "hsl": {
+        "h": 200,
+        "s": 0.81,
+        "l": 0.81
+       }
+      },
+      {
+       "color": "#f6f1fd",
+       "top": 1357,
+       "hsl": {
+        "h": 265,
+        "s": 0.75,
+        "l": 0.97
+       }
+      },
+      {
+       "color": "#111111",
+       "top": 1763,
+       "hsl": {
+        "h": 0,
+        "s": 0,
+        "l": 0.07
+       }
+      },
+      {
+       "color": "#f3f5f8",
+       "top": 3278,
+       "hsl": {
+        "h": 216,
+        "s": 0.26,
+        "l": 0.96
+       }
+      }
+     ],
+     "textColors": [
+      {
+       "color": "#5e6878",
+       "share": 0.36
+      },
+      {
+       "color": "#111111",
+       "share": 0.27
+      },
+      {
+       "color": "#5b3c8f",
+       "share": 0.1
+      },
+      {
+       "color": "#ffffff",
+       "share": 0.08
+      },
+      {
+       "color": "#1e4a63",
+       "share": 0.07
+      }
+     ],
+     "button": {
+      "bg": "#111111",
+      "hsl": {
+       "h": 0,
+       "s": 0,
+       "l": 0.07
+      },
+      "fg": "#ffffff"
+     },
+     "lowContrast": []
+    },
+    "buttons": {
+     "count": 4,
+     "inHero": 3,
+     "radius": "pill",
+     "height": 44,
+     "withShadow": 0,
+     "withGradient": 0,
+     "mono": 0,
+     "upper": 0,
+     "heroLabels": [
+      "Baixar o app",
+      "Só essenciais",
+      "Aceitar"
+     ]
+    },
+    "surfaces": {
+     "shadowStatic": 0,
+     "shadowOverlay": 1,
+     "shadowSamples": [],
+     "gradients": 0,
+     "scrims": 0,
+     "gradientSamples": [],
+     "gradientText": 0,
+     "hairlines": 2,
+     "hairlineSamples": [
+      "footer.border-t.border-borda 1440px",
+      "div.border-t.border-borda 1440px"
+     ],
+     "outlinedBoxes": 1,
+     "dashed": 0,
+     "blurred": 0,
+     "roundedBoxes": 9,
+     "boxRadius": 36,
+     "squareMedia": 0,
+     "roundedMedia": 0,
+     "mediaRadius": 0,
+     "textShadow": 0,
+     "cardRows": [
+      {
+       "count": 4,
+       "iconTopped": true,
+       "rounded": true,
+       "top": 978
+      }
+     ]
+    },
+    "heroMedia": [],
+    "nav": {
+     "links": 6,
+     "fixed": false,
+     "height": 88,
+     "floatingPill": false,
+     "blur": false
+    },
+    "fontsLoaded": [
+     "plus jakarta sans",
+     "plus jakarta sans fallback"
+    ]
+   },
+   "layout": {
+    "viewport": {
+     "w": 1440,
+     "h": 900
+    },
+    "pageH": 4272,
+    "margins": {
+     "left": 120,
+     "right": 148
+    },
+    "sections": [
+     {
+      "sel": "section#download.relative.overflow-hidden",
+      "tag": "section",
+      "top": 88,
+      "height": 654,
+      "words": 53,
+      "media": 1,
+      "middle": 415,
+      "heading": {
+       "text": "A saúde do seu pet, sempre em dia",
+       "size": 66,
+       "tag": "h1"
+      },
+      "left": 120,
+      "right": 24,
+      "textLeft": 120,
+      "textRight": 699,
+      "fullBleed": false,
+      "footer": false,
+      "hero": true,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "section#recursos.px-6.py-16",
+      "tag": "section",
+      "top": 742,
+      "height": 615,
+      "words": 77,
+      "media": 0,
+      "middle": 0,
+      "heading": {
+       "text": "Tudo do seu pet em um só lugar",
+       "size": 54,
+       "tag": "h2"
+      },
+      "left": 148,
+      "right": 154,
+      "textLeft": 148,
+      "textRight": 154,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "section#como-funciona.bg-[#F6F1FD].px-6",
+      "tag": "section",
+      "top": 1357,
+      "height": 406,
+      "words": 53,
+      "media": 0,
+      "middle": 57,
+      "heading": {
+       "text": "Pronto em três passos",
+       "size": 46,
+       "tag": "h2"
+      },
+      "left": 188,
+      "right": 148,
+      "textLeft": 188,
+      "textRight": 148,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "section.bg-tinta.px-6",
+      "tag": "section",
+      "top": 1763,
+      "height": 596,
+      "words": 84,
+      "media": 0,
+      "middle": 261,
+      "heading": {
+       "text": "Clínicas, petshops, banho e tosa, passeio, creche ",
+       "size": 46,
+       "tag": "h2"
+      },
+      "left": 120,
+      "right": 241,
+      "textLeft": 120,
+      "textRight": 241,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "section#lojistas.px-6.py-14",
+      "tag": "section",
+      "top": 2359,
+      "height": 331,
+      "words": 17,
+      "media": 0,
+      "middle": 335,
+      "heading": {
+       "text": "Tem uma loja ou clínica?",
+       "size": 38,
+       "tag": "h2"
+      },
+      "left": 176,
+      "right": 248,
+      "textLeft": 176,
+      "textRight": 248,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "section.px-6.py-16",
+      "tag": "section",
+      "top": 2690,
+      "height": 588,
+      "words": 67,
+      "media": 0,
+      "middle": 0,
+      "heading": {
+       "text": "Comece grátis, evolua quando quiser",
+       "size": 46,
+       "tag": "h2"
+      },
+      "left": 304,
+      "right": 316,
+      "textLeft": 304,
+      "textRight": 316,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "section#perguntas.bg-suave.px-6",
+      "tag": "section",
+      "top": 3278,
+      "height": 633,
+      "words": 146,
+      "media": 0,
+      "middle": 0,
+      "heading": {
+       "text": "Perguntas frequentes",
+       "size": 44,
+       "tag": "h2"
+      },
+      "left": 296,
+      "right": 308,
+      "textLeft": 296,
+      "textRight": 308,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "footer.border-t.border-borda",
+      "tag": "footer",
+      "top": 3910,
+      "height": 362,
+      "words": 61,
+      "media": 0,
+      "middle": 266,
+      "heading": {
+       "text": "PetLive",
+       "size": 24,
+       "tag": "span"
+      },
+      "left": 120,
+      "right": 120,
+      "textLeft": 120,
+      "textRight": 120,
+      "fullBleed": false,
+      "footer": true,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     }
+    ],
+    "gaps": [],
+    "h1s": [
+     {
+      "text": "A saúde do seu pet, sempre em dia",
+      "size": 66,
+      "top": 228,
+      "firstScreen": true
+     }
+    ],
+    "edgeText": [],
+    "edges": [
+     {
+      "x": 296,
+      "n": 5
+     },
+     {
+      "x": 120,
+      "n": 4
+     },
+     {
+      "x": 758,
+      "n": 3
+     },
+     {
+      "x": 148,
+      "n": 2
+     },
+     {
+      "x": 176,
+      "n": 2
+     },
+     {
+      "x": 188,
+      "n": 2
+     },
+     {
+      "x": 453,
+      "n": 2
+     },
+     {
+      "x": 599,
+      "n": 2
+     },
+     {
+      "x": 1009,
+      "n": 2
+     },
+     {
+      "x": 1063,
+      "n": 2
+     }
+    ],
+    "leftBlocks": 26,
+    "bodySize": 16,
+    "stage": false,
+    "explains": true,
+    "slivers": [],
+    "voidShare": 0.2,
+    "voidBox": {
+     "x": 0,
+     "y": 600,
+     "w": 1440,
+     "h": 180
+    }
+   },
+   "app": null,
+   "consoleErrors": []
+  },
+  {
+   "width": 768,
+   "height": 1024,
+   "load": "load",
+   "screens": 6,
+   "filled": [
+    0.75,
+    0.81,
+    0.88,
+    0.57,
+    0.84,
+    0.91
+   ],
+   "motion": {
+    "elements": 1,
+    "css": 0,
+    "transitions": 0,
+    "scripted": 1,
+    "videos": 0,
+    "playingVideos": 0
+   },
+   "metrics": {
+    "viewport": {
+     "w": 768,
+     "h": 1024
+    },
+    "page": {
+     "height": 5255,
+     "screens": 5.1,
+     "words": 484,
+     "img": 0,
+     "video": 0,
+     "canvas": 0,
+     "svg": 12,
+     "sections": 7,
+     "horizontalOverflow": 0,
+     "overflowCulprits": [],
+     "uiFragments": 0,
+     "uiAbuse": false,
+     "realPictures": 0,
+     "videoCount": 0,
+     "uiPictures": 0,
+     "pictureSamples": [],
+     "blendText": 0,
+     "sideScrollers": 0,
+     "brokenImages": [],
+     "emoji": [
+      "✓"
+     ],
+     "videosNoPoster": 0
+    },
+    "hero": {
+     "text": "A saúde do seu pet, sempre em dia",
+     "words": 8,
+     "chars": 33,
+     "lines": 2,
+     "size": 66,
+     "vw": 8.6,
+     "font": "Plus Jakarta Sans",
+     "weight": 500,
+     "tracking": -0.025,
+     "leading": 1.06,
+     "upper": false,
+     "italic": false,
+     "mono": false,
+     "align": "left",
+     "position": "center",
+     "widthRatio": 0.88,
+     "top": 228,
+     "tag": "h1",
+     "kind": "heading"
+    },
+    "h1": {
+     "text": "A saúde do seu pet, sempre em dia",
+     "words": 8,
+     "lines": 2,
+     "size": 66,
+     "font": "Plus Jakarta Sans"
+    },
+    "headings": [
+     {
+      "text": "A saúde do seu pet, sempre em dia",
+      "words": 8,
+      "chars": 33,
+      "lines": 2,
+      "size": 66,
+      "vw": 8.6,
+      "font": "Plus Jakarta Sans",
+      "weight": 500,
+      "tracking": -0.025,
+      "leading": 1.06,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.88,
+      "top": 228,
+      "tag": "h1",
+      "kind": "heading"
+     },
+     {
+      "text": "Tudo do seu pet em um só lugar",
+      "words": 8,
+      "chars": 30,
+      "lines": 2,
+      "size": 54,
+      "vw": 7,
+      "font": "Plus Jakarta Sans",
+      "weight": 500,
+      "tracking": -0.025,
+      "leading": 1.11,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "center",
+      "position": "center",
+      "widthRatio": 0.88,
+      "top": 870,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Pronto em três passos",
+      "words": 4,
+      "chars": 21,
+      "lines": 1,
+      "size": 46,
+      "vw": 6,
+      "font": "Plus Jakarta Sans",
+      "weight": 500,
+      "tracking": -0.025,
+      "leading": 1.11,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "center",
+      "position": "center",
+      "widthRatio": 0.88,
+      "top": 1782,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Clínicas, petshops, banho e tosa, passeio, creche e hotelzinho",
+      "words": 9,
+      "chars": 62,
+      "lines": 3,
+      "size": 46,
+      "vw": 6,
+      "font": "Plus Jakarta Sans",
+      "weight": 500,
+      "tracking": -0.025,
+      "leading": 1.06,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.88,
+      "top": 2289,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Tem uma loja ou clínica? Venda e agende pelo PetLive.",
+      "words": 10,
+      "chars": 53,
+      "lines": 2,
+      "size": 38,
+      "vw": 4.9,
+      "font": "Plus Jakarta Sans",
+      "weight": 500,
+      "tracking": -0.025,
+      "leading": 1.25,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.66,
+      "top": 3327,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Comece grátis, evolua quando quiser",
+      "words": 5,
+      "chars": 35,
+      "lines": 2,
+      "size": 46,
+      "vw": 6,
+      "font": "Plus Jakarta Sans",
+      "weight": 500,
+      "tracking": -0.025,
+      "leading": 1.11,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "center",
+      "position": "center",
+      "widthRatio": 0.88,
+      "top": 3750,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Perguntas frequentes",
+      "words": 2,
+      "chars": 20,
+      "lines": 1,
+      "size": 44,
+      "vw": 5.7,
+      "font": "Plus Jakarta Sans",
+      "weight": 500,
+      "tracking": -0.025,
+      "leading": 1.11,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "center",
+      "position": "center",
+      "widthRatio": 0.88,
+      "top": 4356,
+      "tag": "h2",
+      "kind": "heading"
+     }
+    ],
+    "headingSummary": {
+     "count": 7,
+     "maxLines": 3,
+     "over2Lines": 1,
+     "statements": 0,
+     "centered": 4,
+     "medianWords": 8,
+     "mixedFontHeadings": 0
+    },
+    "type": {
+     "families": [
+      {
+       "family": "Plus Jakarta Sans",
+       "share": 1,
+       "mono": false
+      }
+     ],
+     "familyCount": 1,
+     "sizes": [
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      18,
+      20,
+      22,
+      24,
+      38,
+      44,
+      46,
+      54,
+      66
+     ],
+     "sizeCount": 16,
+     "notLoaded": [],
+     "body": {
+      "font": "Plus Jakarta Sans",
+      "size": 16,
+      "leading": 1.63,
+      "weight": 400,
+      "tracking": 0,
+      "contrast": 5.6
+     },
+     "measureChars": 78,
+     "max": {
+      "size": 66,
+      "vw": 8.6,
+      "font": "Plus Jakarta Sans",
+      "text": "A saúde do seu pet, sempre em dia"
+     },
+     "monoShare": 0,
+     "monoProseShare": 0,
+     "monoFamilies": [],
+     "monoSamples": [],
+     "microLabels": 0,
+     "microLabelShare": 0,
+     "microSamples": [],
+     "upperShare": 0,
+     "centerShare": 0.08,
+     "smallText": 7
+    },
+    "eyebrows": [
+     {
+      "text": "Grátis para começar",
+      "above": "A saúde do seu pet, sempre em dia",
+      "upper": false,
+      "tracked": false,
+      "mono": false,
+      "pill": true,
+      "size": 13,
+      "top": 168
+     },
+     {
+      "text": "Recursos",
+      "above": "Tudo do seu pet em um só lugar",
+      "upper": false,
+      "tracked": false,
+      "mono": false,
+      "pill": false,
+      "size": 14,
+      "top": 838
+     },
+     {
+      "text": "Como funciona",
+      "above": "Pronto em três passos",
+      "upper": false,
+      "tracked": false,
+      "mono": false,
+      "pill": false,
+      "size": 14,
+      "top": 1750
+     },
+     {
+      "text": "Para lojas e clínicas",
+      "above": "Tem uma loja ou clínica? Venda e agende ",
+      "upper": false,
+      "tracked": false,
+      "mono": false,
+      "pill": false,
+      "size": 14,
+      "top": 3299
+     },
+     {
+      "text": "Planos",
+      "above": "Comece grátis, evolua quando quiser",
+      "upper": false,
+      "tracked": false,
+      "mono": false,
+      "pill": false,
+      "size": 14,
+      "top": 3718
+     }
+    ],
+    "numbered": [],
+    "color": {
+     "bodyBg": "#ffffff",
+     "bodyBgHsl": {
+      "h": 0,
+      "s": 0,
+      "l": 1
+     },
+     "dark": false,
+     "sectionBgs": [
+      {
+       "color": "#a9dcf6",
+       "top": 88,
+       "hsl": {
+        "h": 200,
+        "s": 0.81,
+        "l": 0.81
+       }
+      },
+      {
+       "color": "#f6f1fd",
+       "top": 1654,
+       "hsl": {
+        "h": 265,
+        "s": 0.75,
+        "l": 0.97
+       }
+      },
+      {
+       "color": "#111111",
+       "top": 2161,
+       "hsl": {
+        "h": 0,
+        "s": 0,
+        "l": 0.07
+       }
+      },
+      {
+       "color": "#f3f5f8",
+       "top": 4260,
+       "hsl": {
+        "h": 216,
+        "s": 0.26,
+        "l": 0.96
+       }
+      }
+     ],
+     "textColors": [
+      {
+       "color": "#5e6878",
+       "share": 0.36
+      },
+      {
+       "color": "#111111",
+       "share": 0.27
+      },
+      {
+       "color": "#5b3c8f",
+       "share": 0.1
+      },
+      {
+       "color": "#ffffff",
+       "share": 0.08
+      },
+      {
+       "color": "#1e4a63",
+       "share": 0.07
+      }
+     ],
+     "button": {
+      "bg": "#111111",
+      "hsl": {
+       "h": 0,
+       "s": 0,
+       "l": 0.07
+      },
+      "fg": "#ffffff"
+     },
+     "lowContrast": []
+    },
+    "buttons": {
+     "count": 4,
+     "inHero": 3,
+     "radius": "pill",
+     "height": 44,
+     "withShadow": 0,
+     "withGradient": 0,
+     "mono": 0,
+     "upper": 0,
+     "heroLabels": [
+      "Baixar o app",
+      "Só essenciais",
+      "Aceitar"
+     ]
+    },
+    "surfaces": {
+     "shadowStatic": 1,
+     "shadowOverlay": 1,
+     "shadowSamples": [
+      "nav.absolute.right-0 → rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0"
+     ],
+     "gradients": 0,
+     "scrims": 0,
+     "gradientSamples": [],
+     "gradientText": 0,
+     "hairlines": 2,
+     "hairlineSamples": [
+      "footer.border-t.border-borda 768px",
+      "div.border-t.border-borda 768px"
+     ],
+     "outlinedBoxes": 2,
+     "dashed": 0,
+     "blurred": 0,
+     "roundedBoxes": 10,
+     "boxRadius": 36,
+     "squareMedia": 0,
+     "roundedMedia": 0,
+     "mediaRadius": 0,
+     "textShadow": 0,
+     "cardRows": [
+      {
+       "count": 4,
+       "iconTopped": true,
+       "rounded": true,
+       "top": 1038
+      }
+     ]
+    },
+    "heroMedia": [
+     {
+      "type": "svg",
+      "ratio": 0.09
+     }
+    ],
+    "nav": {
+     "links": 3,
+     "fixed": false,
+     "height": 88,
+     "floatingPill": false,
+     "blur": false
+    },
+    "fontsLoaded": [
+     "plus jakarta sans",
+     "plus jakarta sans fallback"
+    ]
+   },
+   "layout": {
+    "viewport": {
+     "w": 768,
+     "h": 1024
+    },
+    "pageH": 5255,
+    "margins": {
+     "left": 48,
+     "right": 48
+    },
+    "sections": [
+     {
+      "sel": "section#download.relative.overflow-hidden",
+      "tag": "section",
+      "top": 88,
+      "height": 654,
+      "words": 53,
+      "media": 1,
+      "middle": 0,
+      "heading": {
+       "text": "A saúde do seu pet, sempre em dia",
+       "size": 66,
+       "tag": "h1"
+      },
+      "left": 48,
+      "right": 24,
+      "textLeft": 48,
+      "textRight": 99,
+      "fullBleed": false,
+      "footer": false,
+      "hero": true,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "section#recursos.px-6.py-16",
+      "tag": "section",
+      "top": 742,
+      "height": 912,
+      "words": 77,
+      "media": 0,
+      "middle": 0,
+      "heading": {
+       "text": "Tudo do seu pet em um só lugar",
+       "size": 54,
+       "tag": "h2"
+      },
+      "left": 68,
+      "right": 68,
+      "textLeft": 68,
+      "textRight": 68,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "section#como-funciona.bg-[#F6F1FD].px-6",
+      "tag": "section",
+      "top": 1654,
+      "height": 507,
+      "words": 53,
+      "media": 0,
+      "middle": 0,
+      "heading": {
+       "text": "Pronto em três passos",
+       "size": 46,
+       "tag": "h2"
+      },
+      "left": 116,
+      "right": 48,
+      "textLeft": 116,
+      "textRight": 48,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "section.bg-tinta.px-6",
+      "tag": "section",
+      "top": 2161,
+      "height": 1034,
+      "words": 84,
+      "media": 0,
+      "middle": 0,
+      "heading": {
+       "text": "Clínicas, petshops, banho e tosa, passeio, creche ",
+       "size": 46,
+       "tag": "h2"
+      },
+      "left": 48,
+      "right": 148,
+      "textLeft": 48,
+      "textRight": 148,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "section#lojistas.px-6.py-14",
+      "tag": "section",
+      "top": 3195,
+      "height": 427,
+      "words": 17,
+      "media": 0,
+      "middle": 0,
+      "heading": {
+       "text": "Tem uma loja ou clínica?",
+       "size": 38,
+       "tag": "h2"
+      },
+      "left": 104,
+      "right": 155,
+      "textLeft": 104,
+      "textRight": 155,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "section.px-6.py-16",
+      "tag": "section",
+      "top": 3622,
+      "height": 639,
+      "words": 67,
+      "media": 0,
+      "middle": 0,
+      "heading": {
+       "text": "Comece grátis, evolua quando quiser",
+       "size": 46,
+       "tag": "h2"
+      },
+      "left": 64,
+      "right": 64,
+      "textLeft": 64,
+      "textRight": 64,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "section#perguntas.bg-suave.px-6",
+      "tag": "section",
+      "top": 4260,
+      "height": 633,
+      "words": 146,
+      "media": 0,
+      "middle": 0,
+      "heading": {
+       "text": "Perguntas frequentes",
+       "size": 44,
+       "tag": "h2"
+      },
+      "left": 72,
+      "right": 75,
+      "textLeft": 72,
+      "textRight": 75,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "footer.border-t.border-borda",
+      "tag": "footer",
+      "top": 4893,
+      "height": 362,
+      "words": 61,
+      "media": 0,
+      "middle": 96,
+      "heading": {
+       "text": "PetLive",
+       "size": 24,
+       "tag": "span"
+      },
+      "left": 48,
+      "right": 48,
+      "textLeft": 48,
+      "textRight": 48,
+      "fullBleed": false,
+      "footer": true,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     }
+    ],
+    "gaps": [],
+    "h1s": [
+     {
+      "text": "A saúde do seu pet, sempre em dia",
+      "size": 66,
+      "top": 228,
+      "firstScreen": true
+     }
+    ],
+    "edgeText": [],
+    "edges": [
+     {
+      "x": 72,
+      "n": 9
+     },
+     {
+      "x": 422,
+      "n": 5
+     },
+     {
+      "x": 48,
+      "n": 4
+     },
+     {
+      "x": 104,
+      "n": 2
+     },
+     {
+      "x": 116,
+      "n": 2
+     },
+     {
+      "x": 351,
+      "n": 2
+     },
+     {
+      "x": 585,
+      "n": 2
+     }
+    ],
+    "leftBlocks": 26,
+    "bodySize": 16,
+    "stage": false,
+    "explains": true,
+    "slivers": [],
+    "voidShare": 0,
+    "voidBox": null
+   },
+   "app": null,
+   "consoleErrors": []
+  },
+  {
+   "width": 390,
+   "height": 844,
+   "load": "load",
+   "screens": 8,
+   "filled": [
+    0.64,
+    0.59,
+    0.73,
+    0.84,
+    0.54,
+    0.47,
+    0.73,
+    0.86
+   ],
+   "motion": {
+    "elements": 1,
+    "css": 0,
+    "transitions": 0,
+    "scripted": 1,
+    "videos": 0,
+    "playingVideos": 0
+   },
+   "metrics": {
+    "viewport": {
+     "w": 390,
+     "h": 844
+    },
+    "page": {
+     "height": 6617,
+     "screens": 7.8,
+     "words": 481,
+     "img": 0,
+     "video": 0,
+     "canvas": 0,
+     "svg": 12,
+     "sections": 7,
+     "horizontalOverflow": 0,
+     "overflowCulprits": [],
+     "uiFragments": 0,
+     "uiAbuse": false,
+     "realPictures": 0,
+     "videoCount": 0,
+     "uiPictures": 0,
+     "pictureSamples": [],
+     "blendText": 0,
+     "sideScrollers": 0,
+     "brokenImages": [],
+     "emoji": [
+      "✓"
+     ],
+     "videosNoPoster": 0
+    },
+    "hero": {
+     "text": "A saúde do seu pet, sempre em dia",
+     "words": 8,
+     "chars": 33,
+     "lines": 3,
+     "size": 48,
+     "vw": 12.3,
+     "font": "Plus Jakarta Sans",
+     "weight": 500,
+     "tracking": -0.025,
+     "leading": 1.06,
+     "upper": false,
+     "italic": false,
+     "mono": false,
+     "align": "left",
+     "position": "center",
+     "widthRatio": 0.88,
+     "top": 204,
+     "tag": "h1",
+     "kind": "heading"
+    },
+    "h1": {
+     "text": "A saúde do seu pet, sempre em dia",
+     "words": 8,
+     "lines": 3,
+     "size": 48,
+     "font": "Plus Jakarta Sans"
+    },
+    "headings": [
+     {
+      "text": "PetLive",
+      "words": 1,
+      "chars": 7,
+      "lines": 1,
+      "size": 24,
+      "vw": 6.2,
+      "font": "Plus Jakarta Sans",
+      "weight": 800,
+      "tracking": -0.025,
+      "leading": 1.33,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.34,
+      "top": 24,
+      "tag": "a",
+      "kind": "heading"
+     },
+     {
+      "text": "A saúde do seu pet, sempre em dia",
+      "words": 8,
+      "chars": 33,
+      "lines": 3,
+      "size": 48,
+      "vw": 12.3,
+      "font": "Plus Jakarta Sans",
+      "weight": 500,
+      "tracking": -0.025,
+      "leading": 1.06,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.88,
+      "top": 204,
+      "tag": "h1",
+      "kind": "heading"
+     },
+     {
+      "text": "Tudo do seu pet em um só lugar",
+      "words": 8,
+      "chars": 30,
+      "lines": 2,
+      "size": 36,
+      "vw": 9.2,
+      "font": "Plus Jakarta Sans",
+      "weight": 500,
+      "tracking": -0.025,
+      "leading": 1.11,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "center",
+      "position": "center",
+      "widthRatio": 0.88,
+      "top": 895,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Carteira de saúde",
+      "words": 3,
+      "chars": 17,
+      "lines": 1,
+      "size": 22,
+      "vw": 5.6,
+      "font": "Plus Jakarta Sans",
+      "weight": 800,
+      "tracking": 0,
+      "leading": 1.5,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.73,
+      "top": 1131,
+      "tag": "h3",
+      "kind": "heading"
+     },
+     {
+      "text": "Lembretes que avisam",
+      "words": 3,
+      "chars": 20,
+      "lines": 1,
+      "size": 22,
+      "vw": 5.6,
+      "font": "Plus Jakarta Sans",
+      "weight": 800,
+      "tracking": 0,
+      "leading": 1.5,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.73,
+      "top": 1402,
+      "tag": "h3",
+      "kind": "heading"
+     },
+     {
+      "text": "Mapa pet",
+      "words": 2,
+      "chars": 8,
+      "lines": 1,
+      "size": 22,
+      "vw": 5.6,
+      "font": "Plus Jakarta Sans",
+      "weight": 800,
+      "tracking": 0,
+      "leading": 1.5,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.73,
+      "top": 1672,
+      "tag": "h3",
+      "kind": "heading"
+     },
+     {
+      "text": "Loja e serviços",
+      "words": 3,
+      "chars": 15,
+      "lines": 1,
+      "size": 22,
+      "vw": 5.6,
+      "font": "Plus Jakarta Sans",
+      "weight": 800,
+      "tracking": 0,
+      "leading": 1.5,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.73,
+      "top": 1942,
+      "tag": "h3",
+      "kind": "heading"
+     },
+     {
+      "text": "Pronto em três passos",
+      "words": 4,
+      "chars": 21,
+      "lines": 2,
+      "size": 36,
+      "vw": 9.2,
+      "font": "Plus Jakarta Sans",
+      "weight": 500,
+      "tracking": -0.025,
+      "leading": 1.11,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "center",
+      "position": "center",
+      "widthRatio": 0.88,
+      "top": 2244,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Clínicas, petshops, banho e tosa, passeio, creche e hotelzinho",
+      "words": 9,
+      "chars": 62,
+      "lines": 4,
+      "size": 36,
+      "vw": 9.2,
+      "font": "Plus Jakarta Sans",
+      "weight": 500,
+      "tracking": -0.025,
+      "leading": 1.06,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.88,
+      "top": 2864,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Tem uma loja ou clínica? Venda e agende pelo PetLive.",
+      "words": 10,
+      "chars": 53,
+      "lines": 4,
+      "size": 30,
+      "vw": 7.7,
+      "font": "Plus Jakarta Sans",
+      "weight": 500,
+      "tracking": -0.025,
+      "leading": 1.25,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.71,
+      "top": 3955,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Comece grátis, evolua quando quiser",
+      "words": 5,
+      "chars": 35,
+      "lines": 3,
+      "size": 36,
+      "vw": 9.2,
+      "font": "Plus Jakarta Sans",
+      "weight": 500,
+      "tracking": -0.025,
+      "leading": 1.11,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "center",
+      "position": "center",
+      "widthRatio": 0.88,
+      "top": 4401,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Grátis",
+      "words": 1,
+      "chars": 6,
+      "lines": 1,
+      "size": 24,
+      "vw": 6.2,
+      "font": "Plus Jakarta Sans",
+      "weight": 800,
+      "tracking": 0,
+      "leading": 1.33,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.71,
+      "top": 4593,
+      "tag": "h3",
+      "kind": "heading"
+     },
+     {
+      "text": "Premium",
+      "words": 1,
+      "chars": 7,
+      "lines": 1,
+      "size": 24,
+      "vw": 6.2,
+      "font": "Plus Jakarta Sans",
+      "weight": 800,
+      "tracking": 0,
+      "leading": 1.33,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.27,
+      "top": 4890,
+      "tag": "h3",
+      "kind": "heading"
+     },
+     {
+      "text": "Perguntas frequentes",
+      "words": 2,
+      "chars": 20,
+      "lines": 2,
+      "size": 36,
+      "vw": 9.2,
+      "font": "Plus Jakarta Sans",
+      "weight": 500,
+      "tracking": -0.025,
+      "leading": 1.11,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "center",
+      "position": "center",
+      "widthRatio": 0.88,
+      "top": 5258,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "+",
+      "words": 1,
+      "chars": 1,
+      "lines": 1,
+      "size": 24,
+      "vw": 6.2,
+      "font": "Plus Jakarta Sans",
+      "weight": 500,
+      "tracking": 0,
+      "leading": 1.33,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "right",
+      "widthRatio": 0.04,
+      "top": 5394,
+      "tag": "span",
+      "kind": "heading"
+     },
+     {
+      "text": "+",
+      "words": 1,
+      "chars": 1,
+      "lines": 1,
+      "size": 24,
+      "vw": 6.2,
+      "font": "Plus Jakarta Sans",
+      "weight": 500,
+      "tracking": 0,
+      "leading": 1.33,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "right",
+      "widthRatio": 0.04,
+      "top": 5478,
+      "tag": "span",
+      "kind": "heading"
+     },
+     {
+      "text": "+",
+      "words": 1,
+      "chars": 1,
+      "lines": 1,
+      "size": 24,
+      "vw": 6.2,
+      "font": "Plus Jakarta Sans",
+      "weight": 500,
+      "tracking": 0,
+      "leading": 1.33,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "right",
+      "widthRatio": 0.04,
+      "top": 5570,
+      "tag": "span",
+      "kind": "heading"
+     },
+     {
+      "text": "+",
+      "words": 1,
+      "chars": 1,
+      "lines": 1,
+      "size": 24,
+      "vw": 6.2,
+      "font": "Plus Jakarta Sans",
+      "weight": 500,
+      "tracking": 0,
+      "leading": 1.33,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "right",
+      "widthRatio": 0.04,
+      "top": 5654,
+      "tag": "span",
+      "kind": "heading"
+     },
+     {
+      "text": "PetLive",
+      "words": 1,
+      "chars": 7,
+      "lines": 1,
+      "size": 24,
+      "vw": 6.2,
+      "font": "Plus Jakarta Sans",
+      "weight": 800,
+      "tracking": -0.025,
+      "leading": 1.33,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.88,
+      "top": 5903,
+      "tag": "a",
+      "kind": "heading"
+     }
+    ],
+    "headingSummary": {
+     "count": 19,
+     "maxLines": 4,
+     "over2Lines": 4,
+     "statements": 0,
+     "centered": 4,
+     "medianWords": 2,
+     "mixedFontHeadings": 0
+    },
+    "type": {
+     "families": [
+      {
+       "family": "Plus Jakarta Sans",
+       "share": 1,
+       "mono": false
+      }
+     ],
+     "familyCount": 1,
+     "sizes": [
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      18,
+      20,
+      22,
+      24,
+      30,
+      36,
+      48
+     ],
+     "sizeCount": 14,
+     "notLoaded": [],
+     "body": {
+      "font": "Plus Jakarta Sans",
+      "size": 16,
+      "leading": 1.63,
+      "weight": 400,
+      "tracking": 0,
+      "contrast": 5.6
+     },
+     "measureChars": 37,
+     "max": {
+      "size": 48,
+      "vw": 12.3,
+      "font": "Plus Jakarta Sans",
+      "text": "A saúde do seu pet, sempre em dia"
+     },
+     "monoShare": 0,
+     "monoProseShare": 0,
+     "monoFamilies": [],
+     "monoSamples": [],
+     "microLabels": 0,
+     "microLabelShare": 0,
+     "microSamples": [],
+     "upperShare": 0,
+     "centerShare": 0.08,
+     "smallText": 7
+    },
+    "eyebrows": [
+     {
+      "text": "Grátis para começar",
+      "above": "A saúde do seu pet, sempre em dia",
+      "upper": false,
+      "tracked": false,
+      "mono": false,
+      "pill": true,
+      "size": 13,
+      "top": 144
+     },
+     {
+      "text": "Recursos",
+      "above": "Tudo do seu pet em um só lugar",
+      "upper": false,
+      "tracked": false,
+      "mono": false,
+      "pill": false,
+      "size": 14,
+      "top": 863
+     },
+     {
+      "text": "Como funciona",
+      "above": "Pronto em três passos",
+      "upper": false,
+      "tracked": false,
+      "mono": false,
+      "pill": false,
+      "size": 14,
+      "top": 2212
+     },
+     {
+      "text": "Para lojas e clínicas",
+      "above": "Tem uma loja ou clínica? Venda e agende ",
+      "upper": false,
+      "tracked": false,
+      "mono": false,
+      "pill": false,
+      "size": 14,
+      "top": 3927
+     },
+     {
+      "text": "Planos",
+      "above": "Comece grátis, evolua quando quiser",
+      "upper": false,
+      "tracked": false,
+      "mono": false,
+      "pill": false,
+      "size": 14,
+      "top": 4369
+     }
+    ],
+    "numbered": [],
+    "color": {
+     "bodyBg": "#ffffff",
+     "bodyBgHsl": {
+      "h": 0,
+      "s": 0,
+      "l": 1
+     },
+     "dark": false,
+     "sectionBgs": [
+      {
+       "color": "#a9dcf6",
+       "top": 88,
+       "hsl": {
+        "h": 200,
+        "s": 0.81,
+        "l": 0.81
+       }
+      },
+      {
+       "color": "#f6f1fd",
+       "top": 2148,
+       "hsl": {
+        "h": 265,
+        "s": 0.75,
+        "l": 0.97
+       }
+      },
+      {
+       "color": "#111111",
+       "top": 2748,
+       "hsl": {
+        "h": 0,
+        "s": 0,
+        "l": 0.07
+       }
+      },
+      {
+       "color": "#ffffff",
+       "top": 3370,
+       "hsl": {
+        "h": 0,
+        "s": 0,
+        "l": 1
+       }
+      },
+      {
+       "color": "#ebddfb",
+       "top": 3879,
+       "hsl": {
+        "h": 268,
+        "s": 0.79,
+        "l": 0.93
+       }
+      },
+      {
+       "color": "#f3f5f8",
+       "top": 5194,
+       "hsl": {
+        "h": 216,
+        "s": 0.26,
+        "l": 0.96
+       }
+      }
+     ],
+     "textColors": [
+      {
+       "color": "#5e6878",
+       "share": 0.36
+      },
+      {
+       "color": "#111111",
+       "share": 0.27
+      },
+      {
+       "color": "#5b3c8f",
+       "share": 0.1
+      },
+      {
+       "color": "#ffffff",
+       "share": 0.08
+      },
+      {
+       "color": "#1e4a63",
+       "share": 0.07
+      }
+     ],
+     "button": {
+      "bg": "#111111",
+      "hsl": {
+       "h": 0,
+       "s": 0,
+       "l": 0.07
+      },
+      "fg": "#ffffff"
+     },
+     "lowContrast": []
+    },
+    "buttons": {
+     "count": 3,
+     "inHero": 2,
+     "radius": "pill",
+     "height": 44,
+     "withShadow": 0,
+     "withGradient": 0,
+     "mono": 0,
+     "upper": 0,
+     "heroLabels": [
+      "Só essenciais",
+      "Aceitar"
+     ]
+    },
+    "surfaces": {
+     "shadowStatic": 1,
+     "shadowOverlay": 1,
+     "shadowSamples": [
+      "nav.absolute.right-0 → rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0"
+     ],
+     "gradients": 0,
+     "scrims": 0,
+     "gradientSamples": [],
+     "gradientText": 0,
+     "hairlines": 2,
+     "hairlineSamples": [
+      "footer.border-t.border-borda 390px",
+      "div.border-t.border-borda 390px"
+     ],
+     "outlinedBoxes": 2,
+     "dashed": 0,
+     "blurred": 0,
+     "roundedBoxes": 12,
+     "boxRadius": 36,
+     "squareMedia": 0,
+     "roundedMedia": 0,
+     "mediaRadius": 0,
+     "textShadow": 0,
+     "cardRows": [
+      {
+       "count": 4,
+       "iconTopped": true,
+       "rounded": true,
+       "top": 1023
+      }
+     ]
+    },
+    "heroMedia": [],
+    "nav": {
+     "links": 2,
+     "fixed": false,
+     "height": 88,
+     "floatingPill": false,
+     "blur": false
+    },
+    "fontsLoaded": [
+     "plus jakarta sans",
+     "plus jakarta sans fallback"
+    ]
+   },
+   "layout": {
+    "viewport": {
+     "w": 390,
+     "h": 844
+    },
+    "pageH": 6617,
+    "margins": {
+     "left": 24,
+     "right": 30
+    },
+    "sections": [
+     {
+      "sel": "section#download.relative.overflow-hidden",
+      "tag": "section",
+      "top": 88,
+      "height": 711,
+      "words": 53,
+      "media": 0,
+      "middle": 0,
+      "heading": {
+       "text": "A saúde do seu pet, sempre em dia",
+       "size": 48,
+       "tag": "h1"
+      },
+      "left": 24,
+      "right": 36,
+      "textLeft": 24,
+      "textRight": 36,
+      "fullBleed": false,
+      "footer": false,
+      "hero": true,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "section#recursos.px-6.py-16",
+      "tag": "section",
+      "top": 799,
+      "height": 1349,
+      "words": 77,
+      "media": 0,
+      "middle": 0,
+      "heading": {
+       "text": "Tudo do seu pet em um só lugar",
+       "size": 36,
+       "tag": "h2"
+      },
+      "left": 36,
+      "right": 36,
+      "textLeft": 36,
+      "textRight": 36,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "section#como-funciona.bg-[#F6F1FD].px-6",
+      "tag": "section",
+      "top": 2148,
+      "height": 600,
+      "words": 53,
+      "media": 0,
+      "middle": 0,
+      "heading": {
+       "text": "Pronto em três passos",
+       "size": 36,
+       "tag": "h2"
+      },
+      "left": 75,
+      "right": 25,
+      "textLeft": 75,
+      "textRight": 25,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "section.bg-tinta.px-6",
+      "tag": "section",
+      "top": 2748,
+      "height": 1075,
+      "words": 84,
+      "media": 0,
+      "middle": 0,
+      "heading": {
+       "text": "Clínicas, petshops, banho e tosa, passeio, creche ",
+       "size": 36,
+       "tag": "h2"
+      },
+      "left": 24,
+      "right": 32,
+      "textLeft": 24,
+      "textRight": 32,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "section#lojistas.px-6.py-14",
+      "tag": "section",
+      "top": 3823,
+      "height": 482,
+      "words": 17,
+      "media": 0,
+      "middle": 0,
+      "heading": {
+       "text": "Tem uma loja ou clínica?",
+       "size": 30,
+       "tag": "h2"
+      },
+      "left": 56,
+      "right": 113,
+      "textLeft": 56,
+      "textRight": 113,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "section.px-6.py-16",
+      "tag": "section",
+      "top": 4305,
+      "height": 889,
+      "words": 67,
+      "media": 0,
+      "middle": 0,
+      "heading": {
+       "text": "Comece grátis, evolua quando quiser",
+       "size": 36,
+       "tag": "h2"
+      },
+      "left": 56,
+      "right": 68,
+      "textLeft": 56,
+      "textRight": 68,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "section#perguntas.bg-suave.px-6",
+      "tag": "section",
+      "top": 5194,
+      "height": 652,
+      "words": 146,
+      "media": 0,
+      "middle": 0,
+      "heading": {
+       "text": "Perguntas frequentes",
+       "size": 36,
+       "tag": "h2"
+      },
+      "left": 48,
+      "right": 48,
+      "textLeft": 48,
+      "textRight": 48,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "footer.border-t.border-borda",
+      "tag": "footer",
+      "top": 5846,
+      "height": 770,
+      "words": 61,
+      "media": 0,
+      "middle": 0,
+      "heading": {
+       "text": "PetLive",
+       "size": 24,
+       "tag": "span"
+      },
+      "left": 24,
+      "right": 30,
+      "textLeft": 24,
+      "textRight": 30,
+      "fullBleed": false,
+      "footer": true,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     }
+    ],
+    "gaps": [],
+    "h1s": [
+     {
+      "text": "A saúde do seu pet, sempre em dia",
+      "size": 48,
+      "top": 204,
+      "firstScreen": true
+     }
+    ],
+    "edgeText": [],
+    "edges": [
+     {
+      "x": 48,
+      "n": 16
+     },
+     {
+      "x": 92,
+      "n": 6
+     },
+     {
+      "x": 24,
+      "n": 4
+     }
+    ],
+    "leftBlocks": 26,
+    "bodySize": 16,
+    "stage": false,
+    "explains": true,
+    "slivers": [],
+    "voidShare": 0,
+    "voidBox": null
+   },
+   "app": null,
+   "consoleErrors": []
+  }
+ ],
+ "findings": [
+  {
+   "level": "FAIL",
+   "id": "headline-lines",
+   "width": 1440,
+   "message": "1 headline(s) wrap past two lines at 1440px: \"Clínicas, petshops, banho e tosa, passeio, crech\" → 3 lines (9 words, 46px)",
+   "fix": "Cut words first (a headline is a title, not a sentence). Then give it a wider measure. Lower the size only as a last resort and never below the scale you chose. A real statement paragraph belongs in a <p> or <blockquote> at 36px or less."
+  },
+  {
+   "level": "FAIL",
+   "id": "eyebrow",
+   "width": 1440,
+   "message": "5 eyebrow/kicker label(s) above headings: \"Grátis para começar\" (pill) above \"A saúde do seu pet, sempre em dia\"; \"Recursos\" above \"Tudo do seu pet em um só lugar\"; \"Como funciona\" above \"Pronto em três passos\"; \"Para lojas e clínicas\" above \"Tem uma loja ou clínica? Venda e agende \"; \"Planos\" above \"Comece grátis, evolua quando quiser\"",
+   "fix": "Delete them. If the label carried real information, fold it into the headline or the supporting sentence.",
+   "alsoAt": [
+    768,
+    390
+   ]
+  },
+  {
+   "level": "FAIL",
+   "id": "emoji",
+   "width": 1440,
+   "message": "Emoji in the page: ✓",
+   "fix": "Remove. Use words or real imagery.",
+   "alsoAt": [
+    768,
+    390
+   ]
+  },
+  {
+   "level": "FAIL",
+   "id": "hairline",
+   "width": 1440,
+   "message": "2 thin rule(s)/divider line(s): footer.border-t.border-borda 1440px | div.border-t.border-borda 1440px",
+   "fix": "Delete. Separate with space, a tone change, or scale. Lines are only for real tables and form fields.",
+   "alsoAt": [
+    768,
+    390
+   ]
+  },
+  {
+   "level": "WARN",
+   "id": "outlined-box",
+   "width": 1440,
+   "message": "1 box(es) drawn with a 1px outline.",
+   "fix": "Prefer a filled surface or no box.",
+   "alsoAt": [
+    768,
+    390
+   ]
+  },
+  {
+   "level": "FAIL",
+   "id": "icon-cards",
+   "width": 1440,
+   "message": "1 row(s) of identical cards each topped with a small icon (4 cards).",
+   "fix": "Replace with one composed section from the direction: a narrative split, a list set in large type, or real imagery per item.",
+   "alsoAt": [
+    768,
+    390
+   ]
+  },
+  {
+   "level": "WARN",
+   "id": "size-count",
+   "width": 1440,
+   "message": "16 different font sizes (10, 11, 12, 13, 14, 15, 16, 18, 20, 22, 24, 38, 44, 46, 54, 66).",
+   "fix": "A page needs about five: display, heading, lead, body, small.",
+   "alsoAt": [
+    768,
+    390
+   ]
+  },
+  {
+   "level": "WARN",
+   "id": "grey-body",
+   "width": 1440,
+   "message": "The running text is a soft grey on its ground (5.6:1).",
+   "fix": "Set body copy in the full ink (7:1 or more). Keep the muted ink for secondary notes; pages read thin and unfinished when everything is grey.",
+   "alsoAt": [
+    768,
+    390
+   ]
+  },
+  {
+   "level": "FAIL",
+   "id": "few-pictures",
+   "width": 1440,
+   "message": "Only 0 picture(s) on the page (0 photographs, footage or raster images, 0 interface fragments). Drawings in SVG do not count.",
+   "fix": "Find real pictures of the subject's world with scripts/assets.mjs (photographs, archival images, maps, engravings, footage), download them to assets/ and give them room: a hero picture, one per section that has a subject, a full-width band. At least four, usually six to twelve."
+  },
+  {
+   "level": "WARN",
+   "id": "no-footage",
+   "width": 1440,
+   "message": "No video anywhere on the page.",
+   "fix": "Look for one honest clip with scripts/assets.mjs --video (the place, the material, the process) and use it as a muted loop with a poster frame. Defend its absence only if no clip fits the subject."
+  },
+  {
+   "level": "WARN",
+   "id": "measure",
+   "width": 1440,
+   "message": "Longest paragraph runs about 106 characters per line.",
+   "fix": "Cap paragraphs at 45–75 characters (max-width: 60ch)."
+  },
+  {
+   "level": "FAIL",
+   "id": "small-text",
+   "width": 1440,
+   "message": "7 text blocks under 13px.",
+   "fix": "Nothing meant to be read goes below 13px.",
+   "alsoAt": [
+    768,
+    390
+   ]
+  },
+  {
+   "level": "WARN",
+   "id": "off-centre",
+   "width": 1440,
+   "message": "The margins differ: 120px on the left, 148px on the right, at 1440px.",
+   "fix": "Put the navigation and the content on one pair of margins; check for padding on one side only, a scrollbar gutter, or a header on another inset than the page."
+  },
+  {
+   "level": "WARN",
+   "id": "ragged-edges",
+   "width": 1440,
+   "message": "Left-aligned text starts at 10 different lines (296px, 120px, 758px, 148px, 176px, 188px, 453px); the three most used hold only 46% of it.",
+   "fix": "Pick two or three anchor lines from the grid and start every heading and paragraph on one of them."
+  },
+  {
+   "level": "FAIL",
+   "id": "still-page",
+   "width": 1440,
+   "message": "Only 1 element(s) moved while the page loaded and scrolled.",
+   "fix": "Build the motion layer (SKILL.md step 9, references/motion.md): the signature move, an entrance for the parts of every section, feedback on every control, and one moving picture. Transform and opacity only, with a reduced-motion fallback."
+  },
+  {
+   "level": "FAIL",
+   "id": "headline-lines",
+   "width": 768,
+   "message": "1 headline(s) wrap past two lines at 768px: \"Clínicas, petshops, banho e tosa, passeio, crech\" → 3 lines (9 words, 46px)",
+   "fix": "Cut words first (a headline is a title, not a sentence). Then give it a wider measure. Lower the size only as a last resort and never below the scale you chose. A real statement paragraph belongs in a <p> or <blockquote> at 32px or less."
+  },
+  {
+   "level": "FAIL",
+   "id": "shadow",
+   "width": 768,
+   "message": "1 box-shadow(s) on elements at rest: nav.absolute.right-0 → rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0",
+   "fix": "Remove. Separate surfaces with a tone step or space. Shadows are for things that really float (menus, dialogs, sticky bars).",
+   "alsoAt": [
+    390
+   ]
+  },
+  {
+   "level": "FAIL",
+   "id": "covered-text",
+   "width": 768,
+   "message": "Large text lies under another element at some scroll position: \"Tudo do seu pet em um só lugar\" (screen 1, 75% hidden)",
+   "fix": "Nothing may sit on top of a headline or statement. Move the picture, shorten the pinned run, or raise the text above it (z-index) and give it a ground.",
+   "alsoAt": [
+    390
+   ]
+  },
+  {
+   "level": "FAIL",
+   "id": "headline-lines",
+   "width": 390,
+   "message": "4 headline(s) wrap past two lines at 390px: \"A saúde do seu pet, sempre em dia\" → 3 lines (8 words, 48px); \"Clínicas, petshops, banho e tosa, passeio, crech\" → 4 lines (9 words, 36px); \"Tem uma loja ou clínica? Venda e agende pelo Pet\" → 4 lines (10 words, 30px); \"Comece grátis, evolua quando quiser\" → 3 lines (5 words, 36px)",
+   "fix": "Cut words first (a headline is a title, not a sentence). Then give it a wider measure. Lower the size only as a last resort and never below the scale you chose. A real statement paragraph belongs in a <p> or <blockquote> at 24px or less."
+  }
+ ],
+ "images": [
+  {
+   "viewport": "desktop",
+   "width": 1440,
+   "fold": "C:\\Users\\DiegoTavaresDeMelo\\Documents\\GitHub\\PetLive\\.taste-skill\\before\\desktop-fold.jpg",
+   "pages": [
+    "C:\\Users\\DiegoTavaresDeMelo\\Documents\\GitHub\\PetLive\\.taste-skill\\before\\desktop-page-01.jpg",
+    "C:\\Users\\DiegoTavaresDeMelo\\Documents\\GitHub\\PetLive\\.taste-skill\\before\\desktop-page-02.jpg"
+   ],
+   "film": []
+  },
+  {
+   "viewport": "tablet",
+   "width": 768,
+   "fold": "C:\\Users\\DiegoTavaresDeMelo\\Documents\\GitHub\\PetLive\\.taste-skill\\before\\tablet-fold.jpg",
+   "pages": [
+    "C:\\Users\\DiegoTavaresDeMelo\\Documents\\GitHub\\PetLive\\.taste-skill\\before\\tablet-page-01.jpg"
+   ],
+   "film": []
+  },
+  {
+   "viewport": "mobile",
+   "width": 390,
+   "fold": "C:\\Users\\DiegoTavaresDeMelo\\Documents\\GitHub\\PetLive\\.taste-skill\\before\\mobile-fold.jpg",
+   "pages": [
+    "C:\\Users\\DiegoTavaresDeMelo\\Documents\\GitHub\\PetLive\\.taste-skill\\before\\mobile-page-01.jpg"
+   ],
+   "film": []
+  }
+ ]
+}

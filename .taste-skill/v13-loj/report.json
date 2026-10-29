@@ -1,0 +1,768 @@
+{
+ "url": "http://localhost:3300/lojistas",
+ "at": "2026-10-29T20:51:39.354Z",
+ "allow": [],
+ "viewports": [
+  {
+   "width": 1440,
+   "height": 900,
+   "load": "load",
+   "screens": 7,
+   "filled": [
+    0.93,
+    0.71,
+    0.51,
+    0.89,
+    0.62,
+    0.64,
+    0.88
+   ],
+   "motion": {
+    "elements": 46,
+    "css": 15,
+    "transitions": 30,
+    "scripted": 1,
+    "videos": 0,
+    "playingVideos": 0
+   },
+   "metrics": {
+    "viewport": {
+     "w": 1440,
+     "h": 900
+    },
+    "page": {
+     "height": 5832,
+     "screens": 6.5,
+     "words": 638,
+     "img": 6,
+     "video": 0,
+     "canvas": 0,
+     "svg": 2,
+     "sections": 6,
+     "horizontalOverflow": 0,
+     "overflowCulprits": [],
+     "uiFragments": 1,
+     "uiAbuse": false,
+     "realPictures": 4,
+     "videoCount": 0,
+     "uiPictures": 1,
+     "pictureSamples": [
+      "image?url=%2F_next%2Fstatic%2Fmedia%2Fconsulta.4",
+      "image?url=%2F_next%2Fstatic%2Fmedia%2Fpasseio.3l",
+      "image?url=%2F_next%2Fstatic%2Fmedia%2Fcao-dormin",
+      "image?url=%2F_next%2Fstatic%2Fmedia%2Ftutora.0_g"
+     ],
+     "blendText": 0,
+     "sideScrollers": 0,
+     "brokenImages": [],
+     "emoji": [],
+     "videosNoPoster": 0
+    },
+    "hero": {
+     "text": "Venda e agende pelo PetLive",
+     "words": 5,
+     "chars": 27,
+     "lines": 2,
+     "size": 77.8,
+     "vw": 5.4,
+     "font": "Plus Jakarta Sans",
+     "weight": 700,
+     "tracking": -0.04,
+     "leading": 0.95,
+     "upper": false,
+     "italic": false,
+     "mono": false,
+     "align": "left",
+     "position": "left",
+     "widthRatio": 0.44,
+     "top": 283,
+     "tag": "h1",
+     "kind": "heading"
+    },
+    "h1": {
+     "text": "Venda e agende pelo PetLive",
+     "words": 5,
+     "lines": 2,
+     "size": 77.8,
+     "font": "Plus Jakarta Sans"
+    },
+    "headings": [
+     {
+      "text": "Venda e agende pelo PetLive",
+      "words": 5,
+      "chars": 27,
+      "lines": 2,
+      "size": 77.8,
+      "vw": 5.4,
+      "font": "Plus Jakarta Sans",
+      "weight": 700,
+      "tracking": -0.04,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.44,
+      "top": 283,
+      "tag": "h1",
+      "kind": "heading"
+     },
+     {
+      "text": "Para vender e atender",
+      "words": 4,
+      "chars": 21,
+      "lines": 1,
+      "size": 49,
+      "vw": 3.4,
+      "font": "Plus Jakarta Sans",
+      "weight": 700,
+      "tracking": -0.03,
+      "leading": 1.02,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "center",
+      "position": "center",
+      "widthRatio": 0.35,
+      "top": 1071,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Cada serviço do seu jeito",
+      "words": 5,
+      "chars": 25,
+      "lines": 2,
+      "size": 49,
+      "vw": 3.4,
+      "font": "Plus Jakarta Sans",
+      "weight": 700,
+      "tracking": -0.03,
+      "leading": 1.02,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.28,
+      "top": 1783,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Sua loja no ar",
+      "words": 4,
+      "chars": 14,
+      "lines": 1,
+      "size": 49,
+      "vw": 3.4,
+      "font": "Plus Jakarta Sans",
+      "weight": 700,
+      "tracking": -0.03,
+      "leading": 1.02,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.29,
+      "top": 2595,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Sem mensalidade",
+      "words": 2,
+      "chars": 15,
+      "lines": 1,
+      "size": 49,
+      "vw": 3.4,
+      "font": "Plus Jakarta Sans",
+      "weight": 700,
+      "tracking": -0.03,
+      "leading": 1.02,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.44,
+      "top": 3413,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Vitrine e agenda",
+      "words": 3,
+      "chars": 16,
+      "lines": 1,
+      "size": 49,
+      "vw": 3.4,
+      "font": "Plus Jakarta Sans",
+      "weight": 700,
+      "tracking": -0.03,
+      "leading": 1.02,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.39,
+      "top": 3562,
+      "tag": "h3",
+      "kind": "heading"
+     },
+     {
+      "text": "Grátis",
+      "words": 1,
+      "chars": 6,
+      "lines": 1,
+      "size": 49,
+      "vw": 3.4,
+      "font": "Plus Jakarta Sans",
+      "weight": 700,
+      "tracking": -0.03,
+      "leading": 1.02,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "center",
+      "position": "right",
+      "widthRatio": 0.09,
+      "top": 3619,
+      "tag": "p",
+      "kind": "statement"
+     },
+     {
+      "text": "Pix pelo app",
+      "words": 3,
+      "chars": 12,
+      "lines": 1,
+      "size": 49,
+      "vw": 3.4,
+      "font": "Plus Jakarta Sans",
+      "weight": 700,
+      "tracking": -0.03,
+      "leading": 1.02,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.39,
+      "top": 3922,
+      "tag": "h3",
+      "kind": "heading"
+     },
+     {
+      "text": "Em breve",
+      "words": 2,
+      "chars": 8,
+      "lines": 1,
+      "size": 49,
+      "vw": 3.4,
+      "font": "Plus Jakarta Sans",
+      "weight": 700,
+      "tracking": -0.03,
+      "leading": 1.02,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "center",
+      "position": "right",
+      "widthRatio": 0.15,
+      "top": 3984,
+      "tag": "p",
+      "kind": "statement"
+     },
+     {
+      "text": "Coloque sua loja no PetLive",
+      "words": 5,
+      "chars": 27,
+      "lines": 2,
+      "size": 49,
+      "vw": 3.4,
+      "font": "Plus Jakarta Sans",
+      "weight": 700,
+      "tracking": -0.03,
+      "leading": 1.02,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.29,
+      "top": 4452,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "PetLive",
+      "words": 1,
+      "chars": 7,
+      "lines": 1,
+      "size": 216,
+      "vw": 15,
+      "font": "Plus Jakarta Sans",
+      "weight": 700,
+      "tracking": -0.05,
+      "leading": 0.9,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.61,
+      "top": 5594,
+      "tag": "p",
+      "kind": "statement"
+     }
+    ],
+    "headingSummary": {
+     "count": 11,
+     "maxLines": 2,
+     "over2Lines": 0,
+     "statements": 3,
+     "centered": 3,
+     "medianWords": 3,
+     "mixedFontHeadings": 0
+    },
+    "type": {
+     "families": [
+      {
+       "family": "Plus Jakarta Sans",
+       "share": 1,
+       "mono": false
+      }
+     ],
+     "familyCount": 1,
+     "sizes": [
+      14,
+      15,
+      16,
+      17,
+      22,
+      49,
+      78,
+      216
+     ],
+     "sizeCount": 8,
+     "notLoaded": [],
+     "body": {
+      "font": "Plus Jakarta Sans",
+      "size": 21.6,
+      "leading": 1.4,
+      "weight": 400,
+      "tracking": 0,
+      "contrast": 18.9
+     },
+     "measureChars": 59,
+     "max": {
+      "size": 216,
+      "vw": 15,
+      "font": "Plus Jakarta Sans",
+      "text": "PetLive"
+     },
+     "monoShare": 0,
+     "monoProseShare": 0,
+     "monoFamilies": [],
+     "monoSamples": [],
+     "microLabels": 0,
+     "microLabelShare": 0,
+     "microSamples": [],
+     "upperShare": 0,
+     "centerShare": 0.05,
+     "smallText": 0
+    },
+    "eyebrows": [],
+    "numbered": [],
+    "color": {
+     "bodyBg": "#ffffff",
+     "bodyBgHsl": {
+      "h": 0,
+      "s": 0,
+      "l": 1
+     },
+     "dark": false,
+     "sectionBgs": [
+      {
+       "color": "#111111",
+       "top": 72,
+       "hsl": {
+        "h": 0,
+        "s": 0,
+        "l": 0.07
+       }
+      },
+      {
+       "color": "#9ad6f8",
+       "top": 863,
+       "hsl": {
+        "h": 202,
+        "s": 0.87,
+        "l": 0.79
+       }
+      },
+      {
+       "color": "#ffffff",
+       "top": 1639,
+       "hsl": {
+        "h": 0,
+        "s": 0,
+        "l": 1
+       }
+      },
+      {
+       "color": "#f3f5f8",
+       "top": 2451,
+       "hsl": {
+        "h": 216,
+        "s": 0.26,
+        "l": 0.96
+       }
+      }
+     ],
+     "textColors": [
+      {
+       "color": "#111111",
+       "share": 0.61
+      },
+      {
+       "color": "#ffffff",
+       "share": 0.19
+      },
+      {
+       "color": "#46505e",
+       "share": 0.15
+      },
+      {
+       "color": "#5e6878",
+       "share": 0.03
+      },
+      {
+       "color": "#c9d0db",
+       "share": 0.02
+      }
+     ],
+     "button": {
+      "bg": "#111111",
+      "hsl": {
+       "h": 0,
+       "s": 0,
+       "l": 0.07
+      },
+      "fg": "#111111"
+     },
+     "lowContrast": []
+    },
+    "buttons": {
+     "count": 7,
+     "inHero": 4,
+     "radius": "pill",
+     "height": 44,
+     "withShadow": 0,
+     "withGradient": 0,
+     "mono": 0,
+     "upper": 0,
+     "heroLabels": [
+      "Só essenciais",
+      "Aceitar",
+      "Cadastrar loja",
+      "Cadastrar minha loja"
+     ]
+    },
+    "surfaces": {
+     "shadowStatic": 0,
+     "shadowOverlay": 0,
+     "shadowSamples": [],
+     "gradients": 0,
+     "scrims": 0,
+     "gradientSamples": [],
+     "gradientText": 0,
+     "hairlines": 0,
+     "hairlineSamples": [],
+     "outlinedBoxes": 0,
+     "dashed": 0,
+     "blurred": 0,
+     "roundedBoxes": 21,
+     "boxRadius": 20,
+     "squareMedia": 0,
+     "roundedMedia": 3,
+     "mediaRadius": 37,
+     "textShadow": 0,
+     "cardRows": []
+    },
+    "heroMedia": [],
+    "nav": {
+     "links": 8,
+     "fixed": false,
+     "height": 72,
+     "floatingPill": false,
+     "blur": false
+    },
+    "fontsLoaded": [
+     "plus jakarta sans",
+     "__nextjs-geist"
+    ]
+   },
+   "layout": {
+    "viewport": {
+     "w": 1440,
+     "h": 900
+    },
+    "pageH": 5832,
+    "margins": {
+     "left": 36,
+     "right": 58
+    },
+    "sections": [
+     {
+      "sel": "section.bg-[var(--tinta)].text-[var(--papel)]",
+      "tag": "section",
+      "top": 72,
+      "height": 828,
+      "words": 102,
+      "media": 0,
+      "middle": 79,
+      "heading": {
+       "text": "Venda e agende pelo PetLive",
+       "size": 78,
+       "tag": "h1"
+      },
+      "left": 58,
+      "right": 98,
+      "textLeft": 58,
+      "textRight": 98,
+      "fullBleed": false,
+      "footer": false,
+      "hero": true,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "section#beneficios.secao.scroll-mt-4",
+      "tag": "section",
+      "top": 863,
+      "height": 814,
+      "words": 89,
+      "media": 1,
+      "middle": 112,
+      "heading": {
+       "text": "Para vender e atender",
+       "size": 49,
+       "tag": "h2"
+      },
+      "left": 38,
+      "right": 85,
+      "textLeft": 468,
+      "textRight": 85,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "section#servicos.secao.scroll-mt-4",
+      "tag": "section",
+      "top": 1639,
+      "height": 850,
+      "words": 120,
+      "media": 1,
+      "middle": 48,
+      "heading": {
+       "text": "Cada serviço do seu jeito",
+       "size": 49,
+       "tag": "h2"
+      },
+      "left": 33,
+      "right": 58,
+      "textLeft": 58,
+      "textRight": 58,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "section#como-comecar.secao.scroll-mt-4",
+      "tag": "section",
+      "top": 2451,
+      "height": 855,
+      "words": 62,
+      "media": 1,
+      "middle": 175,
+      "heading": {
+       "text": "Sua loja no ar",
+       "size": 49,
+       "tag": "h2"
+      },
+      "left": 26,
+      "right": 94,
+      "textLeft": 58,
+      "textRight": 94,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "section#planos.secao.scroll-mt-4",
+      "tag": "section",
+      "top": 3269,
+      "height": 1076,
+      "words": 73,
+      "media": 0,
+      "middle": 16,
+      "heading": {
+       "text": "Sem mensalidade",
+       "size": 49,
+       "tag": "h2"
+      },
+      "left": 58,
+      "right": 124,
+      "textLeft": 58,
+      "textRight": 124,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "section#cadastro.secao.scroll-mt-4",
+      "tag": "section",
+      "top": 4308,
+      "height": 936,
+      "words": 66,
+      "media": 0,
+      "middle": 94,
+      "heading": {
+       "text": "Coloque sua loja no PetLive",
+       "size": 49,
+       "tag": "h2"
+      },
+      "left": 58,
+      "right": 106,
+      "textLeft": 58,
+      "textRight": 134,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "footer.secao.bg-[var(--papel)]",
+      "tag": "footer",
+      "top": 5207,
+      "height": 626,
+      "words": 74,
+      "media": 1,
+      "middle": 50,
+      "heading": {
+       "text": "PetLive",
+       "size": 216,
+       "tag": "p"
+      },
+      "left": 36,
+      "right": 20,
+      "textLeft": 36,
+      "textRight": 79,
+      "fullBleed": false,
+      "footer": true,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     }
+    ],
+    "gaps": [
+     {
+      "top": 692,
+      "height": 368
+     },
+     {
+      "top": 4160,
+      "height": 284
+     }
+    ],
+    "h1s": [
+     {
+      "text": "Venda e agende pelo PetLive",
+      "size": 78,
+      "top": 283,
+      "firstScreen": true
+     }
+    ],
+    "edgeText": [],
+    "edges": [
+     {
+      "x": 58,
+      "n": 9
+     },
+     {
+      "x": 210,
+      "n": 2
+     },
+     {
+      "x": 1084,
+      "n": 2
+     },
+     {
+      "x": 752,
+      "n": 1
+     },
+     {
+      "x": 780,
+      "n": 1
+     }
+    ],
+    "leftBlocks": 15,
+    "bodySize": 22,
+    "stage": false,
+    "explains": true,
+    "slivers": [],
+    "voidShare": 0.14,
+    "voidBox": {
+     "x": 0,
+     "y": 720,
+     "w": 1020,
+     "h": 180
+    }
+   },
+   "app": null,
+   "consoleErrors": []
+  }
+ ],
+ "findings": [
+  {
+   "level": "WARN",
+   "id": "no-footage",
+   "width": 1440,
+   "message": "No video anywhere on the page.",
+   "fix": "Look for one honest clip with scripts/assets.mjs --video (the place, the material, the process) and use it as a muted loop with a poster frame. Defend its absence only if no clip fits the subject."
+  },
+  {
+   "level": "WARN",
+   "id": "off-centre",
+   "width": 1440,
+   "message": "The margins differ: 36px on the left, 58px on the right, at 1440px.",
+   "fix": "Put the navigation and the content on one pair of margins; check for padding on one side only, a scrollbar gutter, or a header on another inset than the page."
+  }
+ ],
+ "images": [
+  {
+   "viewport": "desktop",
+   "width": 1440,
+   "fold": "C:\\Users\\DiegoTavaresDeMelo\\Documents\\GitHub\\PetLive\\.taste-skill\\v13-loj\\desktop-fold.jpg",
+   "pages": [
+    "C:\\Users\\DiegoTavaresDeMelo\\Documents\\GitHub\\PetLive\\.taste-skill\\v13-loj\\desktop-page-01.jpg",
+    "C:\\Users\\DiegoTavaresDeMelo\\Documents\\GitHub\\PetLive\\.taste-skill\\v13-loj\\desktop-page-02.jpg"
+   ],
+   "film": []
+  }
+ ]
+}

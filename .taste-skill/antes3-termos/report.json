@@ -1,0 +1,682 @@
+{
+ "url": "http://localhost:3300/termos",
+ "at": "2026-10-29T20:17:16.916Z",
+ "allow": [],
+ "viewports": [
+  {
+   "width": 390,
+   "height": 844,
+   "load": "load",
+   "screens": 7,
+   "filled": [
+    0.95,
+    0.68,
+    0.65,
+    0.59,
+    0.65,
+    0.93,
+    0.93
+   ],
+   "motion": {
+    "elements": 14,
+    "css": 0,
+    "transitions": 13,
+    "scripted": 1,
+    "videos": 0,
+    "playingVideos": 0
+   },
+   "metrics": {
+    "viewport": {
+     "w": 390,
+     "h": 844
+    },
+    "page": {
+     "height": 5121,
+     "screens": 6.1,
+     "words": 549,
+     "img": 2,
+     "video": 0,
+     "canvas": 0,
+     "svg": 2,
+     "sections": 10,
+     "horizontalOverflow": 0,
+     "overflowCulprits": [],
+     "uiFragments": 0,
+     "uiAbuse": false,
+     "realPictures": 1,
+     "videoCount": 0,
+     "uiPictures": 0,
+     "pictureSamples": [
+      "image?url=%2Ffotos%2Fnoite.jpg&w=640&q=75"
+     ],
+     "blendText": 0,
+     "sideScrollers": 0,
+     "brokenImages": [],
+     "emoji": [],
+     "videosNoPoster": 0
+    },
+    "hero": {
+     "text": "Termos de uso",
+     "words": 3,
+     "chars": 13,
+     "lines": 1,
+     "size": 44,
+     "vw": 11.3,
+     "font": "Plus Jakarta Sans",
+     "weight": 700,
+     "tracking": -0.04,
+     "leading": 0.95,
+     "upper": false,
+     "italic": false,
+     "mono": false,
+     "align": "left",
+     "position": "center",
+     "widthRatio": 0.92,
+     "top": 342,
+     "tag": "h1",
+     "kind": "heading"
+    },
+    "h1": {
+     "text": "Termos de uso",
+     "words": 3,
+     "lines": 1,
+     "size": 44,
+     "font": "Plus Jakarta Sans"
+    },
+    "headings": [
+     {
+      "text": "PetLive",
+      "words": 1,
+      "chars": 7,
+      "lines": 1,
+      "size": 22,
+      "vw": 5.6,
+      "font": "Plus Jakarta Sans",
+      "weight": 800,
+      "tracking": -0.025,
+      "leading": 1.5,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.31,
+      "top": 240,
+      "tag": "a",
+      "kind": "heading"
+     },
+     {
+      "text": "Termos de uso",
+      "words": 3,
+      "chars": 13,
+      "lines": 1,
+      "size": 44,
+      "vw": 11.3,
+      "font": "Plus Jakarta Sans",
+      "weight": 700,
+      "tracking": -0.04,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.92,
+      "top": 342,
+      "tag": "h1",
+      "kind": "heading"
+     },
+     {
+      "text": "O que é o PetLive",
+      "words": 5,
+      "chars": 17,
+      "lines": 1,
+      "size": 22,
+      "vw": 5.6,
+      "font": "Plus Jakarta Sans",
+      "weight": 700,
+      "tracking": 0,
+      "leading": 1.25,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.79,
+      "top": 904,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Sua conta",
+      "words": 2,
+      "chars": 9,
+      "lines": 1,
+      "size": 22,
+      "vw": 5.6,
+      "font": "Plus Jakarta Sans",
+      "weight": 700,
+      "tracking": 0,
+      "leading": 1.25,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.79,
+      "top": 1328,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Como você pode usar o PetLive",
+      "words": 6,
+      "chars": 29,
+      "lines": 2,
+      "size": 22,
+      "vw": 5.6,
+      "font": "Plus Jakarta Sans",
+      "weight": 700,
+      "tracking": 0,
+      "leading": 1.25,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.79,
+      "top": 1760,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Condutas proibidas",
+      "words": 2,
+      "chars": 18,
+      "lines": 1,
+      "size": 22,
+      "vw": 5.6,
+      "font": "Plus Jakarta Sans",
+      "weight": 700,
+      "tracking": 0,
+      "leading": 1.25,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.79,
+      "top": 2257,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Dados do pet e informações de saúde",
+      "words": 7,
+      "chars": 35,
+      "lines": 2,
+      "size": 22,
+      "vw": 5.6,
+      "font": "Plus Jakarta Sans",
+      "weight": 700,
+      "tracking": 0,
+      "leading": 1.25,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.79,
+      "top": 2628,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Serviços de terceiros",
+      "words": 3,
+      "chars": 21,
+      "lines": 1,
+      "size": 22,
+      "vw": 5.6,
+      "font": "Plus Jakarta Sans",
+      "weight": 700,
+      "tracking": 0,
+      "leading": 1.25,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.79,
+      "top": 3000,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Propriedade intelectual",
+      "words": 2,
+      "chars": 23,
+      "lines": 1,
+      "size": 22,
+      "vw": 5.6,
+      "font": "Plus Jakarta Sans",
+      "weight": 700,
+      "tracking": 0,
+      "leading": 1.25,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.79,
+      "top": 3345,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Alterações destes termos",
+      "words": 3,
+      "chars": 24,
+      "lines": 1,
+      "size": 22,
+      "vw": 5.6,
+      "font": "Plus Jakarta Sans",
+      "weight": 700,
+      "tracking": 0,
+      "leading": 1.25,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.79,
+      "top": 3621,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Contato",
+      "words": 1,
+      "chars": 7,
+      "lines": 1,
+      "size": 22,
+      "vw": 5.6,
+      "font": "Plus Jakarta Sans",
+      "weight": 700,
+      "tracking": 0,
+      "leading": 1.25,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.79,
+      "top": 3923,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "A carteira de saúde do seu pet, com aviso na hora de cada cuidado.",
+      "words": 14,
+      "chars": 66,
+      "lines": 3,
+      "size": 22,
+      "vw": 5.6,
+      "font": "Plus Jakarta Sans",
+      "weight": 600,
+      "tracking": 0,
+      "leading": 1.38,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.86,
+      "top": 4206,
+      "tag": "p",
+      "kind": "statement"
+     },
+     {
+      "text": "suporte@petlive.app.br",
+      "words": 1,
+      "chars": 22,
+      "lines": 1,
+      "size": 22,
+      "vw": 5.6,
+      "font": "Plus Jakarta Sans",
+      "weight": 600,
+      "tracking": 0,
+      "leading": 1.5,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.86,
+      "top": 4717,
+      "tag": "a",
+      "kind": "heading"
+     },
+     {
+      "text": "PetLive",
+      "words": 1,
+      "chars": 7,
+      "lines": 1,
+      "size": 48,
+      "vw": 12.3,
+      "font": "Plus Jakarta Sans",
+      "weight": 700,
+      "tracking": -0.04,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.41,
+      "top": 4835,
+      "tag": "p",
+      "kind": "statement"
+     },
+     {
+      "text": "Tem uma loja ou clínica?",
+      "words": 5,
+      "chars": 24,
+      "lines": 2,
+      "size": 22,
+      "vw": 5.6,
+      "font": "Plus Jakarta Sans",
+      "weight": 700,
+      "tracking": 0,
+      "leading": 1.25,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.96,
+      "top": 4946,
+      "tag": "a",
+      "kind": "heading"
+     }
+    ],
+    "headingSummary": {
+     "count": 15,
+     "maxLines": 3,
+     "over2Lines": 0,
+     "statements": 2,
+     "centered": 0,
+     "medianWords": 3,
+     "mixedFontHeadings": 0
+    },
+    "type": {
+     "families": [
+      {
+       "family": "Plus Jakarta Sans",
+       "share": 1,
+       "mono": false
+      }
+     ],
+     "familyCount": 1,
+     "sizes": [
+      14,
+      16,
+      17,
+      19,
+      22,
+      44,
+      48
+     ],
+     "sizeCount": 7,
+     "notLoaded": [],
+     "body": {
+      "font": "Plus Jakarta Sans",
+      "size": 17,
+      "leading": 1.55,
+      "weight": 400,
+      "tracking": 0,
+      "contrast": 18.9
+     },
+     "measureChars": 36,
+     "max": {
+      "size": 48,
+      "vw": 12.3,
+      "font": "Plus Jakarta Sans",
+      "text": "PetLive"
+     },
+     "monoShare": 0,
+     "monoProseShare": 0,
+     "monoFamilies": [],
+     "monoSamples": [],
+     "microLabels": 0,
+     "microLabelShare": 0,
+     "microSamples": [],
+     "upperShare": 0,
+     "centerShare": 0.01,
+     "smallText": 0
+    },
+    "eyebrows": [],
+    "numbered": [],
+    "color": {
+     "bodyBg": "#ffffff",
+     "bodyBgHsl": {
+      "h": 0,
+      "s": 0,
+      "l": 1
+     },
+     "dark": false,
+     "sectionBgs": [
+      {
+       "color": "#9ad6f8",
+       "top": 294,
+       "hsl": {
+        "h": 202,
+        "s": 0.87,
+        "l": 0.79
+       }
+      },
+      {
+       "color": "#ffffff",
+       "top": 880,
+       "hsl": {
+        "h": 0,
+        "s": 0,
+        "l": 1
+       }
+      }
+     ],
+     "textColors": [
+      {
+       "color": "#111111",
+       "share": 0.95
+      },
+      {
+       "color": "#46505e",
+       "share": 0.05
+      },
+      {
+       "color": "#ffffff",
+       "share": 0
+      }
+     ],
+     "button": {
+      "bg": "#ffffff",
+      "hsl": {
+       "h": 0,
+       "s": 0,
+       "l": 1
+      },
+      "fg": "#111111"
+     },
+     "lowContrast": []
+    },
+    "buttons": {
+     "count": 2,
+     "inHero": 2,
+     "radius": 0,
+     "height": 44,
+     "withShadow": 0,
+     "withGradient": 0,
+     "mono": 0,
+     "upper": 0,
+     "heroLabels": [
+      "Só essenciais",
+      "Aceitar"
+     ]
+    },
+    "surfaces": {
+     "shadowStatic": 0,
+     "shadowOverlay": 0,
+     "shadowSamples": [],
+     "gradients": 0,
+     "scrims": 0,
+     "gradientSamples": [],
+     "gradientText": 0,
+     "hairlines": 0,
+     "hairlineSamples": [],
+     "outlinedBoxes": 0,
+     "dashed": 0,
+     "blurred": 0,
+     "roundedBoxes": 0,
+     "boxRadius": 0,
+     "squareMedia": 1,
+     "roundedMedia": 0,
+     "mediaRadius": 0,
+     "textShadow": 0,
+     "cardRows": []
+    },
+    "heroMedia": [
+     {
+      "type": "img",
+      "ratio": 0.29
+     }
+    ],
+    "nav": {
+     "links": 0,
+     "fixed": false,
+     "height": 72,
+     "floatingPill": false,
+     "blur": false
+    },
+    "fontsLoaded": [
+     "plus jakarta sans"
+    ]
+   },
+   "layout": {
+    "viewport": {
+     "w": 390,
+     "h": 844
+    },
+    "pageH": 5121,
+    "margins": {
+     "left": 16,
+     "right": 27
+    },
+    "sections": [
+     {
+      "sel": "div.bg-[var(--ceu-claro)].py-4",
+      "tag": "div",
+      "top": 0,
+      "height": 222,
+      "words": 31,
+      "media": 0,
+      "middle": 0,
+      "heading": null,
+      "left": 16,
+      "right": 27,
+      "textLeft": 16,
+      "textRight": 27,
+      "fullBleed": false,
+      "footer": false,
+      "hero": true,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "main.flex-1",
+      "tag": "main",
+      "top": 294,
+      "height": 3884,
+      "words": 497,
+      "media": 1,
+      "middle": 0,
+      "heading": {
+       "text": "Termos de uso",
+       "size": 44,
+       "tag": "h1"
+      },
+      "left": 16,
+      "right": 16,
+      "textLeft": 16,
+      "textRight": 42,
+      "fullBleed": false,
+      "footer": false,
+      "hero": true,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "footer.bg-[var(--papel)].p-2",
+      "tag": "footer",
+      "top": 4178,
+      "height": 942,
+      "words": 58,
+      "media": 0,
+      "middle": 0,
+      "heading": null,
+      "left": 28,
+      "right": 32,
+      "textLeft": 28,
+      "textRight": 37,
+      "fullBleed": false,
+      "footer": true,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     }
+    ],
+    "gaps": [],
+    "h1s": [
+     {
+      "text": "Termos de uso",
+      "size": 44,
+      "top": 342,
+      "firstScreen": true
+     }
+    ],
+    "edgeText": [],
+    "edges": [
+     {
+      "x": 40,
+      "n": 20
+     },
+     {
+      "x": 16,
+      "n": 3
+     }
+    ],
+    "leftBlocks": 23,
+    "bodySize": 17,
+    "stage": false,
+    "explains": true,
+    "slivers": [],
+    "voidShare": 0,
+    "voidBox": null
+   },
+   "app": null,
+   "consoleErrors": []
+  }
+ ],
+ "findings": [],
+ "images": [
+  {
+   "viewport": "mobile",
+   "width": 390,
+   "fold": "C:\\Users\\DiegoTavaresDeMelo\\Documents\\GitHub\\PetLive\\.taste-skill\\antes3-termos\\mobile-fold.jpg",
+   "pages": [
+    "C:\\Users\\DiegoTavaresDeMelo\\Documents\\GitHub\\PetLive\\.taste-skill\\antes3-termos\\mobile-page-01.jpg"
+   ],
+   "film": []
+  }
+ ]
+}
