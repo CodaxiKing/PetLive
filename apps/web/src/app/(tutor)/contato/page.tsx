@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { FormularioContato } from "@/components/FormularioContato";
 import { EMAIL_CONTATO } from "@/lib/contato";
 
@@ -11,42 +12,45 @@ export const metadata: Metadata = {
 /** Contato (board: [WEB] Site "formulário de contato"). */
 export default function PaginaContato() {
   return (
-    <div className="bg-fundo">
-      <section className="border-b border-borda bg-azul-fundo">
-        <div className="mx-auto max-w-[1440px] px-6 py-16 md:px-12 md:py-20 xl:px-[120px]">
-          <p className="text-sm font-bold uppercase tracking-widest text-azul-escuro">Contato</p>
-          <h1 className="mt-3 max-w-3xl text-4xl font-medium leading-tight tracking-tight md:text-5xl">
+    <div className="bg-[var(--ceu)]">
+      <section className="site-moldura grid items-end gap-8 py-[clamp(48px,6vw,96px)] lg:grid-cols-12">
+        <div className="lg:col-span-6">
+          <h1 data-revelar className="t-display max-w-[10ch]" style={{ fontSize: "clamp(44px, 5.4vw, 84px)" }}>
             Fale com a gente
           </h1>
-          <p className="mt-5 max-w-2xl text-lg leading-relaxed text-cinza">
+          <p data-revelar style={{ ["--ordem" as string]: 1 }} className="t-lead mt-8 max-w-[40ch]">
             Dúvidas sobre o app, sugestões ou pedidos sobre os seus dados. Respondemos por e-mail em até 2 dias úteis.
           </p>
         </div>
+        <figure data-revelar style={{ ["--ordem" as string]: 1 }} className="relative aspect-[4/3] lg:col-span-6">
+          <Image src="/fotos/tutora.jpg" alt="Tutora sorrindo com o cão no colo, em casa" fill priority sizes="(min-width: 1024px) 50vw, 100vw" className="object-cover" />
+        </figure>
       </section>
 
-      <div className="mx-auto grid max-w-[1440px] gap-12 px-6 py-14 md:px-12 lg:grid-cols-[1.5fr_1fr] xl:px-[120px]">
-        <FormularioContato tipo="contato" />
+      <div className="site-moldura pb-[clamp(56px,8vw,120px)]">
+        <div className="grid gap-2 lg:grid-cols-12">
+          <div data-revelar className="bg-[var(--papel)] p-6 md:p-12 lg:col-span-8">
+            <h2 className="mb-8 text-[22px] font-bold">Mensagem</h2>
+            <FormularioContato tipo="contato" />
+          </div>
 
-        <aside className="space-y-4">
-          <div className="rounded-[28px] bg-suave p-6">
-            <p className="font-extrabold">E-mail</p>
-            <a href={`mailto:${EMAIL_CONTATO}`} className="mt-1 block text-cinza underline">
-              {EMAIL_CONTATO}
-            </a>
-          </div>
-          <div className="rounded-[28px] bg-rosa-fundo p-6 text-rosa-texto">
-            <p className="font-extrabold">Emergência com o seu pet?</p>
-            <p className="mt-1 leading-relaxed">
-              Não espere a resposta: no app, toque em SOS para ligar para a clínica 24 h mais perto.
-            </p>
-          </div>
-          <div className="rounded-[28px] bg-verde-fundo p-6 text-verde-texto">
-            <p className="font-extrabold">Seus dados (LGPD)</p>
-            <p className="mt-1 leading-relaxed">
-              Exportar ou apagar a conta é feito no próprio app, em Perfil › Privacidade e dados.
-            </p>
-          </div>
-        </aside>
+          <aside className="grid gap-2 lg:col-span-4">
+            <div data-revelar style={{ ["--ordem" as string]: 1 }} className="flex flex-col justify-between gap-6 bg-[var(--papel)] p-6">
+              <h2 className="text-[22px] font-bold">E-mail</h2>
+              <a href={`mailto:${EMAIL_CONTATO}`} className="link-sublinhado break-all text-[17px] font-semibold">
+                {EMAIL_CONTATO}
+              </a>
+            </div>
+            <div data-revelar style={{ ["--ordem" as string]: 2 }} className="bg-[var(--tinta)] p-6 text-[var(--papel)]">
+              <h2 className="text-[22px] font-bold">Emergência com o seu pet?</h2>
+              <p className="t-corpo mt-3">Não espere a resposta: no app, toque em SOS para ligar para a clínica 24 h mais perto.</p>
+            </div>
+            <div data-revelar style={{ ["--ordem" as string]: 3 }} className="bg-[var(--papel)] p-6">
+              <h2 className="text-[22px] font-bold">Seus dados (LGPD)</h2>
+              <p className="t-corpo mt-3">Exportar ou apagar a conta é feito no próprio app, em Perfil › Privacidade e dados.</p>
+            </div>
+          </aside>
+        </div>
       </div>
     </div>
   );

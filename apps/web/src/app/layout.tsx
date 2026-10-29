@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Plus_Jakarta_Sans } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 
 const jakarta = Plus_Jakarta_Sans({
@@ -36,8 +37,12 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="pt-BR" className={`${jakarta.variable} h-full antialiased`}>
+    <html lang="pt-BR" className={`${jakarta.variable} h-full antialiased`} suppressHydrationWarning>
       <body className="flex min-h-full flex-col">
+        {/* Marca que há script: só então as entradas animadas escondem o conteúdo. */}
+        <Script id="marca-js" strategy="beforeInteractive">
+          {"document.documentElement.classList.add('js')"}
+        </Script>
         {children}
       </body>
     </html>

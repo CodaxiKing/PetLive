@@ -27,7 +27,7 @@ const MENSAGENS: Record<Exclude<ResultadoContato, "ok">, string> = {
 };
 
 const campo =
-  "h-12 w-full rounded-2xl border border-borda bg-fundo px-4 text-[15px] outline-none transition focus:border-tinta focus-visible:ring-2 focus-visible:ring-azul";
+  "min-h-[52px] w-full bg-[var(--tom)] px-4 text-[17px] text-[var(--tinta)] outline-none focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[var(--ceu)]";
 
 /**
  * Formulário do site: "contato" (página Contato) ou "lojista" (interesse de
@@ -59,8 +59,8 @@ export function FormularioContato({ tipo, escuro = false }: { tipo: "contato" | 
 
   if (estado === "ok") {
     return (
-      <div role="status" className="rounded-[28px] bg-verde-fundo p-8 text-verde-texto">
-        <p className="text-xl font-extrabold">Recebemos, obrigado!</p>
+      <div role="status" className="bg-[var(--ceu)] p-8 text-[var(--tinta)]">
+        <p className="text-[22px] font-bold">Recebemos, obrigado!</p>
         <p className="mt-2 leading-relaxed">
           {tipo === "lojista"
             ? "Avisaremos você por e-mail quando o cadastro de lojas abrir na sua cidade."
@@ -70,7 +70,7 @@ export function FormularioContato({ tipo, escuro = false }: { tipo: "contato" | 
     );
   }
 
-  const rotulo = `mb-1.5 block text-sm font-semibold ${escuro ? "text-white" : "text-tinta"}`;
+  const rotulo = `mb-1.5 block text-[14px] font-semibold ${escuro ? "text-white" : "text-tinta"}`;
 
   return (
     <form onSubmit={enviar} className="grid gap-4 sm:grid-cols-2">
@@ -141,13 +141,13 @@ export function FormularioContato({ tipo, escuro = false }: { tipo: "contato" | 
       </div>
 
       {/* Isca para robôs: escondida de pessoas e de leitores de tela. */}
-      <div aria-hidden="true" className="absolute -left-[9999px] h-0 w-0 overflow-hidden">
+      <div aria-hidden="true" className="pointer-events-none absolute h-px w-px overflow-hidden opacity-0 [clip:rect(0,0,0,0)]">
         <label htmlFor={`${tipo}-site`}>Não preencha</label>
         <input id={`${tipo}-site`} name="site" tabIndex={-1} autoComplete="off" />
       </div>
 
       <div className="flex flex-col gap-3 sm:col-span-2 sm:flex-row sm:items-center sm:justify-between">
-        <p className={`text-xs leading-relaxed ${escuro ? "text-white/70" : "text-cinza"}`}>
+        <p className={`text-[14px] leading-relaxed ${escuro ? "text-white/70" : "text-cinza"}`}>
           Usamos estes dados só para responder você. Veja a{" "}
           <Link href="/privacidade" className="underline">
             política de privacidade
@@ -157,14 +157,9 @@ export function FormularioContato({ tipo, escuro = false }: { tipo: "contato" | 
         <button
           type="submit"
           disabled={estado === "enviando" || !contatoConfigurado}
-          className="flex h-14 shrink-0 items-center justify-center gap-3 rounded-full bg-azul pl-6 pr-2 font-semibold text-tinta transition hover:-translate-y-0.5 disabled:opacity-60"
+          className={`botao shrink-0 disabled:opacity-60 ${escuro ? "bg-[var(--ceu)] text-[var(--tinta)] hover:bg-[var(--ceu-claro)]" : ""}`}
         >
           {estado === "enviando" ? "Enviando…" : tipo === "lojista" ? "Quero cadastrar minha loja" : "Enviar mensagem"}
-          <span className="flex h-10 w-10 items-center justify-center rounded-full bg-tinta">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <path d="M5 12h14M13 6l6 6-6 6" />
-            </svg>
-          </span>
         </button>
       </div>
 

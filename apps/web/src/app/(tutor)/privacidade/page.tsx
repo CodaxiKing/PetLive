@@ -93,6 +93,7 @@ const SECOES = [
 export default function PaginaPrivacidade() {
   return (
     <PaginaLegal
+      foto={{ src: "/fotos/gato-janela.jpg", alt: "Gatinho laranja sentado junto à janela" }}
       titulo="Política de privacidade"
       resumo="Como coletamos, usamos, compartilhamos e protegemos os dados de você e do seu pet."
       atualizado="21 de outubro de 2026"

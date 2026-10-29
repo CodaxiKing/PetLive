@@ -33,3 +33,114 @@ body {
   color: var(--color-tinta);
   font-family: var(--font-sans);
 }
+
+/*
+ * Site público: a página é a carteirinha do pet impressa em papel.
+ * Três tintas (papel, tinta e o azul céu da marca), cinco tamanhos de
+ * texto e os recortes de papelaria (ondas, zigue-zague, picote, entalhe).
+ */
+:root {
+  --papel: #ffffff;
+  --tinta: #111111;
+  --apagado: #46505e; /* 4.5:1 sobre o papel e sobre o azul */
+  --ceu: #9ad6f8;
+  --ceu-claro: #e0f1fa;
+  --tom: #f3f5f8;
+  --margem: clamp(16px, 4vw, 64px);
+
+  --t-display: clamp(48px, 6.6vw, 104px);
+  --t-titulo: clamp(34px, 3.4vw, 50px);
+  --t-lead: clamp(19px, 1.5vw, 22px);
+  --t-corpo: 17px;
+  --t-pequeno: 14px;
+
+  --ease-saida: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@layer components {
+.site-moldura {
+  width: 100%;
+  max-width: 1440px;
+  margin-inline: auto;
+  padding-inline: var(--margem);
+}
+
+.t-display { font-size: var(--t-display); line-height: 0.95; letter-spacing: -0.04em; font-weight: 700; }
+.t-titulo { font-size: var(--t-titulo); line-height: 1.02; letter-spacing: -0.03em; font-weight: 700; }
+.t-lead { font-size: var(--t-lead); line-height: 1.4; }
+.t-corpo { font-size: var(--t-corpo); line-height: 1.55; }
+.t-pequeno { font-size: var(--t-pequeno); line-height: 1.45; }
+
+/* Papel com as bordas de cima e de baixo recortadas em ondas (cardápio). */
+.recorte-ondas {
+  --r: 11px;
+  mask:
+    radial-gradient(var(--r) at 50% 0, #0000 97%, #000) 50% 0 / calc(2.6 * var(--r)) 51% repeat-x,
+    radial-gradient(var(--r) at 50% 100%, #0000 97%, #000) 50% 100% / calc(2.6 * var(--r)) 51% repeat-x;
+}
+
+/* Canhoto: borda de baixo em zigue-zague. */
+.recorte-zigue {
+  --z: 14px;
+  mask:
+    conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) 50% / calc(2 * var(--z)) 100%;
+  padding-bottom: calc(var(--z) + 24px);
+}
+
+/* Pontilhado entre o nome e o valor, como numa lista de preços. */
+.pontilhado {
+  flex: 1;
+  min-width: 24px;
+  border-bottom: 4px dotted currentColor;
+  transform: translateY(-6px);
+  opacity: 0.55;
+}
+
+/* Botão da página: retangular, uma cor, como um carimbo. */
+.botao {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 52px;
+  padding: 0 26px;
+  background: var(--tinta);
+  color: var(--papel);
+  font-weight: 700;
+  font-size: 16px;
+  transition: transform 220ms var(--ease-saida), background-color 220ms var(--ease-saida);
+}
+.botao:hover { transform: translateY(-2px); background: #2a2a2a; }
+.botao:active { transform: translateY(0) scale(0.98); }
+.botao[aria-disabled="true"] { background: var(--tom); color: var(--apagado); cursor: default; transform: none; }
+
+.link-sublinhado {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
+  transition: text-underline-offset 200ms var(--ease-saida);
+}
+.link-sublinhado:hover { text-underline-offset: 7px; }
+
+:focus-visible { outline: 3px solid var(--tinta); outline-offset: 3px; }
+
+/* Entrada das partes de cada seção. Sem script, tudo fica visível. */
+html.js [data-revelar] {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 700ms var(--ease-saida), transform 700ms var(--ease-saida);
+  transition-delay: calc(var(--ordem, 0) * 80ms);
+}
+html.js [data-revelar].visivel { opacity: 1; transform: none; }
+
+/* A foto do herói respira devagar. */
+@keyframes respirar { from { transform: scale(1.02); } to { transform: scale(1.09); } }
+.foto-respira { animation: respirar 24s ease-in-out infinite alternate; }
+
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.js [data-revelar] { opacity: 1; transform: none; transition: none; }
+  .foto-respira { animation: none; }
+  .botao, .link-sublinhado { transition: none; }
+}

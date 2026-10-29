@@ -76,6 +76,7 @@ const SECOES = [
 export default function PaginaTermos() {
   return (
     <PaginaLegal
+      foto={{ src: "/fotos/noite.jpg", alt: "Tutora deitada no sofá abraçada ao seu cão" }}
       titulo="Termos de uso"
       resumo="As regras para usar o PetLive com segurança — conta, condutas, dados do pet e serviços contratados."
       atualizado="20 de outubro de 2026"

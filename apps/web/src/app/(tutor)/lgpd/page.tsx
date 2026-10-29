@@ -69,6 +69,7 @@ const SECOES = [
 export default function PaginaLgpd() {
   return (
     <PaginaLegal
+      foto={{ src: "/fotos/tutora.jpg", alt: "Tutora sorrindo com o cão no colo, em casa" }}
       titulo="Direitos na LGPD"
       resumo="Um guia prático dos seus direitos sobre os dados pessoais no PetLive e do passo a passo para usá-los."
       atualizado="20 de outubro de 2026"

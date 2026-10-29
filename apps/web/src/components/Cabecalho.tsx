@@ -3,84 +3,52 @@ import { Logo } from "./Logo";
 
 const LINKS = [
   { rotulo: "Recursos", href: "/#recursos" },
-  { rotulo: "Como funciona", href: "/#como-funciona" },
+  { rotulo: "Como começar", href: "/#como-comecar" },
+  { rotulo: "Planos", href: "/#planos" },
   { rotulo: "Para lojistas", href: "/lojistas" },
-  { rotulo: "Perguntas", href: "/#perguntas" },
 ];
 
-/** Cabeçalho do site (referência: protótipo SitePetLive). */
+/** Cabeçalho do site: uma barra simples com a marca, quatro links e uma ação. */
 export function Cabecalho() {
   return (
-    <header className="relative z-20 h-[88px] bg-fundo">
-      <div className="mx-auto flex h-full max-w-[1440px] items-center justify-between gap-3 px-4 sm:px-6 md:px-12 xl:px-[120px]">
+    <header className="relative z-20 bg-[var(--papel)]">
+      <div className="site-moldura flex h-[72px] items-center justify-between gap-3">
         <Logo />
 
-        <nav className="hidden gap-8 text-[15px] font-semibold lg:flex">
+        <nav aria-label="Principal" className="hidden gap-8 text-[16px] font-semibold lg:flex">
           {LINKS.map((link) => (
-            <Link key={link.href} href={link.href} className="transition hover:-translate-y-0.5">
+            <Link key={link.href} href={link.href} className="link-sublinhado decoration-transparent hover:decoration-current">
               {link.rotulo}
             </Link>
           ))}
         </nav>
 
-        {/* Menu sem JS para telas menores que lg. */}
-        <details className="group relative lg:hidden">
-          <summary className="flex h-11 cursor-pointer list-none items-center gap-2 rounded-full border border-borda px-4 text-sm font-semibold [&::-webkit-details-marker]:hidden">
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="#111"
-              strokeWidth="2.2"
-              strokeLinecap="round"
-              aria-hidden="true"
-            >
-              <path d="M4 7h16M4 12h16M4 17h16" />
-            </svg>
-            Menu
-          </summary>
-          <nav className="absolute right-0 top-14 flex w-56 flex-col gap-1 rounded-3xl border border-borda bg-fundo p-3 shadow-lg">
-            {LINKS.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="rounded-2xl px-4 py-2.5 text-sm font-semibold hover:bg-suave"
-              >
-                {link.rotulo}
-              </Link>
-            ))}
-            <Link
-              href="/termos"
-              className="rounded-2xl px-4 py-2.5 text-sm font-semibold text-cinza hover:bg-suave"
-            >
-              Termos de uso
-            </Link>
-          </nav>
-        </details>
-
-        <div className="flex items-center gap-2.5">
-          <Link
-            href="/#download"
-            className="hidden h-12 items-center gap-3 rounded-full bg-tinta pl-6 pr-1.5 text-sm font-semibold text-white transition hover:-translate-y-0.5 sm:flex"
-          >
+        <div className="flex items-center gap-2">
+          <Link href="/#baixar" className="botao hidden min-h-11 px-5 text-[16px] sm:inline-flex">
             Baixar o app
-            <span className="flex h-9 w-9 items-center justify-center rounded-full bg-azul">
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="#111"
-                strokeWidth="2.4"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                aria-hidden="true"
-              >
-                <path d="M12 4v11M7 11l5 5 5-5M5 20h14" />
-              </svg>
-            </span>
           </Link>
+
+          {/* Menu sem script para telas menores que lg. */}
+          <details className="group relative lg:hidden">
+            <summary
+              aria-label="Abrir menu"
+              className="flex min-h-11 min-w-11 cursor-pointer list-none items-center justify-center bg-[var(--tom)] [&::-webkit-details-marker]:hidden"
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" aria-hidden="true">
+                <path d="M4 7h16M4 12h16M4 17h16" />
+              </svg>
+            </summary>
+            <nav
+              aria-label="Menu"
+              className={"absolute right-0 top-14 flex w-60 flex-col bg-[var(--papel)] p-2 group-open:shadow-[0_18px_40px_rgba(17,17,17,0.18)]" /* taste-skill-ignore: só o menu aberto, que flutua */}
+            >
+              {[...LINKS, { rotulo: "Baixar o app", href: "/#baixar" }].map((link) => (
+                <Link key={link.href} href={link.href} className="px-4 py-3 text-[16px] font-semibold hover:bg-[var(--tom)]">
+                  {link.rotulo}
+                </Link>
+              ))}
+            </nav>
+          </details>
         </div>
       </div>
     </header>

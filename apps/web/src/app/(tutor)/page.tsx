@@ -1,97 +1,111 @@
+import Image from "next/image";
 import Link from "next/link";
-import { BotoesLojas, URL_APP_STORE, URL_GOOGLE_PLAY } from "@/components/BotoesLojas";
+import { URL_APP_STORE, URL_GOOGLE_PLAY } from "@/components/BotoesLojas";
+import { CalendarioVacinas } from "@/components/site/CalendarioVacinas";
+import { HistoriaDia } from "@/components/site/HistoriaDia";
+import { Ingresso } from "@/components/site/Ingresso";
+import { NovoPet } from "@/components/site/NovoPet";
 
-const RECURSOS = [
+/*
+ * Página inicial do site para tutores. A ideia: a página é a carteirinha
+ * de vacinação do pet, impressa em papel. O herói é a carteirinha, os
+ * recursos são um cardápio, o começo é um canhoto, os planos são
+ * ingressos e as perguntas são fichas de arquivo. Os recursos citados
+ * existem no app (apps/tutor); os planos seguem a tela Premium do app.
+ */
+
+const SELOS = [
+  { vacina: "V10", data: "30/11/25" },
+  { vacina: "Antirrábica", data: "15/03/26" },
+  { vacina: "Gripe canina", data: "10/06/26" },
+];
+
+const CARDAPIO = [
   {
-    fundo: "bg-roxo-fundo",
-    texto: "text-roxo-texto",
-    titulo: "Carteira de saúde",
-    descricao:
-      "Vacinas, vermífugo, peso e consultas num só histórico. Exporte em PDF para o veterinário.",
-    icone: (
-      <path d="M14 4l6 6-9 9-6-6z M5 13l6 6" />
-    ),
+    grupo: "Saúde",
+    itens: [
+      { nome: "Carteirinha de vacinas", valor: "incluído", nota: "Vacinas, vermífugo, peso e consultas num só lugar." },
+      { nome: "Calendário sugerido", valor: "por espécie", nota: "As vacinas que faltam, com a data de cada uma." },
+      { nome: "Carteirinha em PDF", valor: "Premium", nota: "Para levar à clínica ou mandar ao veterinário." },
+    ],
   },
   {
-    fundo: "bg-amarelo-fundo",
-    texto: "text-amarelo-texto",
-    titulo: "Lembretes que avisam",
-    descricao:
-      "Vacina, remédio a cada dose, banho e tosa. Você confirma e o PetLive cuida do resto.",
-    icone: <path d="M6 17V11a6 6 0 0 1 12 0v6l1.5 2h-15z M10 21h4" />,
+    grupo: "Rotina",
+    itens: [
+      { nome: "Remédios dose a dose", valor: "na hora", nota: "Aviso no horário e Feito na própria notificação." },
+      { nome: "Lembretes e rotina", valor: "incluído", nota: "Banho, antipulgas, vermífugo e o que você quiser." },
+      { nome: "Passeios gravados", valor: "com mapa", nota: "Trajeto, distância e tempo de cada passeio." },
+    ],
   },
   {
-    fundo: "bg-verde-fundo",
-    texto: "text-verde-texto",
-    titulo: "Mapa pet",
-    descricao:
-      "Clínicas, petshops, banho e tosa e veterinários 24h por perto, com rota e contato.",
-    icone: (
-      <>
-        <path d="M12 21s-6-5.5-6-10a6 6 0 0 1 12 0c0 4.5-6 10-6 10z" />
-        <circle cx="12" cy="11" r="2" />
-      </>
-    ),
-  },
-  {
-    fundo: "bg-azul-fundo",
-    texto: "text-azul-texto",
-    titulo: "Loja e serviços",
-    descricao:
-      "Solicite produtos e reserve banho e tosa, passeio, creche e hotelzinho pelo app.",
-    icone: <path d="M5 8h14l-1 12H6z M9 8V6a3 3 0 0 1 6 0v2" />,
+    grupo: "Quando precisar",
+    itens: [
+      { nome: "SOS e clínica 24 h", valor: "1 toque", nota: "A clínica 24 h mais perto, para ligar ou ir." },
+      { nome: "Primeiros socorros", valor: "sem internet", nota: "Passo a passo guardado no celular." },
+      { nome: "QR da coleira", valor: "incluído", nota: "Quem achar o pet vê como falar com você." },
+    ],
   },
 ];
 
-const PASSOS = [
+const CANHOTO = [
   {
-    titulo: "Cadastre seu pet",
-    descricao:
-      "Nome, espécie, raça e nascimento. O app já sugere o calendário de vacinas.",
+    quando: "Hoje",
+    linhas: [
+      { o_que: "Baixe o app e crie a conta", valor: "grátis" },
+      { o_que: "Cadastre o pet", valor: "nome e nascimento" },
+      { o_que: "Registre as vacinas já tomadas", valor: "na carteirinha" },
+    ],
   },
   {
-    titulo: "Receba os lembretes",
-    descricao:
-      "Vacinas, remédios e consultas chegam no horário certo, sem planilha.",
+    quando: "Amanhã",
+    linhas: [
+      { o_que: "Chega o aviso do remédio", valor: "na hora certa" },
+      { o_que: "Marque Feito na notificação", valor: "1 toque" },
+    ],
   },
   {
-    titulo: "Encontre e reserve",
-    descricao:
-      "Quando a vacina vence, veja clínicas por perto e reserve um horário.",
+    quando: "Quando precisar",
+    linhas: [
+      { o_que: "Clínica 24 h mais perto", valor: "1 toque" },
+      { o_que: "Primeiros socorros", valor: "sem internet" },
+    ],
   },
-];
-
-const SERVICOS = [
-  { rotulo: "Banho e tosa", classe: "bg-roxo-fundo" },
-  { rotulo: "Passeador", classe: "bg-verde-fundo" },
-  { rotulo: "Creche pet", classe: "bg-rosa-fundo" },
-  { rotulo: "Hotelzinho pet", classe: "bg-azul-fundo" },
-  { rotulo: "Clínicas veterinárias", classe: "bg-amarelo-fundo" },
-  { rotulo: "Petshops", classe: "bg-fundo" },
 ];
 
 const PERGUNTAS = [
   {
+    aba: "Veterinário",
     pergunta: "O PetLive substitui o veterinário?",
     resposta:
-      "Não. O PetLive organiza informações de saúde, lembretes e agendamentos; decisões clínicas e emergências devem sempre passar por um veterinário habilitado.",
+      "Não. O PetLive organiza informações de saúde, lembretes e o caminho até a clínica; decisões clínicas e emergências devem sempre passar por um veterinário habilitado.",
   },
   {
-    pergunta: "Meus dados e os do meu pet estão protegidos?",
+    aba: "Dados",
+    pergunta: "Meus dados estão protegidos?",
     resposta:
-      "Sim. Seguimos a LGPD, com acesso controlado por conta, tráfego criptografado e registro do seu consentimento no cadastro. Veja a Política de Privacidade e a página de Direitos na LGPD.",
+      "Sim. Seguimos a LGPD, com acesso controlado por conta, tráfego criptografado e registro do seu consentimento no cadastro. Veja a Política de Privacidade e a página Direitos na LGPD.",
   },
   {
-    pergunta: "Posso comprar remédios pelo app?",
+    aba: "Sem internet",
+    pergunta: "O app funciona sem internet?",
     resposta:
-      "Você pode solicitar produtos ao petshop mais próximo e retirar no local. A venda de medicamentos veterinários segue as regras de cada estabelecimento.",
+      "O essencial, sim: os primeiros socorros e os dados de emergência ficam guardados no celular. A busca no mapa e as rotas precisam de internet.",
   },
   {
+    aba: "Família",
+    pergunta: "Dá para dividir com a família?",
+    resposta:
+      "Sim. Na guarda compartilhada você convida outra pessoa por um link, e a dose que ela marcar como dada aparece para você.",
+  },
+  {
+    aba: "Cidades",
     pergunta: "Quais cidades o PetLive atende?",
     resposta:
-      "O app já funciona em todo o Brasil para carteira de saúde e lembretes. A rede de clínicas, petshops e serviços começa pelo Rio de Janeiro e cresce conforme novos parceiros entram.",
+      "A carteira de saúde e os lembretes funcionam em todo o Brasil. A rede de clínicas, petshops e serviços começa pelo Rio de Janeiro e cresce conforme novos parceiros entram.",
   },
 ];
+
+const CORES_FICHAS = ["var(--ceu)", "var(--ceu-claro)", "var(--tom)"];
 
 /** Dados estruturados do app para os buscadores (schema.org). */
 const DADOS_ESTRUTURADOS = {
@@ -117,274 +131,254 @@ export default function Home() {
         // JSON fixo do próprio site, sem dado de usuário.
         dangerouslySetInnerHTML={{ __html: JSON.stringify(DADOS_ESTRUTURADOS) }}
       />
-      {/* Herói */}
-      <section id="download" className="relative overflow-hidden bg-azul-hero">
-        <svg
-          className="absolute right-6 top-8 hidden opacity-40 md:block"
-          width="260"
-          height="260"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="#fff"
-          strokeWidth="0.5"
-          aria-hidden="true"
-        >
-          <circle cx="6" cy="10" r="1.8" />
-          <circle cx="10" cy="6" r="1.8" />
-          <circle cx="14" cy="6" r="1.8" />
-          <circle cx="18" cy="10" r="1.8" />
-          <path d="M12 12c-3 0-5 2.5-5 4.5 0 1.5 1.2 2 2.6 2 1 0 1.6-.4 2.4-.4s1.4.4 2.4.4c1.4 0 2.6-.5 2.6-2 0-2-2-4.5-5-4.5z" />
-        </svg>
 
-        <div className="mx-auto max-w-[1440px] px-6 pb-28 pt-14 md:px-12 md:pb-36 md:pt-20 xl:px-[120px]">
-          <span className="inline-block rounded-full bg-fundo px-4 py-2 text-[13px] font-bold">
-            Grátis para começar
-          </span>
-          <h1 className="mt-6 max-w-3xl text-5xl font-medium leading-[1.06] tracking-tight md:text-[66px]">
-            A saúde do seu pet, sempre em dia
-          </h1>
-          <p className="mt-6 max-w-xl text-lg leading-relaxed text-azul-texto md:text-xl">
-            Carteira de vacinação, lembretes de remédios, clínicas por perto e
-            serviços com horário marcado. Tudo no PetLive.
-          </p>
-          <BotoesLojas />
-          <p className="mt-5.5 text-[13px] font-medium text-azul-texto">
-            Feito para tutores de cães e gatos no Rio de Janeiro.
-          </p>
+      {/* Herói: a carteirinha sobre um cômodo à meia-luz. */}
+      <section className="relative flex min-h-[calc(100svh-72px)] items-center overflow-hidden bg-[var(--tinta)] py-10">
+        <div className="foto-respira absolute inset-0">
+          <Image
+            src="/fotos/cao-dormindo.jpg"
+            alt="Cão dormindo num travesseiro, na sala à meia-luz"
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover brightness-[0.62]"
+          />
         </div>
-      </section>
 
-      {/* Recursos */}
-      <section id="recursos" className="px-6 py-16 md:px-12 md:py-24 xl:px-[120px]">
-        <div className="mx-auto max-w-[1440px]">
-          <p className="text-center text-sm font-bold text-azul-escuro">Recursos</p>
-          <h2 className="mx-auto mt-3 max-w-3xl text-center text-4xl font-medium tracking-tight md:text-[54px]">
-            Tudo do seu pet em um só lugar
-          </h2>
-          <div className="mt-12 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
-            {RECURSOS.map((recurso) => (
-              <article
-                key={recurso.titulo}
-                className={`${recurso.fundo} flex h-full flex-col rounded-[36px] p-7`}
-              >
-                <span className="flex h-14 w-14 items-center justify-center rounded-full bg-fundo">
-                  <svg
-                    width="26"
-                    height="26"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="#111"
-                    strokeWidth="1.8"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    aria-hidden="true"
-                  >
-                    {recurso.icone}
-                  </svg>
-                </span>
-                <h3 className="mt-6 text-[22px] font-extrabold">{recurso.titulo}</h3>
-                <p className={`mt-2 text-[15px] leading-relaxed ${recurso.texto}`}>
-                  {recurso.descricao}
+        <div className="site-moldura relative">
+          <div className="mx-auto flex min-h-[62svh] w-full max-w-[860px] flex-col justify-between gap-8 bg-[var(--papel)] p-6 md:p-8">
+            <h1 className="t-titulo flex flex-wrap gap-x-[0.28em] md:items-baseline md:justify-between" style={{ fontSize: "clamp(36px, 4vw, 58px)" }}>
+              <span>Carteira</span>
+              <span>de saúde</span>
+              <span>do seu pet</span>
+            </h1>
+
+            <div className="grid items-start gap-8 md:grid-cols-[1.1fr_1fr]">
+              <div>
+                <ul className="t-lead space-y-1 font-semibold">
+                  <li>Vacinas, remédios e consultas</li>
+                  <li>Aviso na hora de cada dose</li>
+                  <li>Para cães e gatos</li>
+                </ul>
+                <p className="t-corpo mt-5 max-w-[34ch]">
+                  O PetLive guarda a saúde do seu pet no celular e avisa você na hora de cada cuidado.
                 </p>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Como funciona */}
-      <section id="como-funciona" className="bg-[#F6F1FD] px-6 py-16 md:px-12 md:py-24 xl:px-[120px]">
-        <div className="mx-auto max-w-[1440px]">
-          <p className="text-center text-sm font-bold text-roxo-texto">Como funciona</p>
-          <h2 className="mt-3 text-center text-4xl font-medium tracking-tight md:text-[46px]">
-            Pronto em três passos
-          </h2>
-          <div className="mt-12 grid gap-8 md:grid-cols-3">
-            {PASSOS.map((passo, i) => (
-              <div key={passo.titulo} className="flex gap-4">
-                <span className="flex h-13 w-13 shrink-0 items-center justify-center rounded-full bg-tinta text-xl font-extrabold text-white">
-                  {i + 1}
-                </span>
-                <div>
-                  <h3 className="text-xl font-extrabold">{passo.titulo}</h3>
-                  <p className="mt-1.5 text-[15px] leading-relaxed text-roxo-texto">
-                    {passo.descricao}
-                  </p>
-                </div>
               </div>
-            ))}
+
+              {/* Os selos das vacinas, como numa carteirinha de papel. */}
+              <div data-ui className="bg-[var(--tom)] p-4" aria-label="Exemplo de carteirinha: vacinas do Rex">
+                <div className="flex items-center gap-3">
+                  <Image src="/logo-petlive.png" alt="" width={32} height={32} />
+                  <p className="text-[16px] font-bold">Rex · cão · 3 anos</p>
+                </div>
+                <ul className="mt-3 grid grid-cols-2 gap-2">
+                  {SELOS.map((s) => (
+                    <li key={s.vacina} className="border-[3px] border-dotted border-[var(--ceu)] bg-[var(--papel)] p-2.5">
+                      <p className="text-[16px] font-bold">{s.vacina}</p>
+                      <p className="t-pequeno tabular-nums text-[var(--apagado)]">{s.data}</p>
+                    </li>
+                  ))}
+                  <li className="bg-[var(--ceu)] p-2.5">
+                    <p className="text-[16px] font-bold">Próxima V10</p>
+                    <p className="t-pequeno tabular-nums">30/11/26</p>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <div className="flex flex-col items-start gap-4 md:flex-row md:items-center md:justify-between">
+              <p className="t-pequeno order-3 text-[var(--apagado)] md:order-1">Foto: Enrique, Pexels</p>
+              <a href="#baixar" className="botao order-1 md:order-2">
+                Baixar o app
+              </a>
+              <a href="#calendario" className="link-sublinhado order-2 text-[16px] font-semibold md:order-3">
+                Ver o calendário de vacinas
+              </a>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Serviços */}
-      <section className="bg-tinta px-6 py-16 text-white md:px-12 md:py-24 xl:px-[120px]">
-        <div className="mx-auto grid max-w-[1440px] gap-12 lg:grid-cols-[1.4fr_1fr] lg:items-center">
-          <div>
-            <p className="text-sm font-bold text-azul">
-              Clínicas, petshops e serviços com horário marcado
-            </p>
-            <h2 className="mt-3 max-w-2xl text-4xl font-medium leading-[1.06] tracking-tight md:text-[46px]">
-              Clínicas, petshops, banho e tosa, passeio, creche e hotelzinho
-            </h2>
-            <p className="mt-5 max-w-xl text-lg leading-relaxed text-[#B8C2D3]">
-              Marque consulta e vacina na clínica, peça produtos no petshop e
-              reserve serviços. Cada loja define dias, horários e vagas, e você
-              só vê horários livres.
-            </p>
-            <div className="mt-7 flex flex-wrap gap-2.5">
-              {SERVICOS.map((servico) => (
-                <span
-                  key={servico.rotulo}
-                  className={`${servico.classe} flex h-10 items-center rounded-full px-5 text-sm font-bold text-tinta`}
-                >
-                  {servico.rotulo}
-                </span>
+      {/* A interação: o calendário de vacinas do pet do visitante. */}
+      <section id="calendario" className="scroll-mt-4 bg-[var(--papel)]">
+        <div className="site-moldura">
+          <CalendarioVacinas />
+        </div>
+      </section>
+
+      {/* Recursos como um cardápio impresso. */}
+      <section id="recursos" className="scroll-mt-4 bg-[var(--tinta)] py-[clamp(72px,10vw,160px)]">
+        <div className="site-moldura grid items-start gap-10 lg:grid-cols-[1fr_minmax(0,600px)_1fr]">
+          <figure data-revelar className="relative hidden aspect-[3/4] lg:mt-40 lg:block">
+            <Image src="/fotos/consulta.jpg" alt="Lulu-da-pomerânia sendo examinado na clínica" fill sizes="25vw" className="object-cover" />
+          </figure>
+
+          <div className="recorte-ondas bg-[var(--papel)] px-6 py-16 md:px-12">
+            <h2 data-revelar className="t-titulo text-center">O que vem no app</h2>
+            <div className="mt-12 space-y-12">
+              {CARDAPIO.map((g, gi) => (
+                <div key={g.grupo} data-revelar style={{ ["--ordem" as string]: gi }}>
+                  <h3 className="text-[22px] font-bold">{g.grupo}</h3>
+                  <ul className="mt-5 space-y-5">
+                    {g.itens.map((i) => (
+                      <li key={i.nome}>
+                        <div className="flex items-end gap-3 text-[17px] font-semibold">
+                          <span>{i.nome}</span>
+                          <span aria-hidden="true" className="pontilhado" />
+                          <span className={`whitespace-nowrap ${i.valor === "Premium" ? "bg-[var(--ceu)] px-2" : ""}`}>{i.valor}</span>
+                        </div>
+                        <p className="t-pequeno mt-1 max-w-[40ch] text-[var(--apagado)]">{i.nota}</p>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               ))}
             </div>
+            <p className="t-pequeno mt-12 text-center text-[var(--apagado)]">
+              Premium: assinatura em breve, pela loja do celular.
+            </p>
           </div>
 
-          {/* Miniatura do app de agendamento (ilustração decorativa) */}
-          <div
-            aria-hidden="true"
-            className="mx-auto w-full max-w-[300px] overflow-hidden rounded-[44px] border-[9px] border-[#2A2A2A] bg-fundo text-tinta"
-          >
-            <div className="h-24 bg-azul-hero px-4 pt-7 text-xl font-medium tracking-tight">
-              Agendar horário
-            </div>
-            <div className="flex flex-col gap-2 p-3.5">
-              <div className="grid grid-cols-5 gap-1 text-center text-[10px] font-bold">
-                <span className="rounded-xl bg-tinta py-1.5 text-white">Seg 19</span>
-                <span className="rounded-xl bg-suave py-1.5">Ter 20</span>
-                <span className="rounded-xl bg-suave py-1.5">Qua 21</span>
-                <span className="rounded-xl bg-suave py-1.5">Qui 22</span>
-                <span className="rounded-xl bg-suave py-1.5">Sex 23</span>
-              </div>
-              <p className="mt-1 text-[11px] font-bold">Horários disponíveis</p>
-              <div className="grid grid-cols-3 gap-1.5 text-center text-[11px] font-semibold">
-                <span className="rounded-2xl border-[1.5px] border-borda py-2">09:00</span>
-                <span className="rounded-2xl bg-suave py-2 text-cinza line-through">10:30</span>
-                <span className="rounded-2xl border-[1.5px] border-borda py-2">13:00</span>
-                <span className="rounded-2xl bg-tinta py-2 text-white">14:30</span>
-                <span className="rounded-2xl border-[1.5px] border-borda py-2">16:00</span>
-                <span className="rounded-2xl bg-suave py-2 text-cinza line-through">17:30</span>
-              </div>
-              <p className="rounded-2xl bg-roxo-fundo p-2.5 text-[11px] font-bold">
-                Banho e tosa · Rex
-                <br />
-                <span className="font-medium text-roxo-texto">Seg, 19 · 14:30</span>
-              </p>
-              <span className="flex h-10 items-center justify-center rounded-full bg-tinta text-xs font-bold text-white">
-                Reservar horário
-              </span>
-            </div>
+          <figure data-revelar className="relative hidden aspect-[3/4] lg:block">
+            <Image src="/fotos/tutora.jpg" alt="Tutora sorrindo com o cão no colo, em casa" fill sizes="25vw" className="object-cover" />
+          </figure>
+        </div>
+      </section>
+
+      {/* Um dia com o PetLive: a foto presa e as etapas passando. */}
+      <section className="bg-[var(--papel)] py-[clamp(72px,10vw,160px)]">
+        <div className="site-moldura">
+          <div className="grid gap-6 lg:grid-cols-2 lg:gap-16">
+            <h2 data-revelar className="t-titulo max-w-[14ch]">Um dia com o PetLive</h2>
+            <p data-revelar style={{ ["--ordem" as string]: 1 }} className="t-lead max-w-[38ch] self-end">
+              Da dose da manhã à escova de dentes da noite: o app avisa, você marca e o histórico se escreve sozinho.
+            </p>
+          </div>
+          <div className="mt-12 lg:mt-16">
+            <HistoriaDia />
           </div>
         </div>
       </section>
 
-      {/* Para lojistas */}
-      <section id="lojistas" className="px-6 py-14 md:px-12 xl:px-[120px]">
-        <div className="mx-auto flex max-w-[1440px] flex-col items-start justify-between gap-8 rounded-[44px] bg-roxo-fundo px-8 py-12 md:px-14 lg:flex-row lg:items-center">
-          <div>
-            <p className="text-sm font-bold text-roxo-texto">Para lojas e clínicas</p>
-            <h2 className="mt-2 text-3xl font-medium leading-tight tracking-tight md:text-[38px]">
-              Tem uma loja ou clínica?
-              <br />
-              Venda e agende pelo PetLive.
-            </h2>
+      {/* Como começar, impresso como um canhoto. */}
+      <section id="como-comecar" className="scroll-mt-4 bg-[var(--ceu)] py-[clamp(72px,10vw,160px)]">
+        <div className="site-moldura grid items-start gap-12 lg:grid-cols-12">
+          <div className="lg:col-span-5">
+            <h2 data-revelar className="t-titulo max-w-[12ch]">Como começar</h2>
+            <p data-revelar style={{ ["--ordem" as string]: 1 }} className="t-lead mt-6 max-w-[30ch]">
+              Cinco minutos hoje e o PetLive cuida dos avisos a partir de amanhã.
+            </p>
           </div>
-          <Link
-            href="/lojistas"
-            className="flex h-16 shrink-0 items-center gap-4 rounded-full bg-tinta py-2 pl-7 pr-2 text-base font-semibold text-white transition hover:-translate-y-0.5"
-          >
-            Conhecer para lojistas
-            <span className="flex h-12 w-12 items-center justify-center rounded-full bg-azul">
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="#111"
-                strokeWidth="2.4"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                aria-hidden="true"
-              >
-                <path d="M5 12h14M13 6l6 6-6 6" />
-              </svg>
-            </span>
-          </Link>
-        </div>
-      </section>
 
-      {/* Planos */}
-      <section className="px-6 py-16 md:px-12 md:py-24 xl:px-[120px]">
-        <div className="mx-auto max-w-[1440px]">
-          <p className="text-center text-sm font-bold text-azul-escuro">Planos</p>
-          <h2 className="mt-3 text-center text-4xl font-medium tracking-tight md:text-[46px]">
-            Comece grátis, evolua quando quiser
-          </h2>
-          <div className="mx-auto mt-10 grid max-w-4xl gap-6 md:grid-cols-2">
-            <div className="rounded-[40px] bg-suave p-8">
-              <h3 className="text-2xl font-extrabold">Grátis</h3>
-              <p className="mt-1 text-[15px] text-cinza">Para cuidar de um pet</p>
-              <ul className="mt-6 space-y-3 text-[15px] font-semibold">
-                <li>✓ 1 pet e lembretes básicos</li>
-                <li>✓ Vacinas, vermífugo e peso</li>
-                <li>✓ Mapa pet e lojas por perto</li>
-                <li>✓ Solicitações e reservas</li>
-              </ul>
-            </div>
-            <div className="rounded-[40px] bg-tinta p-8 text-white">
-              <div className="flex items-center justify-between">
-                <h3 className="text-2xl font-extrabold">Premium</h3>
-                <span className="rounded-full bg-azul px-3 py-1.5 text-xs font-bold text-tinta">
-                  Mais completo
-                </span>
+          <div data-revelar style={{ ["--ordem" as string]: 2 }} className="recorte-zigue bg-[var(--papel)] p-6 md:p-9 lg:col-span-6 lg:col-start-7">
+            {CANHOTO.map((bloco) => (
+              <div key={bloco.quando} className="mt-7 first:mt-0">
+                <h3 className="text-[17px] font-bold">{bloco.quando}</h3>
+                <ul className="mt-3 space-y-3 text-[17px]">
+                  {bloco.linhas.map((l) => (
+                    <li key={l.o_que} className="flex items-end gap-3">
+                      <span>{l.o_que}</span>
+                      <span aria-hidden="true" className="pontilhado" />
+                      <span className="whitespace-nowrap text-right font-semibold">{l.valor}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
-              <p className="mt-1 text-[15px] text-[#B8C2D3]">Valor a combinar no lançamento</p>
-              <ul className="mt-6 space-y-3 text-[15px] font-semibold">
-                <li>✓ Vários pets na mesma conta</li>
-                <li>✓ Carteira em PDF para o veterinário</li>
-                <li>✓ Anexos e acesso para a família</li>
-                <li>✓ QR Code da coleira</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Perguntas */}
-      <section id="perguntas" className="bg-suave px-6 py-16 md:px-12 md:py-24 xl:px-[120px]">
-        <div className="mx-auto max-w-4xl">
-          <h2 className="text-center text-4xl font-medium tracking-tight md:text-[44px]">
-            Perguntas frequentes
-          </h2>
-          <div className="mt-10 flex flex-col gap-3">
-            {PERGUNTAS.map((item) => (
-              <details
-                key={item.pergunta}
-                className="group rounded-3xl bg-fundo px-6 py-4 [&_summary::-webkit-details-marker]:hidden"
-              >
-                <summary className="flex cursor-pointer items-center justify-between gap-4 text-base font-bold">
-                  {item.pergunta}
-                  <span
-                    aria-hidden="true"
-                    className="text-2xl font-medium transition group-open:rotate-45"
-                  >
-                    +
-                  </span>
-                </summary>
-                <p className="mt-3 leading-relaxed text-cinza">{item.resposta}</p>
-              </details>
             ))}
+            <p className="mt-8 flex min-h-11 flex-wrap items-center justify-between gap-x-4 bg-[var(--tinta)] px-4 py-2 text-[17px] font-bold text-[var(--papel)]">
+              <span>Saúde do pet em dia</span>
+              <span>no seu celular</span>
+            </p>
           </div>
-          <p className="mt-10 text-center text-sm text-cinza">
-            Ficou com dúvida? Escreva para{" "}
-            <Link href="mailto:suporte@petlive.app.br" className="font-semibold text-tinta underline">
-              suporte@petlive.app.br
-            </Link>
-          </p>
+        </div>
+      </section>
+
+      {/* Planos como ingressos. */}
+      <section id="planos" className="scroll-mt-4 bg-[var(--tinta)] py-[clamp(72px,10vw,160px)] text-[var(--tinta)]">
+        <div className="site-moldura">
+          <div className="grid gap-6 text-[var(--papel)] lg:grid-cols-2 lg:gap-16">
+            <h2 data-revelar className="t-titulo">Planos</h2>
+            <p data-revelar style={{ ["--ordem" as string]: 1 }} className="t-lead max-w-[36ch] self-end">
+              Comece de graça com um pet. O Premium chega pela loja de apps do celular.
+            </p>
+          </div>
+          <div className="mx-auto mt-12 flex max-w-[1100px] flex-col gap-10">
+            <Ingresso
+              titulo="Grátis, para um pet"
+              linhas={["Carteirinha e calendário de vacinas", "Remédios e lembretes", "Mapa e SOS", "QR básico da coleira"]}
+              preco="R$ 0"
+              acao={
+                <a href="#baixar" className="botao w-full">
+                  Baixar o app
+                </a>
+              }
+            />
+            <Ingresso
+              titulo="Premium"
+              linhas={["Mais pets na mesma conta", "Carteirinha em PDF", "Histórico completo de despesas", "Tudo do plano grátis"]}
+              preco="Em breve"
+              acao={<p className="t-pequeno text-center text-[var(--apagado)]">Valor no lançamento da assinatura</p>}
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* Perguntas como fichas de arquivo. */}
+      <section id="perguntas" className="scroll-mt-4 bg-[var(--papel)] py-[clamp(72px,10vw,160px)]">
+        <div className="site-moldura">
+          <div className="mx-auto max-w-[920px]">
+            <h2 data-revelar className="t-titulo">Perguntas</h2>
+            <div className="mt-10">
+              {PERGUNTAS.map((p, i) => (
+                <details
+                  key={p.aba}
+                  name="perguntas"
+                  open={i === 0}
+                  className="group"
+                  style={{ ["--cor" as string]: CORES_FICHAS[i % CORES_FICHAS.length] }}
+                >
+                  <summary className="block cursor-pointer list-none [&::-webkit-details-marker]:hidden">
+                    <span
+                      className="t-pequeno flex h-10 w-[140px] items-center bg-[var(--cor)] px-4 font-bold md:w-[200px]"
+                      style={{ marginLeft: `min(${i * 150}px, ${i * 12}vw)` }}
+                    >
+                      {p.aba}
+                    </span>
+                    <span className="flex min-h-[64px] items-center justify-between gap-4 bg-[var(--cor)] px-5 text-[17px] font-semibold md:px-7 md:text-[22px]">
+                      {p.pergunta}
+                      <span aria-hidden="true" className="text-[22px] font-medium transition-transform duration-300 group-open:rotate-45">
+                        +
+                      </span>
+                    </span>
+                  </summary>
+                  <div className="bg-[var(--cor)] px-5 pb-7 md:px-7">
+                    <p className="t-corpo max-w-[56ch]">{p.resposta}</p>
+                  </div>
+                </details>
+              ))}
+            </div>
+            <p className="t-corpo mt-10">
+              Ficou com dúvida?{" "}
+              <Link href="mailto:suporte@petlive.app.br" className="link-sublinhado font-semibold">
+                suporte@petlive.app.br
+              </Link>
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Fechamento: a primeira tela do app, já aberta. */}
+      <section id="baixar" className="scroll-mt-4 bg-[var(--ceu)]">
+        <div className="site-moldura grid min-h-[90svh] items-end gap-12 py-16 lg:grid-cols-12 lg:items-center lg:py-20">
+          <div className="self-end lg:col-span-6">
+            <h2 data-revelar className="t-display max-w-[9ch]">Comece pelo seu pet</h2>
+            <p data-revelar style={{ ["--ordem" as string]: 1 }} className="t-lead mt-6 max-w-[34ch]">
+              Baixe o app, cadastre o pet e o PetLive monta o calendário de vacinas na hora.
+            </p>
+          </div>
+          <div data-revelar style={{ ["--ordem" as string]: 2 }} className="flex justify-center lg:col-span-5 lg:col-start-8">
+            <NovoPet />
+          </div>
         </div>
       </section>
     </>

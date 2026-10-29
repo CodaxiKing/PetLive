@@ -2,19 +2,34 @@ import type { Metadata } from "next";
 import { PaginaLegal } from "@/components/PaginaLegal";
 
 export const metadata: Metadata = {
-  title: "Créditos dos mapas",
-  description: "Fontes abertas dos mapas e dos lugares do PetLive e as licenças de cada uma.",
+  title: "Créditos",
+  description: "Fontes abertas dos mapas e dos lugares do PetLive, as fotos do site e as licenças de cada uma.",
   alternates: { canonical: "/creditos" },
 };
 
-/** Créditos e licenças dos dados abertos do mapa (ODbL, CDLA e Apache 2.0). */
+/** Créditos e licenças: dados abertos do mapa (ODbL, CDLA e Apache 2.0) e as fotos do site (Pexels). */
 export default function PaginaCreditos() {
   return (
     <PaginaLegal
-      titulo="Créditos dos mapas"
-      resumo="O mapa e os lugares pet do PetLive vêm de dados abertos. Agradecemos a quem mantém essas fontes."
-      atualizado="21 de outubro de 2026"
+      foto={{ src: "/fotos/consulta.jpg", alt: "Lulu-da-pomerânia sendo examinado na clínica" }}
+      titulo="Créditos"
+      resumo="O mapa e os lugares pet do PetLive vêm de dados abertos, e as fotos do site, do Pexels. Agradecemos a quem mantém essas fontes."
+      atualizado="29 de outubro de 2026"
       secoes={[
+        {
+          titulo: "Fotos do site",
+          paragrafos: [
+            "As fotos da página inicial são do Pexels, usadas sob a licença do Pexels (pexels.com/license). Elas mostram cães, gatos e tutores em geral, não usuários do PetLive.",
+          ],
+          itens: [
+            "Cão dormindo no travesseiro: Enrique — pexels.com/photo/4458433",
+            "Gatinho laranja na janela: 大 董 — pexels.com/photo/34389860",
+            "Dois cães de coleira na calçada: Mathias Reding — pexels.com/photo/31173346",
+            "Tutora e cão no sofá: Meruyert Gonullu — pexels.com/photo/6589017",
+            "Lulu-da-pomerânia na consulta: Tima Miroshnichenko — pexels.com/photo/6235243",
+            "Tutora com o cão no colo: Samson Katt — pexels.com/photo/5256711",
+          ],
+        },
         {
           titulo: "OpenStreetMap",
           paragrafos: [
