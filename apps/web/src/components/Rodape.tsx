@@ -27,7 +27,7 @@ const ANO = 2026;
 export function Rodape({ publico = "tutor" }: { publico?: "tutor" | "lojista" }) {
   const convite = publico === "tutor" ? { texto: "Tem uma loja ou clínica?", href: "/lojistas" } : { texto: "Tem um cão ou gato?", href: "/" };
   return (
-    <footer className="bg-[var(--papel)] p-2 md:p-3">
+    <footer className="secao bg-[var(--papel)] p-2 pt-4 md:p-3 md:pt-5">
       <div className="grid grid-cols-2 gap-2 md:grid-cols-12">
         <div className="col-span-2 flex min-h-[200px] flex-col justify-between gap-6 rounded-[var(--raio)] bg-[var(--tom)] p-5 md:col-span-4 md:min-h-[220px] md:p-6">
           <p className="max-w-[26ch] text-[22px] font-semibold leading-snug">

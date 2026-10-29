@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { Foto } from "@/components/site/Foto";
 import Link from "next/link";
 import { URL_APP_STORE, URL_GOOGLE_PLAY } from "@/components/BotoesLojas";
 import { CalendarioVacinas } from "@/components/site/CalendarioVacinas";
@@ -240,17 +241,17 @@ export default function Home() {
       </section>
 
       {/* A interação: o calendário de vacinas do pet do visitante. */}
-      <section id="calendario" className="scroll-mt-4 bg-[var(--papel)]">
+      <section id="calendario" className="secao scroll-mt-4 bg-[var(--papel)]">
         <div className="site-moldura">
           <CalendarioVacinas />
         </div>
       </section>
 
       {/* Recursos como um cardápio impresso. */}
-      <section id="recursos" className="scroll-mt-4 bg-[var(--tinta)] py-[clamp(72px,10vw,160px)]">
+      <section id="recursos" className="secao scroll-mt-4 bg-[var(--tinta)] py-[clamp(72px,10vw,160px)]">
         <div className="site-moldura grid items-start gap-10 lg:grid-cols-[1fr_minmax(0,600px)_1fr]">
           <figure data-revelar className="relative overflow-hidden rounded-[var(--raio-g)] hidden aspect-[3/4] lg:mt-40 lg:block">
-            <Image src="/fotos/consulta.jpg" alt="Lulu-da-pomerânia sendo examinado na clínica" fill sizes="25vw" className="object-cover" />
+            <Foto src="/fotos/consulta.jpg" alt="Lulu-da-pomerânia sendo examinado na clínica" fill desliza sizes="25vw" className="object-cover" />
           </figure>
 
           <div className="recorte-ondas rounded-[var(--raio-g)] bg-[var(--papel)] px-6 py-16 md:px-12">
@@ -280,13 +281,13 @@ export default function Home() {
           </div>
 
           <figure data-revelar className="relative overflow-hidden rounded-[var(--raio-g)] hidden aspect-[3/4] lg:block">
-            <Image src="/fotos/cao-dormindo.jpg" alt="Cão dormindo num travesseiro, na sala à meia-luz" fill sizes="25vw" className="object-cover" />
+            <Foto src="/fotos/cao-dormindo.jpg" alt="Cão dormindo num travesseiro, na sala à meia-luz" fill desliza sizes="25vw" className="object-cover" />
           </figure>
         </div>
       </section>
 
       {/* Um dia com o PetLive: a foto presa e as etapas passando. */}
-      <section className="bg-[var(--papel)] py-[clamp(72px,10vw,160px)]">
+      <section className="secao bg-[var(--papel)] py-[clamp(72px,10vw,160px)]">
         <div className="site-moldura">
           <div className="grid gap-6 lg:grid-cols-2 lg:gap-16">
             <h2 data-revelar className="t-titulo max-w-[14ch]">Um dia com o PetLive</h2>
@@ -301,7 +302,7 @@ export default function Home() {
       </section>
 
       {/* Como começar, impresso como um canhoto. */}
-      <section id="como-comecar" className="scroll-mt-4 bg-[var(--ceu)] py-[clamp(72px,10vw,160px)]">
+      <section id="como-comecar" className="secao scroll-mt-4 bg-[var(--ceu)] py-[clamp(72px,10vw,160px)]">
         <div className="site-moldura grid items-start gap-12 lg:grid-cols-12">
           <div className="lg:col-span-5">
             <h2 data-revelar className="t-titulo max-w-[12ch]">Como começar</h2>
@@ -334,7 +335,7 @@ export default function Home() {
       </section>
 
       {/* Planos como ingressos. */}
-      <section id="planos" className="scroll-mt-4 bg-[var(--tinta)] py-[clamp(72px,10vw,160px)] text-[var(--tinta)]">
+      <section id="planos" className="secao scroll-mt-4 bg-[var(--tinta)] py-[clamp(72px,10vw,160px)] text-[var(--tinta)]">
         <div className="site-moldura">
           <div className="grid gap-6 text-[var(--papel)] lg:grid-cols-2 lg:gap-16">
             <h2 data-revelar className="t-titulo">Planos</h2>
@@ -364,7 +365,7 @@ export default function Home() {
       </section>
 
       {/* Perguntas como fichas de arquivo. */}
-      <section id="perguntas" className="scroll-mt-4 bg-[var(--papel)] py-[clamp(72px,10vw,160px)]">
+      <section id="perguntas" className="secao scroll-mt-4 bg-[var(--papel)] py-[clamp(72px,10vw,160px)]">
         <div className="site-moldura">
           <div className="mx-auto max-w-[920px]">
             <h2 data-revelar className="t-titulo">Perguntas</h2>
@@ -409,7 +410,7 @@ export default function Home() {
       </section>
 
       {/* Fechamento: a primeira tela do app, já aberta. */}
-      <section id="baixar" className="scroll-mt-4 bg-[var(--ceu)]">
+      <section id="baixar" className="secao scroll-mt-4 bg-[var(--ceu)]">
         <div className="site-moldura grid min-h-[90svh] items-end gap-12 py-16 lg:grid-cols-12 lg:items-center lg:py-20">
           <div className="self-end lg:col-span-6">
             <h2 data-revelar className="t-display max-w-[9ch]">Comece pelo seu pet</h2>

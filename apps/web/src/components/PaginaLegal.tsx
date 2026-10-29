@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Image from "next/image";
+import { Foto } from "@/components/site/Foto";
 
 export type SecaoLegal = {
   titulo: string;
@@ -46,7 +46,7 @@ export function PaginaLegal({ titulo, resumo, atualizado, secoes, foto = FOTO_PA
           </p>
         </div>
         <figure data-revelar style={{ ["--ordem" as string]: 1 }} className="relative overflow-hidden rounded-[var(--raio-g)] aspect-[4/3] lg:col-span-6">
-          <Image src={foto.src} alt={foto.alt} fill priority sizes="(min-width: 1024px) 50vw, 100vw" className="object-cover" />
+          <Foto src={foto.src} alt={foto.alt} fill priority sizes="(min-width: 1024px) 50vw, 100vw" className="object-cover" />
         </figure>
       </section>
 

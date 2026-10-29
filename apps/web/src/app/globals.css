@@ -139,6 +139,51 @@ html {
 
 :focus-visible { outline: 3px solid var(--tinta); outline-offset: 3px; }
 
+/*
+ * Troca de seção: cada seção é uma folha de cantos redondos que sobe por
+ * cima da anterior. Ao entrar na tela a folha abre os cantos e assenta;
+ * sem suporte a animação por rolagem, fica só a folha parada.
+ */
+.secao {
+  position: relative;
+  margin-top: calc(-1 * var(--raio-g));
+  border-radius: var(--raio-g) var(--raio-g) 0 0;
+}
+@supports (animation-timeline: view()) {
+  .secao {
+    animation: folha-assenta linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 100%;
+  }
+  @keyframes folha-assenta {
+    from { border-radius: calc(var(--raio-g) * 2.4) calc(var(--raio-g) * 2.4) 0 0; }
+    to { border-radius: var(--raio-g) var(--raio-g) 0 0; }
+  }
+
+  /* O que sai pelo alto recua um pouco, como a folha de baixo na pilha. */
+  main > section > * {
+    animation: folha-recua linear both;
+    animation-timeline: view();
+    /* Só no fim: quando o pé da seção já está na metade de cima da tela. */
+    animation-range: exit calc(100% - 45vh) exit 100%;
+    transform-origin: 50% 100%;
+  }
+  @keyframes folha-recua {
+    to { transform: scale(0.95); opacity: 0.4; }
+  }
+
+  /* As fotos andam um pouco mais devagar que a página, dentro da moldura. */
+  .foto-desliza {
+    animation: foto-desliza linear both;
+    animation-timeline: view();
+    animation-range: cover 0% cover 100%;
+  }
+  @keyframes foto-desliza {
+    from { transform: translateY(-5%) scale(1.12); }
+    to { transform: translateY(5%) scale(1.12); }
+  }
+}
+
 /* Entrada das partes de cada seção. Sem script, tudo fica visível. */
 html.js [data-revelar] {
   opacity: 0;
@@ -157,6 +202,6 @@ html.js [data-revelar].visivel { opacity: 1; transform: none; }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   html.js [data-revelar] { opacity: 1; transform: none; transition: none; }
-  .foto-respira { animation: none; }
+  .foto-respira, .secao, .foto-desliza, main > section > * { animation: none; }
   .botao, .link-sublinhado { transition: none; }
 }

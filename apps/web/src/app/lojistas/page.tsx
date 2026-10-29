@@ -1,4 +1,4 @@
-import Image from "next/image";
+import { Foto } from "@/components/site/Foto";
 import { FormularioContato } from "@/components/FormularioContato";
 import { Ingresso } from "@/components/site/Ingresso";
 
@@ -101,10 +101,10 @@ export default function PaginaLojistas() {
       </section>
 
       {/* Benefícios como cardápio. */}
-      <section id="beneficios" className="scroll-mt-4 bg-[var(--ceu)] py-[clamp(72px,10vw,160px)]">
+      <section id="beneficios" className="secao scroll-mt-4 bg-[var(--ceu)] py-[clamp(72px,10vw,160px)]">
         <div className="site-moldura grid items-start gap-10 lg:grid-cols-[1fr_minmax(0,600px)_1fr]">
           <figure data-revelar className="relative overflow-hidden rounded-[var(--raio-g)] hidden aspect-[3/4] lg:mt-24 lg:block">
-            <Image src="/fotos/consulta.jpg" alt="Veterinário examinando um lulu-da-pomerânia" fill sizes="25vw" className="object-cover" />
+            <Foto src="/fotos/consulta.jpg" alt="Veterinário examinando um lulu-da-pomerânia" fill desliza sizes="25vw" className="object-cover" />
           </figure>
 
           <div className="recorte-ondas rounded-[var(--raio-g)] bg-[var(--papel)] px-6 py-16 md:px-12">
@@ -133,7 +133,7 @@ export default function PaginaLojistas() {
       </section>
 
       {/* Serviços como lista com pontilhado. */}
-      <section id="servicos" className="scroll-mt-4 bg-[var(--papel)] py-[clamp(72px,10vw,160px)]">
+      <section id="servicos" className="secao scroll-mt-4 bg-[var(--papel)] py-[clamp(72px,10vw,160px)]">
         <div className="site-moldura grid gap-12 lg:grid-cols-12">
           <div className="lg:col-span-4">
             <h2 data-revelar className="t-titulo max-w-[12ch]">Cada serviço do seu jeito</h2>
@@ -141,7 +141,7 @@ export default function PaginaLojistas() {
               Produtos, serviços ou os dois. Cada um com a própria forma de reserva, configurada por você.
             </p>
             <figure data-revelar style={{ ["--ordem" as string]: 2 }} className="relative overflow-hidden rounded-[var(--raio-g)] mt-10 aspect-[4/3]">
-              <Image src="/fotos/passeio.jpg" alt="Dois cães de coleira parados numa calçada" fill sizes="(min-width: 1024px) 33vw, 100vw" className="object-cover" />
+              <Foto src="/fotos/passeio.jpg" alt="Dois cães de coleira parados numa calçada" fill desliza sizes="(min-width: 1024px) 33vw, 100vw" className="object-cover" />
             </figure>
           </div>
           <ul className="grid gap-x-12 gap-y-9 md:grid-cols-2 lg:col-span-8">
@@ -160,7 +160,7 @@ export default function PaginaLojistas() {
       </section>
 
       {/* Como começar, como canhoto. */}
-      <section id="como-comecar" className="scroll-mt-4 bg-[var(--tom)] py-[clamp(72px,10vw,160px)]">
+      <section id="como-comecar" className="secao scroll-mt-4 bg-[var(--tom)] py-[clamp(72px,10vw,160px)]">
         <div className="site-moldura grid items-start gap-12 lg:grid-cols-12">
           <div className="lg:col-span-5">
             <h2 data-revelar className="t-titulo max-w-[12ch]">Sua loja no ar</h2>
@@ -168,7 +168,7 @@ export default function PaginaLojistas() {
               Se a loja já está no mapa do PetLive, você assume o perfil em vez de criar outro.
             </p>
             <figure data-revelar style={{ ["--ordem" as string]: 2 }} className="relative overflow-hidden rounded-[var(--raio-g)] mt-10 aspect-[4/3]">
-              <Image src="/fotos/cao-dormindo.jpg" alt="Cão dormindo num travesseiro, à meia-luz" fill sizes="(min-width: 1024px) 40vw, 100vw" className="object-cover" />
+              <Foto src="/fotos/cao-dormindo.jpg" alt="Cão dormindo num travesseiro, à meia-luz" fill desliza sizes="(min-width: 1024px) 40vw, 100vw" className="object-cover" />
             </figure>
           </div>
           <div data-revelar style={{ ["--ordem" as string]: 2 }} className="recorte-zigue rounded-t-[var(--raio-g)] bg-[var(--papel)] p-6 md:p-9 lg:col-span-6 lg:col-start-7">
@@ -191,7 +191,7 @@ export default function PaginaLojistas() {
       </section>
 
       {/* Planos como ingressos. */}
-      <section id="planos" className="scroll-mt-4 bg-[var(--tinta)] py-[clamp(72px,10vw,160px)]">
+      <section id="planos" className="secao scroll-mt-4 bg-[var(--tinta)] py-[clamp(72px,10vw,160px)]">
         <div className="site-moldura">
           <div className="grid gap-6 text-[var(--papel)] lg:grid-cols-2 lg:gap-16">
             <h2 data-revelar className="t-titulo">Sem mensalidade</h2>
@@ -221,7 +221,7 @@ export default function PaginaLojistas() {
       </section>
 
       {/* Cadastro de interesse até o marketplace abrir. */}
-      <section id="cadastro" className="scroll-mt-4 bg-[var(--ceu)] py-[clamp(72px,10vw,160px)]">
+      <section id="cadastro" className="secao scroll-mt-4 bg-[var(--ceu)] py-[clamp(72px,10vw,160px)]">
         <div className="site-moldura grid items-start gap-10 lg:grid-cols-12">
           <div className="lg:col-span-4">
             <h2 data-revelar className="t-titulo max-w-[12ch]">Coloque sua loja no PetLive</h2>

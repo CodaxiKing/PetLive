@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Image from "next/image";
+import { Foto } from "@/components/site/Foto";
 import { FormularioContato } from "@/components/FormularioContato";
 import { EMAIL_CONTATO } from "@/lib/contato";
 
@@ -23,7 +23,7 @@ export default function PaginaContato() {
           </p>
         </div>
         <figure data-revelar style={{ ["--ordem" as string]: 1 }} className="relative overflow-hidden rounded-[var(--raio-g)] aspect-[4/3] lg:col-span-6">
-          <Image src="/fotos/tutora.jpg" alt="Tutora sorrindo com o cão no colo, em casa" fill priority sizes="(min-width: 1024px) 50vw, 100vw" className="object-cover" />
+          <Foto src="/fotos/tutora.jpg" alt="Tutora sorrindo com o cão no colo, em casa" fill priority sizes="(min-width: 1024px) 50vw, 100vw" className="object-cover" />
         </figure>
       </section>
 

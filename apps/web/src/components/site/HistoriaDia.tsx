@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { Foto } from "@/components/site/Foto";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 
 type Etapa = { id: string; titulo: string; texto: string; foto: string; alt: string; fragmento: ReactNode };
@@ -128,7 +129,7 @@ export function HistoriaDia() {
               style={{ opacity: ativa === i ? 1 : 0 }}
               aria-hidden={ativa !== i}
             >
-              <Image src={e.foto} alt={e.alt} fill sizes="50vw" className="object-cover" />
+              <Foto src={e.foto} alt={e.alt} fill desliza sizes="50vw" className="object-cover" />
               <div className="absolute bottom-6 left-6 right-6">{e.fragmento}</div>
             </div>
           ))}
@@ -146,7 +147,7 @@ export function HistoriaDia() {
             className="flex flex-col justify-center gap-6 py-10 lg:min-h-[86svh] lg:py-0"
           >
             <div className="relative aspect-[4/3] overflow-hidden rounded-[var(--raio-g)] bg-[var(--tom)] lg:hidden">
-              <Image src={e.foto} alt={e.alt} fill sizes="100vw" className="object-cover" />
+              <Foto src={e.foto} alt={e.alt} fill desliza sizes="100vw" className="object-cover" />
               <div className="absolute bottom-3 left-3 right-3">{e.fragmento}</div>
             </div>
             <h3 data-revelar className="t-titulo max-w-[14ch]">
