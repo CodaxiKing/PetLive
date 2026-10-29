@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=390">
+<title>Cadastro do pet</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="estilo.css">
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+</head>
+<body>
+<div class="tela">
+
+<div class="rolagem sobe">
+  <div class="topo"><a href="CriarConta.html" class="redondo" aria-label="Voltar"><i class="ph ph-arrow-left"></i></a><div style="flex:1;height:6px;border-radius:999px;background:#E3E7EE;overflow:hidden"><div style="width:50%;height:100%;background:var(--tinta);border-radius:999px"></div></div><span style="font-size:13px;font-weight:700;color:var(--suave)">1 de 2</span></div>
+  <h1 class="titulo">Conheça seu pet</h1>
+  <p class="sub" style="margin:8px 0 20px">Com estes dados o app sugere o calendário de vacinas.</p>
+  <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px">
+    <div class="foto" style="width:96px;height:96px;border-radius:32px;background-image:url('https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=900&q=70&auto=format&fit=crop');position:relative"><span style="position:absolute;right:-6px;bottom:-6px;width:34px;height:34px;border-radius:50%;background:var(--tinta);color:#fff;display:grid;place-items:center;border:3px solid var(--papel)"><i class="ph ph-camera" style="font-size:16px"></i></span></div>
+    <div><b style="font-size:15px">Foto do Rex</b><p class="sub" style="font-size:13px">Toque para trocar</p></div>
+  </div>
+  <div class="abas" style="margin-bottom:16px"><a class="ativa"><i class="ph ph-dog"></i> Cão</a><a><i class="ph ph-cat"></i> Gato</a></div>
+  <label class="campo"><span>Nome</span><input value="Rex"></label>
+  <label class="campo"><span>Raça</span><input value="Beagle"><em>Opcional. Ajuda a calcular o porte.</em></label>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+    <label class="campo"><span>Nascimento</span><div class="valor num">12/03/2023</div></label>
+    <label class="campo"><span>Peso</span><div class="valor num">12,4 kg</div></label>
+  </div>
+  <span style="display:block;font-size:13px;font-weight:600;color:var(--suave);margin:0 4px 8px">Sexo</span>
+  <div style="display:flex;gap:8px"><span class="chip ativo">Macho</span><span class="chip">Fêmea</span></div>
+</div>
+<div class="rodape"><a href="Inicio.html" class="botao tocavel">Continuar</a></div>
+</div>
+</body>
+</html>

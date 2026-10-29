@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=390">
+<title>Rex, saúde</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="estilo.css">
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+</head>
+<body>
+<div class="tela">
+
+<div class="foto" style="position:absolute;left:0;right:0;top:0;height:330px;background-image:url('https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=900&q=70&auto=format&fit=crop')"></div>
+<div style="position:absolute;left:20px;right:20px;top:56px;display:flex;justify-content:space-between;z-index:2"><a href="MeusPets.html" class="redondo" aria-label="Voltar"><i class="ph ph-arrow-left"></i></a><span style="display:flex;gap:8px"><span class="redondo"><i class="ph ph-share-network"></i></span><span class="redondo"><i class="ph ph-dots-three"></i></span></span></div>
+<div class="rolagem sobe" style="top:270px;padding-top:0;background:var(--papel);border-radius:32px 32px 0 0">
+  <div style="display:flex;align-items:flex-end;justify-content:space-between;padding-top:22px">
+    <div><h1 class="titulo">Rex</h1><p class="sub">Beagle · macho · 3 anos</p></div>
+    <span class="selo atencao"><i class="ph-bold ph-warning"></i>V10 em 5 dias</span>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:18px 0">
+    <div class="cartao" style="padding:12px"><small class="sub" style="font-size:12px">Peso</small><b class="num" style="display:block;font-size:20px;letter-spacing:-0.02em">12,4 kg</b></div>
+    <div class="cartao" style="padding:12px"><small class="sub" style="font-size:12px">Vacinas</small><b class="num" style="display:block;font-size:20px;letter-spacing:-0.02em">3 em dia</b></div>
+    <div class="cartao" style="padding:12px"><small class="sub" style="font-size:12px">Remédios</small><b class="num" style="display:block;font-size:20px;letter-spacing:-0.02em">2 ativos</b></div>
+  </div>
+  <div class="abas"><a class="ativa">Vacinas</a><a>Peso</a><a>Consultas</a></div>
+  <div class="cartao" style="margin-top:12px;padding:6px 16px">
+    <div style="display:flex;gap:14px;padding:12px 0">
+      <div style="display:flex;flex-direction:column;align-items:center"><span style="width:14px;height:14px;border-radius:50%;background:var(--amarelo);margin-top:3px"></span><span style="flex:1;width:2px;background:var(--linha);margin-top:4px"></span></div>
+      <div style="flex:1"><b style="font-size:15px">V10</b><p class="sub num" style="font-size:13px">Vence 03/11/2026</p></div><span class="selo atencao num">5 dias</span>
+    </div>
+    <div style="display:flex;gap:14px;padding:12px 0">
+      <div style="display:flex;flex-direction:column;align-items:center"><span style="width:14px;height:14px;border-radius:50%;background:var(--verde);margin-top:3px"></span><span style="flex:1;width:2px;background:var(--linha);margin-top:4px"></span></div>
+      <div style="flex:1"><b style="font-size:15px">Antirrábica</b><p class="sub num" style="font-size:13px">Próxima dose 30/11/2026</p></div><span class="selo ok">Em dia</span>
+    </div>
+    <div style="display:flex;gap:14px;padding:12px 0">
+      <div style="display:flex;flex-direction:column;align-items:center"><span style="width:14px;height:14px;border-radius:50%;background:var(--verde);margin-top:3px"></span></div>
+      <div style="flex:1"><b style="font-size:15px">Giárdia</b><p class="sub num" style="font-size:13px">Próxima dose 15/02/2027</p></div><span class="selo ok">Em dia</span>
+    </div>
+  </div>
+  <a href="Vacina.html" class="cartao tocavel" style="display:flex;align-items:center;gap:12px;margin-top:10px;background:var(--ceu-fundo);box-shadow:none"><span class="icone" style="background:#fff;color:var(--ceu-texto)"><i class="ph ph-scan"></i></span><div style="flex:1"><b style="font-size:15px">Ler o cartão de vacina</b><p class="sub" style="font-size:13px;color:var(--ceu-texto)">Fotografe e confira antes de salvar</p></div><i class="ph ph-caret-right seta"></i></a>
+</div>
+<div class="rodape"><a href="Vacina.html" class="botao tocavel"><i class="ph ph-plus"></i>Registrar vacina</a></div>
+</div>
+</body>
+</html>

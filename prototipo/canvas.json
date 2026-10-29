@@ -1489,6 +1489,998 @@
       "x": 3760,
       "y": 21836,
       "title": "104 · Atualizações do pet"
+    },
+    "v2/BoasVindas.html": {
+      "w": 390,
+      "h": 844,
+      "is_interactive": true,
+      "x": 9400,
+      "y": 4200,
+      "title": "1 · Boas-vindas · nova"
+    },
+    "v2/CriarConta.html": {
+      "w": 390,
+      "h": 844,
+      "is_interactive": true,
+      "x": 9870,
+      "y": 4200,
+      "title": "2 · Criar conta · nova"
+    },
+    "v2/CadastroPet.html": {
+      "w": 390,
+      "h": 844,
+      "is_interactive": true,
+      "x": 10340,
+      "y": 4200,
+      "title": "3 · Cadastro do pet · nova"
+    },
+    "v2/Inicio.html": {
+      "w": 390,
+      "h": 844,
+      "is_interactive": true,
+      "x": 10810,
+      "y": 4200,
+      "title": "4 · Início · nova"
+    },
+    "v2/MeusPets.html": {
+      "w": 390,
+      "h": 844,
+      "is_interactive": true,
+      "x": 11280,
+      "y": 4200,
+      "title": "5 · Meus pets · nova"
+    },
+    "v2/Pet.html": {
+      "w": 390,
+      "h": 844,
+      "is_interactive": true,
+      "x": 11750,
+      "y": 4200,
+      "title": "6 · Pet, vacinas · nova"
+    },
+    "v2/Vacina.html": {
+      "w": 390,
+      "h": 844,
+      "is_interactive": true,
+      "x": 9400,
+      "y": 5164,
+      "title": "7 · Registrar vacina · nova"
+    },
+    "v2/Lembretes.html": {
+      "w": 390,
+      "h": 844,
+      "is_interactive": true,
+      "x": 10810,
+      "y": 5164,
+      "title": "10 · Lembretes · nova"
+    },
+    "v2/Medicamentos.html": {
+      "w": 390,
+      "h": 844,
+      "is_interactive": true,
+      "x": 9400,
+      "y": 6128,
+      "title": "13 · Medicamentos · nova"
+    },
+    "v2/CaixaAvisos.html": {
+      "w": 390,
+      "h": 844,
+      "is_interactive": true,
+      "x": 12220,
+      "y": 6128,
+      "title": "15 · Caixa de avisos · nova"
+    },
+    "v2/Mapa.html": {
+      "w": 390,
+      "h": 844,
+      "is_interactive": true,
+      "x": 10810,
+      "y": 6128,
+      "title": "16 · Mapa · nova"
+    },
+    "v2/Lugar.html": {
+      "w": 390,
+      "h": 844,
+      "is_interactive": true,
+      "x": 11280,
+      "y": 6128,
+      "title": "17 · Ficha do lugar · nova"
+    },
+    "v2/Perfil.html": {
+      "w": 390,
+      "h": 844,
+      "is_interactive": true,
+      "x": 11750,
+      "y": 6128,
+      "title": "18 · Perfil do tutor · nova"
+    },
+    "v2/SOS.html": {
+      "w": 390,
+      "h": 844,
+      "is_interactive": true,
+      "x": 9400,
+      "y": 7092,
+      "title": "46 · SOS e emergência · nova"
+    },
+    "v2/AcheiFoto.html": {
+      "w": 390,
+      "h": 844,
+      "x": 9400,
+      "y": 65326,
+      "title": "80 · Achei um pet: foto · nova",
+      "is_interactive": true
+    },
+    "v2/AcheiResultado.html": {
+      "w": 390,
+      "h": 844,
+      "x": 9870,
+      "y": 65326,
+      "title": "81 · Possíveis correspondências · nova",
+      "is_interactive": true
+    },
+    "v2/Adocao.html": {
+      "w": 390,
+      "h": 844,
+      "x": 10340,
+      "y": 13088,
+      "title": "54 · Adoção · nova",
+      "is_interactive": true
+    },
+    "v2/AdocaoPet.html": {
+      "w": 390,
+      "h": 844,
+      "x": 10810,
+      "y": 13088,
+      "title": "55 · Pet para adoção · nova",
+      "is_interactive": true
+    },
+    "v2/Agendado.html": {
+      "w": 390,
+      "h": 844,
+      "x": 9400,
+      "y": 35074,
+      "title": "28 · Horário reservado · nova",
+      "is_interactive": true
+    },
+    "v2/Agendar.html": {
+      "w": 390,
+      "h": 844,
+      "x": 11750,
+      "y": 34110,
+      "title": "27 · Agendar horário · nova",
+      "is_interactive": true
+    },
+    "v2/AgendarCreche.html": {
+      "w": 390,
+      "h": 844,
+      "x": 9870,
+      "y": 36038,
+      "title": "35 · Reservar creche · nova",
+      "is_interactive": true
+    },
+    "v2/AgendarHotel.html": {
+      "w": 390,
+      "h": 844,
+      "x": 11750,
+      "y": 35074,
+      "title": "33 · Reservar hotelzinho · nova",
+      "is_interactive": true
+    },
+    "v2/AgendarPasseio.html": {
+      "w": 390,
+      "h": 844,
+      "x": 9400,
+      "y": 36038,
+      "title": "34 · Agendar passeio · nova",
+      "is_interactive": true
+    },
+    "v2/AlbumPedido.html": {
+      "w": 390,
+      "h": 844,
+      "x": 9400,
+      "y": 37966,
+      "title": "87 · Pedido do álbum · nova",
+      "is_interactive": true
+    },
+    "v2/AlbumPet.html": {
+      "w": 390,
+      "h": 844,
+      "x": 11750,
+      "y": 37002,
+      "title": "86 · Álbum do ano · nova",
+      "is_interactive": true
+    },
+    "v2/Avaliar.html": {
+      "w": 390,
+      "h": 844,
+      "x": 9400,
+      "y": 37002,
+      "title": "40 · Avaliar loja e serviço · nova",
+      "is_interactive": true
+    },
+    "v2/Calculadoras.html": {
+      "w": 390,
+      "h": 844,
+      "x": 11280,
+      "y": 7092,
+      "title": "50 · Calculadoras · nova",
+      "is_interactive": true
+    },
+    "v2/CartaoFoto.html": {
+      "w": 390,
+      "h": 844,
+      "x": 9400,
+      "y": 13088,
+      "title": "52 · Foto do cartão de vacina · nova",
+      "is_interactive": true
+    },
+    "v2/CartaoPet.html": {
+      "w": 390,
+      "h": 844,
+      "x": 9870,
+      "y": 16480,
+      "title": "75 · Cartão do pet · nova",
+      "is_interactive": true
+    },
+    "v2/CartaoPremium.html": {
+      "w": 390,
+      "h": 844,
+      "x": 12220,
+      "y": 13088,
+      "title": "52 · Escanear é Premium (plano grátis) · nova",
+      "is_interactive": true
+    },
+    "v2/CartaoRevisar.html": {
+      "w": 390,
+      "h": 844,
+      "x": 9870,
+      "y": 13088,
+      "title": "53 · Revisar vacinas lidas · nova",
+      "is_interactive": true
+    },
+    "v2/Carteirinha.html": {
+      "w": 390,
+      "h": 844,
+      "x": 11750,
+      "y": 10160,
+      "title": "20 · Carteirinha de saúde · nova",
+      "is_interactive": true
+    },
+    "v2/CarteirinhaVazia.html": {
+      "w": 390,
+      "h": 844,
+      "x": 13160,
+      "y": 10160,
+      "title": "20 · Carteirinha de um pet novo · nova",
+      "is_interactive": true
+    },
+    "v2/Chat.html": {
+      "w": 390,
+      "h": 844,
+      "x": 11280,
+      "y": 36038,
+      "title": "38 · Chat com a loja · nova",
+      "is_interactive": true
+    },
+    "v2/Compartilhar.html": {
+      "w": 390,
+      "h": 844,
+      "x": 9870,
+      "y": 10160,
+      "title": "20 · Carteira em PDF · nova",
+      "is_interactive": true
+    },
+    "v2/CompartilharHotel.html": {
+      "w": 390,
+      "h": 844,
+      "x": 12220,
+      "y": 35074,
+      "title": "33 · Compartilhar a carteirinha com o hotel · nova",
+      "is_interactive": true
+    },
+    "v2/CompartilharOpcoes.html": {
+      "w": 390,
+      "h": 844,
+      "x": 11280,
+      "y": 10160,
+      "title": "20 · Opções de compartilhar · nova",
+      "is_interactive": true
+    },
+    "v2/CompartilharSecoes.html": {
+      "w": 390,
+      "h": 844,
+      "x": 13630,
+      "y": 10160,
+      "title": "20 · O que incluir na carteirinha · nova",
+      "is_interactive": true
+    },
+    "v2/Comunidade.html": {
+      "w": 390,
+      "h": 844,
+      "x": 9400,
+      "y": 62258,
+      "title": "62 · Comunidade · nova",
+      "is_interactive": true
+    },
+    "v2/ConfirmarPartida.html": {
+      "w": 390,
+      "h": 844,
+      "x": 12220,
+      "y": 17944,
+      "title": "83 · Confirmar a partida · nova",
+      "is_interactive": true
+    },
+    "v2/ConsultaClinica.html": {
+      "w": 390,
+      "h": 844,
+      "x": 10810,
+      "y": 37002,
+      "title": "76 · Consulta na clínica · nova",
+      "is_interactive": true
+    },
+    "v2/Consultas.html": {
+      "w": 390,
+      "h": 844,
+      "x": 10340,
+      "y": 5164,
+      "title": "9 · Consultas · nova",
+      "is_interactive": true
+    },
+    "v2/Cuidador.html": {
+      "w": 390,
+      "h": 844,
+      "x": 11280,
+      "y": 13088,
+      "title": "56 · Cuidador temporário · nova",
+      "is_interactive": true
+    },
+    "v2/CuidadorVisao.html": {
+      "w": 390,
+      "h": 844,
+      "x": 10340,
+      "y": 20372,
+      "title": "92 · Visão do cuidador (link) · nova",
+      "is_interactive": true
+    },
+    "v2/Cupom.html": {
+      "w": 390,
+      "h": 844,
+      "x": 11750,
+      "y": 36038,
+      "title": "39 · Cupom de desconto · nova",
+      "is_interactive": true
+    },
+    "v2/Despesas.html": {
+      "w": 390,
+      "h": 844,
+      "x": 10810,
+      "y": 15516,
+      "title": "71 · Despesas do pet · nova",
+      "is_interactive": true
+    },
+    "v2/EditarPerfil.html": {
+      "w": 390,
+      "h": 844,
+      "x": 12690,
+      "y": 6128,
+      "title": "18 · Editar perfil · nova",
+      "is_interactive": true
+    },
+    "v2/Encontrado.html": {
+      "w": 390,
+      "h": 844,
+      "x": 10810,
+      "y": 10160,
+      "title": "Pet encontrado (quem escaneia) · nova",
+      "is_interactive": true
+    },
+    "v2/EncontradoProcurado.html": {
+      "w": 390,
+      "h": 844,
+      "x": 11750,
+      "y": 64362,
+      "title": "67 · QR com pet procurado · nova",
+      "is_interactive": true
+    },
+    "v2/Entrega.html": {
+      "w": 390,
+      "h": 844,
+      "x": 9870,
+      "y": 37002,
+      "title": "41 · Entrega ou retirada · nova",
+      "is_interactive": true
+    },
+    "v2/EntregaAcompanhar.html": {
+      "w": 390,
+      "h": 844,
+      "x": 10340,
+      "y": 37002,
+      "title": "42 · Acompanhar entrega · nova",
+      "is_interactive": true
+    },
+    "v2/EnviarFichaClinica.html": {
+      "w": 390,
+      "h": 844,
+      "x": 9400,
+      "y": 18908,
+      "title": "89 · Enviar ficha à clínica · nova",
+      "is_interactive": true
+    },
+    "v2/EstouACaminho.html": {
+      "w": 390,
+      "h": 844,
+      "x": 11280,
+      "y": 37002,
+      "title": "79 · Estou a caminho · nova",
+      "is_interactive": true
+    },
+    "v2/Evento.html": {
+      "w": 390,
+      "h": 844,
+      "x": 9870,
+      "y": 11624,
+      "title": "44 · Evento · nova",
+      "is_interactive": true
+    },
+    "v2/EventoNovo.html": {
+      "w": 390,
+      "h": 844,
+      "x": 10340,
+      "y": 11624,
+      "title": "45 · Criar evento · nova",
+      "is_interactive": true
+    },
+    "v2/EventosMapa.html": {
+      "w": 390,
+      "h": 844,
+      "x": 9400,
+      "y": 11624,
+      "title": "43 · Eventos no mapa · nova",
+      "is_interactive": true
+    },
+    "v2/FichaEmergencia.html": {
+      "w": 390,
+      "h": 844,
+      "x": 9400,
+      "y": 17944,
+      "title": "77 · Ficha de emergência · nova",
+      "is_interactive": true
+    },
+    "v2/FichaExpirada.html": {
+      "w": 390,
+      "h": 844,
+      "x": 9870,
+      "y": 20372,
+      "title": "91 · Link da ficha expirado · nova",
+      "is_interactive": true
+    },
+    "v2/FichaVista.html": {
+      "w": 390,
+      "h": 844,
+      "x": 9400,
+      "y": 20372,
+      "title": "78 · Ficha de emergência (quem recebe) · nova",
+      "is_interactive": true
+    },
+    "v2/GuardaAtividade.html": {
+      "w": 390,
+      "h": 844,
+      "x": 13160,
+      "y": 21836,
+      "title": "104 · Atualizações do pet · nova",
+      "is_interactive": true
+    },
+    "v2/GuardaCompartilhada.html": {
+      "w": 390,
+      "h": 844,
+      "x": 11750,
+      "y": 21836,
+      "title": "101 · Guarda compartilhada · nova",
+      "is_interactive": true
+    },
+    "v2/GuardaConvidar.html": {
+      "w": 390,
+      "h": 844,
+      "x": 12220,
+      "y": 21836,
+      "title": "102 · Convidar para a guarda · nova",
+      "is_interactive": true
+    },
+    "v2/GuardaConvite.html": {
+      "w": 390,
+      "h": 844,
+      "x": 12690,
+      "y": 21836,
+      "title": "103 · Convite de guarda recebido · nova",
+      "is_interactive": true
+    },
+    "v2/HotelBoletim.html": {
+      "w": 390,
+      "h": 844,
+      "x": 12690,
+      "y": 35074,
+      "title": "33 · Boletim do hotel (tutor) · nova",
+      "is_interactive": true
+    },
+    "v2/HotelNotificacao.html": {
+      "w": 390,
+      "h": 844,
+      "x": 13160,
+      "y": 35074,
+      "title": "33 · Aviso: o pet chegou bem · nova",
+      "is_interactive": true
+    },
+    "v2/Intoxicacao.html": {
+      "w": 390,
+      "h": 844,
+      "x": 10340,
+      "y": 7092,
+      "title": "48 · O que intoxica o pet · nova",
+      "is_interactive": true
+    },
+    "v2/Lembrete.html": {
+      "w": 390,
+      "h": 844,
+      "x": 9870,
+      "y": 6128,
+      "title": "14 · Lembrete personalizado · nova",
+      "is_interactive": true
+    },
+    "v2/LinhaDoTempo.html": {
+      "w": 390,
+      "h": 844,
+      "x": 11750,
+      "y": 13088,
+      "title": "57 · Linha do tempo do pet · nova",
+      "is_interactive": true
+    },
+    "v2/Loja.html": {
+      "w": 390,
+      "h": 844,
+      "x": 9400,
+      "y": 34110,
+      "title": "22 · Loja · nova",
+      "is_interactive": true
+    },
+    "v2/LugarClinica.html": {
+      "w": 390,
+      "h": 844,
+      "x": 11750,
+      "y": 17944,
+      "title": "88 · Ficha da clínica com enviar ficha · nova",
+      "is_interactive": true
+    },
+    "v2/MapaSemInternet.html": {
+      "w": 390,
+      "h": 844,
+      "x": 12690,
+      "y": 7092,
+      "title": "16 · Mapa, sem internet · nova",
+      "is_interactive": true
+    },
+    "v2/MapaSemPermissao.html": {
+      "w": 390,
+      "h": 844,
+      "x": 12220,
+      "y": 7092,
+      "title": "16 · Mapa, sem localização · nova",
+      "is_interactive": true
+    },
+    "v2/MapaSemResultados.html": {
+      "w": 390,
+      "h": 844,
+      "x": 13160,
+      "y": 7092,
+      "title": "16 · Mapa, sem resultados · nova",
+      "is_interactive": true
+    },
+    "v2/Memorial.html": {
+      "w": 390,
+      "h": 844,
+      "x": 10340,
+      "y": 17944,
+      "title": "83 · Em memória · nova",
+      "is_interactive": true
+    },
+    "v2/MeusEventos.html": {
+      "w": 390,
+      "h": 844,
+      "x": 10810,
+      "y": 21836,
+      "title": "96 · Meus eventos · nova",
+      "is_interactive": true
+    },
+    "v2/MinhaAssinatura.html": {
+      "w": 390,
+      "h": 844,
+      "x": 11280,
+      "y": 21836,
+      "title": "100 · Minha assinatura · nova",
+      "is_interactive": true
+    },
+    "v2/ModoFogos.html": {
+      "w": 390,
+      "h": 844,
+      "x": 11750,
+      "y": 15516,
+      "title": "73 · Fogos e trovão · nova",
+      "is_interactive": true
+    },
+    "v2/Notificacoes.html": {
+      "w": 390,
+      "h": 844,
+      "x": 10340,
+      "y": 6128,
+      "title": "15 · Avisos · nova",
+      "is_interactive": true
+    },
+    "v2/NovaDespesa.html": {
+      "w": 390,
+      "h": 844,
+      "x": 11280,
+      "y": 15516,
+      "title": "72 · Nova despesa · nova",
+      "is_interactive": true
+    },
+    "v2/NovoLembrete.html": {
+      "w": 390,
+      "h": 844,
+      "x": 11280,
+      "y": 5164,
+      "title": "11 · Novo lembrete · nova",
+      "is_interactive": true
+    },
+    "v2/OngCadastro.html": {
+      "w": 390,
+      "h": 844,
+      "x": 9400,
+      "y": 21836,
+      "title": "93 · Cadastro da ONG · nova",
+      "is_interactive": true
+    },
+    "v2/OngInteresses.html": {
+      "w": 390,
+      "h": 844,
+      "x": 10340,
+      "y": 21836,
+      "title": "95 · Pets e interessados (modo ONG) · nova",
+      "is_interactive": true
+    },
+    "v2/OngNovoPet.html": {
+      "w": 390,
+      "h": 844,
+      "x": 9870,
+      "y": 21836,
+      "title": "94 · Novo pet para adoção (modo ONG) · nova",
+      "is_interactive": true
+    },
+    "v2/Pagamento.html": {
+      "w": 390,
+      "h": 844,
+      "x": 10340,
+      "y": 35074,
+      "title": "30 · Pagamento · nova",
+      "is_interactive": true
+    },
+    "v2/PagamentoOk.html": {
+      "w": 390,
+      "h": 844,
+      "x": 11280,
+      "y": 35074,
+      "title": "32 · Pagamento confirmado · nova",
+      "is_interactive": true
+    },
+    "v2/PagamentoPix.html": {
+      "w": 390,
+      "h": 844,
+      "x": 10810,
+      "y": 35074,
+      "title": "31 · Pagar com Pix · nova",
+      "is_interactive": true
+    },
+    "v2/PasseioAoVivo.html": {
+      "w": 390,
+      "h": 844,
+      "x": 10340,
+      "y": 36038,
+      "title": "36 · Passeio ao vivo · nova",
+      "is_interactive": true
+    },
+    "v2/PasseioFim.html": {
+      "w": 390,
+      "h": 844,
+      "x": 10340,
+      "y": 15516,
+      "title": "70 · Resumo do passeio · nova",
+      "is_interactive": true
+    },
+    "v2/PasseioGps.html": {
+      "w": 390,
+      "h": 844,
+      "x": 9870,
+      "y": 15516,
+      "title": "69 · Passeio em andamento · nova",
+      "is_interactive": true
+    },
+    "v2/PasseioResumo.html": {
+      "w": 390,
+      "h": 844,
+      "x": 10810,
+      "y": 36038,
+      "title": "37 · Passeio concluído · nova",
+      "is_interactive": true
+    },
+    "v2/PasseiosHistorico.html": {
+      "w": 390,
+      "h": 844,
+      "x": 9400,
+      "y": 15516,
+      "title": "68 · Passeios do pet · nova",
+      "is_interactive": true
+    },
+    "v2/Pedido.html": {
+      "w": 390,
+      "h": 844,
+      "x": 10810,
+      "y": 34110,
+      "title": "25 · Acompanhar solicitação · nova",
+      "is_interactive": true
+    },
+    "v2/PerdidoAlerta.html": {
+      "w": 390,
+      "h": 844,
+      "x": 10810,
+      "y": 64362,
+      "title": "65 · Alerta de pet perdido · nova",
+      "is_interactive": true
+    },
+    "v2/PerdidoNotificacao.html": {
+      "w": 390,
+      "h": 844,
+      "x": 10340,
+      "y": 64362,
+      "title": "64 · Notificação de pet perdido · nova",
+      "is_interactive": true
+    },
+    "v2/PerdidoVisto.html": {
+      "w": 390,
+      "h": 844,
+      "x": 11280,
+      "y": 64362,
+      "title": "66 · Vi este pet · nova",
+      "is_interactive": true
+    },
+    "v2/PerfilPet.html": {
+      "w": 390,
+      "h": 844,
+      "x": 9870,
+      "y": 62258,
+      "title": "63 · Perfil público do pet · nova",
+      "is_interactive": true
+    },
+    "v2/PermissoesApp.html": {
+      "w": 390,
+      "h": 844,
+      "x": 9870,
+      "y": 8056,
+      "title": "98 · Permissões do app · nova",
+      "is_interactive": true
+    },
+    "v2/Peso.html": {
+      "w": 390,
+      "h": 844,
+      "x": 9870,
+      "y": 5164,
+      "title": "8 · Peso · nova",
+      "is_interactive": true
+    },
+    "v2/PetFriendly.html": {
+      "w": 390,
+      "h": 844,
+      "x": 10810,
+      "y": 7092,
+      "title": "49 · Pet friendly no mapa · nova",
+      "is_interactive": true
+    },
+    "v2/PetIdoso.html": {
+      "w": 390,
+      "h": 844,
+      "x": 10810,
+      "y": 17944,
+      "title": "84 · Pet sênior · nova",
+      "is_interactive": true
+    },
+    "v2/PetMia.html": {
+      "w": 390,
+      "h": 844,
+      "x": 13160,
+      "y": 17944,
+      "title": "85 · Pet sênior, tela do pet · nova",
+      "is_interactive": true
+    },
+    "v2/PetPerdido.html": {
+      "w": 390,
+      "h": 844,
+      "x": 9400,
+      "y": 64362,
+      "title": "60 · Pet perdido · nova",
+      "is_interactive": true
+    },
+    "v2/Premium.html": {
+      "w": 390,
+      "h": 844,
+      "x": 9400,
+      "y": 10160,
+      "title": "19 · Premium · nova",
+      "is_interactive": true
+    },
+    "v2/PrimeirosSocorros.html": {
+      "w": 390,
+      "h": 844,
+      "x": 9870,
+      "y": 7092,
+      "title": "47 · Primeiros socorros · nova",
+      "is_interactive": true
+    },
+    "v2/PrivacidadeDados.html": {
+      "w": 390,
+      "h": 844,
+      "x": 10340,
+      "y": 8056,
+      "title": "99 · Privacidade e dados · nova",
+      "is_interactive": true
+    },
+    "v2/Produto.html": {
+      "w": 390,
+      "h": 844,
+      "x": 9870,
+      "y": 34110,
+      "title": "23 · Produto · nova",
+      "is_interactive": true
+    },
+    "v2/ProdutoReceita.html": {
+      "w": 390,
+      "h": 844,
+      "x": 9870,
+      "y": 35074,
+      "title": "29 · Produto com receita (só na loja) · nova",
+      "is_interactive": true
+    },
+    "v2/QR.html": {
+      "w": 390,
+      "h": 844,
+      "x": 10340,
+      "y": 10160,
+      "title": "21 · QR da coleira · nova",
+      "is_interactive": true
+    },
+    "v2/QualidadeVida.html": {
+      "w": 390,
+      "h": 844,
+      "x": 11280,
+      "y": 17944,
+      "title": "85 · Qualidade de vida · nova",
+      "is_interactive": true
+    },
+    "v2/ReativarPet.html": {
+      "w": 390,
+      "h": 844,
+      "x": 12690,
+      "y": 17944,
+      "title": "83 · Reativar o pet · nova",
+      "is_interactive": true
+    },
+    "v2/RegistrarPartida.html": {
+      "w": 390,
+      "h": 844,
+      "x": 9870,
+      "y": 17944,
+      "title": "82 · Registrar a partida · nova",
+      "is_interactive": true
+    },
+    "v2/Remedio.html": {
+      "w": 390,
+      "h": 844,
+      "x": 11750,
+      "y": 5164,
+      "title": "12 · Novo remédio · nova",
+      "is_interactive": true
+    },
+    "v2/RotaApps.html": {
+      "w": 390,
+      "h": 844,
+      "x": 12220,
+      "y": 10160,
+      "title": "20 · Traçar rota · nova",
+      "is_interactive": true
+    },
+    "v2/RotaSemApps.html": {
+      "w": 390,
+      "h": 844,
+      "x": 12690,
+      "y": 10160,
+      "title": "20 · Traçar rota, sem app de mapa · nova",
+      "is_interactive": true
+    },
+    "v2/Rotina.html": {
+      "w": 390,
+      "h": 844,
+      "x": 11750,
+      "y": 7092,
+      "title": "51 · Rotina de cuidados · nova",
+      "is_interactive": true
+    },
+    "v2/Seguro.html": {
+      "w": 390,
+      "h": 844,
+      "x": 9870,
+      "y": 64362,
+      "title": "61 · Plano e seguro pet · nova",
+      "is_interactive": true
+    },
+    "v2/Selos.html": {
+      "w": 390,
+      "h": 844,
+      "x": 9870,
+      "y": 14052,
+      "title": "59 · Selos de cuidado · nova",
+      "is_interactive": true
+    },
+    "v2/SeniorNotificacao.html": {
+      "w": 390,
+      "h": 844,
+      "x": 13630,
+      "y": 17944,
+      "title": "85 · Aviso: pet sênior · nova",
+      "is_interactive": true
+    },
+    "v2/Servicos.html": {
+      "w": 390,
+      "h": 844,
+      "x": 11280,
+      "y": 34110,
+      "title": "26 · Serviços da loja · nova",
+      "is_interactive": true
+    },
+    "v2/Solicitar.html": {
+      "w": 390,
+      "h": 844,
+      "x": 10340,
+      "y": 34110,
+      "title": "24 · Solicitação · nova",
+      "is_interactive": true
+    },
+    "v2/TermosConsentimento.html": {
+      "w": 390,
+      "h": 844,
+      "x": 9400,
+      "y": 8056,
+      "title": "97 · Termos e consentimento · nova",
+      "is_interactive": true
+    },
+    "v2/TodosAtalhos.html": {
+      "w": 390,
+      "h": 844,
+      "x": 12220,
+      "y": 4200,
+      "title": "4 · Todos os atalhos · nova",
+      "is_interactive": true
+    },
+    "v2/Viagem.html": {
+      "w": 390,
+      "h": 844,
+      "x": 9400,
+      "y": 14052,
+      "title": "58 · Checklist de viagem · nova",
+      "is_interactive": true
+    },
+    "v2/WidgetAtalhos.html": {
+      "w": 390,
+      "h": 844,
+      "x": 9400,
+      "y": 16480,
+      "title": "74 · Widget e atalhos · nova",
+      "is_interactive": true
     }
   },
   "createdOnFiles": {
@@ -1708,6 +2700,123 @@
       "text": "Passeador · serviço e passeio do dia",
       "kind": "title1",
       "maxW": 860
+    },
+    "v2a": {
+      "x": 9400,
+      "y": 3560,
+      "text": "Nova versão: recriação proposta",
+      "kind": "title1",
+      "size": "xxl",
+      "maxW": 4400
+    },
+    "v2b": {
+      "x": 9400,
+      "y": 3900,
+      "text": "App do tutor recriado: fotos reais, cartões limpos e barra flutuante",
+      "kind": "title1",
+      "maxW": 4400
+    },
+    "v2_f5": {
+      "x": 9400,
+      "y": 9520,
+      "text": "Nova versão · Fase 2",
+      "kind": "title1",
+      "size": "xxl",
+      "maxW": 4400
+    },
+    "v2_s6": {
+      "x": 9400,
+      "y": 9860,
+      "text": "App do tutor: Premium e página pública do QR (nova versão)",
+      "kind": "title1",
+      "maxW": 1800
+    },
+    "v2_s7": {
+      "x": 9400,
+      "y": 11324,
+      "text": "Eventos pet no mapa (app do tutor) (nova versão)",
+      "kind": "title1",
+      "maxW": 1330
+    },
+    "v2_s8": {
+      "x": 9400,
+      "y": 12788,
+      "text": "Cartão por foto, adoção, cuidador, linha do tempo, viagem e selos (nova versão)",
+      "kind": "title1",
+      "maxW": 2740
+    },
+    "v2_s9": {
+      "x": 9400,
+      "y": 15216,
+      "text": "Passeios com GPS, despesas, fogos e trovão, widget e cartão do pet (nova versão)",
+      "kind": "title1",
+      "maxW": 2740
+    },
+    "v2_s10": {
+      "x": 9400,
+      "y": 17644,
+      "text": "Ficha de emergência, memorial e pet sênior (nova versão)",
+      "kind": "title1",
+      "maxW": 2740
+    },
+    "v2_s11": {
+      "x": 9400,
+      "y": 20072,
+      "text": "Link da ficha de emergência e do cuidador: como quem recebe vê (celular) (nova versão)",
+      "kind": "title1",
+      "maxW": 1330
+    },
+    "v2_s12": {
+      "x": 9400,
+      "y": 21536,
+      "text": "Modo ONG, meus eventos, minha assinatura e guarda compartilhada (nova versão)",
+      "kind": "title1",
+      "maxW": 4150
+    },
+    "v2_f16": {
+      "x": 9400,
+      "y": 33470,
+      "text": "Nova versão · Fase 3",
+      "kind": "title1",
+      "size": "xxl",
+      "maxW": 4400
+    },
+    "v2_s17": {
+      "x": 9400,
+      "y": 33810,
+      "text": "App do tutor: lojas, pedidos, entrega e serviços (nova versão)",
+      "kind": "title1",
+      "maxW": 2740
+    },
+    "v2_f22": {
+      "x": 9400,
+      "y": 61618,
+      "text": "Nova versão · Fase 4",
+      "kind": "title1",
+      "size": "xxl",
+      "maxW": 4400
+    },
+    "v2_s23": {
+      "x": 9400,
+      "y": 61958,
+      "text": "App do tutor: comunidade (nova versão)",
+      "kind": "title1",
+      "maxW": 860
+    },
+    "v2_f24": {
+      "x": 9400,
+      "y": 63722,
+      "text": "Nova versão · Fase 5",
+      "kind": "title1",
+      "size": "xxl",
+      "maxW": 4400
+    },
+    "v2_s25": {
+      "x": 9400,
+      "y": 64062,
+      "text": "App do tutor: pet perdido (com a tela que as pessoas recebem) e parceiros de plano e seguro (nova versão)",
+      "kind": "title1",
+      "maxW": 2740
     }
   },
   "order": [
@@ -1896,7 +3005,131 @@
     "CompartilharSecoes.dc.html",
     "HotelBoletim.dc.html",
     "HotelNotificacao.dc.html",
-    "CaixaAvisos.dc.html"
+    "CaixaAvisos.dc.html",
+    "v2/BoasVindas.html",
+    "v2/CriarConta.html",
+    "v2/CadastroPet.html",
+    "v2/Inicio.html",
+    "v2/MeusPets.html",
+    "v2/Pet.html",
+    "v2/Vacina.html",
+    "v2/Lembretes.html",
+    "v2/Medicamentos.html",
+    "v2/CaixaAvisos.html",
+    "v2/Mapa.html",
+    "v2/Lugar.html",
+    "v2/Perfil.html",
+    "v2/SOS.html",
+    "v2/AcheiFoto.html",
+    "v2/AcheiResultado.html",
+    "v2/Adocao.html",
+    "v2/AdocaoPet.html",
+    "v2/Agendado.html",
+    "v2/Agendar.html",
+    "v2/AgendarCreche.html",
+    "v2/AgendarHotel.html",
+    "v2/AgendarPasseio.html",
+    "v2/AlbumPedido.html",
+    "v2/AlbumPet.html",
+    "v2/Avaliar.html",
+    "v2/Calculadoras.html",
+    "v2/CartaoFoto.html",
+    "v2/CartaoPet.html",
+    "v2/CartaoPremium.html",
+    "v2/CartaoRevisar.html",
+    "v2/Carteirinha.html",
+    "v2/CarteirinhaVazia.html",
+    "v2/Chat.html",
+    "v2/Compartilhar.html",
+    "v2/CompartilharHotel.html",
+    "v2/CompartilharOpcoes.html",
+    "v2/CompartilharSecoes.html",
+    "v2/Comunidade.html",
+    "v2/ConfirmarPartida.html",
+    "v2/ConsultaClinica.html",
+    "v2/Consultas.html",
+    "v2/Cuidador.html",
+    "v2/CuidadorVisao.html",
+    "v2/Cupom.html",
+    "v2/Despesas.html",
+    "v2/EditarPerfil.html",
+    "v2/Encontrado.html",
+    "v2/EncontradoProcurado.html",
+    "v2/Entrega.html",
+    "v2/EntregaAcompanhar.html",
+    "v2/EnviarFichaClinica.html",
+    "v2/EstouACaminho.html",
+    "v2/Evento.html",
+    "v2/EventoNovo.html",
+    "v2/EventosMapa.html",
+    "v2/FichaEmergencia.html",
+    "v2/FichaExpirada.html",
+    "v2/FichaVista.html",
+    "v2/GuardaAtividade.html",
+    "v2/GuardaCompartilhada.html",
+    "v2/GuardaConvidar.html",
+    "v2/GuardaConvite.html",
+    "v2/HotelBoletim.html",
+    "v2/HotelNotificacao.html",
+    "v2/Intoxicacao.html",
+    "v2/Lembrete.html",
+    "v2/LinhaDoTempo.html",
+    "v2/Loja.html",
+    "v2/LugarClinica.html",
+    "v2/MapaSemInternet.html",
+    "v2/MapaSemPermissao.html",
+    "v2/MapaSemResultados.html",
+    "v2/Memorial.html",
+    "v2/MeusEventos.html",
+    "v2/MinhaAssinatura.html",
+    "v2/ModoFogos.html",
+    "v2/Notificacoes.html",
+    "v2/NovaDespesa.html",
+    "v2/NovoLembrete.html",
+    "v2/OngCadastro.html",
+    "v2/OngInteresses.html",
+    "v2/OngNovoPet.html",
+    "v2/Pagamento.html",
+    "v2/PagamentoOk.html",
+    "v2/PagamentoPix.html",
+    "v2/PasseioAoVivo.html",
+    "v2/PasseioFim.html",
+    "v2/PasseioGps.html",
+    "v2/PasseioResumo.html",
+    "v2/PasseiosHistorico.html",
+    "v2/Pedido.html",
+    "v2/PerdidoAlerta.html",
+    "v2/PerdidoNotificacao.html",
+    "v2/PerdidoVisto.html",
+    "v2/PerfilPet.html",
+    "v2/PermissoesApp.html",
+    "v2/Peso.html",
+    "v2/PetFriendly.html",
+    "v2/PetIdoso.html",
+    "v2/PetMia.html",
+    "v2/PetPerdido.html",
+    "v2/Premium.html",
+    "v2/PrimeirosSocorros.html",
+    "v2/PrivacidadeDados.html",
+    "v2/Produto.html",
+    "v2/ProdutoReceita.html",
+    "v2/QR.html",
+    "v2/QualidadeVida.html",
+    "v2/ReativarPet.html",
+    "v2/RegistrarPartida.html",
+    "v2/Remedio.html",
+    "v2/RotaApps.html",
+    "v2/RotaSemApps.html",
+    "v2/Rotina.html",
+    "v2/Seguro.html",
+    "v2/Selos.html",
+    "v2/SeniorNotificacao.html",
+    "v2/Servicos.html",
+    "v2/Solicitar.html",
+    "v2/TermosConsentimento.html",
+    "v2/TodosAtalhos.html",
+    "v2/Viagem.html",
+    "v2/WidgetAtalhos.html"
   ],
   "pages": [],
   "title": "Wireframes App de Pets"
