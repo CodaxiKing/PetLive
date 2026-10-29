@@ -3,9 +3,16 @@
 import { useId, useState } from "react";
 import { URL_APP_STORE, URL_GOOGLE_PLAY } from "@/components/BotoesLojas";
 
+/** As primeiras vacinas que o app vai lembrar, do calendário de cada espécie. */
+const PRIMEIRAS = {
+  cao: ["V10", "Antirrábica", "Gripe canina"],
+  gato: ["V4 Felina", "Antirrábica", "Leucemia felina"],
+};
+
 /**
- * A primeira tela do app já aberta: o nome do pet e a espécie. O botão
- * leva à loja quando o app estiver publicado; antes disso fica "Em breve".
+ * A primeira tela do app já aberta: o nome do pet e a espécie, e abaixo as
+ * vacinas que o app vai lembrar. O botão leva à loja quando o app estiver
+ * publicado; antes disso fica "Em breve".
  */
 export function NovoPet() {
   const [nome, setNome] = useState("Rex");
@@ -15,7 +22,7 @@ export function NovoPet() {
   const quem = nome.trim() || "seu pet";
 
   return (
-    <div data-ui className="w-full max-w-[440px] rounded-[var(--raio-g)] bg-[var(--papel)] p-6 shadow-[0_24px_60px_rgba(17,17,17,0.22)] md:p-8">
+    <div data-ui className="w-full max-w-[440px] rounded-[var(--raio-g)] bg-[var(--papel)] p-6 md:p-8">
       <p className="text-[22px] font-bold">Novo pet</p>
       <label htmlFor={idNome} className="t-pequeno mt-6 block font-semibold">
         Nome
@@ -44,12 +51,22 @@ export function NovoPet() {
           </button>
         ))}
       </div>
+      <div className="mt-5 rounded-[var(--raio)] bg-[var(--ceu-claro)] p-4" aria-live="polite">
+        <p className="t-pequeno font-semibold">O PetLive vai lembrar de {quem}:</p>
+        <ul className="mt-2 flex flex-wrap gap-1.5">
+          {PRIMEIRAS[especie].map((v) => (
+            <li key={v} className="rounded-full border-[3px] border-dotted border-[var(--ceu)] bg-[var(--papel)] px-3 py-1 text-[15px] font-bold">
+              {v}
+            </li>
+          ))}
+        </ul>
+      </div>
       {loja ? (
-        <a href={loja} target="_blank" rel="noopener noreferrer" className="botao mt-7 w-full">
+        <a href={loja} target="_blank" rel="noopener noreferrer" className="botao mt-5 w-full">
           Cadastrar {quem} no app
         </a>
       ) : (
-        <span aria-disabled="true" className="botao mt-7 w-full">
+        <span aria-disabled="true" className="botao mt-5 w-full">
           Em breve nas lojas
         </span>
       )}

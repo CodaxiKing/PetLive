@@ -1,5 +1,7 @@
+import Image from "next/image";
 import Link from "next/link";
 import { BotaoPreferenciasCookies } from "./ConsentimentoCookies";
+import { Foto } from "./site/Foto";
 import { HoraRio } from "./site/HoraRio";
 
 const NAVEGACAO = [
@@ -25,7 +27,22 @@ const ANO = 2026;
  * O bloco azul convida o outro público (tutores ↔ lojistas).
  */
 export function Rodape({ publico = "tutor" }: { publico?: "tutor" | "lojista" }) {
-  const convite = publico === "tutor" ? { texto: "Tem uma loja ou clínica?", href: "/lojistas" } : { texto: "Tem um cão ou gato?", href: "/" };
+  const convite =
+    publico === "tutor"
+      ? {
+          texto: "Tem uma loja ou clínica?",
+          frase: "Receba pedidos e reservas dos tutores pelo PetLive.",
+          href: "/lojistas",
+          foto: { src: "/fotos/consulta.jpg", alt: "Lulu-da-pomerânia sendo examinado na clínica" },
+          acao: { rotulo: "Baixar o app", href: "/#baixar" },
+        }
+      : {
+          texto: "Tem um cão ou gato?",
+          frase: "A carteira de saúde do pet, com aviso na hora de cada dose.",
+          href: "/",
+          foto: { src: "/fotos/tutora.jpg", alt: "Tutora sorrindo com o cão no colo, em casa" },
+          acao: { rotulo: "Cadastrar loja", href: "/lojistas#cadastro" },
+        };
   return (
     <footer className="secao bg-[var(--papel)] p-2 pt-4 md:p-3 md:pt-5">
       <div className="grid grid-cols-2 gap-2 md:grid-cols-12">
@@ -76,30 +93,38 @@ export function Rodape({ publico = "tutor" }: { publico?: "tutor" | "lojista" })
           </a>
         </div>
 
-        <div className="col-span-2 flex min-h-[160px] items-center justify-center rounded-[var(--raio)] bg-[var(--tinta)] p-6 text-[var(--papel)] md:col-span-8 md:min-h-[320px]">
-          <p className="t-display" aria-hidden="true">
+        {/* O nome de volta, grande, com a ação do público desta página. */}
+        <div className="relative col-span-2 flex min-h-[220px] flex-col justify-between gap-10 overflow-hidden rounded-[var(--raio)] bg-[var(--tinta)] p-5 text-[var(--papel)] md:col-span-8 md:min-h-[360px] md:p-8">
+          <div className="flex items-center justify-between gap-4">
+            <Image src="/logo-petlive.png" alt="" width={52} height={52} />
+            <Link href={convite.acao.href} className="botao min-h-11 bg-[var(--ceu)] px-5 text-[15px] text-[var(--tinta)] hover:bg-[var(--ceu-claro)]">
+              {convite.acao.rotulo}
+            </Link>
+          </div>
+          <p aria-hidden="true" className="font-bold leading-[0.9] tracking-[-0.05em]" style={{ fontSize: "clamp(84px, 15vw, 232px)" }}>
             PetLive
           </p>
         </div>
 
+        {/* Convite ao outro público, com a foto do mundo dele. */}
         <Link
           href={convite.href}
-          className="group col-span-2 flex min-h-[160px] flex-col justify-between rounded-[var(--raio)] bg-[var(--ceu)] p-6 md:col-span-4 md:min-h-[320px]"
+          className="group relative col-span-2 grid min-h-[240px] grid-cols-[1fr_40%] overflow-hidden rounded-[var(--raio)] bg-[var(--ceu)] md:col-span-4 md:min-h-[360px]"
         >
-          <span className="max-w-[14ch] text-[22px] font-bold leading-tight">{convite.texto}</span>
-          <svg
-            width="64"
-            height="64"
-            viewBox="0 0 64 64"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="4"
-            strokeLinecap="square"
-            className="self-end transition-transform duration-300 group-hover:translate-x-2"
-            aria-hidden="true"
-          >
-            <path d="M8 32h46M36 14l18 18-18 18" />
-          </svg>
+          <span className="flex flex-col justify-between gap-6 p-5 md:p-6">
+            <span>
+              <span className="block text-[22px] font-bold leading-tight">{convite.texto}</span>
+              <span className="t-pequeno mt-3 block">{convite.frase}</span>
+            </span>
+            <span aria-hidden="true" className="flex h-12 w-12 items-center justify-center rounded-full bg-[var(--tinta)] text-[var(--papel)] transition-transform duration-300 group-hover:translate-x-2">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M4 12h15M13 6l6 6-6 6" />
+              </svg>
+            </span>
+          </span>
+          <span className="relative m-2 ml-0 overflow-hidden rounded-[var(--raio-p)]">
+            <Foto src={convite.foto.src} alt={convite.foto.alt} fill sizes="(min-width: 768px) 14vw, 40vw" className="object-cover transition-transform duration-500 group-hover:scale-105" />
+          </span>
         </Link>
       </div>
     </footer>

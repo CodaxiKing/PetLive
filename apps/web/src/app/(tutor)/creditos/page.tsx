@@ -28,6 +28,7 @@ export default function PaginaCreditos() {
             "Tutora e cão no sofá: Meruyert Gonullu — pexels.com/photo/6589017",
             "Lulu-da-pomerânia na consulta: Tima Miroshnichenko — pexels.com/photo/6235243",
             "Tutora com o cão no colo: Samson Katt — pexels.com/photo/5256711",
+            "Tutora no celular com o cão branco: Helena Lopes — pexels.com/photo/4453148",
           ],
         },
         {

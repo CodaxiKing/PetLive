@@ -5,6 +5,7 @@ import gatoJanela from "../../../public/fotos/gato-janela.jpg";
 import noite from "../../../public/fotos/noite.jpg";
 import passeio from "../../../public/fotos/passeio.jpg";
 import tutora from "../../../public/fotos/tutora.jpg";
+import tutoraCelular from "../../../public/fotos/tutora-celular.jpg";
 
 const FOTOS: Record<string, StaticImageData> = {
   "/fotos/cao-dormindo.jpg": caoDormindo,
@@ -13,6 +14,7 @@ const FOTOS: Record<string, StaticImageData> = {
   "/fotos/noite.jpg": noite,
   "/fotos/passeio.jpg": passeio,
   "/fotos/tutora.jpg": tutora,
+  "/fotos/tutora-celular.jpg": tutoraCelular,
 };
 
 /**

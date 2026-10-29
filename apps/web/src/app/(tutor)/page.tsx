@@ -413,16 +413,42 @@ export default function Home() {
       </section>
 
       {/* Fechamento: a primeira tela do app, já aberta. */}
-      <section id="baixar" className="secao scroll-mt-4 bg-[var(--ceu)]">
-        <div className="site-moldura grid min-h-[90svh] items-end gap-12 py-16 lg:grid-cols-12 lg:items-center lg:py-20">
-          <div className="self-end lg:col-span-6">
+      <section id="baixar" className="secao scroll-mt-4 bg-[var(--ceu)] py-[clamp(72px,9vw,144px)]">
+        <div className="site-moldura grid gap-10 lg:grid-cols-12 lg:gap-8">
+          <div className="flex flex-col lg:col-span-5">
             <h2 data-revelar className="t-display max-w-[9ch]">Comece pelo seu pet</h2>
             <p data-revelar style={{ ["--ordem" as string]: 1 }} className="t-lead mt-6 max-w-[34ch]">
               Baixe o app, cadastre o pet e o PetLive monta o calendário de vacinas na hora.
             </p>
+            <ul data-revelar style={{ ["--ordem" as string]: 2 }} className="mt-10 space-y-3 text-[17px] font-semibold lg:mt-auto">
+              {["Grátis para um pet", "Aviso de vacina e remédio no celular", "A família acompanha junto"].map((l) => (
+                <li key={l} className="flex items-center gap-3">
+                  <span aria-hidden="true" className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[var(--tinta)] text-[var(--papel)]">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M5 12.5l4.5 4.5L19 7.5" />
+                    </svg>
+                  </span>
+                  {l}
+                </li>
+              ))}
+            </ul>
           </div>
-          <div data-revelar style={{ ["--ordem" as string]: 2 }} className="flex justify-center lg:col-span-5 lg:col-start-8">
-            <NovoPet />
+
+          {/* A foto grande e, por cima, a primeira tela do app para o visitante preencher. */}
+          <div data-revelar style={{ ["--ordem" as string]: 2 }} className="relative lg:col-span-7">
+            <figure className="relative aspect-[4/5] overflow-hidden rounded-[var(--raio-g)] sm:aspect-[4/3] lg:ml-auto lg:aspect-[4/5] lg:w-[72%]">
+              <Foto
+                src="/fotos/tutora-celular.jpg"
+                alt="Tutora sorrindo para o celular com o cão branco no colo, num gramado"
+                fill
+                desliza
+                sizes="(min-width: 1024px) 42vw, 100vw"
+                className="object-cover object-[50%_35%]"
+              />
+            </figure>
+            <div className="relative mx-3 -mt-28 sm:mx-auto sm:max-w-[440px] lg:absolute lg:bottom-10 lg:left-0 lg:mx-0 lg:mt-0 lg:w-[420px]">
+              <NovoPet />
+            </div>
           </div>
         </div>
       </section>
