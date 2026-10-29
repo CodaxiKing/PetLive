@@ -63,7 +63,7 @@ export function FormularioContato({ tipo, escuro = false }: { tipo: "contato" | 
         <p className="text-[22px] font-bold">Recebemos, obrigado!</p>
         <p className="mt-2 leading-relaxed">
           {tipo === "lojista"
-            ? "Avisaremos você por e-mail quando o cadastro de lojas abrir na sua cidade."
+            ? "Nossa equipe fala com você por e-mail para fazer o cadastro da loja."
             : "Respondemos pelo e-mail informado em até 2 dias úteis."}
         </p>
       </div>

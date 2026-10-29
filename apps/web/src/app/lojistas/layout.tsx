@@ -40,6 +40,9 @@ export default function LayoutLojistas({ children }: LayoutProps<"/lojistas">) {
             ))}
           </nav>
           <div className="flex items-center gap-2">
+            <Link href="/lojista/entrar" className="hidden min-h-11 items-center px-3 text-[16px] font-semibold md:flex">
+              Entrar
+            </Link>
             <Link href="/" className="hidden min-h-11 items-center px-3 text-[16px] font-semibold sm:flex">
               Sou tutor
             </Link>

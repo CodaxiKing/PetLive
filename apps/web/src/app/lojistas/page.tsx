@@ -12,7 +12,7 @@ import { Ingresso } from "@/components/site/Ingresso";
 const BENEFICIOS = [
   { nome: "Vitrine e solicitações", valor: "celular e computador", nota: "Mostre produtos com preço e estoque. O tutor solicita e você aceita." },
   { nome: "Agenda com horários livres", valor: "sem encavalar", nota: "Você define dias, horários, vagas e folgas. O app mostra só o que está livre." },
-  { nome: "Recebimento por Pix", valor: "quando ativar", nota: "O tutor paga no app, a confirmação é automática e o repasse cai na sua chave." },
+  { nome: "Pedidos com entrega", valor: "você acompanha", nota: "Retirada ou entrega, com o tutor vendo o andamento e conversando com a loja." },
 ];
 
 const SERVICOS = [
@@ -32,7 +32,7 @@ const PASSOS = [
 ];
 
 const SOLICITACOES = [
-  { quem: "Diego · Rex", oque: "Ração adulto 10 kg · retirar hoje", selo: "Pago via Pix", destaque: true },
+  { quem: "Diego · Rex", oque: "Ração adulto 10 kg · retirar hoje", selo: "Pagar na retirada", destaque: true },
   { quem: "Ana · Mia", oque: "Banho e tosa · amanhã, 10:30", selo: "Aguardando" },
   { quem: "Rafa · Thor", oque: "Hotelzinho · 22 a 25 de out.", selo: "Pagar na loja" },
 ];
@@ -48,21 +48,21 @@ export default function PaginaLojistas() {
               Venda e agende pelo PetLive
             </h1>
             <p data-revelar style={{ ["--ordem" as string]: 1 }} className="t-lead mt-8 max-w-[40ch]">
-              Solicitações de produtos e reservas de banho e tosa, passeio, creche e hotelzinho num painel simples. O cadastro
-              de lojas abre em breve: deixe o contato e avisamos primeiro.
+              Os tutores já pedem produtos e reservam banho e tosa, creche, hotelzinho e passeio pelo app. Para colocar a
+              sua loja, deixe o contato: o cadastro é feito com a nossa equipe.
             </p>
             <div data-revelar style={{ ["--ordem" as string]: 2 }} className="mt-10 flex flex-wrap items-center gap-6">
               <a href="#cadastro" className="botao bg-[var(--ceu)] text-[var(--tinta)] hover:bg-[var(--ceu-claro)]">
                 Cadastrar minha loja
               </a>
-              <a href="#como-comecar" className="link-sublinhado text-[17px] font-semibold">
-                Ver como funciona
+              <a href="/lojista/entrar" className="link-sublinhado text-[17px] font-semibold">
+                Já tenho acesso ao painel
               </a>
             </div>
             <p className="t-pequeno mt-6 text-[#C9D0DB]">Sem mensalidade na vitrine e na agenda.</p>
           </div>
 
-          {/* O painel do lojista (ilustrativo: chega com o marketplace). */}
+          {/* O painel do lojista (ilustrativo, com dados de exemplo). */}
           <div data-revelar style={{ ["--ordem" as string]: 2 }} className="lg:col-span-6">
             <div data-ui aria-label="Exemplo do painel de solicitações" className="flex min-h-[420px] bg-[var(--tom)] text-[var(--tinta)]">
               <div className="hidden w-[150px] flex-col gap-1 bg-[#1E1E1E] p-4 text-[14px] font-semibold text-[#C9D0DB] sm:flex">
@@ -172,7 +172,7 @@ export default function PaginaLojistas() {
             </figure>
           </div>
           <div data-revelar style={{ ["--ordem" as string]: 2 }} className="recorte-zigue bg-[var(--papel)] p-6 md:p-9 lg:col-span-6 lg:col-start-7">
-            <h3 className="text-[17px] font-bold">Quando o cadastro abrir</h3>
+            <h3 className="text-[17px] font-bold">Com a nossa equipe</h3>
             <ul className="mt-4 space-y-3 text-[17px]">
               {PASSOS.map((p) => (
                 <li key={p.o_que} className="flex items-end gap-3">
@@ -194,9 +194,9 @@ export default function PaginaLojistas() {
       <section id="planos" className="scroll-mt-4 bg-[var(--tinta)] py-[clamp(72px,10vw,160px)]">
         <div className="site-moldura">
           <div className="grid gap-6 text-[var(--papel)] lg:grid-cols-2 lg:gap-16">
-            <h2 data-revelar className="t-titulo">Só paga quando vende pelo app</h2>
+            <h2 data-revelar className="t-titulo">Sem mensalidade</h2>
             <p data-revelar style={{ ["--ordem" as string]: 1 }} className="t-lead max-w-[36ch] self-end">
-              Vitrine e agenda sem mensalidade. O Pix pelo app cobra só sobre a venda.
+              Vitrine e agenda sem mensalidade. Hoje o tutor paga na loja; o Pix pelo app vem depois.
             </p>
           </div>
           <div className="mx-auto mt-12 flex max-w-[1100px] flex-col gap-10">
@@ -213,8 +213,8 @@ export default function PaginaLojistas() {
             <Ingresso
               titulo="Pix pelo app"
               linhas={["Tudo da vitrine e agenda", "Pagamento por Pix no app", "Confirmação automática e extrato", "Repasse na sua chave Pix"]}
-              preco="Por venda"
-              acao={<p className="t-pequeno text-center text-[var(--apagado)]">Comissão sobre cada venda paga no app</p>}
+              preco="Em breve"
+              acao={<p className="t-pequeno text-center text-[var(--apagado)]">Com comissão sobre cada venda paga no app</p>}
             />
           </div>
         </div>
@@ -226,8 +226,8 @@ export default function PaginaLojistas() {
           <div className="lg:col-span-4">
             <h2 data-revelar className="t-titulo max-w-[12ch]">Coloque sua loja no PetLive</h2>
             <p data-revelar style={{ ["--ordem" as string]: 1 }} className="t-lead mt-6 max-w-[32ch]">
-              O cadastro de lojas abre em breve. Deixe o seu contato e avisamos primeiro, com ajuda para montar a vitrine e a
-              agenda.
+              Deixe o contato da loja. A nossa equipe faz o cadastro com você, ajuda a montar a vitrine e a agenda e libera o
+              acesso ao painel.
             </p>
           </div>
           <div data-revelar style={{ ["--ordem" as string]: 2 }} className="bg-[var(--papel)] p-6 md:p-12 lg:col-span-8">

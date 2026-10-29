@@ -38,6 +38,15 @@ const CARDAPIO = [
     ],
   },
   {
+    grupo: "Lojas e serviços",
+    itens: [
+      { nome: "Pedido ao petshop", valor: "retirada ou entrega", nota: "Monte o pedido na vitrine e acompanhe até chegar." },
+      { nome: "Banho e tosa", valor: "por horário", nota: "Só os horários livres, com remarcação pelo app." },
+      { nome: "Creche, hotel e passeio", valor: "reserva", nota: "E o passeio do passeador acompanhado ao vivo." },
+      { nome: "Conversa com a loja", valor: "por pedido", nota: "Tire dúvidas sem sair do app; o pagamento é na loja." },
+    ],
+  },
+  {
     grupo: "Quando precisar",
     itens: [
       { nome: "SOS e clínica 24 h", valor: "1 toque", nota: "A clínica 24 h mais perto, para ligar ou ir." },
@@ -66,6 +75,7 @@ const CANHOTO = [
   {
     quando: "Quando precisar",
     linhas: [
+      { o_que: "Banho e tosa no horário livre", valor: "reserva" },
       { o_que: "Clínica 24 h mais perto", valor: "1 toque" },
       { o_que: "Primeiros socorros", valor: "sem internet" },
     ],
@@ -98,10 +108,16 @@ const PERGUNTAS = [
       "Sim. Na guarda compartilhada você convida outra pessoa por um link, e a dose que ela marcar como dada aparece para você.",
   },
   {
+    aba: "Pagamento",
+    pergunta: "Dá para pagar pelo app?",
+    resposta:
+      "Ainda não. Nos pedidos e reservas, o pagamento é feito na loja, na retirada, na entrega ou no atendimento. A loja confirma pelo app antes.",
+  },
+  {
     aba: "Cidades",
     pergunta: "Quais cidades o PetLive atende?",
     resposta:
-      "A carteira de saúde e os lembretes funcionam em todo o Brasil. A rede de clínicas, petshops e serviços começa pelo Rio de Janeiro e cresce conforme novos parceiros entram.",
+      "A carteira de saúde e os lembretes funcionam em todo o Brasil. As lojas e os serviços com pedido e reserva começam pelo Rio de Janeiro e crescem conforme novas lojas entram.",
   },
 ];
 
@@ -115,7 +131,7 @@ const DADOS_ESTRUTURADOS = {
   operatingSystem: "Android, iOS",
   applicationCategory: "HealthApplication",
   description:
-    "Carteira de saúde do pet, lembretes de vacinas e remédios, SOS com a clínica 24 h mais perto e lugares pet por perto.",
+    "Carteira de saúde do pet, lembretes de vacinas e remédios, SOS com a clínica 24 h mais perto, pedidos ao petshop e reservas de banho e tosa, creche, hotelzinho e passeio.",
   inLanguage: "pt-BR",
   offers: { "@type": "Offer", price: "0", priceCurrency: "BRL" },
   ...(URL_GOOGLE_PLAY || URL_APP_STORE
@@ -158,7 +174,7 @@ export default function Home() {
                 <ul className="t-lead space-y-1 font-semibold">
                   <li>Vacinas, remédios e consultas</li>
                   <li>Aviso na hora de cada dose</li>
-                  <li>Para cães e gatos</li>
+                  <li>Petshop, banho e tosa e passeio</li>
                 </ul>
                 <p className="t-corpo mt-5 max-w-[34ch]">
                   O PetLive guarda a saúde do seu pet no celular e avisa você na hora de cada cuidado.
@@ -305,7 +321,7 @@ export default function Home() {
           <div className="mx-auto mt-12 flex max-w-[1100px] flex-col gap-10">
             <Ingresso
               titulo="Grátis, para um pet"
-              linhas={["Carteirinha e calendário de vacinas", "Remédios e lembretes", "Mapa e SOS", "QR básico da coleira"]}
+              linhas={["Carteirinha e calendário de vacinas", "Remédios e lembretes", "Mapa, SOS e QR da coleira", "Pedidos e reservas nas lojas"]}
               preco="R$ 0"
               acao={
                 <a href="#baixar" className="botao w-full">
