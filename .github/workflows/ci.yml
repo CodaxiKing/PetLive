@@ -91,6 +91,10 @@ jobs:
         working-directory: apps/web
         run: pnpm test:campanhas
 
+      - name: Testar acesso e contrato do painel lojista
+        working-directory: apps/web
+        run: pnpm test:lojista
+
       - name: Typecheck
         working-directory: apps/web
         run: pnpm exec tsc --noEmit
