@@ -48,6 +48,11 @@ body {
   --tom: #f3f5f8;
   --margem: clamp(16px, 4vw, 64px);
 
+  /* Cantos: painéis e fotos, cartões, e peças pequenas (campos, selos). */
+  --raio-g: clamp(24px, 2.6vw, 40px);
+  --raio: 20px;
+  --raio-p: 12px;
+
   --t-display: clamp(48px, 6.6vw, 104px);
   --t-titulo: clamp(34px, 3.4vw, 50px);
   --t-lead: clamp(19px, 1.5vw, 22px);
@@ -55,6 +60,12 @@ body {
   --t-pequeno: 14px;
 
   --ease-saida: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Os links para as seções descem a página devagar, e não em salto. */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 16px;
 }
 
 @layer components {
@@ -87,23 +98,27 @@ body {
   padding-bottom: calc(var(--z) + 24px);
 }
 
-/* Pontilhado entre o nome e o valor, como numa lista de preços. */
+/* Pontilhado entre o nome e o valor, como numa lista de preços.
+   No celular falta largura: o pontilhado sai e nome e valor vão às pontas. */
 .pontilhado {
+  display: none;
   flex: 1;
   min-width: 24px;
   border-bottom: 4px dotted currentColor;
   transform: translateY(-6px);
   opacity: 0.55;
 }
+@media (min-width: 640px) { .pontilhado { display: block; } }
 
-/* Botão da página: retangular, uma cor, como um carimbo. */
+/* Botão da página: uma pílula de uma cor só. */
 .botao {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
   min-height: 52px;
-  padding: 0 26px;
+  padding: 0 28px;
+  border-radius: 999px;
   background: var(--tinta);
   color: var(--papel);
   font-weight: 700;
@@ -140,6 +155,7 @@ html.js [data-revelar].visivel { opacity: 1; transform: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
   html.js [data-revelar] { opacity: 1; transform: none; transition: none; }
   .foto-respira { animation: none; }
   .botao, .link-sublinhado { transition: none; }

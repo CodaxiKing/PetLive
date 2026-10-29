@@ -148,68 +148,92 @@ export default function Home() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(DADOS_ESTRUTURADOS) }}
       />
 
-      {/* Herói: a carteirinha sobre um cômodo à meia-luz. */}
-      <section className="relative flex min-h-[calc(100svh-72px)] items-center overflow-hidden bg-[var(--tinta)] py-10">
-        <div className="foto-respira absolute inset-0">
-          <Image
-            src="/fotos/cao-dormindo.jpg"
-            alt="Cão dormindo num travesseiro, na sala à meia-luz"
-            fill
-            priority
-            sizes="100vw"
-            className="object-cover brightness-[0.62]"
-          />
-        </div>
+      {/* Herói: o título grande no azul da marca e o pet dormindo, com a carteirinha dele. */}
+      <section className="bg-[var(--ceu)] pb-[clamp(40px,6vw,96px)] pt-[clamp(28px,4vw,64px)]">
+        <div className="site-moldura">
+          <h1 className="t-display text-balance" style={{ fontSize: "clamp(40px, 6.4vw, 104px)" }}>
+            Carteira de saúde do seu pet
+          </h1>
 
-        <div className="site-moldura relative">
-          <div className="mx-auto flex min-h-[62svh] w-full max-w-[860px] flex-col justify-between gap-8 bg-[var(--papel)] p-6 md:p-8">
-            <h1 className="t-titulo flex flex-wrap gap-x-[0.28em] md:items-baseline md:justify-between" style={{ fontSize: "clamp(36px, 4vw, 58px)" }}>
-              <span>Carteira</span>
-              <span>de saúde</span>
-              <span>do seu pet</span>
-            </h1>
+          <div className="mt-8 grid gap-10 lg:mt-10 lg:grid-cols-12 lg:gap-8">
+            <div className="flex flex-col gap-8 lg:col-span-4">
+              <p className="t-lead max-w-[30ch]">
+                Vacinas, remédios e consultas no celular, com aviso na hora de cada dose. E o petshop, o banho e tosa e o
+                passeio a um toque.
+              </p>
 
-            <div className="grid items-start gap-8 md:grid-cols-[1.1fr_1fr]">
-              <div>
-                <ul className="t-lead space-y-1 font-semibold">
-                  <li>Vacinas, remédios e consultas</li>
-                  <li>Aviso na hora de cada dose</li>
-                  <li>Petshop, banho e tosa e passeio</li>
-                </ul>
-                <p className="t-corpo mt-5 max-w-[34ch]">
-                  O PetLive guarda a saúde do seu pet no celular e avisa você na hora de cada cuidado.
-                </p>
-              </div>
-
-              {/* Os selos das vacinas, como numa carteirinha de papel. */}
-              <div data-ui className="bg-[var(--tom)] p-4" aria-label="Exemplo de carteirinha: vacinas do Rex">
-                <div className="flex items-center gap-3">
-                  <Image src="/logo-petlive.png" alt="" width={32} height={32} />
-                  <p className="text-[16px] font-bold">Rex · cão · 3 anos</p>
-                </div>
-                <ul className="mt-3 grid grid-cols-2 gap-2">
-                  {SELOS.map((s) => (
-                    <li key={s.vacina} className="border-[3px] border-dotted border-[var(--ceu)] bg-[var(--papel)] p-2.5">
-                      <p className="text-[16px] font-bold">{s.vacina}</p>
-                      <p className="t-pequeno tabular-nums text-[var(--apagado)]">{s.data}</p>
-                    </li>
-                  ))}
-                  <li className="bg-[var(--ceu)] p-2.5">
-                    <p className="text-[16px] font-bold">Próxima V10</p>
-                    <p className="t-pequeno tabular-nums">30/11/26</p>
+              <ul className="flex flex-wrap gap-2 text-[15px] font-semibold" aria-label="O que tem no app">
+                {["Carteirinha de vacinas", "Remédio dose a dose", "SOS 24 h", "Banho e tosa", "Passeio ao vivo"].map((c) => (
+                  <li key={c} className="rounded-full bg-[var(--papel)] px-4 py-2">
+                    {c}
                   </li>
-                </ul>
+                ))}
+              </ul>
+
+              <div className="flex flex-wrap items-center gap-x-6 gap-y-4">
+                <a href="#baixar" className="botao">
+                  Baixar o app
+                </a>
+                <a href="#calendario" className="link-sublinhado text-[16px] font-semibold">
+                  Ver o calendário de vacinas
+                </a>
               </div>
             </div>
 
-            <div className="flex flex-col items-start gap-4 md:flex-row md:items-center md:justify-between">
-              <p className="t-pequeno order-3 text-[var(--apagado)] md:order-1">Foto: Enrique, Pexels</p>
-              <a href="#baixar" className="botao order-1 md:order-2">
-                Baixar o app
-              </a>
-              <a href="#calendario" className="link-sublinhado order-2 text-[16px] font-semibold md:order-3">
-                Ver o calendário de vacinas
-              </a>
+            <div className="lg:col-span-8">
+              <div className="relative">
+                <figure className="relative aspect-[4/3] overflow-hidden rounded-[var(--raio-g)] bg-[var(--tinta)] sm:aspect-[16/10] lg:aspect-[16/9]">
+                  <div className="foto-respira absolute inset-0">
+                    <Image
+                      src="/fotos/tutora.jpg"
+                      alt="Tutora sorrindo com o cão no colo, em casa"
+                      fill
+                      priority
+                      sizes="(min-width: 1024px) 66vw, 100vw"
+                      className="object-cover object-[30%_40%]"
+                    />
+                  </div>
+                </figure>
+
+                {/* A carteirinha do pet da foto, presa no canto como um cartão. */}
+                <div
+                  data-ui
+                  aria-label="Exemplo de carteirinha: vacinas do Rex"
+                  className="relative mx-3 -mt-16 rounded-[var(--raio)] bg-[var(--papel)] p-4 sm:absolute sm:bottom-5 sm:right-5 sm:m-0 sm:w-[360px]"
+                >
+                  <div className="flex items-center gap-3">
+                    <Image src="/logo-petlive.png" alt="" width={32} height={32} />
+                    <p className="text-[16px] font-bold">Rex · cão · 3 anos</p>
+                  </div>
+                  <ul className="mt-3 grid grid-cols-2 gap-2">
+                    {SELOS.map((s) => (
+                      <li key={s.vacina} className="rounded-[var(--raio-p)] border-[3px] border-dotted border-[var(--ceu)] p-2.5">
+                        <p className="text-[16px] font-bold">{s.vacina}</p>
+                        <p className="t-pequeno tabular-nums text-[var(--apagado)]">{s.data}</p>
+                      </li>
+                    ))}
+                    <li className="rounded-[var(--raio-p)] bg-[var(--ceu)] p-2.5">
+                      <p className="text-[16px] font-bold">Próxima V10</p>
+                      <p className="t-pequeno tabular-nums">30/11/26</p>
+                    </li>
+                  </ul>
+                </div>
+
+                {/* O aviso do remédio chegando, no outro canto. */}
+                <div
+                  data-ui
+                  aria-hidden="true"
+                  className="absolute right-5 top-5 hidden w-[320px] items-center gap-3 rounded-[var(--raio)] bg-[var(--papel)] p-3 md:flex"
+                >
+                  <Image src="/logo-petlive.png" alt="" width={36} height={36} />
+                  <div className="min-w-0 flex-1">
+                    <p className="text-[15px] font-bold">Hora do remédio do Rex</p>
+                    <p className="t-pequeno text-[var(--apagado)]">Vermífugo · 1 comprimido</p>
+                  </div>
+                  <span className="rounded-full bg-[var(--tinta)] px-3 py-1.5 text-[14px] font-bold text-[var(--papel)]">Feito</span>
+                </div>
+              </div>
+              <p className="t-pequeno mt-3 text-right text-[var(--apagado)]">Foto: Samson Katt, Pexels</p>
             </div>
           </div>
         </div>
@@ -225,11 +249,11 @@ export default function Home() {
       {/* Recursos como um cardápio impresso. */}
       <section id="recursos" className="scroll-mt-4 bg-[var(--tinta)] py-[clamp(72px,10vw,160px)]">
         <div className="site-moldura grid items-start gap-10 lg:grid-cols-[1fr_minmax(0,600px)_1fr]">
-          <figure data-revelar className="relative hidden aspect-[3/4] lg:mt-40 lg:block">
+          <figure data-revelar className="relative overflow-hidden rounded-[var(--raio-g)] hidden aspect-[3/4] lg:mt-40 lg:block">
             <Image src="/fotos/consulta.jpg" alt="Lulu-da-pomerânia sendo examinado na clínica" fill sizes="25vw" className="object-cover" />
           </figure>
 
-          <div className="recorte-ondas bg-[var(--papel)] px-6 py-16 md:px-12">
+          <div className="recorte-ondas rounded-[var(--raio-g)] bg-[var(--papel)] px-6 py-16 md:px-12">
             <h2 data-revelar className="t-titulo text-center">O que vem no app</h2>
             <div className="mt-12 space-y-12">
               {CARDAPIO.map((g, gi) => (
@@ -238,10 +262,10 @@ export default function Home() {
                   <ul className="mt-5 space-y-5">
                     {g.itens.map((i) => (
                       <li key={i.nome}>
-                        <div className="flex items-end gap-3 text-[17px] font-semibold">
+                        <div className="flex items-end justify-between gap-3 text-[17px] font-semibold">
                           <span>{i.nome}</span>
                           <span aria-hidden="true" className="pontilhado" />
-                          <span className={`whitespace-nowrap ${i.valor === "Premium" ? "bg-[var(--ceu)] px-2" : ""}`}>{i.valor}</span>
+                          <span className={`whitespace-nowrap text-right ${i.valor === "Premium" ? "rounded-full bg-[var(--ceu)] px-2.5" : ""}`}>{i.valor}</span>
                         </div>
                         <p className="t-pequeno mt-1 max-w-[40ch] text-[var(--apagado)]">{i.nota}</p>
                       </li>
@@ -255,8 +279,8 @@ export default function Home() {
             </p>
           </div>
 
-          <figure data-revelar className="relative hidden aspect-[3/4] lg:block">
-            <Image src="/fotos/tutora.jpg" alt="Tutora sorrindo com o cão no colo, em casa" fill sizes="25vw" className="object-cover" />
+          <figure data-revelar className="relative overflow-hidden rounded-[var(--raio-g)] hidden aspect-[3/4] lg:block">
+            <Image src="/fotos/cao-dormindo.jpg" alt="Cão dormindo num travesseiro, na sala à meia-luz" fill sizes="25vw" className="object-cover" />
           </figure>
         </div>
       </section>
@@ -286,13 +310,13 @@ export default function Home() {
             </p>
           </div>
 
-          <div data-revelar style={{ ["--ordem" as string]: 2 }} className="recorte-zigue bg-[var(--papel)] p-6 md:p-9 lg:col-span-6 lg:col-start-7">
+          <div data-revelar style={{ ["--ordem" as string]: 2 }} className="recorte-zigue rounded-t-[var(--raio-g)] bg-[var(--papel)] p-6 md:p-9 lg:col-span-6 lg:col-start-7">
             {CANHOTO.map((bloco) => (
               <div key={bloco.quando} className="mt-7 first:mt-0">
                 <h3 className="text-[17px] font-bold">{bloco.quando}</h3>
                 <ul className="mt-3 space-y-3 text-[17px]">
                   {bloco.linhas.map((l) => (
-                    <li key={l.o_que} className="flex items-end gap-3">
+                    <li key={l.o_que} className="flex items-end justify-between gap-3">
                       <span>{l.o_que}</span>
                       <span aria-hidden="true" className="pontilhado" />
                       <span className="whitespace-nowrap text-right font-semibold">{l.valor}</span>
@@ -301,7 +325,7 @@ export default function Home() {
                 </ul>
               </div>
             ))}
-            <p className="mt-8 flex min-h-11 flex-wrap items-center justify-between gap-x-4 bg-[var(--tinta)] px-4 py-2 text-[17px] font-bold text-[var(--papel)]">
+            <p className="mt-8 flex min-h-11 flex-wrap items-center justify-between gap-x-4 rounded-[var(--raio-p)] bg-[var(--tinta)] px-4 py-2 text-[17px] font-bold text-[var(--papel)]">
               <span>Saúde do pet em dia</span>
               <span>no seu celular</span>
             </p>
@@ -353,21 +377,22 @@ export default function Home() {
                   className="group"
                   style={{ ["--cor" as string]: CORES_FICHAS[i % CORES_FICHAS.length] }}
                 >
-                  <summary className="block cursor-pointer list-none [&::-webkit-details-marker]:hidden">
+                  <summary className="block cursor-pointer list-none [--aba:132px] md:[--aba:200px] [&::-webkit-details-marker]:hidden">
+                    {/* As abas andam da esquerda à direita sem passar da borda. */}
                     <span
-                      className="t-pequeno flex h-10 w-[140px] items-center bg-[var(--cor)] px-4 font-bold md:w-[200px]"
-                      style={{ marginLeft: `min(${i * 150}px, ${i * 12}vw)` }}
+                      className="t-pequeno flex h-10 w-[var(--aba)] items-center rounded-t-[var(--raio-p)] bg-[var(--cor)] px-4 font-bold"
+                      style={{ marginLeft: `calc(${i / (PERGUNTAS.length - 1)} * (100% - var(--aba)))` }}
                     >
                       {p.aba}
                     </span>
-                    <span className="flex min-h-[64px] items-center justify-between gap-4 bg-[var(--cor)] px-5 text-[17px] font-semibold md:px-7 md:text-[22px]">
+                    <span className="flex min-h-[64px] items-center justify-between gap-4 rounded-[var(--raio-p)] bg-[var(--cor)] px-5 text-[17px] font-semibold group-open:rounded-b-none md:px-7 md:text-[22px]">
                       {p.pergunta}
                       <span aria-hidden="true" className="text-[22px] font-medium transition-transform duration-300 group-open:rotate-45">
                         +
                       </span>
                     </span>
                   </summary>
-                  <div className="bg-[var(--cor)] px-5 pb-7 md:px-7">
+                  <div className="rounded-b-[var(--raio-p)] bg-[var(--cor)] px-5 pb-7 md:px-7">
                     <p className="t-corpo max-w-[56ch]">{p.resposta}</p>
                   </div>
                 </details>

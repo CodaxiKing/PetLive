@@ -45,13 +45,13 @@ export function PaginaLegal({ titulo, resumo, atualizado, secoes, foto = FOTO_PA
             Última atualização: {atualizado}
           </p>
         </div>
-        <figure data-revelar style={{ ["--ordem" as string]: 1 }} className="relative aspect-[4/3] lg:col-span-6">
+        <figure data-revelar style={{ ["--ordem" as string]: 1 }} className="relative overflow-hidden rounded-[var(--raio-g)] aspect-[4/3] lg:col-span-6">
           <Image src={foto.src} alt={foto.alt} fill priority sizes="(min-width: 1024px) 50vw, 100vw" className="object-cover" />
         </figure>
       </section>
 
       <div className="site-moldura pb-[clamp(56px,8vw,120px)]">
-        <div className="grid gap-10 bg-[var(--papel)] p-6 md:p-12 lg:grid-cols-12">
+        <div className="grid gap-10 rounded-[var(--raio-g)] bg-[var(--papel)] p-6 md:p-12 lg:grid-cols-12">
           <nav aria-label="Nesta página" className="hidden lg:col-span-3 lg:block">
             <ul className="sticky top-6 space-y-2 text-[16px]">
               {secoes.map((secao) => (

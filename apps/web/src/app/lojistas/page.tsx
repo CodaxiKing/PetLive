@@ -64,10 +64,10 @@ export default function PaginaLojistas() {
 
           {/* O painel do lojista (ilustrativo, com dados de exemplo). */}
           <div data-revelar style={{ ["--ordem" as string]: 2 }} className="lg:col-span-6">
-            <div data-ui aria-label="Exemplo do painel de solicitações" className="flex min-h-[420px] bg-[var(--tom)] text-[var(--tinta)]">
+            <div data-ui aria-label="Exemplo do painel de solicitações" className="flex min-h-[420px] overflow-hidden rounded-[var(--raio-g)] bg-[var(--tom)] text-[var(--tinta)]">
               <div className="hidden w-[150px] flex-col gap-1 bg-[#1E1E1E] p-4 text-[14px] font-semibold text-[#C9D0DB] sm:flex">
                 <p className="pb-3 text-[16px] font-extrabold text-[var(--papel)]">PetLive</p>
-                <p className="bg-[var(--ceu)] px-3 py-2 text-[var(--tinta)]">Solicitações</p>
+                <p className="rounded-[var(--raio-p)] bg-[var(--ceu)] px-3 py-2 text-[var(--tinta)]">Solicitações</p>
                 <p className="px-3 py-2">Catálogo</p>
                 <p className="px-3 py-2">Agenda</p>
                 <p className="px-3 py-2">Recebimentos</p>
@@ -75,24 +75,24 @@ export default function PaginaLojistas() {
               <div className="flex flex-1 flex-col gap-2.5 p-5">
                 <p className="text-[22px] font-bold">Solicitações</p>
                 <div className="flex gap-2 text-[14px]">
-                  <span className="bg-[var(--tinta)] px-3 py-1.5 font-bold text-[var(--papel)]">Novas · 3</span>
-                  <span className="bg-[var(--papel)] px-3 py-1.5 font-semibold">Em andamento</span>
+                  <span className="rounded-full bg-[var(--tinta)] px-3 py-1.5 font-bold text-[var(--papel)]">Novas · 3</span>
+                  <span className="rounded-full bg-[var(--papel)] px-3 py-1.5 font-semibold">Em andamento</span>
                 </div>
                 {SOLICITACOES.map((s) => (
                   <div
                     key={s.quem}
-                    className={`flex items-center justify-between gap-3 bg-[var(--papel)] px-4 py-3 ${s.destaque ? "outline-2 -outline-offset-2 outline-[var(--tinta)]" : ""}`}
+                    className={`flex items-center justify-between gap-3 rounded-[var(--raio)] bg-[var(--papel)] px-4 py-3 ${s.destaque ? "outline-2 -outline-offset-2 outline-[var(--tinta)]" : ""}`}
                   >
                     <div>
                       <p className="text-[16px] font-bold">{s.quem}</p>
                       <p className="t-pequeno text-[var(--apagado)]">{s.oque}</p>
                     </div>
-                    <span className={`shrink-0 px-2 py-1 text-[14px] font-semibold ${s.destaque ? "bg-[var(--ceu)]" : "bg-[var(--tom)]"}`}>{s.selo}</span>
+                    <span className={`shrink-0 rounded-full px-2.5 py-1 text-[14px] font-semibold ${s.destaque ? "bg-[var(--ceu)]" : "bg-[var(--tom)]"}`}>{s.selo}</span>
                   </div>
                 ))}
                 <div className="mt-auto flex gap-2 text-[16px] font-bold">
-                  <span className="flex-1 bg-[var(--tinta)] p-3 text-center text-[var(--papel)]">Aceitar e separar</span>
-                  <span className="bg-[var(--papel)] px-5 py-3">Recusar</span>
+                  <span className="flex-1 rounded-full bg-[var(--tinta)] p-3 text-center text-[var(--papel)]">Aceitar e separar</span>
+                  <span className="rounded-full bg-[var(--papel)] px-5 py-3">Recusar</span>
                 </div>
               </div>
             </div>
@@ -103,16 +103,16 @@ export default function PaginaLojistas() {
       {/* Benefícios como cardápio. */}
       <section id="beneficios" className="scroll-mt-4 bg-[var(--ceu)] py-[clamp(72px,10vw,160px)]">
         <div className="site-moldura grid items-start gap-10 lg:grid-cols-[1fr_minmax(0,600px)_1fr]">
-          <figure data-revelar className="relative hidden aspect-[3/4] lg:mt-24 lg:block">
+          <figure data-revelar className="relative overflow-hidden rounded-[var(--raio-g)] hidden aspect-[3/4] lg:mt-24 lg:block">
             <Image src="/fotos/consulta.jpg" alt="Veterinário examinando um lulu-da-pomerânia" fill sizes="25vw" className="object-cover" />
           </figure>
 
-          <div className="recorte-ondas bg-[var(--papel)] px-6 py-16 md:px-12">
+          <div className="recorte-ondas rounded-[var(--raio-g)] bg-[var(--papel)] px-6 py-16 md:px-12">
             <h2 data-revelar className="t-titulo text-center">Para vender e atender</h2>
             <ul className="mt-12 space-y-7">
               {BENEFICIOS.map((b, i) => (
                 <li key={b.nome} data-revelar style={{ ["--ordem" as string]: i }}>
-                  <div className="flex items-end gap-3 text-[17px] font-semibold">
+                  <div className="flex items-end justify-between gap-3 text-[17px] font-semibold">
                     <span>{b.nome}</span>
                     <span aria-hidden="true" className="pontilhado" />
                     <span className="whitespace-nowrap">{b.valor}</span>
@@ -123,7 +123,7 @@ export default function PaginaLojistas() {
             </ul>
           </div>
 
-          <div data-revelar className="bg-[var(--tinta)] p-6 text-[var(--papel)] lg:mt-48">
+          <div data-revelar className="rounded-[var(--raio-g)] bg-[var(--tinta)] p-6 text-[var(--papel)] lg:mt-48">
             <h3 className="text-[22px] font-bold leading-tight">Remédio com receita fica só para consulta</h3>
             <p className="t-corpo mt-4">
               O tutor vê preço e estoque, mas a compra é feita somente na loja. Você escolhe a mensagem que aparece.
@@ -140,14 +140,14 @@ export default function PaginaLojistas() {
             <p data-revelar style={{ ["--ordem" as string]: 1 }} className="t-lead mt-6 max-w-[30ch]">
               Produtos, serviços ou os dois. Cada um com a própria forma de reserva, configurada por você.
             </p>
-            <figure data-revelar style={{ ["--ordem" as string]: 2 }} className="relative mt-10 aspect-[4/3]">
+            <figure data-revelar style={{ ["--ordem" as string]: 2 }} className="relative overflow-hidden rounded-[var(--raio-g)] mt-10 aspect-[4/3]">
               <Image src="/fotos/passeio.jpg" alt="Dois cães de coleira parados numa calçada" fill sizes="(min-width: 1024px) 33vw, 100vw" className="object-cover" />
             </figure>
           </div>
           <ul className="grid gap-x-12 gap-y-9 md:grid-cols-2 lg:col-span-8">
             {SERVICOS.map((s, i) => (
               <li key={s.nome} data-revelar style={{ ["--ordem" as string]: i % 2 }}>
-                <div className="flex items-end gap-3 text-[22px] font-bold">
+                <div className="flex items-end justify-between gap-3 text-[22px] font-bold">
                   <span>{s.nome}</span>
                   <span aria-hidden="true" className="pontilhado" />
                   <span className="whitespace-nowrap text-[17px] font-semibold">{s.selo}</span>
@@ -167,22 +167,22 @@ export default function PaginaLojistas() {
             <p data-revelar style={{ ["--ordem" as string]: 1 }} className="t-lead mt-6 max-w-[30ch]">
               Se a loja já está no mapa do PetLive, você assume o perfil em vez de criar outro.
             </p>
-            <figure data-revelar style={{ ["--ordem" as string]: 2 }} className="relative mt-10 aspect-[4/3]">
+            <figure data-revelar style={{ ["--ordem" as string]: 2 }} className="relative overflow-hidden rounded-[var(--raio-g)] mt-10 aspect-[4/3]">
               <Image src="/fotos/cao-dormindo.jpg" alt="Cão dormindo num travesseiro, à meia-luz" fill sizes="(min-width: 1024px) 40vw, 100vw" className="object-cover" />
             </figure>
           </div>
-          <div data-revelar style={{ ["--ordem" as string]: 2 }} className="recorte-zigue bg-[var(--papel)] p-6 md:p-9 lg:col-span-6 lg:col-start-7">
+          <div data-revelar style={{ ["--ordem" as string]: 2 }} className="recorte-zigue rounded-t-[var(--raio-g)] bg-[var(--papel)] p-6 md:p-9 lg:col-span-6 lg:col-start-7">
             <h3 className="text-[17px] font-bold">Com a nossa equipe</h3>
             <ul className="mt-4 space-y-3 text-[17px]">
               {PASSOS.map((p) => (
-                <li key={p.o_que} className="flex items-end gap-3">
+                <li key={p.o_que} className="flex items-end justify-between gap-3">
                   <span>{p.o_que}</span>
                   <span aria-hidden="true" className="pontilhado" />
                   <span className="whitespace-nowrap text-right font-semibold">{p.valor}</span>
                 </li>
               ))}
             </ul>
-            <p className="mt-8 flex min-h-11 flex-wrap items-center justify-between gap-x-4 bg-[var(--tinta)] px-4 py-2 text-[17px] font-bold text-[var(--papel)]">
+            <p className="mt-8 flex min-h-11 flex-wrap items-center justify-between gap-x-4 rounded-[var(--raio-p)] bg-[var(--tinta)] px-4 py-2 text-[17px] font-bold text-[var(--papel)]">
               <span>Loja no mapa e na vitrine</span>
               <span>pedidos no celular</span>
             </p>
@@ -230,7 +230,7 @@ export default function PaginaLojistas() {
               acesso ao painel.
             </p>
           </div>
-          <div data-revelar style={{ ["--ordem" as string]: 2 }} className="bg-[var(--papel)] p-6 md:p-12 lg:col-span-8">
+          <div data-revelar style={{ ["--ordem" as string]: 2 }} className="rounded-[var(--raio-g)] bg-[var(--papel)] p-6 md:p-12 lg:col-span-8">
             <FormularioContato tipo="lojista" />
           </div>
         </div>

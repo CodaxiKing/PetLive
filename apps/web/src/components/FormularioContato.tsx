@@ -27,7 +27,7 @@ const MENSAGENS: Record<Exclude<ResultadoContato, "ok">, string> = {
 };
 
 const campo =
-  "min-h-[52px] w-full bg-[var(--tom)] px-4 text-[17px] text-[var(--tinta)] outline-none focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[var(--ceu)]";
+  "min-h-[52px] w-full rounded-[var(--raio-p)] bg-[var(--tom)] px-4 text-[17px] text-[var(--tinta)] outline-none focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[var(--ceu)]";
 
 /**
  * Formulário do site: "contato" (página Contato) ou "lojista" (interesse de
@@ -59,7 +59,7 @@ export function FormularioContato({ tipo, escuro = false }: { tipo: "contato" | 
 
   if (estado === "ok") {
     return (
-      <div role="status" className="bg-[var(--ceu)] p-8 text-[var(--tinta)]">
+      <div role="status" className="rounded-[var(--raio)] bg-[var(--ceu)] p-8 text-[var(--tinta)]">
         <p className="text-[22px] font-bold">Recebemos, obrigado!</p>
         <p className="mt-2 leading-relaxed">
           {tipo === "lojista"

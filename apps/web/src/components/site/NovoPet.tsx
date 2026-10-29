@@ -15,7 +15,7 @@ export function NovoPet() {
   const quem = nome.trim() || "seu pet";
 
   return (
-    <div data-ui className="w-full max-w-[440px] bg-[var(--papel)] p-6 shadow-[0_24px_60px_rgba(17,17,17,0.22)] md:p-8">
+    <div data-ui className="w-full max-w-[440px] rounded-[var(--raio-g)] bg-[var(--papel)] p-6 shadow-[0_24px_60px_rgba(17,17,17,0.22)] md:p-8">
       <p className="text-[22px] font-bold">Novo pet</p>
       <label htmlFor={idNome} className="t-pequeno mt-6 block font-semibold">
         Nome
@@ -25,12 +25,12 @@ export function NovoPet() {
         value={nome}
         onChange={(e) => setNome(e.target.value.slice(0, 24))}
         autoComplete="off"
-        className="mt-2 min-h-[52px] w-full bg-[var(--tom)] px-4 text-[17px]"
+        className="mt-2 min-h-[52px] w-full rounded-[var(--raio-p)] bg-[var(--tom)] px-4 text-[17px]"
       />
       <p className="t-pequeno mt-5 font-semibold" id={`${idNome}-especie`}>
         Espécie
       </p>
-      <div role="radiogroup" aria-labelledby={`${idNome}-especie`} className="mt-2 grid grid-cols-2 bg-[var(--tom)] p-1">
+      <div role="radiogroup" aria-labelledby={`${idNome}-especie`} className="mt-2 grid grid-cols-2 rounded-full bg-[var(--tom)] p-1">
         {(["cao", "gato"] as const).map((e) => (
           <button
             key={e}
@@ -38,7 +38,7 @@ export function NovoPet() {
             role="radio"
             aria-checked={especie === e}
             onClick={() => setEspecie(e)}
-            className={`min-h-11 text-[16px] font-semibold transition-colors ${especie === e ? "bg-[var(--tinta)] text-[var(--papel)]" : "hover:bg-[var(--ceu-claro)]"}`}
+            className={`min-h-11 rounded-full text-[16px] font-semibold transition-colors ${especie === e ? "bg-[var(--tinta)] text-[var(--papel)]" : "hover:bg-[var(--ceu-claro)]"}`}
           >
             {e === "cao" ? "Cão" : "Gato"}
           </button>

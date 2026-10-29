@@ -29,7 +29,7 @@ export function Rodape({ publico = "tutor" }: { publico?: "tutor" | "lojista" })
   return (
     <footer className="bg-[var(--papel)] p-2 md:p-3">
       <div className="grid grid-cols-2 gap-2 md:grid-cols-12">
-        <div className="col-span-2 flex min-h-[200px] flex-col justify-between gap-6 bg-[var(--tom)] p-5 md:col-span-4 md:min-h-[220px] md:p-6">
+        <div className="col-span-2 flex min-h-[200px] flex-col justify-between gap-6 rounded-[var(--raio)] bg-[var(--tom)] p-5 md:col-span-4 md:min-h-[220px] md:p-6">
           <p className="max-w-[26ch] text-[22px] font-semibold leading-snug">
             A carteira de saúde do seu pet, com aviso na hora de cada cuidado.
           </p>
@@ -50,7 +50,7 @@ export function Rodape({ publico = "tutor" }: { publico?: "tutor" | "lojista" })
           </div>
         </div>
 
-        <nav aria-label="Rodapé" className="bg-[var(--tom)] p-5 md:col-span-3 md:min-h-[220px] md:p-6">
+        <nav aria-label="Rodapé" className="rounded-[var(--raio)] bg-[var(--tom)] p-5 md:col-span-3 md:min-h-[220px] md:p-6">
           <ul className="space-y-2 text-[17px] font-semibold">
             {NAVEGACAO.map((link) => (
               <li key={link.href}>
@@ -62,21 +62,21 @@ export function Rodape({ publico = "tutor" }: { publico?: "tutor" | "lojista" })
           </ul>
         </nav>
 
-        <div className="flex min-h-[140px] flex-col justify-between bg-[var(--tom)] p-5 md:col-span-2 md:min-h-[220px] md:p-6">
+        <div className="flex min-h-[140px] flex-col justify-between rounded-[var(--raio)] bg-[var(--tom)] p-5 md:col-span-2 md:min-h-[220px] md:p-6">
           <p className="text-[17px] font-semibold">Rio de Janeiro</p>
           <p className="t-pequeno text-[var(--apagado)]">
             <HoraRio />
           </p>
         </div>
 
-        <div className="col-span-2 flex min-h-[120px] flex-col justify-between gap-4 bg-[var(--tom)] p-5 md:col-span-3 md:min-h-[220px] md:p-6">
+        <div className="col-span-2 flex min-h-[120px] flex-col justify-between gap-4 rounded-[var(--raio)] bg-[var(--tom)] p-5 md:col-span-3 md:min-h-[220px] md:p-6">
           <p className="t-pequeno text-[var(--apagado)]">Dúvidas sobre o app</p>
           <a href="mailto:suporte@petlive.app.br" className="link-sublinhado break-all text-[22px] font-semibold">
             suporte@petlive.app.br
           </a>
         </div>
 
-        <div className="col-span-2 flex min-h-[160px] items-center justify-center bg-[var(--tinta)] p-6 text-[var(--papel)] md:col-span-8 md:min-h-[320px]">
+        <div className="col-span-2 flex min-h-[160px] items-center justify-center rounded-[var(--raio)] bg-[var(--tinta)] p-6 text-[var(--papel)] md:col-span-8 md:min-h-[320px]">
           <p className="t-display" aria-hidden="true">
             PetLive
           </p>
@@ -84,7 +84,7 @@ export function Rodape({ publico = "tutor" }: { publico?: "tutor" | "lojista" })
 
         <Link
           href={convite.href}
-          className="group col-span-2 flex min-h-[160px] flex-col justify-between bg-[var(--ceu)] p-6 md:col-span-4 md:min-h-[320px]"
+          className="group col-span-2 flex min-h-[160px] flex-col justify-between rounded-[var(--raio)] bg-[var(--ceu)] p-6 md:col-span-4 md:min-h-[320px]"
         >
           <span className="max-w-[14ch] text-[22px] font-bold leading-tight">{convite.texto}</span>
           <svg

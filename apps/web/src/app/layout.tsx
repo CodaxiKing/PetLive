@@ -37,7 +37,12 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="pt-BR" className={`${jakarta.variable} h-full antialiased`} suppressHydrationWarning>
+    <html
+      lang="pt-BR"
+      className={`${jakarta.variable} h-full antialiased`}
+      data-scroll-behavior="smooth"
+      suppressHydrationWarning
+    >
       <body className="flex min-h-full flex-col">
         {/* Marca que há script: só então as entradas animadas escondem o conteúdo. */}
         <Script id="marca-js" strategy="beforeInteractive">

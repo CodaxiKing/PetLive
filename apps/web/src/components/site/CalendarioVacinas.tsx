@@ -86,8 +86,8 @@ export function CalendarioVacinas() {
   return (
     <div className="grid min-h-[88svh] items-center gap-10 py-16 lg:grid-cols-2 lg:gap-16 lg:py-24">
       {/* A carteirinha preenchida, sobre o azul da marca. */}
-      <div data-revelar className="flex aspect-square w-full items-center justify-center bg-[var(--ceu)] p-[clamp(16px,4vw,48px)]">
-        <div data-ui className="w-full max-w-[520px] bg-[var(--papel)] p-6 md:p-8" aria-live="polite">
+      <div data-revelar className="flex aspect-square w-full items-center justify-center rounded-[var(--raio-g)] bg-[var(--ceu)] p-[clamp(16px,4vw,48px)]">
+        <div data-ui className="w-full max-w-[520px] rounded-[var(--raio)] bg-[var(--papel)] p-6 md:p-8" aria-live="polite">
           <div className="flex items-baseline justify-between gap-3">
             <p className="text-[22px] font-bold">Vacinas sugeridas</p>
             <p className="t-pequeno text-[var(--apagado)]">{especie === "cao" ? "Cão" : "Gato"}</p>
@@ -152,7 +152,7 @@ export function CalendarioVacinas() {
             max={hoje ? paraIso(hoje) : undefined}
             onChange={(ev) => setEscolhido(ev.target.value)}
             aria-describedby={idNota}
-            className="mt-2 min-h-[52px] w-full max-w-[280px] bg-[var(--tom)] px-4 text-[17px] tabular-nums"
+            className="mt-2 min-h-[52px] w-full max-w-[280px] rounded-[var(--raio-p)] bg-[var(--tom)] px-4 text-[17px] tabular-nums"
           />
           <p id={idNota} className="t-pequeno mt-3 max-w-[42ch] text-[var(--apagado)]">
             É uma sugestão do calendário do app. Confirme as datas com o veterinário.
@@ -163,7 +163,7 @@ export function CalendarioVacinas() {
           <a href="#baixar" className="botao min-h-[72px] w-full">
             Baixar o app
           </a>
-          <a href="#recursos" className="flex min-h-[72px] items-center justify-center bg-[var(--tom)] px-4 font-bold transition-colors hover:bg-[var(--ceu-claro)]">
+          <a href="#recursos" className="flex min-h-[72px] items-center justify-center rounded-full bg-[var(--tom)] px-4 font-bold transition-colors hover:bg-[var(--ceu-claro)]">
             Ver os recursos
           </a>
         </div>

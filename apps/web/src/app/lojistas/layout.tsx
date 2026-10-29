@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { ConsentimentoCookies } from "@/components/ConsentimentoCookies";
+import { MenuCelular } from "@/components/MenuCelular";
 import { Rodape } from "@/components/Rodape";
 import { Revelar } from "@/components/site/Revelar";
 
@@ -46,9 +47,14 @@ export default function LayoutLojistas({ children }: LayoutProps<"/lojistas">) {
             <Link href="/" className="hidden min-h-11 items-center px-3 text-[16px] font-semibold sm:flex">
               Sou tutor
             </Link>
-            <a href="#cadastro" className="botao min-h-11 bg-[var(--ceu)] px-5 text-[16px] text-[var(--tinta)] hover:bg-[var(--ceu-claro)]">
+            <a href="#cadastro" className="botao min-h-11 bg-[var(--ceu)] px-4 sm:px-5 text-[16px] text-[var(--tinta)] hover:bg-[var(--ceu-claro)]">
               Cadastrar loja
             </a>
+            <div className="text-[var(--tinta)]">
+              <MenuCelular
+                links={[...LINKS, { rotulo: "Entrar no painel", href: "/lojista/entrar" }, { rotulo: "Sou tutor", href: "/" }]}
+              />
+            </div>
           </div>
         </div>
       </header>

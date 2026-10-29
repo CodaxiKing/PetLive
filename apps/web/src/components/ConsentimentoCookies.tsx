@@ -77,29 +77,26 @@ gtag('js',new Date());gtag('config','${ID_ANALYTICS}',{anonymize_ip:true});`}
           role="dialog"
           aria-live="polite"
           aria-label="Aviso de cookies"
-          className="bg-[var(--ceu-claro)] py-4"
+          className="fixed inset-x-3 bottom-3 z-50 rounded-[var(--raio)] border-2 border-[var(--tinta)] bg-[var(--ceu-claro)] p-4 sm:inset-x-auto sm:bottom-5 sm:right-5 sm:w-[420px] sm:p-5"
         >
-          <div className="site-moldura gap-6 md:flex md:items-center md:justify-between">
-          <p className="max-w-[62ch] text-[16px] leading-relaxed text-tinta">
-            Usamos cookies essenciais para o site funcionar e, se você aceitar, cookies de medição para entender o uso do
-            site. Nada de publicidade. Saiba mais na{" "}
+          <p className="text-[15px] leading-relaxed text-tinta">
+            Usamos cookies essenciais e, se você aceitar, cookies de medição. Nada de publicidade. Veja a{" "}
             <Link href="/privacidade" className="font-semibold text-tinta underline">
               política de privacidade
             </Link>
             .
           </p>
-          <div className="mt-4 flex shrink-0 gap-2 md:mt-0">
+          <div className="mt-3 grid grid-cols-2 gap-2">
             <button
               type="button"
               onClick={() => salvar("recusado")}
-              className="min-h-11 bg-[var(--papel)] px-5 text-[16px] font-semibold transition-colors hover:bg-[var(--tom)]"
+              className="min-h-11 rounded-full bg-[var(--papel)] px-4 text-[15px] font-semibold transition-colors hover:bg-[var(--tom)]"
             >
               Só essenciais
             </button>
-            <button type="button" onClick={() => salvar("aceito")} className="botao min-h-11 px-5 text-[16px]">
+            <button type="button" onClick={() => salvar("aceito")} className="botao min-h-11 px-4 text-[15px]">
               Aceitar
             </button>
-          </div>
           </div>
         </div>
       ) : null}

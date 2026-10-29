@@ -16,7 +16,7 @@ export function Ingresso({
   acao: ReactNode;
 }) {
   return (
-    <div data-revelar className="relative grid w-full bg-[var(--papel)] md:min-h-[320px] md:grid-cols-[7fr_3fr]">
+    <div data-revelar className="relative grid w-full rounded-[var(--raio-g)] bg-[var(--papel)] md:min-h-[320px] md:grid-cols-[7fr_3fr]">
       <div className="flex flex-col justify-between gap-8 p-7 md:p-10">
         <h3 className="t-titulo max-w-[16ch]">{titulo}</h3>
         <ul className="grid gap-x-8 gap-y-2 text-[17px] sm:grid-cols-2">
