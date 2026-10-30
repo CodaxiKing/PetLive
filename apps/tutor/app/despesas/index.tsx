@@ -225,7 +225,7 @@ const estilos = StyleSheet.create({
   mes: { fontFamily: fontFamily.bold, fontSize: 18, color: colors.black },
   total: { backgroundColor: colors.premiumSurface, borderRadius: 30, paddingVertical: 18, paddingHorizontal: 22 },
   totalRotulo: { fontFamily: fontFamily.bold, fontSize: 14, color: colors.premiumText },
-  totalValor: { fontFamily: fontFamily.medium, fontSize: 40, letterSpacing: -1.2, color: colors.black, marginTop: 2 },
+  totalValor: { fontFamily: fontFamily.bold, fontSize: 40, letterSpacing: -1.2, color: colors.black, marginTop: 2 },
   totalApoio: { fontFamily: fontFamily.regular, fontSize: 13, color: colors.premiumText },
   grafico: { flexDirection: 'row', gap: 10, height: 170, alignItems: 'flex-end' },
   colunaGrafico: { flex: 1, alignItems: 'center', gap: 6, height: '100%' },

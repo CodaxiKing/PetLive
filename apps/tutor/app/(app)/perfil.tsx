@@ -289,7 +289,7 @@ const estilos = StyleSheet.create({
   avatarFoto: { width: 76, height: 76, borderRadius: 38 },
   avatarLetra: { fontSize: 32, fontFamily: fontFamily.semiBold, color: colors.black },
   // Deixa a fonte calcular a altura: lineHeight apertado corta descendentes no Android.
-  nome: { fontSize: 32, paddingBottom: 4, letterSpacing: -1, fontFamily: fontFamily.medium, color: colors.black },
+  nome: { fontSize: 32, paddingBottom: 4, letterSpacing: -1, fontFamily: fontFamily.bold, color: colors.black },
   cidade: {
     alignSelf: 'flex-start',
     marginTop: 6,

@@ -180,7 +180,7 @@ const estilos = StyleSheet.create({
     elevation: 4,
   },
   foto: { width: 210, height: 210 },
-  nome: { fontFamily: fontFamily.medium, fontSize: 40, letterSpacing: -1.2, color: colors.black, marginTop: 18 },
+  nome: { fontFamily: fontFamily.bold, fontSize: 40, letterSpacing: -1.2, color: colors.black, marginTop: 18 },
   anos: { fontFamily: fontFamily.medium, fontSize: 16, color: colors.premiumText },
   corpo: { paddingHorizontal: 24, gap: 12 },
   desfazer: { flexDirection: 'row', alignItems: 'center', gap: 12, backgroundColor: '#FFF0C9', borderRadius: 26, padding: 14, paddingLeft: 18 },

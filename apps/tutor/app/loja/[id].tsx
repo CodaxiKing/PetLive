@@ -177,7 +177,7 @@ const estilos = StyleSheet.create({
   selo: { fontFamily: fontFamily.bold, fontSize: 12, color: colors.black, backgroundColor: colors.white, paddingHorizontal: 10, paddingVertical: 4, borderRadius: 999, overflow: 'hidden' },
   seloAberto: { backgroundColor: colors.successSurface, color: colors.successText },
   seloFechado: { backgroundColor: colors.background, color: colors.textMuted },
-  nome: { fontFamily: fontFamily.medium, fontSize: 30, letterSpacing: -0.8, color: colors.black, marginTop: 6 },
+  nome: { fontFamily: fontFamily.bold, fontSize: 30, letterSpacing: -0.8, color: colors.black, marginTop: 6 },
   sub: { fontFamily: fontFamily.regular, fontSize: 13, color: colors.textMuted },
   titulo: { fontFamily: fontFamily.bold, fontSize: 20, color: colors.black },
   abas: { flexDirection: 'row', gap: 8, paddingHorizontal: 24, marginTop: 16 },

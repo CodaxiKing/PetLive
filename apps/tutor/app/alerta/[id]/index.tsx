@@ -118,7 +118,7 @@ const estilos = StyleSheet.create({
     fontSize: 13, letterSpacing: 1, paddingHorizontal: 12, paddingVertical: 6, borderRadius: 999, overflow: 'hidden',
   },
   voltarTopo: { position: 'absolute', left: 24, top: 52, width: 46, height: 46, borderRadius: 23, backgroundColor: colors.white, alignItems: 'center', justifyContent: 'center', transform: [{ scaleX: -1 }] },
-  nome: { fontFamily: fontFamily.medium, fontSize: 34, letterSpacing: -1, color: colors.black, paddingHorizontal: 24, marginTop: 8 },
+  nome: { fontFamily: fontFamily.bold, fontSize: 34, letterSpacing: -1, color: colors.black, paddingHorizontal: 24, marginTop: 8 },
   sub: { fontFamily: fontFamily.regular, fontSize: 14, color: colors.textMuted, paddingHorizontal: 24 },
   info: { marginHorizontal: 24, backgroundColor: colors.background, borderRadius: 22, padding: 16, gap: 6, marginTop: 6 },
   infoForte: { fontFamily: fontFamily.bold, fontSize: 15, color: colors.black },

@@ -42,7 +42,6 @@ export default function TelaPeso() {
   const [carregando, setCarregando] = useState(true)
   const [novo, setNovo] = useState('')
   const [salvando, setSalvando] = useState(false)
-  const [larguraHero, setLarguraHero] = useState(0)
 
   useEffect(() => {
     if (!id) return
@@ -89,11 +88,12 @@ export default function TelaPeso() {
       style={estilos.tela}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
-      <View style={estilos.hero} onLayout={(e) => setLarguraHero(Math.round(e.nativeEvent.layout.width))}>
-        <CabecalhoTela titulo={`Peso do ${pet?.nome ?? 'pet'}`} aEsquerda />
+      <View style={estilos.hero}>
+        <CabecalhoTela titulo="" />
 
         <View style={estilos.heroConteudo}>
-          <Text style={estilos.kg}>
+          <Text style={estilos.sobre}>Peso {pet?.sexo === 'femea' ? 'da' : 'do'} {pet?.nome ?? 'pet'}</Text>
+          <Text style={estilos.kg} accessibilityRole="header">
             {carregando ? '—' : atual ? formatarKg(atual.peso) : '—'}
             <Text style={estilos.kgUnidade}> kg</Text>
           </Text>
@@ -105,10 +105,6 @@ export default function TelaPeso() {
           ) : null}
         </View>
 
-        {larguraHero > 0 ? (
-          <View style={estilos.onda}>
-          </View>
-        ) : null}
       </View>
 
       <ScrollView
@@ -176,6 +172,7 @@ const estilos = StyleSheet.create({
   },
   pata: { position: 'absolute', right: 30, top: 60 },
   maisCta: { fontFamily: fontFamily.regular, fontSize: 28, lineHeight: 32, color: colors.black },
+  sobre: { ...typography.captionMedium, color: colors.textMuted, marginBottom: -spacing.sm },
   heroConteudo: {
     paddingHorizontal: 24,
     paddingTop: spacing.lg,
@@ -183,8 +180,8 @@ const estilos = StyleSheet.create({
   },
   kg: {
     ...typography.h1,
-    fontFamily: fontFamily.medium,
-    fontSize: 68,
+    fontFamily: fontFamily.bold,
+    fontSize: 64,
     lineHeight: 72,
     letterSpacing: -2.5,
     color: colors.black,
@@ -205,12 +202,6 @@ const estilos = StyleSheet.create({
     ...typography.small,
     fontFamily: fontFamily.bold,
     color: colors.text,
-  },
-  onda: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    bottom: -1,
   },
   conteudo: {
     paddingHorizontal: spacing.xl,

@@ -9,6 +9,8 @@ import { DenunciaEvento } from '../../src/mapa/DenunciaEvento';
 import { colors } from '../../src/theme/colors';
 import { radius, spacing } from '../../src/theme/tokens';
 import { typography } from '../../src/theme/typography';
+import { ArrowLeft } from 'phosphor-react-native/src/icons/ArrowLeft';
+import { BotaoRedondo } from '../../src/components/Layout';
 
 const quando = (valor: string) => new Intl.DateTimeFormat('pt-BR', {
   dateStyle: 'long', timeStyle: 'short', timeZone: 'America/Sao_Paulo',
@@ -100,9 +102,11 @@ export default function FichaEvento() {
   }
 
   return <ScrollView style={estilos.tela} contentContainerStyle={[estilos.conteudo, { paddingTop: insets.top + spacing.lg, paddingBottom: insets.bottom + spacing.xl }]}>
-    <Pressable accessibilityRole="button" onPress={() => router.canGoBack() ? router.back() : router.replace({ pathname: '/(app)/mapa', params: { aba: 'eventos' } })} style={estilos.botao}>
-      <Text style={estilos.link}>Voltar ao mapa</Text>
-    </Pressable>
+    <View style={{ alignSelf: 'flex-start' }}>
+      <BotaoRedondo acessibilidade="Voltar" onPress={() => router.canGoBack() ? router.back() : router.replace({ pathname: '/(app)/mapa', params: { aba: 'eventos' } })}>
+        <ArrowLeft size={22} color={colors.black} />
+      </BotaoRedondo>
+    </View>
     {denunciaRecebida === id ? <Text accessibilityLiveRegion="polite" style={estilos.texto}>Denúncia recebida. Obrigado por avisar.</Text> : null}
     {carregando ? <ActivityIndicator accessibilityLabel="Carregando evento" color={colors.primaryDeep} /> : erro ? <View style={estilos.card}>
       <Text accessibilityRole="header" style={estilos.titulo}>Não foi possível carregar</Text>

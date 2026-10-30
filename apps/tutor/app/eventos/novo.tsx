@@ -6,7 +6,6 @@ import { useAuth } from '../../src/auth/AuthProvider';
 import { SeletorLocalEvento } from '../../src/mapa/SeletorLocalEvento';
 import { enviarFotoEvento } from '../../src/mapa/fotoEvento';
 import { BotaoPrimario } from '../../src/components/BotaoPrimario';
-import { Icone } from '../../src/components/Icone';
 import { supabase } from '../../src/lib/supabase';
 import { colors } from '../../src/theme/colors';
 import { components, radius, spacing } from '../../src/theme/tokens';
@@ -14,6 +13,8 @@ import { fontFamily, typography } from '../../src/theme/typography';
 import { atualizarEvento, carregarEventoEditavel, TIPO_EVENTO, type EventoMapa } from '../../src/mapa/eventos';
 
 import { isoLocal, validarFormularioEvento } from '../../src/mapa/formularioEvento';
+import { ArrowLeft } from 'phosphor-react-native/src/icons/ArrowLeft';
+import { BotaoRedondo } from '../../src/components/Layout';
 
 type Tipo = EventoMapa['tipo'];
 const TIPOS: Tipo[] = ['adocao', 'vacinacao', 'passeio', 'encontro', 'palestra', 'outro'];
@@ -129,10 +130,11 @@ export default function NovoEvento() {
   return (
     <KeyboardAvoidingView style={estilos.tela} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
       <ScrollView contentContainerStyle={estilos.conteudo} keyboardShouldPersistTaps="handled">
-        <Pressable accessibilityRole="button" onPress={() => router.canGoBack() ? router.back() : router.replace('/eventos/meus')} style={estilos.voltar}>
-          <Icone nome="seta" size={18} espessura={2} />
-          <Text style={estilos.voltarTexto}>Voltar ao mapa</Text>
-        </Pressable>
+        <View style={estilos.voltar}>
+          <BotaoRedondo acessibilidade="Voltar" onPress={() => router.canGoBack() ? router.back() : router.replace('/eventos/meus')}>
+            <ArrowLeft size={22} color={colors.black} />
+          </BotaoRedondo>
+        </View>
         <Text style={estilos.tituloTela}>{editando ? 'Editar evento' : 'Criar evento'}</Text>
         <Text style={estilos.ajuda}>{editando ? 'Mudar data, horário ou local envia o evento novamente para análise.' : 'Você pode enviar até 3 eventos por mês. Organizadores verificados publicam direto; os demais passam por análise.'}</Text>
 
@@ -200,7 +202,7 @@ const estilos = StyleSheet.create({
   conteudo: { padding: spacing.xl, paddingTop: 58, paddingBottom: 48, gap: spacing.sm },
   voltar: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm, marginBottom: spacing.sm },
   voltarTexto: { ...typography.captionMedium, color: colors.primaryDeep },
-  tituloTela: { ...typography.h1, fontFamily: fontFamily.bold, color: colors.black },
+  tituloTela: { ...typography.h1, fontFamily: fontFamily.bold, fontSize: 32, lineHeight: 38, letterSpacing: -1.1, color: colors.black },
   ajuda: { ...typography.body, color: colors.textMuted, marginBottom: spacing.md },
   rotulo: { ...typography.captionMedium, color: colors.text, fontFamily: fontFamily.bold, marginTop: spacing.sm },
   campo: { ...components.input, minHeight: 50 },

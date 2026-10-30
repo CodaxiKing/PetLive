@@ -213,7 +213,7 @@ const estilos = StyleSheet.create({
   chipTextoAtivo: { color: colors.white },
   valor: { backgroundColor: colors.background, borderRadius: 28, paddingVertical: 14, paddingHorizontal: 20 },
   valorRotulo: { fontFamily: fontFamily.semiBold, fontSize: 12, color: '#566070' },
-  valorTexto: { fontFamily: fontFamily.medium, fontSize: 40, letterSpacing: -1, color: colors.black, paddingVertical: 2 },
+  valorTexto: { fontFamily: fontFamily.bold, fontSize: 40, letterSpacing: -1, color: colors.black, paddingVertical: 2 },
   campoPets: { backgroundColor: colors.background, borderRadius: 24, paddingVertical: 12, paddingHorizontal: 16, gap: 8 },
   chipPet: { paddingVertical: 8, paddingHorizontal: 14, borderRadius: 999, backgroundColor: colors.white },
   chipPetAtivo: { backgroundColor: colors.black },

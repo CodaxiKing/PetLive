@@ -155,7 +155,7 @@ const estilos = StyleSheet.create({
   botaoVoltar: { position: 'absolute', left: 24, top: 52, width: 46, height: 46, borderRadius: 23, backgroundColor: colors.white, alignItems: 'center', justifyContent: 'center', transform: [{ scaleX: -1 }] },
   corpo: { paddingHorizontal: 24, paddingTop: 18, gap: 10 },
   seloReceita: { alignSelf: 'flex-start', fontFamily: fontFamily.bold, fontSize: 12, color: colors.healthText, backgroundColor: colors.healthSurface, paddingHorizontal: 10, paddingVertical: 4, borderRadius: 999, overflow: 'hidden' },
-  nome: { fontFamily: fontFamily.medium, fontSize: 26, letterSpacing: -0.6, color: colors.black },
+  nome: { fontFamily: fontFamily.bold, fontSize: 26, letterSpacing: -0.6, color: colors.black },
   linha: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
   preco: { fontFamily: fontFamily.bold, fontSize: 22, color: colors.black },
   estado: { fontFamily: fontFamily.bold, fontSize: 12, paddingHorizontal: 10, paddingVertical: 4, borderRadius: 999, overflow: 'hidden' },

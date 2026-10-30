@@ -172,7 +172,7 @@ const estilos = StyleSheet.create({
   ajuda: { fontFamily: fontFamily.regular, fontSize: 11, color: '#566070' },
   total: { backgroundColor: colors.primarySurface, borderRadius: 28, paddingVertical: 18, paddingHorizontal: 22, gap: 2 },
   totalRotulo: { fontFamily: fontFamily.bold, fontSize: 14, color: colors.primaryDeep },
-  totalValor: { fontFamily: fontFamily.medium, fontSize: 38, letterSpacing: -1, color: colors.black },
+  totalValor: { fontFamily: fontFamily.bold, fontSize: 38, letterSpacing: -1, color: colors.black },
   totalAviso: { fontFamily: fontFamily.regular, fontSize: 13, lineHeight: 19, color: colors.primaryDeep },
   observacao: { backgroundColor: colors.background, borderRadius: 22, padding: 16, minHeight: 70, fontFamily: fontFamily.medium, fontSize: 14, color: colors.black },
   secao: { fontFamily: fontFamily.bold, fontSize: 15, color: colors.black, marginTop: 6 },

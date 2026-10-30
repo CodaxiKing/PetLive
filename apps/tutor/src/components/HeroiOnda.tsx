@@ -46,9 +46,9 @@ export function HeroiOnda({
     <View
       style={[
         estilos.heroi,
-        // Sem a onda sobra um pouco de rodapé, mas o título (que começa em
-        // 112) precisa de pelo menos 184 para não ser cortado.
-        { height: Math.max(altura - 16, 184), backgroundColor: colorido ? fundo : corOnda },
+        // O título fica no fluxo: títulos de duas linhas aumentam o topo em
+        // vez de serem cortados. `altura` vira a altura mínima.
+        { minHeight: Math.max(altura - 16, 184), backgroundColor: colorido ? fundo : corOnda },
         colorido && estilos.faixa,
       ]}
     >
@@ -83,6 +83,7 @@ const estilos = StyleSheet.create({
   heroi: {
     overflow: 'hidden',
     flexShrink: 0,
+    paddingBottom: 20,
   },
   faixa: {
     borderBottomLeftRadius: 32,
@@ -114,14 +115,12 @@ const estilos = StyleSheet.create({
     paddingVertical: 5,
   },
   blocoTitulo: {
-    position: 'absolute',
-    left: 24,
-    right: 24,
-    top: 112,
+    marginTop: 112,
+    marginHorizontal: 24,
   },
   // Sem o botão de voltar, o título ocupa o topo (abas Pets e Perfil).
   blocoTituloAlto: {
-    top: 96,
+    marginTop: 96,
   },
   subtitulo: {
     ...typography.captionMedium,
