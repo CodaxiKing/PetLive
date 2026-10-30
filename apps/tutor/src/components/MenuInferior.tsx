@@ -1,8 +1,10 @@
+import { router } from 'expo-router';
 import { type BottomTabBarProps } from 'expo-router/js-tabs';
 import { useEffect, useState } from 'react';
-import { Animated, Pressable, StyleSheet, View } from 'react-native';
+import { Animated, Pressable, StyleSheet, Text, View } from 'react-native';
 import Svg, { Circle, Path } from 'react-native-svg';
 import { colors } from '../theme/colors';
+import { fontFamily } from '../theme/typography';
 import { useMovimentoReduzido } from './Animacoes';
 
 type Ícone = 'inicio' | 'pets' | 'mapa' | 'perfil' | 'avisos';
@@ -92,7 +94,8 @@ const RÓTULOS: Record<string, string> = {
 
 /**
  * Menu inferior flutuante: pílula preta suspensa com o item ativo em
- * círculo azul, como no protótipo (Inicio.dc.html <nav>).
+ * círculo azul e, no meio, o SOS vermelho (versão 2 do protótipo). O SOS
+ * não é uma aba: abre a tela de emergência por cima.
  *
  * A bolha azul desliza (spring) até a aba escolhida.
  *
@@ -103,25 +106,30 @@ export function MenuInferior({ state, descriptors, emitter, navigateToTab, inset
   const base = Math.max(insets.bottom, 20);
   const reduzido = useMovimentoReduzido();
   const [largura, setLargura] = useState(0);
-  const posicao = useState(() => new Animated.Value(state.index))[0];
-  const total = state.routes.length;
-  // Itens de 48 px distribuídos com space-between e 8 px de respiro nas pontas.
+  const posicao = useState(() => new Animated.Value(state.index < Math.ceil(state.routes.length / 2) ? state.index : state.index + 1))[0];
+  // Posições na pílula: as abas e o SOS no meio (depois da metade das abas).
+  const meio = Math.ceil(state.routes.length / 2);
+  const total = state.routes.length + 1;
+  const vaga = (indice: number) => (indice < meio ? indice : indice + 1);
+  // Itens de 54 px distribuídos com space-between e 8 px de respiro nas pontas.
   const passo = total > 1 && largura > 0 ? (largura - 16 - ITEM) / (total - 1) : 0;
 
   useEffect(() => {
     if (reduzido) {
-      posicao.setValue(state.index);
+      posicao.setValue(vaga(state.index));
       return;
     }
     const animacao = Animated.spring(posicao, {
-      toValue: state.index,
+      toValue: vaga(state.index),
       useNativeDriver: true,
       speed: 16,
       bounciness: 7,
     });
     animacao.start();
     return () => animacao.stop();
-  }, [state.index, reduzido, posicao]);
+    // vaga depende só de `meio`, que muda junto com as rotas.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state.index, reduzido, posicao, meio]);
 
   return (
     <View style={[estilos.envoltorio, { bottom: base }]} pointerEvents="box-none">
@@ -169,7 +177,7 @@ export function MenuInferior({ state, descriptors, emitter, navigateToTab, inset
             RÓTULOS[rota.name] ||
             rota.name;
 
-          return (
+          const aba = (
             <Pressable
               key={rota.key}
               role="tab"
@@ -179,28 +187,41 @@ export function MenuInferior({ state, descriptors, emitter, navigateToTab, inset
               onLongPress={aoPressionarLongo}
               style={[estilos.item, focada && largura === 0 && estilos.itemAtivo]}
             >
-              <Svg width={22} height={22} viewBox="0 0 24 24" color={focada ? colors.black : colors.white}>
+              <Svg width={22} height={22} viewBox="0 0 24 24" color={focada ? colors.black : colors.textMuted}>
                 {desenhoÍcone(rota.name as Ícone)}
               </Svg>
             </Pressable>
           );
+          if (indice !== meio - 1) return aba;
+          return [
+            aba,
+            <Pressable
+              key="sos"
+              accessibilityRole="button"
+              accessibilityLabel="SOS, emergência"
+              onPress={() => router.push('/sos')}
+              style={({ pressed }) => [estilos.item, estilos.sos, pressed && { opacity: 0.85 }]}
+            >
+              <Text style={estilos.sosTexto}>SOS</Text>
+            </Pressable>,
+          ];
         })}
       </View>
     </View>
   );
 }
 
-const ITEM = 48;
+const ITEM = 54;
 
 const estilos = StyleSheet.create({
   envoltorio: {
     position: 'absolute',
-    left: 24,
-    right: 24,
+    left: 16,
+    right: 16,
   },
   menu: {
-    height: 64,
-    borderRadius: 32,
+    height: 68,
+    borderRadius: 34,
     backgroundColor: colors.black,
     flexDirection: 'row',
     alignItems: 'center',
@@ -208,19 +229,28 @@ const estilos = StyleSheet.create({
     paddingHorizontal: 8,
   },
   item: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
+    width: 54,
+    height: 54,
+    borderRadius: 27,
     alignItems: 'center',
     justifyContent: 'center',
   },
   itemAtivo: {
     backgroundColor: colors.primary,
   },
+  sos: {
+    backgroundColor: colors.emergency,
+  },
+  sosTexto: {
+    fontFamily: fontFamily.extraBold,
+    fontSize: 13,
+    letterSpacing: 0.3,
+    color: colors.white,
+  },
   bolha: {
     position: 'absolute',
     left: 0,
-    top: 8,
+    top: 7,
     width: ITEM,
     height: ITEM,
     borderRadius: ITEM / 2,

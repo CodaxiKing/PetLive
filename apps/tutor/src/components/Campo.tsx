@@ -32,7 +32,7 @@ export function Campo({ rotulo, variante = 'neutro', icone, mascara, ...props }:
   const tema = temaPorVariante[variante];
 
   return (
-    <View style={[estilos.campo, { backgroundColor: tema.fundo }]}>
+    <View style={[estilos.campo, { backgroundColor: colors.surface, borderColor: colors.border }]}>
       {icone ? <View style={estilos.icone}>{icone}</View> : null}
 
       <View style={estilos.conteudo}>
@@ -58,9 +58,10 @@ const estilos = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: spacing.md,
-    borderRadius: 24,
+    borderRadius: 16,
+    borderWidth: 1.5,
     paddingHorizontal: spacing.xl,
-    minHeight: 62,
+    minHeight: 60,
   },
   icone: {
     flexShrink: 0,

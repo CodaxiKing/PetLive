@@ -6,8 +6,8 @@ export const spacing = {
   xs: 4,
   sm: 8,
   md: 12,
-  lg: 16,
-  xl: 20,
+  lg: 20,
+  xl: 24,
   xxl: 24,
   xxxl: 32,
   huge: 40,
@@ -16,22 +16,23 @@ export const spacing = {
 export const radius = {
   sm: 8,
   md: 12,
-  lg: 16,
-  xl: 20,
+  lg: 20,
+  xl: 24,
   pill: 999,
 } as const;
 
 /** Elevação leve dos cards do protótipo. */
 export const shadow = {
+  // Versão 2: sombra baixa e espalhada, sem borda no card.
   card: {
-    shadowColor: '#2A211C',
-    shadowOffset: { width: 0, height: 2 },
+    shadowColor: '#0E1726',
+    shadowOffset: { width: 0, height: 8 },
     shadowOpacity: 0.06,
-    shadowRadius: 8,
+    shadowRadius: 24,
     elevation: 2,
   },
   floating: {
-    shadowColor: '#2A211C',
+    shadowColor: '#0E1726',
     shadowOffset: { width: 0, height: 6 },
     shadowOpacity: 0.14,
     shadowRadius: 16,
@@ -43,10 +44,8 @@ export const components = {
   /** Card branco arredondado, o bloco base das telas. */
   card: {
     backgroundColor: colors.surface,
-    borderRadius: radius.lg,
+    borderRadius: radius.xl,
     padding: spacing.lg,
-    borderWidth: 1,
-    borderColor: colors.border,
     ...shadow.card,
   } satisfies ViewStyle,
 
@@ -72,21 +71,21 @@ export const components = {
     borderColor: colors.borderStrong,
   } satisfies ViewStyle,
 
-  /** Botão principal preenchido. */
+  /** Botão principal preenchido: pílula escura. */
   buttonPrimary: {
-    backgroundColor: colors.primary,
-    borderRadius: radius.md,
+    backgroundColor: colors.black,
+    borderRadius: radius.pill,
     paddingVertical: spacing.lg,
     alignItems: 'center',
     justifyContent: 'center',
     ...typography.button,
-    color: colors.text,
+    color: colors.white,
   } satisfies ViewStyle & TextStyle,
 
   /** Botão secundário, com borda. */
   buttonSecondary: {
     backgroundColor: colors.surface,
-    borderRadius: radius.md,
+    borderRadius: radius.pill,
     paddingVertical: spacing.lg,
     alignItems: 'center',
     justifyContent: 'center',

@@ -4,7 +4,7 @@ import Svg, { Path } from 'react-native-svg';
 import { voltarOuInicio } from '../lib/voltar';
 import { colors } from '../theme/colors';
 import { typography } from '../theme/typography';
-import { spacing } from '../theme/tokens';
+import { shadow, spacing } from '../theme/tokens';
 
 type Props = {
   titulo: string;
@@ -74,14 +74,17 @@ const estilos = StyleSheet.create({
     backgroundColor: colors.white,
     alignItems: 'center',
     justifyContent: 'center',
+    ...shadow.card,
   },
   pressionado: {
     opacity: 0.6,
   },
   titulo: {
     flex: 1,
-    textAlign: 'center',
-    ...typography.h3,
+    textAlign: 'left',
+    ...typography.h2,
+    fontSize: 24,
+    letterSpacing: -0.6,
     color: colors.black,
   },
   tituloEsquerda: {

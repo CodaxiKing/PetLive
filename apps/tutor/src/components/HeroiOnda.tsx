@@ -1,8 +1,9 @@
 import { ReactNode } from 'react';
-import { Pressable, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 import { voltarOuInicio } from '../lib/voltar';
 import { colors } from '../theme/colors';
+import { shadow } from '../theme/tokens';
 import { typography } from '../theme/typography';
 import { Surgir } from './Animacoes';
 
@@ -12,9 +13,9 @@ type Props = {
   subtitulo?: string;
   /** Esconde o botão de voltar (ex.: primeiro acesso, sem tela anterior). */
   semVoltar?: boolean;
-  /** Fundo do herói; o padrão é o azul das telas do protótipo. */
+  /** Fundo com significado (rosa da emergência, lilás do memorial). Sem ele, o topo é o próprio fundo da tela. */
   fundo?: string;
-  /** Cor da onda: a mesma do fundo da tela logo abaixo. */
+  /** Fundo da tela logo abaixo; o topo sem `fundo` usa esta cor. */
   corOnda?: string;
   altura?: number;
   /** Selo verde no canto direito (ex.: "Funciona sem internet"). */
@@ -24,24 +25,32 @@ type Props = {
 };
 
 /**
- * Herói das telas empilhadas do protótipo (Termos, Permissões,
- * Privacidade, SOS, Calculadoras...): fundo azul, botão de voltar
- * branco, subtítulo, título grande e a onda branca no rodapé.
+ * Topo das telas empilhadas (Termos, Permissões, Privacidade, SOS,
+ * Calculadoras...), na versão 2 do protótipo: botão de voltar redondo,
+ * subtítulo e título grande sobre o fundo da tela. Telas com cor de
+ * significado (`fundo`) ganham uma faixa colorida de cantos arredondados.
  */
 export function HeroiOnda({
   titulo,
   subtitulo,
   semVoltar,
-  fundo = colors.hero,
+  fundo,
   corOnda = colors.surface,
   altura = 230,
   selo,
   children,
 }: Props) {
-  const { width } = useWindowDimensions();
+  const colorido = Boolean(fundo && fundo !== colors.hero);
 
   return (
-    <View style={[estilos.heroi, { height: altura, backgroundColor: fundo }]}>
+    <View
+      style={[
+        estilos.heroi,
+        // Sem a onda, o rodapé de 28 px que ela ocupava sobra.
+        { height: altura - 28, backgroundColor: colorido ? fundo : corOnda },
+        colorido && estilos.faixa,
+      ]}
+    >
       {children}
 
       {semVoltar ? null : (
@@ -73,18 +82,6 @@ export function HeroiOnda({
         </Text>
       </Surgir>
 
-      <Svg
-        style={estilos.onda}
-        width={width}
-        height={46}
-        viewBox="0 0 390 46"
-        preserveAspectRatio="none"
-      >
-        <Path
-          d="M0 46V26C28 8 56 10 80 24C104 38 132 40 154 26C180 8 214 10 238 26C262 42 300 38 322 22C346 6 372 12 390 24V46z"
-          fill={corOnda}
-        />
-      </Svg>
     </View>
   );
 }
@@ -93,6 +90,10 @@ const estilos = StyleSheet.create({
   heroi: {
     overflow: 'hidden',
     flexShrink: 0,
+  },
+  faixa: {
+    borderBottomLeftRadius: 32,
+    borderBottomRightRadius: 32,
   },
   voltar: {
     position: 'absolute',
@@ -104,6 +105,7 @@ const estilos = StyleSheet.create({
     backgroundColor: colors.white,
     alignItems: 'center',
     justifyContent: 'center',
+    ...shadow.card,
   },
   selo: {
     position: 'absolute',
@@ -111,8 +113,8 @@ const estilos = StyleSheet.create({
     top: 62,
     fontSize: 11,
     fontFamily: typography.h1.fontFamily,
-    color: '#1F6B45',
-    backgroundColor: '#D8F2E3',
+    color: colors.successText,
+    backgroundColor: colors.successSurface,
     borderRadius: 999,
     overflow: 'hidden',
     paddingHorizontal: 12,
@@ -130,19 +132,13 @@ const estilos = StyleSheet.create({
   },
   subtitulo: {
     ...typography.captionMedium,
-    color: colors.primaryDark,
+    color: colors.textMuted,
   },
   titulo: {
     ...typography.h1,
-    fontFamily: typography.bodyMedium.fontFamily,
     fontSize: 32,
-    lineHeight: 34,
-    letterSpacing: -0.96,
+    lineHeight: 36,
+    letterSpacing: -1.1,
     color: colors.black,
-  },
-  onda: {
-    position: 'absolute',
-    left: 0,
-    bottom: -1,
   },
 });
