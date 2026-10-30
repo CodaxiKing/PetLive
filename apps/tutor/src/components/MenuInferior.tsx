@@ -1,88 +1,27 @@
 import { router } from 'expo-router';
 import { type BottomTabBarProps } from 'expo-router/js-tabs';
-import { useEffect, useState } from 'react';
+import { type ComponentType, useEffect, useState } from 'react';
 import { Animated, Pressable, StyleSheet, Text, View } from 'react-native';
-import Svg, { Circle, Path } from 'react-native-svg';
+import type { IconProps } from 'phosphor-react-native';
+import { Bell } from 'phosphor-react-native/src/icons/Bell';
+import { House } from 'phosphor-react-native/src/icons/House';
+import { MapTrifold } from 'phosphor-react-native/src/icons/MapTrifold';
+import { PawPrint } from 'phosphor-react-native/src/icons/PawPrint';
+import { User } from 'phosphor-react-native/src/icons/User';
 import { colors } from '../theme/colors';
 import { fontFamily } from '../theme/typography';
 import { useMovimentoReduzido } from './Animacoes';
 
 type Ícone = 'inicio' | 'pets' | 'mapa' | 'perfil' | 'avisos';
 
-function desenhoÍcone(nome: Ícone) {
-  switch (nome) {
-    case 'inicio':
-      return (
-        <Path
-          d="M4 11l8-7 8 7v8a1 1 0 0 1-1 1h-4v-6h-6v6H5a1 1 0 0 1-1-1z"
-          stroke="currentColor"
-          strokeWidth={1.9}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          fill="none"
-        />
-      );
-    case 'pets':
-      return (
-        <>
-          <Circle cx={6} cy={10} r={1.8} stroke="currentColor" strokeWidth={1.8} fill="none" />
-          <Circle cx={10} cy={6} r={1.8} stroke="currentColor" strokeWidth={1.8} fill="none" />
-          <Circle cx={14} cy={6} r={1.8} stroke="currentColor" strokeWidth={1.8} fill="none" />
-          <Circle cx={18} cy={10} r={1.8} stroke="currentColor" strokeWidth={1.8} fill="none" />
-          <Path
-            d="M12 12c-3 0-5 2.5-5 4.5 0 1.5 1.2 2 2.6 2 1 0 1.6-.4 2.4-.4s1.4.4 2.4.4c1.4 0 2.6-.5 2.6-2 0-2-2-4.5-5-4.5z"
-            stroke="currentColor"
-            strokeWidth={1.8}
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            fill="none"
-          />
-        </>
-      );
-    case 'mapa':
-      return (
-        <>
-          <Path
-            d="M12 21s-6-5.5-6-10a6 6 0 0 1 12 0c0 4.5-6 10-6 10z"
-            stroke="currentColor"
-            strokeWidth={1.8}
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            fill="none"
-          />
-          <Circle cx={12} cy={11} r={2} stroke="currentColor" strokeWidth={1.8} fill="none" />
-        </>
-      );
-    case 'avisos':
-      return (
-        <>
-          <Path
-            d="M6 17V11a6 6 0 0 1 12 0v6l1.5 2h-15z"
-            stroke="currentColor"
-            strokeWidth={1.8}
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            fill="none"
-          />
-          <Path d="M10 21h4" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" fill="none" />
-        </>
-      );
-    case 'perfil':
-    default:
-      return (
-        <>
-          <Circle cx={12} cy={8} r={4} stroke="currentColor" strokeWidth={1.8} fill="none" />
-          <Path
-            d="M4 20c1-4 4-6 8-6s7 2 8 6"
-            stroke="currentColor"
-            strokeWidth={1.8}
-            strokeLinecap="round"
-            fill="none"
-          />
-        </>
-      );
-  }
-}
+/** Ícones das abas (Phosphor), como na versão 2 do protótipo. */
+const ÍCONES: Record<Ícone, ComponentType<IconProps>> = {
+  inicio: House,
+  pets: PawPrint,
+  mapa: MapTrifold,
+  perfil: User,
+  avisos: Bell,
+};
 
 const RÓTULOS: Record<string, string> = {
   inicio: 'Início',
@@ -187,9 +126,10 @@ export function MenuInferior({ state, descriptors, emitter, navigateToTab, inset
               onLongPress={aoPressionarLongo}
               style={[estilos.item, focada && largura === 0 && estilos.itemAtivo]}
             >
-              <Svg width={22} height={22} viewBox="0 0 24 24" color={focada ? colors.black : colors.textMuted}>
-                {desenhoÍcone(rota.name as Ícone)}
-              </Svg>
+              {(() => {
+                const Desenho = ÍCONES[rota.name as Ícone] ?? User;
+                return <Desenho size={24} color={focada ? colors.black : '#9AA3B2'} weight={focada ? 'bold' : 'regular'} />;
+              })()}
             </Pressable>
           );
           if (indice !== meio - 1) return aba;

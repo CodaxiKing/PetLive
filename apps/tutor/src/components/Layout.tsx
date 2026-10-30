@@ -1,5 +1,9 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
-import Svg, { Circle, Path } from 'react-native-svg';
+import Svg, { Path } from 'react-native-svg';
+import { Bell } from 'phosphor-react-native/src/icons/Bell';
+import { MagnifyingGlass } from 'phosphor-react-native/src/icons/MagnifyingGlass';
+import { MapPin } from 'phosphor-react-native/src/icons/MapPin';
+import { User } from 'phosphor-react-native/src/icons/User';
 import { colors } from '../../src/theme/colors';
 import { fontFamily, typography } from '../../src/theme/typography';
 
@@ -47,42 +51,22 @@ export function OndaHeroi({ largura, altura = 46 }: { largura: number; altura?: 
 
 /** Ícone de sino (avisos). */
 export function IconeSino({ size = 20, cor = colors.black }: { size?: number; cor?: string }) {
-  return (
-    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={cor} strokeWidth={1.9} strokeLinecap="round" strokeLinejoin="round">
-      <Path d="M6 17V11a6 6 0 0 1 12 0v6l1.5 2h-15z" />
-      <Path d="M10 21h4" />
-    </Svg>
-  );
+  return <Bell size={size} color={cor} />;
 }
 
 /** Ícone de perfil. */
 export function IconePerfil({ size = 20, cor = colors.black }: { size?: number; cor?: string }) {
-  return (
-    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={cor} strokeWidth={1.9} strokeLinecap="round" strokeLinejoin="round">
-      <Circle cx={12} cy={8} r={4} />
-      <Path d="M4 20c1-4 4-6 8-6s7 2 8 6" />
-    </Svg>
-  );
+  return <User size={size} color={cor} />;
 }
 
 /** Ícone de localização. */
 export function IconeLocal({ size = 20, cor = colors.black }: { size?: number; cor?: string }) {
-  return (
-    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={cor} strokeWidth={1.9} strokeLinecap="round" strokeLinejoin="round">
-      <Path d="M12 21s-6-5.5-6-10a6 6 0 0 1 12 0c0 4.5-6 10-6 10z" />
-      <Circle cx={12} cy={11} r={2} />
-    </Svg>
-  );
+  return <MapPin size={size} color={cor} />;
 }
 
 /** Ícone de busca. */
 export function IconeBusca({ size = 20, cor = colors.black }: { size?: number; cor?: string }) {
-  return (
-    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={cor} strokeWidth={1.8} strokeLinecap="round">
-      <Circle cx={11} cy={11} r={7} />
-      <Path d="M20 20l-4-4" />
-    </Svg>
-  );
+  return <MagnifyingGlass size={size} color={cor} />;
 }
 
 /** Título de seção com link à direita ("Ver todos ›"). */

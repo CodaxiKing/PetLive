@@ -1,5 +1,5 @@
 import { useRouter } from 'expo-router';
-import { Image, ImageBackground, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { BotaoPrimario } from '../../src/components/BotaoPrimario';
 import { Surgir } from '../../src/components/Animacoes';
@@ -19,12 +19,8 @@ export default function Welcome() {
   const insets = useSafeAreaInsets();
 
   return (
-    <ImageBackground
-      source={FOTO}
-      resizeMode="cover"
-      style={estilos.tela}
-      accessibilityIgnoresInvertColors
-    >
+    <View style={estilos.tela}>
+      <Image source={FOTO} resizeMode="cover" style={estilos.foto} accessibilityIgnoresInvertColors />
       <View style={[estilos.marca, { top: insets.top + 16 }]}>
         <Image source={LOGO} style={estilos.logo} accessibilityIgnoresInvertColors />
         <Text style={estilos.marcaTexto}>PetLive</Text>
@@ -52,7 +48,7 @@ export default function Welcome() {
           <Text style={estilos.entrarTexto}>Já tenho conta</Text>
         </Pressable>
       </Surgir>
-    </ImageBackground>
+    </View>
   );
 }
 
@@ -61,6 +57,15 @@ const estilos = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.black,
     justifyContent: 'flex-end',
+  },
+  foto: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    width: '100%',
+    height: '100%',
   },
   marca: {
     position: 'absolute',
