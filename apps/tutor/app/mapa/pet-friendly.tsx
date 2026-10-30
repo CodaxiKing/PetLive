@@ -6,7 +6,6 @@ import { Surgir, Tocavel } from '../../src/components/Animacoes';
 import { BotaoPrimario } from '../../src/components/BotaoPrimario';
 import { HeroiOnda } from '../../src/components/HeroiOnda';
 import { Icone } from '../../src/components/Icone';
-import { MarcaPata } from '../../src/components/MarcaPata';
 import { AtribuicaoGoogle } from '../../src/mapa/AtribuicaoGoogle';
 import { acharEndereco } from '../../src/mapa/geocodificar';
 import { IlustracaoLugar } from '../../src/mapa/IlustracaoLugar';
@@ -127,7 +126,6 @@ export default function TelaPetFriendly() {
   return (
     <View style={estilos.tela}>
       <HeroiOnda subtitulo="Mapa" titulo="Pet friendly" altura={196}>
-        <MarcaPata size={96} style={estilos.pata} />
       </HeroiOnda>
 
       <View style={estilos.corpo}>

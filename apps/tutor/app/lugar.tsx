@@ -7,7 +7,6 @@ import {
   StyleSheet,
   Text,
   View,
-  useWindowDimensions,
 } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import Svg, { Path } from 'react-native-svg';
@@ -63,7 +62,6 @@ export default function Lugar() {
   const { nomes: rotulosCategoria } = useCategoriasMapa();
   const { id, categoria } = useLocalSearchParams<{ id: string; categoria?: CategoriaLugar }>();
   const { pets, petAtivo } = usePets();
-  const { width } = useWindowDimensions();
   const [lugar, setLugar] = useState<LugarRegistro | null>(null);
   const [carregando, setCarregando] = useState(true);
   const [falha, setFalha] = useState(false);
@@ -147,12 +145,6 @@ export default function Lugar() {
           />
         )}
 
-        <Svg style={estilos.onda} width={width} height={46} viewBox="0 0 390 46" preserveAspectRatio="none">
-          <Path
-            d="M0 46V26C28 8 56 10 80 24C104 38 132 40 154 26C180 8 214 10 238 26C262 42 300 38 322 22C346 6 372 12 390 24V46z"
-            fill={colors.surface}
-          />
-        </Svg>
 
         <Pressable
           accessibilityRole="button"
@@ -192,7 +184,7 @@ export default function Lugar() {
         </Pressable>
       </View>
 
-      <ScrollView contentContainerStyle={estilos.conteudo}>
+      <ScrollView style={estilos.folha} contentContainerStyle={estilos.conteudo}>
         <Text style={estilos.nome} numberOfLines={2}>
           {lugar.nome}
         </Text>
@@ -497,11 +489,6 @@ const estilos = StyleSheet.create({
     backgroundColor: '#CFE8FB',
     overflow: 'hidden',
   },
-  onda: {
-    position: 'absolute',
-    left: 0,
-    bottom: -1,
-  },
   subtitulo: {
     ...typography.caption,
     color: colors.textMuted,
@@ -533,6 +520,14 @@ const estilos = StyleSheet.create({
   },
   voltarPressionado: {
     opacity: 0.6,
+  },
+  // Versão 2: a folha branca sobe sobre o mapa ou as fotos.
+  folha: {
+    flex: 1,
+    marginTop: -28,
+    backgroundColor: colors.surface,
+    borderTopLeftRadius: 32,
+    borderTopRightRadius: 32,
   },
   conteudo: {
     padding: spacing.xxl,

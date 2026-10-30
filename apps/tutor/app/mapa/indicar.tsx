@@ -7,7 +7,6 @@ import { BotaoPrimario } from '../../src/components/BotaoPrimario';
 import { Campo } from '../../src/components/Campo';
 import { HeroiOnda } from '../../src/components/HeroiOnda';
 import { Icone } from '../../src/components/Icone';
-import { MarcaPata } from '../../src/components/MarcaPata';
 import { mensagemDeErro } from '../../src/lib/cacheOffline';
 import { acharEndereco } from '../../src/mapa/geocodificar';
 import { IlustracaoLugar } from '../../src/mapa/IlustracaoLugar';
@@ -122,7 +121,6 @@ export default function IndicarLugar() {
   return (
     <KeyboardAvoidingView style={estilos.tela} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
       <HeroiOnda subtitulo="Pet friendly" titulo="Indicar um lugar" altura={196}>
-        <MarcaPata size={96} style={estilos.pata} />
       </HeroiOnda>
 
       <ScrollView contentContainerStyle={estilos.conteudo} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>

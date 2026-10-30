@@ -12,7 +12,6 @@ import {
 import { router } from 'expo-router'
 import { Flutuar, Surgir, Tocavel } from '../../src/components/Animacoes'
 import { HeroiOnda } from '../../src/components/HeroiOnda'
-import { MarcaPata } from '../../src/components/MarcaPata'
 import { Mascote } from '../../src/components/Mascote'
 import { useLembretes } from '../../src/lembretes/LembretesProvider'
 import { rotuloProximidade } from '../../src/lembretes/types'
@@ -66,7 +65,6 @@ export default function Pets() {
   return (
     <View style={estilos.tela}>
       <HeroiOnda subtitulo={contagem} titulo="Meus pets" semVoltar altura={210}>
-        <MarcaPata size={120} style={estilos.pata} />
         <Pressable
           accessibilityRole="button"
           accessibilityLabel="Cadastrar novo pet"

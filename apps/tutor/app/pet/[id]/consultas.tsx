@@ -10,7 +10,6 @@ import {
 import { router, useFocusEffect, useLocalSearchParams } from 'expo-router'
 import { BotaoPrimario } from '../../../src/components/BotaoPrimario'
 import { HeroiOnda } from '../../../src/components/HeroiOnda'
-import { MarcaPata } from '../../../src/components/MarcaPata'
 import { usePets } from '../../../src/pets/PetsProvider'
 import {
   carregarConsultas,
@@ -71,7 +70,6 @@ export default function TelaConsultas() {
   return (
     <View style={estilos.tela}>
       <HeroiOnda subtitulo={pet?.nome ?? ''} titulo="Consultas" altura={220}>
-        <MarcaPata size={110} style={estilos.pata} />
       </HeroiOnda>
 
       <ScrollView

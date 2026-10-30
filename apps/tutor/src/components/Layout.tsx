@@ -1,5 +1,4 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
-import Svg, { Path } from 'react-native-svg';
 import { Bell } from 'phosphor-react-native/src/icons/Bell';
 import { MagnifyingGlass } from 'phosphor-react-native/src/icons/MagnifyingGlass';
 import { MapPin } from 'phosphor-react-native/src/icons/MapPin';
@@ -34,18 +33,6 @@ export function BotaoRedondo({
     >
       {children}
     </Pressable>
-  );
-}
-
-/** Onda branca do rodapé dos heróis azuis. */
-export function OndaHeroi({ largura, altura = 46 }: { largura: number; altura?: number }) {
-  return (
-    <Svg width={largura} height={altura} viewBox="0 0 390 46" preserveAspectRatio="none" style={estilos.onda}>
-      <Path
-        d="M0 46V26C28 8 56 10 80 24C104 38 132 40 154 26C180 8 214 10 238 26C262 42 300 38 322 22C346 6 372 12 390 24V46z"
-        fill="#fff"
-      />
-    </Svg>
   );
 }
 
@@ -96,11 +83,6 @@ const estilos = StyleSheet.create({
     shadowOpacity: 0.06,
     shadowRadius: 24,
     elevation: 2,
-  },
-  onda: {
-    position: 'absolute',
-    left: 0,
-    bottom: -1,
   },
   secao: {
     flexDirection: 'row',

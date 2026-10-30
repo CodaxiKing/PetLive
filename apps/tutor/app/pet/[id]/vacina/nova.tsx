@@ -14,7 +14,6 @@ import { BotaoPrimario } from '../../../../src/components/BotaoPrimario'
 import { Campo } from '../../../../src/components/Campo'
 import { HeroiOnda } from '../../../../src/components/HeroiOnda'
 import { Interruptor } from '../../../../src/components/Interruptor'
-import { MarcaPata } from '../../../../src/components/MarcaPata'
 import { Mascote } from '../../../../src/components/Mascote'
 import { useLembretes } from '../../../../src/lembretes/LembretesProvider'
 import { LEMBRETE_FORM_VAZIO } from '../../../../src/lembretes/types'
@@ -116,7 +115,6 @@ export default function NovaVacina() {
         showsVerticalScrollIndicator={false}
       >
         <HeroiOnda titulo="Registrar vacina" altura={230}>
-          <MarcaPata size={110} style={estilos.pata} />
           {pet ? (
             <View style={estilos.petChip}>
               <View style={estilos.petAvatar}>

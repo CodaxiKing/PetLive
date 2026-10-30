@@ -163,7 +163,6 @@ export default function NovoLembrete() {
       <View style={estilos.tela}>
         <ScrollView contentContainerStyle={estilos.conteudo} showsVerticalScrollIndicator={false}>
           <HeroiOnda titulo="Novo lembrete" altura={230}>
-            <MarcaPata size={110} style={estilos.pata} />
             <View style={estilos.petChipLugar}>
               <PetChip pet={pet} onPress={() => setEscolhendoPet(true)} />
             </View>

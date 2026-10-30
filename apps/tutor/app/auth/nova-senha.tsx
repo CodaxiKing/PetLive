@@ -5,7 +5,6 @@ import * as Linking from 'expo-linking';
 import { BotaoPrimario } from '../../src/components/BotaoPrimario';
 import { Campo } from '../../src/components/Campo';
 import { HeroiOnda } from '../../src/components/HeroiOnda';
-import { MarcaPata } from '../../src/components/MarcaPata';
 import { sessaoDoLinkDeRecuperacao } from '../../src/auth/senha';
 import { supabase } from '../../src/lib/supabase';
 import { colors } from '../../src/theme/colors';
@@ -60,7 +59,6 @@ export default function NovaSenha() {
   return (
     <KeyboardAvoidingView style={estilos.tela} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
       <HeroiOnda subtitulo="Conta" titulo="Nova senha" altura={210} semVoltar>
-        <MarcaPata size={110} style={estilos.pata} />
       </HeroiOnda>
 
       <ScrollView contentContainerStyle={estilos.conteudo} keyboardShouldPersistTaps="handled">

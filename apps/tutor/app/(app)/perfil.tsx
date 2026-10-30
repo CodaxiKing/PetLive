@@ -5,7 +5,6 @@ import { useAuth } from '../../src/auth/AuthProvider';
 import { Surgir, Tocavel } from '../../src/components/Animacoes';
 import { HeroiOnda } from '../../src/components/HeroiOnda';
 import { Icone, type NomeIcone } from '../../src/components/Icone';
-import { MarcaPata } from '../../src/components/MarcaPata';
 import { Mascote } from '../../src/components/Mascote';
 import { limparCacheOffline } from '../../src/lib/cacheOffline';
 import { mascaraTelefone } from '../../src/lib/mascaras';
@@ -131,7 +130,6 @@ export default function Perfil() {
     <View style={estilos.tela}>
       <ScrollView contentContainerStyle={estilos.conteudo} showsVerticalScrollIndicator={false}>
         <HeroiOnda titulo="" semVoltar altura={206}>
-          <MarcaPata size={130} style={estilos.pataHeroi} />
           <View style={estilos.identidade}>
             <Tocavel accessibilityRole="button" accessibilityLabel="Editar perfil" onPress={() => router.push('/meus-dados')} style={estilos.avatar}>
               {fotoUrl ? <Image source={{ uri: fotoUrl }} style={estilos.avatarFoto} /> : <Text style={estilos.avatarLetra}>{inicial}</Text>}
