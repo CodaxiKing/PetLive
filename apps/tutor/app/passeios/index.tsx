@@ -72,8 +72,8 @@ function GravarPasseio({ tutorId }: { tutorId: string }) {
     ]);
   }
 
-  return <ScrollView style={s.tela} contentContainerStyle={{ padding: spacing.xl, paddingTop: insets.top, paddingBottom: insets.bottom + spacing.xl, gap: spacing.lg }}>
-    <CabecalhoTela titulo="Passeios" />
+  return <ScrollView style={s.tela} contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: insets.bottom + spacing.xl, gap: spacing.lg }}>
+    <View style={s.cabecalhoLargo}><CabecalhoTela titulo="Passeios" /></View>
     <Pressable accessibilityRole="button" onPress={() => router.push('/passeios/historico')} style={s.acao}><Text style={s.link}>Histórico e meta semanal</Text></Pressable>
     <Text style={s.texto}>{segundoPlano ? 'O passeio continua ao apagar a tela ou colocar o app em segundo plano. Sair desta tela, pausar ou finalizar encerra a gravação.' : 'Escolha seu pet e registre o passeio com GPS. Mantenha esta tela aberta: sair do app ou apagar a tela pausa a gravação.'}</Text>
     {passeioSegundoPlanoDisponivel() ? <View style={s.card}>
@@ -125,6 +125,8 @@ function GravarPasseio({ tutorId }: { tutorId: string }) {
 }
 
 const s = StyleSheet.create({
+  // O cabeçalho traz o próprio recuo lateral; aqui ele ocupa a largura toda.
+  cabecalhoLargo: { marginHorizontal: -20 },
   tela: { flex: 1, backgroundColor: colors.background },
   texto: { ...typography.body, color: colors.textMuted },
   titulo: { ...typography.h3, color: colors.black },

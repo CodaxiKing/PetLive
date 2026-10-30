@@ -1,10 +1,12 @@
 import { useState } from 'react'
 import { ActivityIndicator, Alert, ScrollView, Share, StyleSheet, Text, View } from 'react-native'
 import { router, useLocalSearchParams } from 'expo-router'
+import { Phone } from 'phosphor-react-native/src/icons/Phone'
+import { Warning } from 'phosphor-react-native/src/icons/Warning'
+import { WhatsappLogo } from 'phosphor-react-native/src/icons/WhatsappLogo'
 import { Tocavel } from '../../src/components/Animacoes'
 import { BotaoPrimario } from '../../src/components/BotaoPrimario'
 import { HeroiOnda } from '../../src/components/HeroiOnda'
-import { Icone } from '../../src/components/Icone'
 import { mensagemDeErro } from '../../src/lib/cacheOffline'
 import { useRecurso } from '../../src/lib/configApp'
 import { ligarPara } from '../../src/mapa/acoes'
@@ -14,9 +16,10 @@ import { FolhaQR } from '../../src/pets/FolhaQR'
 import { gerarLink, urlFicha, type OrigemLink } from '../../src/pets/linkCarteirinha'
 import { usePets } from '../../src/pets/PetsProvider'
 import { colors } from '../../src/theme/colors'
+import { shadow } from '../../src/theme/tokens'
 import { fontFamily } from '../../src/theme/typography'
 
-const ROSA = '#FDE0E6'
+const AMARELO = '#FFF0C9'
 const HORAS = 24
 // Para a clínica vai tudo: alergias, remédios, vacinas e peso, veterinário e telefone.
 const TUDO = new Set(ITENS_FICHA.map((i) => i.chave))
@@ -38,7 +41,7 @@ export default function TelaEnviarFicha() {
   if (!pet) {
     return (
       <View style={estilos.tela}>
-        <HeroiOnda fundo={ROSA} subtitulo={nome ?? 'Clínica'} titulo="Enviar a ficha" altura={200} />
+        <HeroiOnda subtitulo={nome} titulo="Enviar a ficha" />
         <View style={estilos.vazio}>
           <Text style={estilos.vazioTexto}>Cadastre um pet para enviar a ficha de emergência.</Text>
           <BotaoPrimario titulo="Cadastrar pet" onPress={() => router.push('/pet/novo')} />
@@ -67,24 +70,27 @@ export default function TelaEnviarFicha() {
 
   return (
     <View style={estilos.tela}>
-      <HeroiOnda fundo={ROSA} subtitulo={nome ?? 'Clínica'} titulo="Enviar a ficha" altura={200} />
+      <HeroiOnda subtitulo={nome} titulo="Enviar a ficha" />
       <ScrollView style={estilos.flex} contentContainerStyle={estilos.conteudo} showsVerticalScrollIndicator={false}>
         {telefone ? (
           <>
-            <View style={[estilos.cartao, { backgroundColor: celular ? colors.successSurface : '#FFF0C9' }]}>
-              <View style={estilos.cartaoIcone}>
-                <Icone nome="telefone" size={20} />
+            <View style={estilos.cartao}>
+              <View style={[estilos.cartaoIcone, { backgroundColor: celular ? colors.successSurface : AMARELO }]}>
+                {celular ? <WhatsappLogo size={22} color={colors.successText} /> : <Phone size={22} color="#8A6414" />}
               </View>
               <View style={estilos.flex}>
-                <Text style={estilos.cartaoRotulo}>{celular ? 'WhatsApp da clínica' : 'Telefone da clínica'}</Text>
-                <Text style={estilos.cartaoValor}>{telefone} · número do mapa</Text>
+                <Text style={estilos.cartaoValor}>{celular ? 'WhatsApp da clínica' : 'Telefone da clínica'}</Text>
+                <Text style={estilos.cartaoRotulo}>{telefone} · número do mapa</Text>
               </View>
             </View>
-            <Text style={estilos.nota}>
+            <View style={estilos.alerta}>
+              <Warning size={18} color="#8A6414" />
+              <Text style={estilos.alertaTexto}>
               {celular
                 ? 'Confira o número antes de enviar. Ele vem do mapa e pode estar desatualizado.'
                 : 'Este número parece ser fixo e pode não ter WhatsApp. Você escolhe o contato na hora de enviar, ou liga para a clínica.'}
-            </Text>
+              </Text>
+            </View>
           </>
         ) : null}
 
@@ -104,37 +110,36 @@ export default function TelaEnviarFicha() {
           </View>
         ) : null}
 
-        <View style={[estilos.cartao, { backgroundColor: colors.surface }]}>
+        <View style={estilos.cartao}>
           <View style={estilos.avatar}>
             <AvatarPet especie={pet.especie} foto={pet.foto_url} size={44} />
           </View>
           <View style={estilos.flex}>
-            <Text style={estilos.cartaoRotulo}>Pet</Text>
-            <Text style={estilos.cartaoValor}>{resumoPet(pet)}</Text>
+            <Text style={estilos.cartaoValor}>{pet.nome}</Text>
+            <Text style={estilos.cartaoRotulo}>{resumoPet(pet).slice(pet.nome.length + 3)}</Text>
           </View>
         </View>
 
-        <Text style={estilos.secao}>Mensagem que será enviada</Text>
+        <Text style={estilos.secao}>Mensagem</Text>
         <Text style={estilos.balao}>{previa}</Text>
         <View style={estilos.inclui}>
-          <Text style={estilos.incluiRotulo}>Inclui:</Text>
           {['Alergias', 'Remédios', 'Vacinas', 'Peso'].map((c) => (
             <Text key={c} style={estilos.chip}>{c}</Text>
           ))}
+          <Tocavel accessibilityRole="link" accessibilityLabel="Mudar o que vai na ficha" onPress={() => router.push(`/pet/${pet.id}/ficha`)}>
+            <Text style={estilos.mudar}>Mudar</Text>
+          </Tocavel>
         </View>
-        <Tocavel accessibilityRole="link" onPress={() => router.push(`/pet/${pet.id}/ficha`)}>
-          <Text style={estilos.mudar}>Mudar o que vai na ficha</Text>
-        </Tocavel>
-        <Text style={estilos.aviso}>Você está enviando essas informações para esta clínica. O link vale por {HORAS} h e você pode cancelar.</Text>
+        <Text style={estilos.aviso}>O link vale por {HORAS} h e você pode cancelar quando quiser.</Text>
         {!ligado ? <Text style={estilos.pausado}>O envio por link está pausado agora. Ligue para a clínica.</Text> : null}
       </ScrollView>
 
       <View style={estilos.rodape}>
         <BotaoPrimario
-          titulo={celular ? 'WhatsApp da clínica' : 'Enviar pelo WhatsApp'}
+          titulo="Enviar pelo WhatsApp"
           carregando={enviando === 'whatsapp'}
           desabilitado={!ligado || enviando !== null}
-          icone={<Icone nome="compartilhar" size={22} espessura={2} />}
+          icone={<WhatsappLogo size={20} />}
           onPress={() => enviar('whatsapp')}
         />
         <View style={estilos.linha}>
@@ -160,27 +165,28 @@ export default function TelaEnviarFicha() {
 const estilos = StyleSheet.create({
   tela: { flex: 1, backgroundColor: colors.background },
   flex: { flex: 1, minWidth: 0 },
-  conteudo: { paddingHorizontal: 24, paddingBottom: 24, gap: 10 },
+  conteudo: { paddingHorizontal: 20, paddingBottom: 24, gap: 12 },
   vazio: { padding: 24, gap: 16 },
   vazioTexto: { fontFamily: fontFamily.regular, fontSize: 15, color: colors.textMuted },
-  cartao: { flexDirection: 'row', alignItems: 'center', gap: 14, borderRadius: 26, padding: 12 },
-  cartaoIcone: { width: 44, height: 44, borderRadius: 22, backgroundColor: colors.white, alignItems: 'center', justifyContent: 'center' },
-  avatar: { width: 44, height: 44, borderRadius: 22, overflow: 'hidden', backgroundColor: colors.white },
-  cartaoRotulo: { fontFamily: fontFamily.regular, fontSize: 12, color: '#566070' },
-  cartaoValor: { fontFamily: fontFamily.bold, fontSize: 15, color: colors.black },
-  nota: { fontFamily: fontFamily.regular, fontSize: 12, lineHeight: 17, color: '#566070', paddingHorizontal: 6 },
+  cartao: { flexDirection: 'row', alignItems: 'center', gap: 14, borderRadius: 26, padding: 14, backgroundColor: colors.surface, ...shadow.card },
+  cartaoIcone: { width: 44, height: 44, borderRadius: 14, alignItems: 'center', justifyContent: 'center' },
+  avatar: { width: 44, height: 44, borderRadius: 14, overflow: 'hidden', backgroundColor: colors.background },
+  cartaoRotulo: { fontFamily: fontFamily.regular, fontSize: 14, color: colors.textMuted },
+  cartaoValor: { fontFamily: fontFamily.bold, fontSize: 16, color: colors.black },
+  alerta: { flexDirection: 'row', alignItems: 'flex-start', gap: 10, backgroundColor: AMARELO, borderRadius: 20, padding: 14 },
+  alertaTexto: { flex: 1, fontFamily: fontFamily.regular, fontSize: 14, lineHeight: 19, color: '#8A6414' },
   pets: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
   petChip: { paddingVertical: 8, paddingHorizontal: 16, borderRadius: 999, backgroundColor: colors.surface },
   petChipAtivo: { backgroundColor: colors.black },
   petChipTexto: { fontFamily: fontFamily.bold, fontSize: 14, color: colors.black },
   petChipTextoAtivo: { color: colors.white },
-  secao: { fontFamily: fontFamily.bold, fontSize: 15, color: colors.black, marginTop: 6 },
+  secao: { fontFamily: fontFamily.bold, fontSize: 17, color: colors.black, marginTop: 8, paddingHorizontal: 2 },
   balao: {
     fontFamily: fontFamily.regular,
     fontSize: 15,
     lineHeight: 22,
     color: colors.black,
-    backgroundColor: colors.successSurface,
+    backgroundColor: '#DCF7C9',
     borderRadius: 22,
     borderBottomRightRadius: 6,
     overflow: 'hidden',
@@ -188,19 +194,18 @@ const estilos = StyleSheet.create({
     marginLeft: 20,
   },
   inclui: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', gap: 6 },
-  incluiRotulo: { fontFamily: fontFamily.regular, fontSize: 13, color: '#566070' },
   chip: {
     fontFamily: fontFamily.bold,
     fontSize: 12,
-    color: colors.successText,
-    backgroundColor: colors.successSurface,
+    color: '#A3324F',
+    backgroundColor: '#FDE0E6',
     borderRadius: 999,
     overflow: 'hidden',
     paddingVertical: 5,
     paddingHorizontal: 12,
   },
-  mudar: { fontFamily: fontFamily.bold, fontSize: 14, color: colors.black, textDecorationLine: 'underline' },
-  aviso: { fontFamily: fontFamily.regular, fontSize: 12, lineHeight: 17, color: '#566070', textAlign: 'center' },
+  mudar: { fontFamily: fontFamily.bold, fontSize: 14, color: colors.primaryDeep, paddingHorizontal: 6 },
+  aviso: { fontFamily: fontFamily.regular, fontSize: 13, lineHeight: 18, color: colors.textMuted, paddingHorizontal: 4 },
   pausado: {
     fontFamily: fontFamily.bold,
     fontSize: 13,
@@ -211,8 +216,8 @@ const estilos = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 14,
   },
-  rodape: { paddingHorizontal: 24, paddingTop: 12, paddingBottom: 28, gap: 10 },
+  rodape: { paddingHorizontal: 20, paddingTop: 12, paddingBottom: 28, gap: 10 },
   linha: { flexDirection: 'row', gap: 10 },
-  secundario: { height: 50, borderRadius: 25, backgroundColor: colors.disabled, alignItems: 'center', justifyContent: 'center' },
+  secundario: { height: 50, borderRadius: 25, backgroundColor: colors.surface, alignItems: 'center', justifyContent: 'center', ...shadow.card },
   secundarioTexto: { fontFamily: fontFamily.bold, fontSize: 14, color: colors.black },
 })

@@ -48,7 +48,7 @@ export default function TelaReativar() {
 
   return (
     <View style={estilos.tela}>
-      <HeroiOnda fundo={colors.premiumSurface} subtitulo={nome} titulo={`Reativar ${o} ${nome}`} altura={200} />
+      <HeroiOnda subtitulo={nome} titulo={`Reativar ${o} ${nome}`} />
       <ScrollView style={estilos.flex} contentContainerStyle={estilos.conteudo} showsVerticalScrollIndicator={false}>
         <Text style={estilos.intro}>
           Se você registrou por engano, está tudo certo. Ao reativar, {o} {nome} volta para o app como antes.

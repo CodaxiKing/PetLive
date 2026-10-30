@@ -68,9 +68,11 @@ function EditorQr({ pet, nome }: { pet: string; nome: string }) {
       if (versao === ciclo.current) setErro(e instanceof Error && !/native module|RNViewShot|ExpoSharing/i.test(e.message) ? e.message : 'Não foi possível salvar a etiqueta. Atualize o app e tente novamente.');
     } finally { trava.current = false; setOcupado(false); }
   }
-  return <ScrollView style={s.tela} contentContainerStyle={{ padding: 24, paddingTop: insets.top + 16, paddingBottom: insets.bottom + 24, gap: 18 }}>
-    <BotaoRedondo acessibilidade="Voltar" onPress={() => router.back()}><ArrowLeft size={22} color={colors.black} /></BotaoRedondo>
-    <Text accessibilityRole="header" style={s.titulo}>QR da coleira</Text>
+  return <ScrollView style={s.tela} contentContainerStyle={{ padding: 20, paddingTop: insets.top + 16, paddingBottom: insets.bottom + 24, gap: 18 }}>
+    <View style={s.linhaTopo}>
+      <BotaoRedondo acessibilidade="Voltar" onPress={() => router.back()}><ArrowLeft size={22} color={colors.black} /></BotaoRedondo>
+      <Text accessibilityRole="header" style={s.tituloTopo}>QR da coleira</Text>
+    </View>
     <Text style={s.texto}>Quem escanear verá o nome e a espécie de {nome}. Escolha os dados adicionais. As alterações valem também para etiquetas já impressas.</Text>
     {carregando ? <ActivityIndicator /> : carregado ? <>
       {(Object.keys(escolhas) as (keyof typeof escolhas)[]).map((k) => <View key={k} style={s.linha}>
@@ -91,6 +93,9 @@ function EditorQr({ pet, nome }: { pet: string; nome: string }) {
   </ScrollView>;
 }
 const s = StyleSheet.create({
+  // Versão 2: voltar e título na mesma linha.
+  linhaTopo: { flexDirection: 'row', alignItems: 'center', gap: 12 },
+  tituloTopo: { flex: 1, fontFamily: fontFamily.bold, fontSize: 26, lineHeight: 31, letterSpacing: -0.8, color: colors.black },
   tela: { flex: 1, backgroundColor: colors.background }, titulo: { fontFamily: fontFamily.bold, fontSize: 25, color: colors.black },
   texto: { fontFamily: fontFamily.regular, fontSize: 14, lineHeight: 21, color: colors.black },
   link: { color: colors.primaryDeep, fontFamily: fontFamily.bold, paddingVertical: 10 },

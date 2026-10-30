@@ -87,10 +87,10 @@ function Historico({ tutorId }: { tutorId: string }) {
   const carregando = estado.carregando || plano.carregando;
 
   return <FlatList
-    style={s.tela} contentContainerStyle={{ padding: spacing.xl, paddingTop: insets.top, paddingBottom: insets.bottom + spacing.xl, gap: spacing.md }}
+    style={s.tela} contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: insets.bottom + spacing.xl, gap: spacing.md }}
     keyboardShouldPersistTaps="handled" data={carregando ? [] : lista} keyExtractor={(p) => p.id}
     ListHeaderComponent={<View style={s.cabecalho}>
-      <CabecalhoTela titulo="Histórico de passeios" />
+      <View style={s.cabecalhoLargo}><CabecalhoTela titulo="Histórico de passeios" /></View>
       <Text style={s.texto}>Passeios concluídos salvos ou recuperados neste aparelho. Para atualizar com a nuvem, use Sincronizar na tela Passeios. A semana começa na segunda-feira; as datas seguem o horário do aparelho.</Text>
       <Text style={s.texto}>{plano.carregando ? 'Consultando seu plano…' : premium ? 'Histórico completo disponível nesta conta Premium.' : 'Plano grátis: últimos 30 dias, incluindo hoje. Os passeios antigos continuam salvos; a lista e os totais respeitam esse limite.'}</Text>
       {plano.erro ? <Pressable accessibilityRole="button" onPress={plano.recarregar} style={s.acao}><Text style={s.link}>Não foi possível consultar o plano. Tentar novamente</Text></Pressable> : null}
@@ -138,6 +138,8 @@ function Historico({ tutorId }: { tutorId: string }) {
 }
 
 const s = StyleSheet.create({
+  // O cabeçalho traz o próprio recuo lateral; aqui ele ocupa a largura toda.
+  cabecalhoLargo: { marginHorizontal: -20 },
   tela: { flex: 1, backgroundColor: colors.background }, cabecalho: { gap: spacing.lg },
   texto: { ...typography.body, color: colors.textMuted }, titulo: { ...typography.h3, color: colors.black },
   numero: { ...typography.h2, color: colors.primaryDeep }, link: { ...typography.bodyMedium, color: colors.primaryDeep },

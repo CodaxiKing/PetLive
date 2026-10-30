@@ -87,9 +87,11 @@ export default function CartaoPet() {
     finally { if (versao === ciclo.current) { ocupado.current = false; setGerando(false); } }
   }
 
-  return <ScrollView style={estilos.tela} contentContainerStyle={{ padding: spacing.xl, paddingTop: insets.top + spacing.lg, paddingBottom: insets.bottom + spacing.xl, gap: spacing.lg }}>
-    <BotaoRedondo acessibilidade="Voltar" onPress={() => router.canGoBack() ? router.back() : router.replace('/(app)/pets')}><ArrowLeft size={22} color={colors.black} /></BotaoRedondo>
-    <Text accessibilityRole="header" style={estilos.titulo}>Cartão do pet</Text>
+  return <ScrollView style={estilos.tela} contentContainerStyle={{ padding: 20, paddingTop: insets.top + spacing.lg, paddingBottom: insets.bottom + spacing.xl, gap: spacing.lg }}>
+    <View style={estilos.linhaTopo}>
+      <BotaoRedondo acessibilidade="Voltar" onPress={() => router.canGoBack() ? router.back() : router.replace('/(app)/pets')}><ArrowLeft size={22} color={colors.black} /></BotaoRedondo>
+      <Text accessibilityRole="header" style={estilos.tituloTopo}>Cartão do pet</Text>
+    </View>
     {carregando ? <ActivityIndicator accessibilityLabel="Carregando pet" /> : !dados ? <Text style={estilos.texto}>Pet não encontrado. Volte à lista de pets.</Text> : <>
       <Text accessibilityRole="header" style={estilos.secao}>Formato</Text>
       <View style={estilos.opcoes}>
@@ -137,6 +139,9 @@ export default function CartaoPet() {
 }
 
 const estilos = StyleSheet.create({
+  // Versão 2: voltar e título na mesma linha.
+  linhaTopo: { flexDirection: 'row', alignItems: 'center', gap: 12 },
+  tituloTopo: { flex: 1, fontFamily: fontFamily.bold, fontSize: 26, lineHeight: 31, letterSpacing: -0.8, color: colors.black },
   tela: { flex: 1, backgroundColor: colors.background },
   titulo: { ...typography.h2, color: colors.black },
   texto: { ...typography.body, color: colors.textMuted },

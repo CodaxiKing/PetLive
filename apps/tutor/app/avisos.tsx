@@ -21,7 +21,7 @@ import {
   type TipoAviso,
 } from '../src/notificacoes/prefs'
 import { colors } from '../src/theme/colors'
-import { radius, spacing } from '../src/theme/tokens'
+import { radius, shadow, spacing } from '../src/theme/tokens'
 import { fontFamily, typography } from '../src/theme/typography'
 import { ConfigurarRegiaoEventos } from '../src/notificacoes/ConfigurarRegiaoEventos'
 import { ConfigurarRegiaoPerdidos } from '../src/perdido/ConfigurarRegiaoPerdidos'
@@ -146,10 +146,11 @@ export default function TelaAvisos() {
       >
         {estado ? (
           <>
-            {CARTOES_AVISO.map((cartao) => {
+            <View style={estilos.lista}>
+            {CARTOES_AVISO.map((cartao, i) => {
               const ligado = estado.ativos[cartao.tipo]
               return (
-                <View key={cartao.tipo} style={estilos.cartao}>
+                <View key={cartao.tipo} style={[estilos.itemLista, i > 0 && estilos.divisor]}>
                   <View style={[estilos.icone, { backgroundColor: cartao.fundo }]}>
                     {desenhoIcone(cartao.icone, colors.black)}
                   </View>
@@ -172,6 +173,7 @@ export default function TelaAvisos() {
                 </View>
               )
             })}
+            </View>
 
             <ConfigurarRegiaoEventos eventosLigados={estado.ativos.eventos} />
             <ConfigurarRegiaoPerdidos />
@@ -310,10 +312,14 @@ const estilos = StyleSheet.create({
     padding: 10,
     paddingRight: spacing.lg,
   },
+  // Versão 2: os tipos de aviso numa lista branca só, com divisórias.
+  lista: { backgroundColor: colors.surface, borderRadius: 26, ...shadow.card },
+  itemLista: { flexDirection: 'row', alignItems: 'center', gap: spacing.md, paddingVertical: 12, paddingHorizontal: 14 },
+  divisor: { borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: colors.border },
   icone: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
+    width: 42,
+    height: 42,
+    borderRadius: 14,
     alignItems: 'center',
     justifyContent: 'center',
     flexShrink: 0,

@@ -5,6 +5,7 @@ import { HeroiOnda } from '../src/components/HeroiOnda';
 import { Icone, type NomeIcone } from '../src/components/Icone';
 import { usePets } from '../src/pets/PetsProvider';
 import { colors } from '../src/theme/colors';
+import { shadow } from '../src/theme/tokens';
 import { fontFamily } from '../src/theme/typography';
 
 type Atalho = { nome: string; descricao: string; fundo: string; icone: NomeIcone; cor?: string; claro?: boolean; destino: (petId: string | null) => Href };
@@ -53,20 +54,20 @@ export default function TodosAtalhos() {
 
   return (
     <View style={estilos.tela}>
-      <HeroiOnda subtitulo="Tudo o que o app faz" titulo="Atalhos" altura={196} />
+      <HeroiOnda titulo="Atalhos" />
       <ScrollView contentContainerStyle={estilos.grade} showsVerticalScrollIndicator={false}>
         {ATALHOS.map((atalho, i) => (
-          <Surgir key={atalho.nome} indice={Math.min(i, 5)} style={estilos.celula}>
+          <Surgir key={atalho.nome} indice={Math.min(i, 5)} style={atalho.claro ? estilos.celulaLarga : estilos.celula}>
             <Tocavel
               accessibilityRole="button"
               accessibilityLabel={`${atalho.nome}: ${atalho.descricao}`}
               onPress={() => router.push(atalho.destino(petAtivo?.id ?? null))}
-              style={[estilos.cartao, { backgroundColor: atalho.fundo }]}
+              style={[estilos.cartao, atalho.claro && estilos.cartaoSos]}
             >
-              <View style={estilos.icone}>
-                <Icone nome={atalho.icone} size={20} cor={atalho.cor} espessura={atalho.cor ? 2.2 : 1.9} />
+              <View style={[estilos.icone, { backgroundColor: atalho.claro ? 'rgba(255,255,255,0.18)' : atalho.fundo }]}>
+                <Icone nome={atalho.icone} size={20} cor={atalho.claro ? colors.white : atalho.cor} espessura={atalho.cor ? 2.2 : 1.9} />
               </View>
-              <View>
+              <View style={atalho.claro ? estilos.flex : undefined}>
                 <Text style={[estilos.nome, atalho.claro && estilos.textoClaro]}>{atalho.nome}</Text>
                 <Text style={[estilos.descricao, atalho.claro && estilos.textoClaro]}>{atalho.descricao}</Text>
               </View>
@@ -80,14 +81,17 @@ export default function TodosAtalhos() {
 
 const estilos = StyleSheet.create({
   tela: { flex: 1, backgroundColor: colors.background },
-  grade: { flexDirection: 'row', flexWrap: 'wrap', gap: 10, paddingHorizontal: 24, paddingBottom: 40 },
+  // Versão 2: cartões brancos com o ícone num quadrado colorido; o SOS ocupa a linha toda.
+  grade: { flexDirection: 'row', flexWrap: 'wrap', gap: 10, paddingHorizontal: 20, paddingBottom: 120 },
   celula: { width: '48.4%' },
-  cartao: { borderRadius: 24, padding: 14, gap: 10, minHeight: 112 },
+  celulaLarga: { width: '100%' },
+  flex: { flex: 1 },
+  cartao: { borderRadius: 24, padding: 16, gap: 12, minHeight: 124, backgroundColor: colors.surface, ...shadow.card },
+  cartaoSos: { backgroundColor: colors.emergency, flexDirection: 'row', alignItems: 'center', minHeight: 0 },
   icone: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: colors.white,
+    width: 42,
+    height: 42,
+    borderRadius: 14,
     alignItems: 'center',
     justifyContent: 'center',
   },

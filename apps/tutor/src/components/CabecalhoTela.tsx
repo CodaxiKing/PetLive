@@ -4,7 +4,7 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { voltarOuInicio } from '../lib/voltar';
 import { colors } from '../theme/colors';
 import { typography } from '../theme/typography';
-import { shadow, spacing } from '../theme/tokens';
+import { shadow } from '../theme/tokens';
 
 type Props = {
   titulo: string;
@@ -33,7 +33,7 @@ export function CabecalhoTela({ titulo, acao, onAcao, aEsquerda, children }: Pro
         <ArrowLeft size={22} color={colors.black} />
       </Pressable>
 
-      <Text style={[estilos.titulo, aEsquerda && estilos.tituloEsquerda]} numberOfLines={1}>
+      <Text style={[estilos.titulo, aEsquerda && estilos.tituloEsquerda]} accessibilityRole="header">
         {titulo}
       </Text>
 
@@ -54,15 +54,16 @@ const estilos = StyleSheet.create({
   cabecalho: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: spacing.sm,
-    paddingHorizontal: spacing.xl,
-    paddingTop: spacing.xxl,
-    paddingBottom: spacing.md,
+    gap: 12,
+    // Mesma posição do HeroiOnda, para o título não pular entre as telas.
+    paddingHorizontal: 20,
+    paddingTop: 56,
+    paddingBottom: 16,
   },
   botaoVoltar: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
+    width: 46,
+    height: 46,
+    borderRadius: 23,
     backgroundColor: colors.white,
     alignItems: 'center',
     justifyContent: 'center',
@@ -74,14 +75,14 @@ const estilos = StyleSheet.create({
   titulo: {
     flex: 1,
     textAlign: 'left',
-    ...typography.h2,
-    fontSize: 24,
-    letterSpacing: -0.6,
+    ...typography.h1,
+    fontSize: 26,
+    lineHeight: 31,
+    letterSpacing: -0.8,
     color: colors.black,
   },
   tituloEsquerda: {
     textAlign: 'left',
-    marginLeft: spacing.sm,
   },
   acao: {
     minWidth: 44,
@@ -93,6 +94,6 @@ const estilos = StyleSheet.create({
     color: colors.primaryDeep,
   },
   espacador: {
-    width: 44,
+    width: 0,
   },
 });

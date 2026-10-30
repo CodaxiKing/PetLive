@@ -16,6 +16,8 @@ type Props = {
   icone?: ReactNode;
   /** Posição do botão no pai (flex, margem): vai no Pressable de fora. */
   estilo?: ViewStyle;
+  /** Cor da pílula: escura por padrão, vermelha nas ações de emergência. */
+  fundo?: string;
 };
 
 /**
@@ -23,7 +25,7 @@ type Props = {
  * centro. Um ícone próprio aparece pequeno e branco antes do texto ("+ Novo
  * remédio"): as telas passam ícones escuros, então o botão os recolore.
  */
-export function BotaoPrimario({ titulo, onPress, carregando, desabilitado, icone, estilo }: Props) {
+export function BotaoPrimario({ titulo, onPress, carregando, desabilitado, icone, estilo, fundo }: Props) {
   const inativo = desabilitado || carregando;
 
   return (
@@ -37,7 +39,7 @@ export function BotaoPrimario({ titulo, onPress, carregando, desabilitado, icone
       // Sem isto, um flex: 1 no estilo ficava na camada de dentro e o botão
       // encolhia numa linha (ex.: "Começar" cortado nas boas-vindas).
       estiloExterno={estilo}
-      style={[estilos.botao, inativo && estilos.botaoInativo]}
+      style={[estilos.botao, fundo ? { backgroundColor: fundo } : null, inativo && estilos.botaoInativo]}
     >
       {carregando ? (
         <ActivityIndicator size="small" color={colors.white} />

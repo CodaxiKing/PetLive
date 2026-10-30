@@ -49,8 +49,10 @@ export default function MeusEventos() {
   return (
     <View style={estilos.tela}>
       <View style={[estilos.topo, { paddingTop: insets.top + spacing.lg }]}>
-        <View style={estilos.voltar}><BotaoRedondo acessibilidade="Voltar" onPress={() => router.canGoBack() ? router.back() : router.replace('/(app)/perfil')}><ArrowLeft size={22} color={colors.black} /></BotaoRedondo></View>
-        <Text style={estilos.titulo}>Meus eventos</Text>
+        <View style={estilos.linhaTopo}>
+          <BotaoRedondo acessibilidade="Voltar" onPress={() => router.canGoBack() ? router.back() : router.replace('/(app)/perfil')}><ArrowLeft size={22} color={colors.black} /></BotaoRedondo>
+          <Text accessibilityRole="header" style={estilos.tituloTopo}>Meus eventos</Text>
+        </View>
         <Text style={estilos.subtitulo}>Acompanhe a análise, as presenças e os eventos encerrados.</Text>
         <Pressable accessibilityRole="button" disabled={cancelando !== null} onPress={() => router.push('/eventos/novo')} style={estilos.editar}><Text style={estilos.link}>Criar evento</Text></Pressable>
       </View>
@@ -79,7 +81,10 @@ export default function MeusEventos() {
 
 const estilos = StyleSheet.create({
   tela: { flex: 1, backgroundColor: colors.background },
-  topo: { paddingHorizontal: spacing.xl, paddingTop: 58, paddingBottom: spacing.lg },
+  // Versão 2: voltar e título na mesma linha.
+  linhaTopo: { flexDirection: 'row', alignItems: 'center', gap: 12 },
+  tituloTopo: { flex: 1, fontFamily: fontFamily.bold, fontSize: 26, lineHeight: 31, letterSpacing: -0.8, color: colors.black },
+  topo: { paddingHorizontal: 20, paddingTop: 58, paddingBottom: spacing.lg, gap: 4 },
   voltar: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm, marginBottom: spacing.lg },
   link: { ...typography.captionMedium, color: colors.primaryDeep },
   titulo: { ...typography.h1, fontFamily: fontFamily.bold, fontSize: 32, lineHeight: 38, letterSpacing: -1.1, color: colors.black },

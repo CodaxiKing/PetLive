@@ -15,13 +15,12 @@ export default function Premium() {
   const plano = useEstadoPlano();
   const insets = useSafeAreaInsets();
   const premium = plano.plano === 'premium';
-  return <ScrollView style={s.tela} contentContainerStyle={{ padding: 24, paddingTop: insets.top + 16, paddingBottom: insets.bottom + 24, gap: 14 }}>
-    <BotaoRedondo acessibilidade="Voltar" onPress={() => router.canGoBack() ? router.back() : router.replace('/(app)/perfil')}>
-      <ArrowLeft size={22} color={colors.black} />
-    </BotaoRedondo>
-    <View>
-      <Text style={s.sobre}>Plano</Text>
-      <Text accessibilityRole="header" style={s.titulo}>Premium PetLive</Text>
+  return <ScrollView style={s.tela} contentContainerStyle={{ padding: 20, paddingTop: insets.top + 16, paddingBottom: insets.bottom + 24, gap: 14 }}>
+    <View style={s.linhaTopo}>
+      <BotaoRedondo acessibilidade="Voltar" onPress={() => router.canGoBack() ? router.back() : router.replace('/(app)/perfil')}>
+        <ArrowLeft size={22} color={colors.black} />
+      </BotaoRedondo>
+      <Text accessibilityRole="header" style={s.tituloTopo}>Premium PetLive</Text>
     </View>
     <View style={s.cartaoEscuro}>
       <View style={s.coroa}><CrownSimple size={22} color="#F2C14E" weight="fill" /></View>
@@ -50,6 +49,9 @@ export default function Premium() {
   </ScrollView>;
 }
 const s = StyleSheet.create({
+  // Versão 2: voltar e título na mesma linha.
+  linhaTopo: { flexDirection: 'row', alignItems: 'center', gap: 12 },
+  tituloTopo: { flex: 1, fontFamily: fontFamily.bold, fontSize: 26, lineHeight: 31, letterSpacing: -0.8, color: colors.black },
   tela: { flex: 1, backgroundColor: colors.background },
   sobre: { fontFamily: fontFamily.semiBold, color: colors.textMuted, fontSize: 13, marginTop: 4 },
   titulo: { fontFamily: fontFamily.bold, color: colors.black, fontSize: 32, lineHeight: 38, letterSpacing: -1.1 },

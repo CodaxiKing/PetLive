@@ -1,18 +1,39 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type ComponentType } from 'react';
 import { LayoutAnimation, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { router } from 'expo-router';
+import { Bug } from 'phosphor-react-native/src/icons/Bug';
+import { Car } from 'phosphor-react-native/src/icons/Car';
+import { Drop } from 'phosphor-react-native/src/icons/Drop';
+import { FirstAid } from 'phosphor-react-native/src/icons/FirstAid';
+import { Lightning } from 'phosphor-react-native/src/icons/Lightning';
+import { Minus } from 'phosphor-react-native/src/icons/Minus';
+import { Phone } from 'phosphor-react-native/src/icons/Phone';
+import { Plus } from 'phosphor-react-native/src/icons/Plus';
+import { Sun } from 'phosphor-react-native/src/icons/Sun';
+import { WifiSlash } from 'phosphor-react-native/src/icons/WifiSlash';
+import { Wind } from 'phosphor-react-native/src/icons/Wind';
 import { BotaoPrimario } from '../../src/components/BotaoPrimario';
 import { HeroiOnda } from '../../src/components/HeroiOnda';
-import { Icone } from '../../src/components/Icone';
 import { textoRevisao } from '../../src/sos/conteudo';
 import { usePacoteEmergencia } from '../../src/sos/pacote';
 import { colors } from '../../src/theme/colors';
-import { spacing } from '../../src/theme/tokens';
-import { fontFamily, typography } from '../../src/theme/typography';
+import { shadow, spacing } from '../../src/theme/tokens';
+import { typography } from '../../src/theme/typography';
 import { estaOffline } from '../../src/lib/cacheOffline';
 import { registrarEvento } from '../../src/lib/eventos';
 
-const ROSA = '#FDE0E6';
+const AMARELO = '#FFF0C9';
+const AMARELO_TEXTO = '#8A6414';
+
+// Ícone de cada situação do pacote; uma situação nova sem ícone usa o kit.
+const ICONES: Record<string, ComponentType<{ size?: number; color?: string }>> = {
+  engasgo: Wind,
+  'golpe-de-calor': Sun,
+  convulsao: Lightning,
+  sangramento: Drop,
+  'picada-mordida': Bug,
+  'atropelamento-queda': Car,
+};
 
 /**
  * Primeiros socorros (tela 47, protótipo PrimeirosSocorros; board P1
@@ -35,25 +56,30 @@ export default function PrimeirosSocorros() {
 
   return (
     <View style={estilos.tela}>
-      <HeroiOnda subtitulo="Emergência" titulo="Primeiros socorros" selo="Funciona sem internet" />
+      <HeroiOnda titulo="Primeiros socorros">
+        <View style={estilos.offline}>
+          <WifiSlash size={16} color={colors.successText} weight="bold" />
+          <Text style={estilos.offlineTexto}>Funciona sem internet</Text>
+        </View>
+      </HeroiOnda>
 
       <ScrollView contentContainerStyle={estilos.conteudo} showsVerticalScrollIndicator={false}>
         {pacote.primeirosSocorros.map((situacao) => {
           const estaAberta = aberta === situacao.id;
+          const Desenho = ICONES[situacao.id] ?? FirstAid;
           return (
-            <View key={situacao.id} style={estilos.bloco}>
+            <View key={situacao.id} style={[estilos.cartao, estaAberta && estilos.cartaoAberto]}>
               <Pressable
                 accessibilityRole="button"
                 accessibilityState={{ expanded: estaAberta }}
                 onPress={() => alternar(situacao.id)}
-                style={({ pressed }) => [
-                  estilos.situacao,
-                  estaAberta && { backgroundColor: ROSA },
-                  pressed && { opacity: 0.75 },
-                ]}
+                style={({ pressed }) => [estilos.situacao, pressed && { opacity: 0.7 }]}
               >
+                <View style={estilos.icone}>
+                  <Desenho size={22} color={AMARELO_TEXTO} />
+                </View>
                 <Text style={estilos.situacaoTitulo}>{situacao.titulo}</Text>
-                <Text style={estilos.sinal}>{estaAberta ? '−' : '+'}</Text>
+                {estaAberta ? <Minus size={22} color={colors.textMuted} /> : <Plus size={22} color={colors.textMuted} />}
               </Pressable>
 
               {estaAberta ? (
@@ -78,7 +104,8 @@ export default function PrimeirosSocorros() {
       <View style={estilos.rodape}>
         <BotaoPrimario
           titulo="Clínica 24 h mais perto"
-          icone={<Icone nome="local" size={22} />}
+          fundo={colors.emergency}
+          icone={<Phone size={20} />}
           onPress={() => router.navigate('/sos')}
         />
       </View>
@@ -88,28 +115,38 @@ export default function PrimeirosSocorros() {
 
 const estilos = StyleSheet.create({
   tela: { flex: 1, backgroundColor: colors.background },
-  conteudo: { paddingHorizontal: 24, paddingBottom: spacing.lg, gap: 8 },
-  bloco: { gap: 8 },
-  situacao: {
+  offline: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    alignSelf: 'flex-start',
+    gap: 8,
+    marginTop: 14,
+    borderRadius: 999,
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    backgroundColor: colors.successSurface,
+  },
+  offlineTexto: { fontSize: 13, fontFamily: typography.h1.fontFamily, color: colors.successText },
+  conteudo: { paddingHorizontal: 20, paddingBottom: spacing.lg, gap: 10 },
+  cartao: {
     backgroundColor: colors.surface,
-    borderRadius: 20,
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-  },
-  situacaoTitulo: { fontSize: 14, lineHeight: 19, fontFamily: typography.h1.fontFamily, color: colors.black },
-  sinal: { fontFamily: fontFamily.regular, fontSize: 18, lineHeight: 20, color: colors.black },
-  passos: {
-    backgroundColor: colors.white,
+    borderRadius: 26,
     borderWidth: 1.5,
-    borderColor: ROSA,
-    borderRadius: 22,
-    paddingVertical: 14,
-    paddingHorizontal: 16,
-    gap: 10,
+    borderColor: 'transparent',
+    ...shadow.card,
   },
+  cartaoAberto: { borderColor: AMARELO },
+  situacao: { flexDirection: 'row', alignItems: 'center', gap: 14, padding: 14 },
+  icone: {
+    width: 42,
+    height: 42,
+    borderRadius: 14,
+    backgroundColor: AMARELO,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  situacaoTitulo: { flex: 1, fontSize: 16, lineHeight: 21, fontFamily: typography.h1.fontFamily, color: colors.black },
+  passos: { paddingHorizontal: 18, paddingBottom: 18, paddingTop: 4, gap: 14 },
   passo: { flexDirection: 'row', alignItems: 'flex-start', gap: 12 },
   numero: {
     width: 28,
@@ -119,23 +156,22 @@ const estilos = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  numeroTexto: { fontSize: 13, fontFamily: typography.overline.fontFamily, color: colors.primary },
+  numeroTexto: { fontSize: 13, fontFamily: typography.h1.fontFamily, color: colors.white },
   passoTexto: {
     flex: 1,
-    fontSize: 14,
-    lineHeight: 20,
+    fontSize: 15,
+    lineHeight: 21,
     paddingTop: 3,
     fontFamily: typography.caption.fontFamily,
     color: colors.black,
   },
   nota: {
-    fontSize: 11,
-    lineHeight: 16,
+    fontSize: 13,
+    lineHeight: 18,
     fontFamily: typography.small.fontFamily,
-    color: '#566070',
-    textAlign: 'center',
-    paddingHorizontal: 6,
+    color: colors.textMuted,
+    paddingHorizontal: 4,
     marginTop: 4,
   },
-  rodape: { paddingHorizontal: 24, paddingTop: 12, paddingBottom: 28 },
+  rodape: { paddingHorizontal: 20, paddingTop: 12, paddingBottom: 28, backgroundColor: colors.background },
 });

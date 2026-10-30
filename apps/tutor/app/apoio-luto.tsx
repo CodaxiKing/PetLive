@@ -23,7 +23,7 @@ export default function ApoioLuto() {
   }, [])
   return (
     <View style={estilos.tela}>
-      <HeroiOnda fundo={colors.premiumSurface} subtitulo="Em memória" titulo="Apoio ao luto" altura={200} />
+      <HeroiOnda subtitulo="Em memória" titulo="Apoio ao luto" />
       <ScrollView contentContainerStyle={estilos.conteudo} showsVerticalScrollIndicator={false}>
         {recursos.map((r) => {
           const link = linkSeguro(r.link)

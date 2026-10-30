@@ -19,7 +19,6 @@ import { usePets } from '../../../src/pets/PetsProvider'
 import { colors } from '../../../src/theme/colors'
 import { fontFamily } from '../../../src/theme/typography'
 
-const ROSA = '#FDE0E6'
 
 /**
  * Ficha de emergência (protótipo FichaEmergencia): o que enviar, por quanto
@@ -87,7 +86,7 @@ export default function TelaFicha() {
 
   return (
     <KeyboardAvoidingView style={estilos.tela} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-      <HeroiOnda fundo={ROSA} subtitulo="Emergência" titulo="Ficha de emergência" altura={200} />
+      <HeroiOnda subtitulo="Emergência" titulo="Ficha de emergência" />
       <ScrollView style={estilos.flex} contentContainerStyle={estilos.conteudo} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
         <View style={estilos.pet}>
           <View style={estilos.avatar}>

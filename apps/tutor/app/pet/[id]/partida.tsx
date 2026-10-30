@@ -64,7 +64,7 @@ export default function TelaPartida() {
 
   return (
     <KeyboardAvoidingView style={estilos.tela} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-      <HeroiOnda fundo={colors.premiumSurface} subtitulo={nome} titulo="Registrar a partida" altura={200} />
+      <HeroiOnda subtitulo={nome} titulo="Registrar a partida" />
       <ScrollView style={estilos.flex} contentContainerStyle={estilos.conteudo} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
         <Text style={estilos.intro}>
           Sentimos muito pela partida {doPet}. Quando quiser, registre aqui. Nada será apagado.

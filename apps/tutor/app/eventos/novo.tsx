@@ -130,12 +130,12 @@ export default function NovoEvento() {
   return (
     <KeyboardAvoidingView style={estilos.tela} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
       <ScrollView contentContainerStyle={estilos.conteudo} keyboardShouldPersistTaps="handled">
-        <View style={estilos.voltar}>
+        <View style={estilos.linhaTopo}>
           <BotaoRedondo acessibilidade="Voltar" onPress={() => router.canGoBack() ? router.back() : router.replace('/eventos/meus')}>
             <ArrowLeft size={22} color={colors.black} />
           </BotaoRedondo>
+          <Text accessibilityRole="header" style={estilos.tituloTopo}>{editando ? 'Editar evento' : 'Criar evento'}</Text>
         </View>
-        <Text style={estilos.tituloTela}>{editando ? 'Editar evento' : 'Criar evento'}</Text>
         <Text style={estilos.ajuda}>{editando ? 'Mudar data, horário ou local envia o evento novamente para análise.' : 'Você pode enviar até 3 eventos por mês. Organizadores verificados publicam direto; os demais passam por análise.'}</Text>
 
         <Text style={estilos.rotulo}>Título</Text>
@@ -198,6 +198,9 @@ export default function NovoEvento() {
 }
 
 const estilos = StyleSheet.create({
+  // Versão 2: voltar e título na mesma linha.
+  linhaTopo: { flexDirection: 'row', alignItems: 'center', gap: 12 },
+  tituloTopo: { flex: 1, fontFamily: fontFamily.bold, fontSize: 26, lineHeight: 31, letterSpacing: -0.8, color: colors.black },
   tela: { flex: 1, backgroundColor: colors.background },
   conteudo: { padding: spacing.xl, paddingTop: 58, paddingBottom: 48, gap: spacing.sm },
   voltar: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm, marginBottom: spacing.sm },

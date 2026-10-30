@@ -78,7 +78,7 @@ export default function TelaFogos() {
 
   return (
     <View style={estilos.tela}>
-      <HeroiOnda fundo={colors.premiumSurface} subtitulo="Cuidados" titulo="Fogos e trovão" altura={200} />
+      <HeroiOnda subtitulo="Cuidados" titulo="Fogos e trovão" />
       <ScrollView contentContainerStyle={estilos.conteudo} showsVerticalScrollIndicator={false}>
         <View style={estilos.proxima}>
           {data === undefined ? (
@@ -168,10 +168,11 @@ const estilos = StyleSheet.create({
   tela: { flex: 1, backgroundColor: colors.background },
   flex: { flex: 1, minWidth: 0 },
   conteudo: { paddingHorizontal: 24, paddingBottom: 24, gap: 12 },
-  proxima: { backgroundColor: '#FFF0C9', borderRadius: 28, paddingVertical: 18, paddingHorizontal: 20, gap: 2, minHeight: 100, justifyContent: 'center' },
-  proximaRotulo: { fontFamily: fontFamily.bold, fontSize: 14, color: '#8A5A00' },
-  proximaTitulo: { fontFamily: fontFamily.bold, fontSize: 24, letterSpacing: -0.5, color: colors.black },
-  proximaSub: { fontFamily: fontFamily.regular, fontSize: 14, color: '#8A5A00' },
+  // Versão 2: a próxima data num cartão escuro.
+  proxima: { backgroundColor: colors.black, borderRadius: 28, paddingVertical: 18, paddingHorizontal: 20, gap: 2, minHeight: 100, justifyContent: 'center' },
+  proximaRotulo: { fontFamily: fontFamily.bold, fontSize: 14, color: '#F2C14E' },
+  proximaTitulo: { fontFamily: fontFamily.bold, fontSize: 24, letterSpacing: -0.5, color: colors.white },
+  proximaSub: { fontFamily: fontFamily.regular, fontSize: 14, color: 'rgba(255,255,255,0.75)' },
   item: { flexDirection: 'row', alignItems: 'center', gap: 12, backgroundColor: colors.surface, borderRadius: 24, paddingVertical: 14, paddingHorizontal: 18 },
   itemTitulo: { fontFamily: fontFamily.bold, fontSize: 16, color: colors.black },
   itemSub: { fontFamily: fontFamily.regular, fontSize: 13, color: '#566070' },
