@@ -9,7 +9,7 @@
 /* Barra lateral */
 .lateral { width: 232px; flex: none; background: var(--tinta); color: #C9D0DB; display: flex; flex-direction: column; padding: 20px 12px 14px; }
 .marca-web { display: flex; align-items: center; gap: 10px; padding: 0 10px 16px; color: #fff; }
-.marca-web .logo { width: 34px; height: 34px; border-radius: 11px; background: var(--ceu); color: var(--tinta); display: grid; place-items: center; font-size: 18px; }
+.marca-web .logo { width: 36px; height: 36px; display: block; flex: none; }
 .marca-web b { font-size: 17px; letter-spacing: -0.02em; }
 .marca-web small { display: block; font-size: 11px; font-weight: 600; color: #8A93A3; }
 .menu { flex: 1; overflow: hidden; }

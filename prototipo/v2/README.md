@@ -2,7 +2,7 @@
 
 Recriação de todas as telas do protótipo: as 124 do app do tutor, o painel admin, o app e o painel do lojista, o site e a identidade visual (186 no total). Cada tela fica no canvas ao lado da original, na mesma linha, 9400 px à direita, e cada seção tem o título original com "(nova versão)".
 
-O que mantém da marca: Plus Jakarta Sans, o azul-céu `#9AD6F8` e as cores com significado de `paleta.json` (rosa saúde, lilás rotina, azul lugares, verde e amarelo só para estado, vermelho só no SOS).
+O que mantém da marca: o logo oficial (`logo-petlive.png`, cópia de `apps/web/public/logo-petlive.png`), Plus Jakarta Sans, o azul-céu `#9AD6F8` e as cores com significado de `paleta.json` (rosa saúde, lilás rotina, azul lugares, verde e amarelo só para estado, vermelho só no SOS).
 
 O que muda:
 
