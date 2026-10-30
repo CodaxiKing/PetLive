@@ -1,13 +1,14 @@
 import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react'
-import { ActivityIndicator, Alert, ScrollView, StyleSheet, Switch, Text, View } from 'react-native'
+import { ActivityIndicator, Alert, Image, ScrollView, StyleSheet, Switch, Text, View } from 'react-native'
 import { router, useFocusEffect, useLocalSearchParams } from 'expo-router'
+import { ArrowLeft } from 'phosphor-react-native/src/icons/ArrowLeft'
 import { useAuth } from '../../../src/auth/AuthProvider'
 import { Surgir, Tocavel } from '../../../src/components/Animacoes'
 import { BotaoPrimario } from '../../../src/components/BotaoPrimario'
-import { Gradiente } from '../../../src/components/Gradiente'
-import { HeroiOnda } from '../../../src/components/HeroiOnda'
+import { BotaoRedondo } from '../../../src/components/Layout'
 import { Icone, type NomeIcone } from '../../../src/components/Icone'
 import { supabase } from '../../../src/lib/supabase'
+import { voltarOuInicio } from '../../../src/lib/voltar'
 import { usePlano } from '../../../src/lib/plano'
 import { abrirPdf, compartilharPdf } from '../../../src/lib/pdf'
 import { AvatarPet } from '../../../src/pets/AvatarPet'
@@ -23,6 +24,7 @@ import { progressoDias } from '../../../src/remedios/doses'
 import type { Remedio } from '../../../src/remedios/types'
 import { diasAte, type Vacina } from '../../../src/saude/types'
 import { colors } from '../../../src/theme/colors'
+import { shadow } from '../../../src/theme/tokens'
 import { fontFamily } from '../../../src/theme/typography'
 
 /** "12/09/25", como na tabela do protótipo. */
@@ -138,24 +140,30 @@ export default function TelaCarteirinha() {
 
   return (
     <View style={estilos.tela}>
-      <HeroiOnda titulo="Carteirinha" altura={176}>
+      <View style={estilos.topo}>
+        <BotaoRedondo acessibilidade="Voltar" onPress={voltarOuInicio}>
+          <ArrowLeft size={22} color={colors.black} />
+        </BotaoRedondo>
+        <Text style={estilos.titulo} accessibilityRole="header">Carteirinha</Text>
         <Tocavel
           accessibilityRole="button"
           accessibilityLabel={`Compartilhar a carteirinha de ${pet.nome}`}
           onPress={() => router.push(`/pet/${pet.id}/compartilhar`)}
-          estiloExterno={estilos.compartilharTopo}
           style={estilos.compartilharTopoBotao}
         >
           <Icone nome="compartilhar" size={20} cor={colors.white} />
         </Tocavel>
-      </HeroiOnda>
+      </View>
 
       <ScrollView style={estilos.flex} contentContainerStyle={estilos.conteudo} showsVerticalScrollIndicator={false}>
         <Surgir indice={0} style={estilos.identidade}>
           <View style={estilos.identidadeTopo}>
-            <Gradiente de={colors.hero} ate={colors.premiumSurface} />
             <View style={estilos.avatar}>
-              <AvatarPet especie={pet.especie} foto={pet.foto_url} size={76} />
+              {pet.foto_url ? (
+                <Image source={{ uri: pet.foto_url }} style={estilos.avatarFoto} accessibilityLabel={`Foto de ${pet.nome}`} />
+              ) : (
+                <AvatarPet especie={pet.especie} foto={null} size={72} />
+              )}
             </View>
             <View style={estilos.flex}>
               <Text style={estilos.nome} numberOfLines={1}>
@@ -167,8 +175,8 @@ export default function TelaCarteirinha() {
           </View>
           <View style={estilos.dados}>
             {dados.map((d) => (
-              <View key={d.rotulo} style={[estilos.dado, { backgroundColor: d.fundo }]}>
-                <Text style={[estilos.dadoRotulo, { color: d.cor }]}>{d.rotulo}</Text>
+              <View key={d.rotulo} style={estilos.dado}>
+                <Text style={estilos.dadoRotulo}>{d.rotulo}</Text>
                 <Text style={estilos.dadoValor} numberOfLines={1}>
                   {d.valor}
                 </Text>
@@ -181,28 +189,30 @@ export default function TelaCarteirinha() {
           <ActivityIndicator color={colors.primaryDeep} style={estilos.carregando} />
         ) : (
           <>
-            <Bloco icone="vacina" titulo="Vacinas" fundo={colors.primarySurface} indice={1}>
+            <Bloco icone="vacina" titulo="Vacinas" fundo={colors.healthSurface} cor={colors.healthText} indice={1}>
               {vacinas.length === 0 ? (
                 <Text style={estilos.vazio}>Nenhuma vacina registrada.</Text>
               ) : (
                 <>
-                  <View style={estilos.linhaVacina}>
-                    <Text style={[estilos.colunaNome, estilos.cabecalhoTabela]}>Vacina</Text>
-                    <Text style={[estilos.coluna, estilos.cabecalhoTabela]}>Aplicada</Text>
-                    <Text style={[estilos.coluna, estilos.cabecalhoTabela]}>Próxima</Text>
-                  </View>
                   {vacinas.map((v, i) => {
                     const dias = diasAte(v.proxima_dose)
-                    const alerta = dias !== null && dias <= 7
+                    const vencida = dias !== null && dias < 0
+                    const perto = dias !== null && dias >= 0 && dias <= 30
+                    const selo = dias === null ? null : vencida ? 'Vencida' : perto ? (dias === 0 ? 'Hoje' : `${dias} ${dias === 1 ? 'dia' : 'dias'}`) : 'Em dia'
                     return (
                       <View key={v.id} style={[estilos.linhaVacina, i > 0 && estilos.linhaDivisoria]}>
-                        <Text style={[estilos.colunaNome, estilos.celula]} numberOfLines={1}>
-                          {v.nome}
-                        </Text>
-                        <Text style={[estilos.coluna, estilos.celula]}>{dataCurta(v.aplicada_em)}</Text>
-                        <Text style={[estilos.coluna, estilos.celula, alerta && estilos.celulaAlerta]}>
-                          {dataCurta(v.proxima_dose)}
-                        </Text>
+                        <View style={[estilos.vacinaIcone, { backgroundColor: colors.healthSurface }]}>
+                          <Icone nome="vacina" size={18} cor={colors.healthText} />
+                        </View>
+                        <View style={estilos.flex}>
+                          <Text style={estilos.vacinaNome} numberOfLines={1}>{v.nome}</Text>
+                          <Text style={estilos.vacinaSub}>
+                            {v.proxima_dose ? `Próxima ${dataCurta(v.proxima_dose)}` : `Aplicada ${dataCurta(v.aplicada_em)}`}
+                          </Text>
+                        </View>
+                        {selo ? (
+                          <Text style={[estilos.selo, vencida ? estilos.seloVencida : perto ? estilos.seloPerto : estilos.seloEmDia]}>{selo}</Text>
+                        ) : null}
                       </View>
                     )
                   })}
@@ -215,7 +225,7 @@ export default function TelaCarteirinha() {
               )}
             </Bloco>
 
-            <Bloco icone="capsula" titulo="Remédios em uso" fundo="#FFF0C9" indice={2}>
+            <Bloco icone="capsula" titulo="Remédios em uso" fundo={colors.healthSurface} cor={colors.healthText} indice={2}>
               {remedios.length === 0 ? (
                 <Text style={estilos.vazio}>Nenhum remédio em uso agora.</Text>
               ) : (
@@ -238,7 +248,7 @@ export default function TelaCarteirinha() {
               )}
             </Bloco>
 
-            <Bloco icone="coracao" titulo="Saúde e cuidados" fundo={colors.successSurface} indice={3}>
+            <Bloco icone="coracao" titulo="Saúde e cuidados" fundo={colors.premiumSurface} cor={colors.premiumText} indice={3}>
               <View style={estilos.cuidados}>
                 <View style={estilos.cuidado}>
                   <Text style={estilos.cuidadoRotulo}>Castrado</Text>
@@ -256,17 +266,21 @@ export default function TelaCarteirinha() {
             </Bloco>
 
             {pet.alergias ? (
-              <Bloco icone="alerta" titulo="Alergias e condições" fundo="#FCE1E6" indice={4}>
-                <Text style={estilos.textoLivre}>{pet.alergias}</Text>
+              <Bloco icone="alerta" titulo="Alergias e condições" fundo={colors.healthSurface} cor={colors.healthText} indice={4}>
+                <View style={estilos.alergias}>
+                  {pet.alergias.split(/[,;\n]/).map((a) => a.trim()).filter(Boolean).map((a) => (
+                    <Text key={a} style={[estilos.selo, estilos.seloVencida]}>{a}</Text>
+                  ))}
+                </View>
               </Bloco>
             ) : null}
             {pet.veterinario ? (
-              <Bloco icone="telefone" titulo="Veterinário" fundo={colors.background} indice={5}>
+              <Bloco icone="telefone" titulo="Veterinário" fundo={colors.primarySurface} cor={colors.primaryDeep} indice={5}>
                 <Text style={estilos.textoLivre}>{pet.veterinario}</Text>
               </Bloco>
             ) : null}
             {pet.observacoes ? (
-              <Bloco icone="livro" titulo="Observações" fundo={colors.premiumSurface} indice={6}>
+              <Bloco icone="livro" titulo="Observações" fundo={colors.premiumSurface} cor={colors.premiumText} indice={6}>
                 <Text style={estilos.textoLivre}>{pet.observacoes}</Text>
               </Bloco>
             ) : null}
@@ -312,20 +326,23 @@ function Bloco({
   icone,
   titulo,
   fundo,
+  cor,
   indice,
   children,
 }: {
   icone: NomeIcone
   titulo: string
+  /** Fundo do ícone, na cor de significado (rosa saúde, lilás rotina, azul lugares). */
   fundo: string
+  cor?: string
   indice: number
   children: ReactNode
 }) {
   return (
-    <Surgir indice={indice} style={[estilos.bloco, { backgroundColor: fundo }]}>
+    <Surgir indice={indice} style={estilos.bloco}>
       <View style={estilos.blocoTopo}>
-        <View style={estilos.blocoIcone}>
-          <Icone nome={icone} size={18} />
+        <View style={[estilos.blocoIcone, { backgroundColor: fundo }]}>
+          <Icone nome={icone} size={18} cor={cor} />
         </View>
         <Text style={estilos.blocoTitulo}>{titulo}</Text>
       </View>
@@ -335,10 +352,11 @@ function Bloco({
 }
 
 const estilos = StyleSheet.create({
-  tela: { flex: 1, backgroundColor: colors.surface },
+  tela: { flex: 1, backgroundColor: colors.background },
   centro: { alignItems: 'center', justifyContent: 'center' },
   flex: { flex: 1, minWidth: 0 },
-  compartilharTopo: { position: 'absolute', right: 24, top: 56 },
+  topo: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingHorizontal: 20, paddingTop: 56, paddingBottom: 16 },
+  titulo: { flex: 1, fontFamily: fontFamily.bold, fontSize: 28, letterSpacing: -0.9, color: colors.black },
   compartilharTopoBotao: {
     width: 46,
     height: 46,
@@ -347,20 +365,9 @@ const estilos = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  conteudo: { paddingHorizontal: 24, paddingBottom: 24, gap: 12 },
+  conteudo: { paddingHorizontal: 20, paddingBottom: 24, gap: 12 },
   carregando: { marginTop: 24 },
-  identidade: {
-    backgroundColor: colors.white,
-    borderWidth: 1.5,
-    borderColor: '#E6EAF0',
-    borderRadius: 28,
-    overflow: 'hidden',
-    shadowColor: '#111111',
-    shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.08,
-    shadowRadius: 30,
-    elevation: 3,
-  },
+  identidade: { backgroundColor: colors.white, borderRadius: 24, overflow: 'hidden', ...shadow.card },
   identidadeTopo: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -369,33 +376,36 @@ const estilos = StyleSheet.create({
     paddingHorizontal: 16,
     overflow: 'hidden',
   },
-  avatar: { width: 76, height: 76, borderRadius: 38, backgroundColor: colors.white, overflow: 'hidden' },
-  nome: { fontFamily: fontFamily.bold, fontSize: 28, lineHeight: 30, letterSpacing: -0.8, color: colors.black },
-  raca: { fontFamily: fontFamily.regular, fontSize: 13, color: '#2B3A4A', marginTop: 2 },
-  tutor: { fontFamily: fontFamily.bold, fontSize: 13, color: '#2B3A4A', marginTop: 2 },
+  avatar: { width: 72, height: 72, borderRadius: 22, backgroundColor: colors.primarySurface, alignItems: 'center', justifyContent: 'center' },
+  avatarFoto: { width: 72, height: 72, borderRadius: 22 },
+  nome: { fontFamily: fontFamily.bold, fontSize: 24, lineHeight: 30, letterSpacing: -0.6, color: colors.black },
+  raca: { fontFamily: fontFamily.regular, fontSize: 14, color: colors.textMuted, marginTop: 1 },
+  tutor: { fontFamily: fontFamily.semiBold, fontSize: 13, color: colors.textMuted, marginTop: 1 },
   dados: { flexDirection: 'row', gap: 8, paddingTop: 12, paddingHorizontal: 14, paddingBottom: 14 },
-  dado: { flex: 1, minWidth: 0, borderRadius: 18, paddingVertical: 8, paddingHorizontal: 10 },
-  dadoRotulo: { fontFamily: fontFamily.semiBold, fontSize: 11 },
-  dadoValor: { fontFamily: fontFamily.bold, fontSize: 15, color: colors.black, marginTop: 1 },
-  bloco: { borderRadius: 26, paddingVertical: 14, paddingHorizontal: 16, gap: 8 },
+  dado: { flex: 1, minWidth: 0, borderRadius: 18, paddingVertical: 10, paddingHorizontal: 12, backgroundColor: colors.background },
+  dadoRotulo: { fontFamily: fontFamily.medium, fontSize: 12, color: colors.textMuted },
+  dadoValor: { fontFamily: fontFamily.bold, fontSize: 18, color: colors.black, marginTop: 1 },
+  bloco: { borderRadius: 24, paddingVertical: 14, paddingHorizontal: 16, gap: 8, backgroundColor: colors.surface, ...shadow.card },
   blocoTopo: { flexDirection: 'row', alignItems: 'center', gap: 10 },
   blocoIcone: {
-    width: 34,
-    height: 34,
-    borderRadius: 17,
-    backgroundColor: colors.white,
+    width: 38,
+    height: 38,
+    borderRadius: 13,
     alignItems: 'center',
     justifyContent: 'center',
   },
   blocoTitulo: { flex: 1, fontFamily: fontFamily.bold, fontSize: 16, color: colors.black },
   vazio: { fontFamily: fontFamily.regular, fontSize: 13, color: colors.textMuted },
-  linhaVacina: { flexDirection: 'row', gap: 6, paddingVertical: 6 },
-  linhaDivisoria: { borderTopWidth: 1, borderTopColor: '#C9E3F2' },
-  colunaNome: { flex: 1.3, minWidth: 0 },
-  coluna: { flex: 1 },
-  cabecalhoTabela: { fontFamily: fontFamily.bold, fontSize: 11, color: colors.primaryDeep },
-  celula: { fontFamily: fontFamily.medium, fontSize: 14, color: colors.black },
-  celulaAlerta: { color: '#B3173A' },
+  linhaVacina: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingVertical: 10 },
+  linhaDivisoria: { borderTopWidth: 1, borderTopColor: colors.border },
+  vacinaIcone: { width: 38, height: 38, borderRadius: 13, alignItems: 'center', justifyContent: 'center' },
+  vacinaNome: { fontFamily: fontFamily.bold, fontSize: 15, color: colors.black },
+  vacinaSub: { fontFamily: fontFamily.regular, fontSize: 13, color: colors.textMuted },
+  selo: { fontFamily: fontFamily.bold, fontSize: 12, borderRadius: 999, overflow: 'hidden', paddingHorizontal: 10, paddingVertical: 5 },
+  seloEmDia: { color: colors.successText, backgroundColor: colors.successSurface },
+  seloPerto: { color: colors.warningText, backgroundColor: colors.warningSurface },
+  seloVencida: { color: colors.healthText, backgroundColor: colors.healthSurface },
+  alergias: { flexDirection: 'row', flexWrap: 'wrap', gap: 6 },
   aviso: {
     backgroundColor: '#FFE3E3',
     color: '#9B2C2C',
@@ -408,24 +418,24 @@ const estilos = StyleSheet.create({
   },
   remedio: { flexDirection: 'row', alignItems: 'center', gap: 10 },
   remedioNome: { fontFamily: fontFamily.bold, fontSize: 14, color: colors.black },
-  remedioSub: { fontFamily: fontFamily.regular, fontSize: 12, color: '#8A6414' },
+  remedioSub: { fontFamily: fontFamily.regular, fontSize: 12, color: colors.textMuted },
   remedioDia: {
     fontFamily: fontFamily.bold,
     fontSize: 12,
     color: colors.black,
-    backgroundColor: colors.white,
+    backgroundColor: colors.background,
     borderRadius: 999,
     overflow: 'hidden',
     paddingVertical: 5,
     paddingHorizontal: 12,
   },
   cuidados: { flexDirection: 'row', gap: 8 },
-  cuidado: { flex: 1, minWidth: 0, backgroundColor: colors.white, borderRadius: 16, paddingVertical: 8, paddingHorizontal: 10 },
-  cuidadoRotulo: { fontFamily: fontFamily.semiBold, fontSize: 11, color: '#1F6B45' },
+  cuidado: { flex: 1, minWidth: 0, backgroundColor: colors.background, borderRadius: 16, paddingVertical: 8, paddingHorizontal: 12 },
+  cuidadoRotulo: { fontFamily: fontFamily.medium, fontSize: 12, color: colors.textMuted },
   cuidadoValor: { fontFamily: fontFamily.bold, fontSize: 14, color: colors.black },
   textoLivre: { fontFamily: fontFamily.medium, fontSize: 14, lineHeight: 20, color: colors.black },
   nota: { fontFamily: fontFamily.regular, fontSize: 11, lineHeight: 16, color: '#566070', textAlign: 'center' },
-  botaoPdf: { minHeight: 48, borderRadius: 24, backgroundColor: colors.disabled, alignItems: 'center', justifyContent: 'center', marginBottom: 16 },
+  botaoPdf: { minHeight: 50, borderRadius: 25, backgroundColor: colors.surface, alignItems: 'center', justifyContent: 'center', marginBottom: 4, ...shadow.card },
   textoPdf: { fontFamily: fontFamily.bold, fontSize: 14, color: colors.black },
-  rodape: { paddingHorizontal: 24, paddingTop: 12, paddingBottom: 28 },
+  rodape: { paddingHorizontal: 20, paddingTop: 12, paddingBottom: 28 },
 })

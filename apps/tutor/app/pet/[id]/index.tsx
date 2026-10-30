@@ -31,6 +31,8 @@ import { GraficoPeso } from '../../../src/saude/GraficoPeso'
 import { carregarPesos, formatarKg, type RegistroPeso } from '../../../src/saude/peso'
 import { dataParaExibicao, diasAte, rotuloDose } from '../../../src/saude/types'
 import { useVacinas } from '../../../src/saude/VacinasProvider'
+import { useRemedios } from '../../../src/remedios/RemediosProvider'
+import { emTratamentoHoje } from '../../../src/remedios/doses'
 import { colors } from '../../../src/theme/colors'
 import { fontFamily, typography } from '../../../src/theme/typography'
 import { shadow } from '../../../src/theme/tokens'
@@ -38,7 +40,6 @@ import { shadow } from '../../../src/theme/tokens'
 const ABAS = ['Vacinas', 'Peso', 'Consultas'] as const
 type Aba = (typeof ABAS)[number]
 
-const CIRCULOS = ['#9AD6F8', '#EADCFB']
 
 /** 'YYYY-MM-DD' -> 'DD/MM/AA', como no protótipo. */
 function dataCurta(iso: string | null | undefined): string {
@@ -74,6 +75,7 @@ export default function PetDetalhe() {
   const comunidade = useRecurso('comunidade', false)
   const { pets, petsMemoria, seniores, marcarSenior, definirPetAtivo, removerPet } = usePets()
   const { vacinas, removerVacina } = useVacinas()
+  const { remedios } = useRemedios()
   const [cuidadores, setCuidadores] = useState<Cuidadores | null>(null)
   // " · por Ana" só quando o pet é dividido e foi outra pessoa que registrou.
   const porQuem = (autor?: string | null) =>
@@ -137,6 +139,10 @@ export default function PetDetalhe() {
 
   const pesoAtual = pesos.length ? pesos[pesos.length - 1].peso : petAtual.peso_atual
   const idade = idadeEmAnos(petAtual.nascimento)
+  const raca = petAtual.raca || (petAtual.especie === 'gato' ? 'Gato' : 'Cão')
+  const sexo = petAtual.sexo === 'femea' ? 'fêmea' : petAtual.sexo === 'macho' ? 'macho' : null
+  const vacinasEmDia = vacinas.filter((v) => (diasAte(v.proxima_dose) ?? 0) >= 0).length
+  const remediosAtivos = remedios.filter(emTratamentoHoje).length
 
   function ir(pathname: '/pet/[id]/carteirinha' | '/pet/[id]/editar' | '/pet/[id]/medicamentos' | '/pet/[id]/peso' | '/pet/[id]/consultas' | '/pet/[id]/vacina/nova' | '/pet/[id]/consultas/nova' | '/pet/[id]/linha-do-tempo' | '/pet/[id]/partida' | '/pet/[id]/senior' | '/pet/[id]/viagem' | '/pet/[id]/selos' | '/pet/[id]/atualizacoes') {
     setMenuAberto(false)
@@ -208,33 +214,33 @@ export default function PetDetalhe() {
           <AvisoLimitesPlano limites={limites?.dados ?? null} petId={id} />
           <AvisoOffline />
           <View style={estilos.linhaNome}>
-            <Text style={estilos.nome} numberOfLines={1} accessibilityRole="header">
-              {petAtual.nome}
-            </Text>
+            <View style={estilos.flex}>
+              <Text style={estilos.nome} numberOfLines={1} accessibilityRole="header">
+                {petAtual.nome}
+              </Text>
+              <Text style={estilos.subNome} numberOfLines={1}>
+                {[raca, sexo, idade].filter(Boolean).join(' · ')}
+              </Text>
+            </View>
             {textoAlerta ? (
-              <Text style={estilos.alerta} numberOfLines={1}>
+              <Text style={[estilos.alerta, alerta && alerta.dias < 0 && estilos.alertaVencida]} numberOfLines={1}>
                 {textoAlerta}
               </Text>
             ) : null}
           </View>
 
           <View style={estilos.resumo}>
-            <View style={[estilos.resumoItem, { backgroundColor: '#EADCFB' }]}>
-              <Text style={estilos.resumoValor}>{petAtual.sexo === 'femea' ? 'Fêmea' : petAtual.sexo === 'macho' ? 'Macho' : '—'}</Text>
-              <Text style={[estilos.resumoRotulo, { color: '#5B3E8A' }]}>Sexo</Text>
-            </View>
-            <View style={[estilos.resumoItem, { backgroundColor: '#FFF0C9' }]}>
-              <Text style={estilos.resumoValor}>{idade ?? '—'}</Text>
-              <Text style={[estilos.resumoRotulo, { color: '#8A6414' }]}>Idade</Text>
-            </View>
-            <Pressable
-              accessibilityRole="button"
-              accessibilityLabel="Ver peso"
-              onPress={() => setAba('Peso')}
-              style={[estilos.resumoItem, { backgroundColor: '#D8F2E3' }]}
-            >
-              <Text style={estilos.resumoValor}>{pesoAtual ? `${formatarKg(Number(pesoAtual))} kg` : '—'}</Text>
-              <Text style={[estilos.resumoRotulo, { color: '#1F6B45' }]}>Peso</Text>
+            <Pressable accessibilityRole="button" accessibilityLabel="Ver peso" onPress={() => setAba('Peso')} style={estilos.resumoItem}>
+              <Text style={estilos.resumoRotulo}>Peso</Text>
+              <Text style={estilos.resumoValor} numberOfLines={1}>{pesoAtual ? `${formatarKg(Number(pesoAtual))} kg` : '—'}</Text>
+            </Pressable>
+            <Pressable accessibilityRole="button" accessibilityLabel="Ver vacinas" onPress={() => setAba('Vacinas')} style={estilos.resumoItem}>
+              <Text style={estilos.resumoRotulo}>Vacinas</Text>
+              <Text style={estilos.resumoValor} numberOfLines={1}>{vacinas.length ? `${vacinasEmDia} em dia` : '—'}</Text>
+            </Pressable>
+            <Pressable accessibilityRole="button" accessibilityLabel="Ver remédios" onPress={() => ir('/pet/[id]/medicamentos')} style={estilos.resumoItem}>
+              <Text style={estilos.resumoRotulo}>Remédios</Text>
+              <Text style={estilos.resumoValor} numberOfLines={1}>{remediosAtivos ? `${remediosAtivos} ${remediosAtivos === 1 ? 'ativo' : 'ativos'}` : 'Nenhum'}</Text>
             </Pressable>
           </View>
 
@@ -291,38 +297,51 @@ export default function PetDetalhe() {
               ) : null}
               {vacinas.map((vacina, i) => {
                 const dose = rotuloDose(vacina.proxima_dose)
-                const chip =
-                  dose.urgencia === 'vencida' || dose.urgencia === 'hoje' || dose.urgencia === 'perto'
-                    ? dose.texto
-                    : dataCurta(vacina.proxima_dose)
+                const urgente = dose.urgencia === 'vencida' || dose.urgencia === 'hoje' || dose.urgencia === 'perto'
+                const chip = vacina.proxima_dose ? (urgente ? dose.texto : 'Em dia') : null
+                const corPonto = dose.urgencia === 'vencida' ? colors.healthText : urgente ? colors.warningText : colors.successText
                 return (
                   <Surgir key={vacina.id} indice={i}>
                     <Pressable
                       accessibilityRole="button"
                       accessibilityHint="Segure para apagar"
                       onLongPress={() => confirmarRemocaoVacina(vacina.id, vacina.nome)}
-                      style={estilos.linha}
+                      style={[estilos.linha, i > 0 && estilos.divisoria]}
                     >
-                      <View style={[estilos.circulo, { backgroundColor: CIRCULOS[i % CIRCULOS.length] }]}>
-                        <Icone nome="vacina" size={18} />
-                      </View>
+                      <View style={[estilos.ponto, { backgroundColor: corPonto }]} />
                       <View style={estilos.flex}>
                         <Text style={estilos.linhaTitulo} numberOfLines={1}>
                           {vacina.nome}
                         </Text>
                         <Text style={estilos.linhaSub}>
-                          Aplicada em {dataCurta(vacina.aplicada_em)}
+                          {vacina.proxima_dose ? `Próxima dose ${dataCurta(vacina.proxima_dose)}` : `Aplicada em ${dataCurta(vacina.aplicada_em)}`}
                           {porQuem(vacina.criado_por)}
                         </Text>
                       </View>
                       {chip ? (
-                        <Text style={[estilos.chip, dose.urgencia === 'vencida' && estilos.chipVencida]}>{chip}</Text>
+                        <Text style={[estilos.chip, urgente ? estilos.chipPerto : estilos.chipEmDia, dose.urgencia === 'vencida' && estilos.chipVencida]}>{chip}</Text>
                       ) : null}
                     </Pressable>
                   </Surgir>
                 )
               })}
             </View>
+          ) : null}
+          {aba === 'Vacinas' && !somenteLeitura ? (
+            <Tocavel
+              accessibilityRole="button"
+              onPress={() => router.push({ pathname: '/pet/[id]/documentos-saude', params: { id: petAtual.id } })}
+              style={estilos.lerCartao}
+            >
+              <View style={estilos.lerCartaoIcone}>
+                <Icone nome="camera" size={20} cor={colors.primaryDeep} />
+              </View>
+              <View style={estilos.flex}>
+                <Text style={estilos.linhaTitulo}>Ler o cartão de vacina</Text>
+                <Text style={estilos.linhaSub}>Fotografe e o app preenche as doses</Text>
+              </View>
+              <Icone nome="seta" size={18} cor={colors.textMuted} />
+            </Tocavel>
           ) : null}
 
           {aba === 'Peso' ? (
@@ -331,7 +350,7 @@ export default function PetDetalhe() {
               {pesos.length === 0 ? <Text style={estilos.vazio}>Nenhum peso registrado ainda.</Text> : null}
               {[...pesos].reverse().slice(0, 3).map((registro, i) => (
                 <Surgir key={registro.id} indice={i}>
-                  <View style={estilos.linha}>
+                  <View style={[estilos.linha, i > 0 && estilos.divisoria]}>
                     <View style={[estilos.circulo, { backgroundColor: colors.healthSurface }]}>
                       <Icone nome="balanca" size={18} />
                     </View>
@@ -355,7 +374,7 @@ export default function PetDetalhe() {
               {consultas.length === 0 ? <Text style={estilos.vazio}>Nenhuma consulta registrada ainda.</Text> : null}
               {consultas.slice(0, 4).map((consulta, i) => (
                 <Surgir key={consulta.id} indice={i}>
-                  <Pressable accessibilityRole="button" onPress={() => ir('/pet/[id]/consultas')} style={estilos.linha}>
+                  <Pressable accessibilityRole="button" onPress={() => ir('/pet/[id]/consultas')} style={[estilos.linha, i > 0 && estilos.divisoria]}>
                     <View style={[estilos.circulo, { backgroundColor: colors.healthSurface }]}>
                       <Icone nome="relogio" size={18} />
                     </View>
@@ -383,18 +402,18 @@ export default function PetDetalhe() {
           {/* Atalhos do pet (protótipo Pet): remédios, carteirinha e compartilhar. */}
           <View style={estilos.atalhos}>
             {[
-              { rotulo: 'Medicamentos', icone: 'capsula' as const, fundo: '#FFF0C9', acao: () => ir('/pet/[id]/medicamentos') },
-              { rotulo: 'Carteirinha', icone: 'carteirinha' as const, fundo: '#EADCFB', acao: () => ir('/pet/[id]/carteirinha') },
-              { rotulo: 'Compartilhar', icone: 'compartilhar' as const, fundo: '#E0F1FA', acao: () => router.push(`/pet/${petAtual.id}/compartilhar`) },
+              { rotulo: 'Remédios', icone: 'capsula' as const, cor: colors.healthText, acao: () => ir('/pet/[id]/medicamentos') },
+              { rotulo: 'Carteirinha', icone: 'carteirinha' as const, cor: colors.premiumText, acao: () => ir('/pet/[id]/carteirinha') },
+              { rotulo: 'Compartilhar', icone: 'compartilhar' as const, cor: colors.primaryDeep, acao: () => router.push(`/pet/${petAtual.id}/compartilhar`) },
             ].map((atalho) => (
               <Tocavel
                 key={atalho.rotulo}
                 accessibilityRole="button"
                 onPress={atalho.acao}
                 estiloExterno={estilos.flex}
-                style={[estilos.atalho, { backgroundColor: atalho.fundo }]}
+                style={estilos.atalho}
               >
-                <Icone nome={atalho.icone} size={22} />
+                <Icone nome={atalho.icone} size={22} cor={atalho.cor} />
                 <Text style={estilos.atalhoTexto} numberOfLines={1}>
                   {atalho.rotulo}
                 </Text>
@@ -506,10 +525,10 @@ export default function PetDetalhe() {
 }
 
 const estilos = StyleSheet.create({
-  tela: { flex: 1, backgroundColor: colors.surface },
+  tela: { flex: 1, backgroundColor: colors.background },
   flex: { flex: 1, minWidth: 0 },
   atalhos: { flexDirection: 'row', gap: 8, marginTop: 12 },
-  atalho: { height: 68, borderRadius: 24, alignItems: 'center', justifyContent: 'center', gap: 6, paddingHorizontal: 4 },
+  atalho: { height: 72, borderRadius: 22, alignItems: 'center', justifyContent: 'center', gap: 6, paddingHorizontal: 4, backgroundColor: colors.surface, ...shadow.card },
   atalhoTexto: { fontFamily: fontFamily.bold, fontSize: 12, color: colors.black },
   conteudo: { paddingBottom: 24 },
   // Versão 2: a foto ocupa o topo inteiro e a folha branca sobe por cima.
@@ -538,13 +557,14 @@ const estilos = StyleSheet.create({
   corpo: {
     marginTop: -32,
     paddingTop: 24,
-    paddingHorizontal: 24,
+    paddingHorizontal: 20,
     gap: 14,
-    backgroundColor: colors.surface,
+    backgroundColor: colors.background,
     borderTopLeftRadius: 32,
     borderTopRightRadius: 32,
   },
-  linhaNome: { flexDirection: 'row', alignItems: 'center', gap: 10 },
+  linhaNome: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingHorizontal: 4 },
+  subNome: { fontSize: 14, fontFamily: fontFamily.regular, color: colors.textMuted, marginTop: -2 },
   nome: {
     flex: 1,
     fontSize: 36,
@@ -557,17 +577,19 @@ const estilos = StyleSheet.create({
     flexShrink: 1,
     fontSize: 12,
     fontFamily: fontFamily.bold,
-    color: '#A3324F',
-    backgroundColor: '#FDE0E6',
+    color: colors.warningText,
+    backgroundColor: colors.warningSurface,
     borderRadius: 999,
     overflow: 'hidden',
     paddingHorizontal: 12,
     paddingVertical: 6,
   },
+  alertaVencida: { color: colors.healthText, backgroundColor: colors.healthSurface },
+  // Versão 2: os números do pet em cartões brancos.
   resumo: { flexDirection: 'row', gap: 10 },
-  resumoItem: { flex: 1, borderRadius: 24, paddingVertical: 12, alignItems: 'center' },
-  resumoValor: { fontSize: 16, fontFamily: fontFamily.bold, color: colors.black },
-  resumoRotulo: { fontSize: 12, fontFamily: fontFamily.medium },
+  resumoItem: { flex: 1, minWidth: 0, borderRadius: 22, paddingVertical: 12, paddingHorizontal: 14, backgroundColor: colors.surface, ...shadow.card },
+  resumoValor: { fontSize: 19, lineHeight: 24, fontFamily: fontFamily.bold, color: colors.black },
+  resumoRotulo: { fontSize: 12, fontFamily: fontFamily.medium, color: colors.textMuted },
   selos: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', gap: 6, marginTop: 14 },
   selo: { flexDirection: 'row', alignItems: 'center', gap: 5, borderRadius: 999, paddingVertical: 6, paddingHorizontal: 10 },
   seloTexto: { fontFamily: fontFamily.bold, fontSize: 12, color: colors.black },
@@ -578,22 +600,24 @@ const estilos = StyleSheet.create({
   seniorTitulo: { fontFamily: fontFamily.bold, fontSize: 16, color: '#4A3800' },
   seniorSub: { fontFamily: fontFamily.regular, fontSize: 13, color: '#8A6414' },
   seniorSeta: { fontFamily: fontFamily.bold, fontSize: 24, color: '#4A3800', paddingRight: 6 },
-  abas: { flexDirection: 'row', gap: 22, borderBottomWidth: 1.5, borderBottomColor: colors.border },
-  aba: { paddingVertical: 8, borderBottomWidth: 3, borderBottomColor: 'transparent', marginBottom: -1.5 },
-  abaAtiva: { borderBottomColor: colors.primary },
-  abaTexto: { fontSize: 16, fontFamily: fontFamily.medium, color: colors.textMuted },
+  // Abas em pílula: trilho cinza e a aba ativa branca.
+  abas: { flexDirection: 'row', gap: 6, backgroundColor: '#E7EAF0', borderRadius: 999, padding: 4 },
+  aba: { flex: 1, height: 40, borderRadius: 999, alignItems: 'center', justifyContent: 'center' },
+  abaAtiva: { backgroundColor: colors.surface, ...shadow.card },
+  abaTexto: { fontSize: 15, fontFamily: fontFamily.semiBold, color: colors.textMuted },
   abaTextoAtivo: { color: colors.black, fontFamily: fontFamily.bold },
-  lista: { gap: 10 },
+  lista: { backgroundColor: colors.surface, borderRadius: 24, overflow: 'hidden', paddingVertical: 4, ...shadow.card },
   linha: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 12,
-    backgroundColor: colors.background,
-    borderRadius: 24,
     paddingVertical: 12,
-    paddingLeft: 12,
-    paddingRight: 14,
+    paddingHorizontal: 16,
   },
+  divisoria: { borderTopWidth: 1, borderTopColor: colors.border },
+  ponto: { width: 12, height: 12, borderRadius: 6 },
+  lerCartao: { flexDirection: 'row', alignItems: 'center', gap: 12, backgroundColor: colors.primarySurface, borderRadius: 24, padding: 14 },
+  lerCartaoIcone: { width: 42, height: 42, borderRadius: 14, backgroundColor: colors.white, alignItems: 'center', justifyContent: 'center' },
   circulo: { width: 44, height: 44, borderRadius: 22, alignItems: 'center', justifyContent: 'center' },
   linhaTitulo: { fontSize: 16, fontFamily: fontFamily.semiBold, color: colors.black },
   linhaSub: { fontSize: 13, fontFamily: fontFamily.regular, color: colors.textMuted },
@@ -607,10 +631,12 @@ const estilos = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 6,
   },
-  chipVencida: { color: '#A3324F', backgroundColor: '#FDE0E6' },
+  chipEmDia: { color: colors.successText, backgroundColor: colors.successSurface },
+  chipPerto: { color: colors.warningText, backgroundColor: colors.warningSurface },
+  chipVencida: { color: colors.healthText, backgroundColor: colors.healthSurface },
   vazio: { ...typography.caption, color: colors.textMuted, textAlign: 'center', paddingVertical: 12 },
   verTudo: { fontSize: 13, fontFamily: fontFamily.semiBold, color: colors.primaryDeep, textAlign: 'center' },
-  rodape: { paddingHorizontal: 24, paddingTop: 10, paddingBottom: 28, backgroundColor: colors.surface },
+  rodape: { paddingHorizontal: 20, paddingTop: 10, paddingBottom: 28, backgroundColor: colors.background },
   ctaMais: { fontFamily: fontFamily.regular, fontSize: 28, lineHeight: 32, color: colors.black },
   fundoModal: { flex: 1, backgroundColor: colors.overlay, justifyContent: 'flex-end' },
   folha: {
