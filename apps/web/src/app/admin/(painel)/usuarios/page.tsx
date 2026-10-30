@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { Cabecalho, haQuanto, numero, useAdmin } from "@/components/admin/Painel";
+import { Cabecalho, EstadoPainel, haQuanto, numero, useAdmin } from "@/components/admin/Painel";
 import { rpcAdmin } from "@/lib/admin/supabase";
 
 type Linha = {
@@ -122,7 +122,7 @@ export default function Usuarios() {
       {erro ? <p className="mb-3 rounded-2xl bg-perigo-fundo p-3 text-sm text-perigo">{erro}</p> : null}
 
       <div className="grid gap-4 xl:grid-cols-[1.7fr_1fr]">
-        <section className="overflow-hidden rounded-[28px] bg-fundo">
+        <section className="overflow-hidden admin-surface border border-borda bg-fundo shadow-sm">
           <table className="w-full text-left text-[13px]">
             <thead className="text-[11px] font-bold uppercase tracking-wider text-[#6A7484]">
               <tr>
@@ -175,9 +175,9 @@ export default function Usuarios() {
           </table>
         </section>
 
-        <section className="h-fit min-w-0 rounded-[28px] bg-fundo p-6">
+        <section className="h-fit min-w-0 admin-surface border border-borda bg-fundo shadow-sm p-6">
           {!ficha ? (
-            <p className="text-sm text-cinza">Escolha um tutor na lista para ver a ficha.</p>
+            <EstadoPainel titulo="Ficha do tutor">Escolha um tutor na lista para ver a ficha.</EstadoPainel>
           ) : (
             <>
               <h2 className="font-bold">Tutor selecionado</h2>

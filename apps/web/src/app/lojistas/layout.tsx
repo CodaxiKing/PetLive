@@ -25,12 +25,12 @@ export default function LayoutLojistas({ children }: LayoutProps<"/lojistas">) {
   return (
     <>
       <ConsentimentoCookies />
-      <header className="relative z-20 bg-[var(--tinta)] text-[var(--papel)]">
-        <div className="site-moldura flex h-[72px] items-center justify-between gap-3">
+      <header className="relative z-20 bg-[#F2F4F7] text-tinta">
+        <div className="site-moldura flex h-[76px] items-center justify-between gap-3">
           <Link href="/lojistas" className="flex items-center gap-2.5 text-[22px] font-extrabold tracking-tight" aria-label="PetLive para lojistas">
             <Image src="/logo-petlive.png" alt="" width={36} height={36} priority />
             <span>
-              PetLive <span className="hidden font-semibold text-[var(--ceu)] sm:inline">para lojistas</span>
+              PetLive <span className="hidden font-semibold text-azul-escuro sm:inline">para lojistas</span>
             </span>
           </Link>
           <nav aria-label="Lojistas" className="hidden gap-8 text-[16px] font-semibold lg:flex">

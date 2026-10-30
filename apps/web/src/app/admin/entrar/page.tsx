@@ -1,6 +1,8 @@
 "use client";
 
 import { useRef, useState, type FormEvent } from "react";
+import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { painelConfigurado, rpcAdmin, supabaseAdmin, type AdminEu } from "@/lib/admin/supabase";
 
@@ -8,18 +10,6 @@ type Etapa =
   | { tipo: "senha" }
   | { tipo: "codigo"; fatorId: string }
   | { tipo: "cadastrar"; fatorId: string; qr: string; segredo: string };
-
-function Pata() {
-  return (
-    <svg width="220" height="220" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="1.1" aria-hidden="true">
-      <circle cx="6" cy="10" r="1.8" />
-      <circle cx="10" cy="6" r="1.8" />
-      <circle cx="14" cy="6" r="1.8" />
-      <circle cx="18" cy="10" r="1.8" />
-      <path d="M12 12c-3 0-5 2.5-5 4.5 0 1.5 1.2 2 2.6 2 1 0 1.6-.4 2.4-.4s1.4.4 2.4.4c1.4 0 2.6-.5 2.6-2 0-2-2-4.5-5-4.5z" />
-    </svg>
-  );
-}
 
 /**
  * Entrar no painel (protótipo AdminLogin): e-mail e senha da equipe e o código
@@ -109,25 +99,28 @@ export default function EntrarAdmin() {
     if (numeros && i < 5) caixas.current[i + 1]?.focus();
   }
 
-  const campo = "h-14 w-full rounded-[28px] bg-suave px-6 text-[15px] outline-none focus-visible:ring-2 focus-visible:ring-azul";
+  const campo = "h-14 w-full rounded-[14px] border border-borda bg-white px-4 text-[15px] outline-none focus-visible:ring-2 focus-visible:ring-azul";
 
   return (
-    <div className="grid min-h-screen md:grid-cols-[1fr_1.25fr]">
-      <section className="relative hidden overflow-hidden bg-azul-hero px-12 py-10 md:block">
-        <p className="flex items-center gap-2 text-xl font-extrabold tracking-tight">
-          PetLive <span className="rounded-full bg-roxo-fundo px-2 py-0.5 text-[10px] font-extrabold tracking-wider">ADMIN</span>
-        </p>
-        <h1 className="mt-28 max-w-sm text-5xl font-medium leading-[1.05] tracking-tight">O PetLive em um só painel</h1>
-        <p className="mt-4 max-w-sm text-cinza">Tutores, pets, privacidade e equipe. Acesso só para a equipe.</p>
-        <div className="absolute bottom-10 right-10 opacity-90">
-          <Pata />
+    <div className="admin-login-v2">
+      <section className="admin-login-foto" aria-label="PetLive para a equipe">
+        <Image src="https://images.unsplash.com/photo-1450778869180-41d0601e046e?w=900&q=70&auto=format&fit=crop" alt="Cão e gato juntos ao ar livre" fill priority unoptimized sizes="50vw" />
+        <div className="admin-login-gradiente" />
+        <Link href="/" className="admin-login-marca">
+          <Image src="/logo-petlive.png" alt="" width={38} height={38} />
+          <b>PetLive</b><span>Admin</span>
+        </Link>
+        <div className="admin-login-copy">
+          <h1>O PetLive em um só painel</h1>
+          <p>Assinaturas, avaliações, pedidos e lojas. Acesso só para a equipe.</p>
         </div>
       </section>
-
-      <section className="flex items-center justify-center px-6 py-12">
-        <div className="w-full max-w-[380px]">
-          <h2 className="text-3xl font-medium tracking-tight">Entrar</h2>
-          <p className="mt-1 text-sm text-cinza">Use o e-mail da equipe PetLive.</p>
+      <section className="admin-login-formulario">
+        <div className="w-full max-w-[400px]">
+          <Link href="/" className="admin-login-marca-mobile"><Image src="/logo-petlive.png" alt="" width={36} height={36} /><b>PetLive</b><span>Admin</span></Link>
+          <span className="admin-login-etapa">ACESSO DA EQUIPE · {etapa.tipo === "senha" ? "01 / 02" : "02 / 02"}</span>
+          <h2 className="text-[30px] font-bold tracking-tight">{etapa.tipo === "senha" ? "Entrar no painel" : etapa.tipo === "cadastrar" ? "Proteja sua conta" : "Confirme seu acesso"}</h2>
+          <p className="mt-2 text-sm leading-relaxed text-cinza">{etapa.tipo === "senha" ? "Use o e-mail da equipe PetLive para continuar." : "Use seu app autenticador para concluir a entrada com segurança."}</p>
 
           {!painelConfigurado ? (
             <p className="mt-6 rounded-2xl bg-perigo-fundo p-4 text-sm text-perigo">
@@ -136,15 +129,17 @@ export default function EntrarAdmin() {
           ) : null}
 
           {etapa.tipo === "senha" ? (
-            <form onSubmit={entrarComSenha} className="mt-6 space-y-3">
-              <label className="sr-only" htmlFor="email">E-mail</label>
-              <input id="email" type="email" required autoComplete="username" placeholder="[nome]@petlive.com.br" value={email} onChange={(e) => setEmail(e.target.value)} className={campo} />
-              <div className="relative">
-                <label className="sr-only" htmlFor="senha">Senha</label>
+            <form onSubmit={entrarComSenha} className="mt-8 space-y-5">
+              <div><label className="mb-2 block text-[13px] font-semibold" htmlFor="email">E-mail da equipe</label>
+              <input id="email" type="email" required autoComplete="username" placeholder="[nome]@petlive.com.br" value={email} onChange={(e) => setEmail(e.target.value)} className={campo} /></div>
+              <div>
+                <label className="mb-2 block text-[13px] font-semibold" htmlFor="senha">Senha</label>
+                <div className="relative">
                 <input id="senha" type={mostrarSenha ? "text" : "password"} required autoComplete="current-password" placeholder="Senha" value={senha} onChange={(e) => setSenha(e.target.value)} className={`${campo} pr-24`} />
                 <button type="button" onClick={() => setMostrarSenha((m) => !m)} className="absolute right-5 top-1/2 -translate-y-1/2 text-sm font-semibold">
                   {mostrarSenha ? "Ocultar" : "Mostrar"}
                 </button>
+              </div>
               </div>
               <BotaoEntrar enviando={enviando} rotulo="Continuar" />
             </form>
@@ -178,7 +173,7 @@ export default function EntrarAdmin() {
                       onKeyDown={(e) => {
                         if (e.key === "Backspace" && !codigo[i] && i > 0) caixas.current[i - 1]?.focus();
                       }}
-                      className={`h-14 w-12 rounded-2xl text-center text-xl font-bold outline-none focus-visible:ring-2 focus-visible:ring-azul ${d ? "border-2 border-tinta bg-fundo" : "bg-suave"}`}
+                      className={`h-14 min-w-0 flex-1 rounded-[14px] border bg-white text-center text-xl font-bold outline-none focus-visible:ring-2 focus-visible:ring-azul ${d ? "border-tinta" : "border-borda"}`}
                     />
                   ))}
                 </div>
@@ -200,11 +195,18 @@ export default function EntrarAdmin() {
           )}
 
           {erro ? (
-            <p role="alert" className="mt-4 text-sm font-semibold text-perigo">
+            <p role="alert" className="mt-4 rounded-[14px] bg-perigo-fundo p-4 text-sm font-semibold text-perigo">
               {erro}
             </p>
           ) : null}
-          <p className="mt-6 text-center text-xs text-cinza">Esqueceu a senha? Fale com um super admin.</p>
+          <p className="mt-6 text-center text-xs leading-relaxed text-cinza">Esqueceu a senha? Fale com um super admin.</p>
+          {process.env.NODE_ENV === "development" ? (
+            <div className="mt-6 rounded-2xl border border-borda bg-white p-4 text-center">
+              <Link href="/admin/dev/AdminVisao.html" prefetch={false} className="inline-flex min-h-10 items-center justify-center rounded-full bg-azul-fundo px-5 text-xs font-bold text-azul-escuro">Abrir prévia dev</Link>
+              <p className="mt-2 text-xs leading-relaxed text-cinza">Telas do canvas com dados fictícios. Disponível apenas no desenvolvimento local.</p>
+            </div>
+          ) : null}
+          <div className="admin-login-seguranca"><span aria-hidden="true">✓</span> Acesso protegido com verificação em duas etapas</div>
         </div>
       </section>
     </div>
@@ -216,15 +218,15 @@ function BotaoEntrar({ enviando, rotulo }: { enviando: boolean; rotulo: string }
     <button
       type="submit"
       disabled={enviando}
-      className="flex h-14 w-full items-center gap-3 rounded-full bg-tinta pl-2 pr-6 font-bold text-white transition hover:-translate-y-0.5 disabled:opacity-60"
+      className="flex h-14 w-full items-center justify-center gap-3 rounded-full bg-tinta px-6 text-sm font-bold text-white transition hover:bg-[#243349] disabled:opacity-60"
     >
-      <span className="flex h-10 w-10 items-center justify-center rounded-full bg-azul">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#111" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+      <span className="flex items-center justify-center">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
           <rect x="5" y="11" width="14" height="9" rx="2" />
           <path d="M8 11V8a4 4 0 0 1 8 0v3" />
         </svg>
       </span>
-      <span className="flex-1 text-center">{enviando ? "Conferindo…" : rotulo}</span>
+      <span className="text-center">{enviando ? "Conferindo…" : rotulo}</span>
     </button>
   );
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Cabecalho, useAdmin } from "@/components/admin/Painel";
+import { Cabecalho, EstadoPainel, useAdmin } from "@/components/admin/Painel";
 import { rpcAdmin } from "@/lib/admin/supabase";
 import { EventoOficial } from "./EventoOficial";
 import { Organizadores } from "./Organizadores";
@@ -83,14 +83,14 @@ export default function EventosAdmin() {
     </div>
     <div className="mb-4 flex flex-wrap gap-2">{ABAS.map((aba) => <button key={aba.status} disabled={salvando} aria-pressed={status === aba.status} onClick={() => { if (status === aba.status) return; requisicao.current++; setStatus(aba.status); setDados(null); setSelecionado(null); setMotivo(""); }} className={`rounded-full px-4 py-2 text-sm ${status === aba.status ? "bg-preto text-white" : "bg-fundo text-texto"}`}>{aba.rotulo}</button>)}</div>
     <div className="grid gap-4 xl:grid-cols-[1.1fr_1fr]">
-      <section className="max-h-[70vh] overflow-auto rounded-[28px] bg-fundo p-3">
+      <section className="max-h-[70vh] overflow-auto admin-surface border border-borda bg-fundo shadow-sm p-3">
         {carregando ? <p className="p-4 text-sm text-cinza">Carregando…</p> : !dados?.itens.length ? <p className="p-4 text-sm text-cinza">Nenhum evento nesta fila.</p> : dados.itens.map((evento) => <button key={evento.id} disabled={salvando} onClick={() => { setSelecionado(evento); setMotivo(evento.motivo_status ?? ""); }} className={`mb-2 block w-full rounded-2xl p-4 text-left ${selecionado?.id === evento.id ? "bg-white ring-2 ring-azul" : "bg-white/60"}`}>
           <span className="flex items-center justify-between gap-2"><strong className="text-sm">{evento.titulo}</strong><span className="rounded-full bg-amarelo-fundo px-2 py-1 text-xs">{evento.denuncias ? `${evento.denuncias} denúncias` : rotulos[evento.status]}</span></span>
           <span className="mt-2 block text-xs text-cinza">{evento.organizador} · {inicio(evento.inicio_em)}</span>
           <span className="mt-1 block text-xs text-cinza">{evento.local_nome} · {evento.confirmados} confirmados</span>
         </button>)}</section>
-      <section className="rounded-[28px] bg-white p-5 shadow-sm">
-        {!selecionado ? <p className="text-sm text-cinza">Selecione um evento para revisar.</p> : <>
+      <section className="admin-surface border border-borda bg-white p-5">
+        {!selecionado ? <EstadoPainel titulo="Análise do evento">Selecione um evento para revisar.</EstadoPainel> : <>
           <div className="flex items-start justify-between gap-4"><div><p className="text-xs text-azul-escuro">{selecionado.tipo} · {rotulos[selecionado.status]}</p><h2 className="mt-1 text-xl font-bold">{selecionado.titulo}</h2></div><span className="rounded-full bg-rosa-fundo px-3 py-1 text-xs text-rosa-texto">{selecionado.denuncias} denúncias</span></div>
           <p className="mt-3 text-sm">{selecionado.descricao}</p><dl className="mt-4 grid gap-2 text-sm"><div><dt className="font-semibold">Organizador</dt><dd>{selecionado.organizador}</dd></div><div><dt className="font-semibold">Quando</dt><dd>{inicio(selecionado.inicio_em)} – {inicio(selecionado.fim_em)}</dd></div><div><dt className="font-semibold">Onde</dt><dd>{selecionado.local_nome}{selecionado.place_id ? ` · Google Place ID ${selecionado.place_id}` : ` · ${selecionado.lat}, ${selecionado.lng}`}</dd></div><div><dt className="font-semibold">Entrada</dt><dd>{selecionado.gratuito ? "Gratuita" : `R$ ${((selecionado.preco_centavos ?? 0) / 100).toFixed(2).replace(".", ",")} · ${selecionado.ingresso_url}`}</dd></div><div><dt className="font-semibold">Vagas</dt><dd>{selecionado.vagas ?? "Sem limite informado"}</dd></div></dl>
           <label className="mt-5 block text-sm font-semibold" htmlFor="motivo">Motivo ou instrução para o organizador</label><textarea id="motivo" disabled={salvando || carregando || !pode || !acoes.length} value={motivo} onChange={(e) => setMotivo(e.target.value)} maxLength={1000} className="mt-2 min-h-24 w-full rounded-2xl border border-borda p-3 text-sm" placeholder="Descreva o motivo de ajuste, recusa ou decisão sobre denúncia." />

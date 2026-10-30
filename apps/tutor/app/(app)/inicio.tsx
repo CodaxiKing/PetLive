@@ -1,7 +1,7 @@
 import { Fragment, useCallback, useState } from 'react';
-import { Alert, Pressable, ScrollView, StyleSheet, Text, View, useWindowDimensions } from 'react-native';
+import { Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useFocusEffect, useRouter, type Href } from 'expo-router';
-import { IconeLocal, IconePerfil, IconeSino, OndaHeroi } from '../../src/components/Layout';
+import { IconeLocal, IconePerfil, IconeSino } from '../../src/components/Layout';
 import { Gradiente } from '../../src/components/Gradiente';
 import { Icone, type NomeIcone } from '../../src/components/Icone';
 import { BarraProgresso, Surgir, Tocavel } from '../../src/components/Animacoes';
@@ -31,6 +31,7 @@ import { useRemedios } from '../../src/remedios/RemediosProvider';
 import { useVacinas } from '../../src/saude/VacinasProvider';
 import { colors } from '../../src/theme/colors';
 import { fontFamily } from '../../src/theme/typography';
+import { shadow } from '../../src/theme/tokens';
 
 /** Atalhos do Início (protótipo: fundo pastel, ícone num círculo branco). Só os da Fase 1. */
 const ATALHOS: { nome: string; fundo: string; icone: NomeIcone; cor?: string; destino: Href | { pet: 'carteirinha' | 'medicamentos' } }[] = [
@@ -93,7 +94,7 @@ function quandoHoje(iso: string): string {
  */
 export default function Inicio() {
   const router = useRouter();
-  const { width } = useWindowDimensions();
+
   const { pets, petAtivo, definirPetAtivo, seniores } = usePets();
   const { lembretes, concluirLembrete } = useLembretes();
   const { remedios } = useRemedios();
@@ -258,7 +259,6 @@ export default function Inicio() {
           </Tocavel>
         </ScrollView>
 
-        <OndaHeroi largura={width} altura={30} />
       </View>
 
       <View style={estilos.corpo}>
@@ -460,15 +460,13 @@ export default function Inicio() {
 }
 
 const estilos = StyleSheet.create({
-  tela: { flex: 1, backgroundColor: colors.surface },
+  tela: { flex: 1, backgroundColor: colors.background },
   conteudo: { paddingBottom: 24 },
   flex: { flex: 1, minWidth: 0 },
+  // Versão 2: o topo é o próprio fundo da tela, sem o azul e a onda.
   heroi: {
-    backgroundColor: colors.hero,
-    overflow: 'hidden',
     paddingTop: 50,
-    paddingBottom: 24,
-    minHeight: 236,
+    paddingBottom: 18,
   },
   cabecalho: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingHorizontal: 24 },
   local: {
@@ -480,6 +478,7 @@ const estilos = StyleSheet.create({
     borderRadius: 22,
     backgroundColor: colors.white,
     paddingHorizontal: 14,
+    ...shadow.card,
   },
   localNome: { flexShrink: 1, fontFamily: fontFamily.bold, fontSize: 13, color: colors.black },
   botaoRedondo: {
@@ -489,6 +488,7 @@ const estilos = StyleSheet.create({
     backgroundColor: colors.white,
     alignItems: 'center',
     justifyContent: 'center',
+    ...shadow.card,
   },
   pontoSino: {
     position: 'absolute',
@@ -502,10 +502,10 @@ const estilos = StyleSheet.create({
     borderColor: colors.white,
   },
   botaoPerfil: { backgroundColor: colors.white },
-  ola: { fontFamily: fontFamily.semiBold, fontSize: 13, lineHeight: 18, color: colors.primaryDark, marginTop: 14, paddingHorizontal: 24 },
+  ola: { fontFamily: fontFamily.semiBold, fontSize: 13, lineHeight: 18, color: colors.textMuted, marginTop: 18, paddingHorizontal: 24 },
   titulo: {
-    fontFamily: fontFamily.medium,
-    fontSize: 34,
+    fontFamily: fontFamily.bold,
+    fontSize: 30,
     lineHeight: 36,
     letterSpacing: -1,
     color: colors.black,
@@ -524,7 +524,7 @@ const estilos = StyleSheet.create({
     paddingRight: 14,
   },
   petChipAtivo: { backgroundColor: colors.black },
-  petChipInativo: { backgroundColor: colors.white },
+  petChipInativo: { backgroundColor: colors.white, ...shadow.card },
   petNome: { fontFamily: fontFamily.bold, fontSize: 13, color: colors.black },
   etiquetaSenior: { fontFamily: fontFamily.bold, fontSize: 10, color: '#8A6414', backgroundColor: '#FFF0C9', borderRadius: 999, overflow: 'hidden', paddingVertical: 2, paddingHorizontal: 7 },
   petNomeAtivo: { color: colors.white },
@@ -535,6 +535,7 @@ const estilos = StyleSheet.create({
     backgroundColor: colors.white,
     alignItems: 'center',
     justifyContent: 'center',
+    ...shadow.card,
   },
   corpo: { paddingHorizontal: 24, gap: 12 },
   vacina: {

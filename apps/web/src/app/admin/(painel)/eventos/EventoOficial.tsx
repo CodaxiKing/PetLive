@@ -41,7 +41,7 @@ export function EventoOficial({ onPublicado }: { onPublicado: () => void }) {
     finally { trava.current = false; setSalvando(false); }
   }
   const campo = "mt-1 w-full rounded-2xl border border-borda bg-white px-4 py-3 text-sm";
-  return <section aria-label="Cadastrar evento oficial" className="mb-5 space-y-3 rounded-[28px] bg-white p-5">
+  return <section aria-label="Cadastrar evento oficial" className="mb-5 space-y-3 admin-surface bg-white p-5">
     <button type="button" disabled={salvando} className="rounded-full bg-tinta px-5 py-3 text-sm font-bold text-white" onClick={() => setAberto(v => !v)}>{aberto ? "Fechar cadastro" : "Novo evento do PetLive"}</button>
     {aberto ? <form onSubmit={publicar}><fieldset disabled={salvando} className="space-y-3">
       <h2 className="text-lg font-bold">Evento oficial</h2><p className="text-sm text-cinza">Será publicado diretamente. Cobrança de ingressos ocorre apenas no site externo informado. Datas usam o fuso deste navegador: {Intl.DateTimeFormat().resolvedOptions().timeZone}.</p>

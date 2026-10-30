@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 import { ROTULO_PAPEL, rpcAdmin, supabaseAdmin, type AdminEu, type Papel } from "@/lib/admin/supabase";
@@ -38,10 +39,11 @@ const AREAS: { rotulo: string; href?: string; icone: keyof typeof ICONES; papeis
   { rotulo: "Assinaturas", href: "/admin/assinaturas", icone: "financeiro", papeis: ["financeiro", "leitura"] },
   { rotulo: "Planos e cupons", href: "/admin/planos", icone: "financeiro", papeis: ["financeiro", "leitura"] },
   { rotulo: "Financeiro", href: "/admin/financeiro", icone: "financeiro", papeis: ["financeiro", "leitura"] },
-  { rotulo: "Avaliações", href: "/admin/avaliacoes", icone: "avaliacoes", papeis: ["suporte", "marketing", "leitura"] },
   { rotulo: "Usuários e pets", href: "/admin/usuarios", icone: "usuarios", papeis: ["suporte", "moderacao", "leitura"] },
   { rotulo: "Lojistas", href: "/admin/lojistas", icone: "moderacao", papeis: ["moderacao", "suporte", "leitura"] },
   { rotulo: "Suporte", href: "/admin/suporte", icone: "suporte", papeis: ["suporte", "leitura"] },
+  { rotulo: "Equipe", href: "/admin/equipe", icone: "equipe", papeis: [] },
+  { rotulo: "Avaliações", href: "/admin/avaliacoes", icone: "avaliacoes", papeis: ["suporte", "marketing", "leitura"] },
   { rotulo: "Moderação", href: "/admin/moderacao", icone: "moderacao", papeis: ["moderacao", "leitura"] },
   { rotulo: "Eventos", href: "/admin/eventos", icone: "moderacao", papeis: ["moderacao", "leitura"] },
   { rotulo: "Adoção e ONGs", href: "/admin/adocao", icone: "moderacao", papeis: ["moderacao", "leitura"] },
@@ -50,7 +52,6 @@ const AREAS: { rotulo: string; href?: string; icone: keyof typeof ICONES; papeis
   { rotulo: "Integrações", href: "/admin/integracoes", icone: "sistema", papeis: ["leitura"] },
   { rotulo: "Sistema", href: "/admin/sistema", icone: "sistema" },
   { rotulo: "Privacidade e LGPD", href: "/admin/lgpd", icone: "lgpd", papeis: ["suporte", "leitura"] },
-  { rotulo: "Equipe", href: "/admin/equipe", icone: "equipe", papeis: [] },
 ];
 
 function Icone({ caminhos }: { caminhos: string[] }) {
@@ -94,35 +95,37 @@ export function Painel({ children }: { children: ReactNode }) {
   }
 
   if (!admin) {
-    return <div className="flex min-h-screen items-center justify-center bg-[#F5F6FA] text-sm text-cinza">Conferindo o acesso…</div>;
+    return <div className="flex min-h-screen items-center justify-center bg-suave text-sm text-cinza">Conferindo o acesso…</div>;
   }
 
   const pode = (papeis?: Papel[]) => !papeis || admin.papel === "super" || papeis.includes(admin.papel);
 
   return (
     <ContextoAdmin.Provider value={admin}>
-      <div className="flex min-h-screen bg-[#F5F6FA]">
-        <aside className="sticky top-0 flex h-screen w-60 flex-none flex-col gap-0.5 overflow-y-auto bg-tinta px-4 py-5 text-white">
-          <p className="flex items-center gap-2.5 px-2 pb-2.5 text-xl font-extrabold tracking-tight">
-            PetLive <span className="rounded-full bg-roxo-fundo px-2 py-0.5 text-[10px] font-extrabold tracking-wider text-tinta">ADMIN</span>
-          </p>
-          {AREAS.filter((a) => pode(a.papeis)).map((area) => {
-            const ativa = area.href && (area.href === "/admin" ? caminho === "/admin" : caminho.startsWith(area.href));
-            const classe = "flex h-8 items-center gap-3 rounded-[14px] px-3.5 text-[13px]";
-            return area.href ? (
-              <Link key={area.rotulo} href={area.href} className={`${classe} ${ativa ? "bg-azul font-bold text-tinta" : "font-semibold text-[#C9D0DB] hover:text-white"}`}>
-                <Icone caminhos={ICONES[area.icone]} />
-                {area.rotulo}
-              </Link>
-            ) : (
-              <span key={area.rotulo} title="Chega na próxima etapa" className={`${classe} cursor-default font-semibold text-[#5E6878]`}>
-                <Icone caminhos={ICONES.breve} />
-                {area.rotulo}
-                <span className="ml-auto text-[10px] uppercase tracking-wider">breve</span>
-              </span>
-            );
+      <div className="admin-v2 flex min-h-screen bg-suave">
+        <aside aria-label="Navegação administrativa" className="sticky top-0 flex h-screen w-[232px] flex-none flex-col gap-0.5 overflow-y-auto bg-tinta px-4 py-5 text-white">
+          <Link href="/admin" className="admin-marca">
+            <Image src="/logo-petlive.png" alt="" width={36} height={36} />
+            <span><b>PetLive</b><small>Painel admin</small></span>
+          </Link>
+          <nav className="admin-navegacao" aria-label="Áreas do painel">
+          {[
+            { nome: "Visão", itens: ["Visão geral", "Relatórios"] },
+            { nome: "Receita", itens: ["Assinaturas", "Planos e cupons", "Financeiro"] },
+            { nome: "Pessoas", itens: ["Usuários e pets", "Lojistas", "Suporte", "Equipe"] },
+            { nome: "Conteúdo", itens: ["Avaliações", "Moderação", "Eventos", "Adoção e ONGs", "Campanhas", "Conteúdo mestre"] },
+            { nome: "Sistema", itens: ["Integrações", "Sistema", "Privacidade e LGPD"] },
+          ].map(grupo => {
+            const areas = AREAS.filter(area => grupo.itens.includes(area.rotulo) && pode(area.papeis));
+            if (!areas.length) return null;
+            const atual = (href?: string) => Boolean(href && (href === "/admin" ? caminho === href : caminho.startsWith(href)));
+            return <details key={`${grupo.nome}:${caminho}`} className="admin-menu-dropdown" open={areas.some(area => atual(area.href))}>
+              <summary>{grupo.nome}<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg></summary>
+              <div className="admin-menu-links">{areas.map(area => area.href ? <Link key={area.rotulo} href={area.href} aria-current={atual(area.href) ? "page" : undefined} className={`flex h-8 items-center gap-3 rounded-full px-3.5 text-[13px] ${atual(area.href) ? "bg-azul font-bold text-tinta" : "font-semibold text-[#C9D0DB] hover:text-white"}`}><Icone caminhos={ICONES[area.icone]} />{area.rotulo}</Link> : null)}</div>
+            </details>;
           })}
-          <div className="mt-auto flex items-center gap-2.5 rounded-[18px] bg-[#1E1E1E] p-3">
+          </nav>
+          <div className="mt-auto flex items-center gap-2.5 rounded-[18px] bg-[#182336] p-3">
             <span className="flex h-[38px] w-[38px] items-center justify-center rounded-xl bg-roxo-fundo font-extrabold text-tinta">
               {admin.nome.trim().charAt(0).toUpperCase()}
             </span>
@@ -130,12 +133,13 @@ export function Painel({ children }: { children: ReactNode }) {
               <p className="truncate text-[13px] font-bold">{admin.nome}</p>
               <p className="text-[11px] text-azul">{ROTULO_PAPEL[admin.papel]}</p>
             </div>
-            <button onClick={sair} title="Sair" aria-label="Sair do painel" className="text-[#C9D0DB] hover:text-white">
+            <button onClick={sair} title="Sair" aria-label="Sair do painel" className="admin-sair text-[#C9D0DB] hover:text-white">
               <Icone caminhos={["M10 4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h4", "M15 8l4 4-4 4", "M19 12H9"]} />
+              <span>Sair</span>
             </button>
           </div>
         </aside>
-        <main className="min-w-0 flex-1 px-8 py-6">{children}</main>
+        <main className="admin-v2-conteudo min-w-0 flex-1"><div className="admin-rota" key={caminho}>{children}</div></main>
       </div>
     </ContextoAdmin.Provider>
   );
@@ -144,25 +148,30 @@ export function Painel({ children }: { children: ReactNode }) {
 /** Cabeçalho das páginas: título, subtítulo e ações à direita. */
 export function Cabecalho({ titulo, subtitulo, children }: { titulo: string; subtitulo?: string; children?: ReactNode }) {
   return (
-    <div className="mb-4 flex flex-wrap items-center gap-3.5">
+    <header className="admin-cabecalho">
       <div className="min-w-0 flex-1">
-        <h1 className="text-[32px] font-medium tracking-tight">{titulo}</h1>
+        <h1 className="text-[26px] font-bold tracking-tight">{titulo}</h1>
         {subtitulo ? <p className="mt-0.5 text-[13px] text-[#6A7484]">{subtitulo}</p> : null}
       </div>
-      {children}
-    </div>
+      <div className="admin-cabecalho-acoes">{children}</div>
+    </header>
   );
 }
 
 /** Cartão de número (KPI) do protótipo: fundo pastel, rótulo, valor grande e linha de apoio. */
-export function CartaoNumero({ rotulo, valor, apoio, fundo, cor }: { rotulo: string; valor: string; apoio?: string; fundo: string; cor: string }) {
+export function CartaoNumero({ rotulo, valor, apoio, cor }: { rotulo: string; valor: string; apoio?: string; fundo: string; cor: string }) {
   return (
-    <div className={`rounded-[28px] p-5 ${fundo}`}>
-      <p className={`text-xs font-bold ${cor}`}>{rotulo}</p>
-      <p className="mt-2 text-[34px] font-medium leading-none tracking-tight">{valor}</p>
-      {apoio ? <p className={`mt-2 text-xs font-semibold ${cor}`}>{apoio}</p> : null}
+    <div className="admin-kpi">
+      <p className="admin-kpi-rotulo">{rotulo}</p>
+      <p className="mt-2 text-[28px] font-bold leading-none tracking-tight">{valor}</p>
+      {apoio ? <p className={`admin-kpi-apoio ${cor}`}>{apoio}</p> : null}
     </div>
   );
+}
+
+/** Empty detail panels keep a clear next step while no record is selected. */
+export function EstadoPainel({ titulo, children }: { titulo: string; children: ReactNode }) {
+  return <div className="admin-estado"><span className="admin-estado-icone" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="4" y="3" width="16" height="18" rx="3"/><path d="M8 8h8M8 12h8M8 16h4"/></svg></span><h2>{titulo}</h2><p>{children}</p></div>;
 }
 
 export const numero = (n: number | null | undefined) => (n ?? 0).toLocaleString("pt-BR");

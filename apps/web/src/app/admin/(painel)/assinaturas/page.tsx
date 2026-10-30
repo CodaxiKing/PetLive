@@ -41,7 +41,7 @@ function Lista() {
   return <>
     <Cabecalho titulo="Assinaturas" subtitulo="Contratos Premium, falhas de pagamento e cancelamentos" />
     <p className="mb-4 text-sm text-cinza">Consulta dos contratos registrados. A integração de cobrança ainda está em implantação; esta tela não altera planos ou pagamentos.</p>
-    <form onSubmit={e => e.preventDefault()} className="mb-4 flex flex-wrap gap-3" aria-label="Filtrar assinaturas">
+    <form onSubmit={e => e.preventDefault()} className="admin-filtros mb-4 flex flex-wrap gap-3" aria-label="Filtrar assinaturas">
       <label className="flex flex-col gap-1 text-xs">Tutor ou e-mail<input className={campo} value={busca} maxLength={120} onChange={e => mudar(() => setBusca(e.target.value))} placeholder="Buscar tutor" /></label>
       <label className="flex flex-col gap-1 text-xs">Status<select className={campo} value={status} onChange={e => mudar(() => setStatus(e.target.value))}><option value="">Todos</option>{Object.entries(ESTADOS).map(([v, r]) => <option key={v} value={v}>{r}</option>)}</select></label>
       <label className="flex flex-col gap-1 text-xs">Ciclo<select className={campo} value={ciclo} onChange={e => mudar(() => setCiclo(e.target.value))}><option value="">Todos</option><option value="mensal">Mensal</option><option value="anual">Anual</option></select></label>
@@ -56,14 +56,14 @@ function Lista() {
         <CartaoNumero rotulo="Pagamento falhou" valor={String(dados.resumo.pagamento_falhou)} fundo="bg-rosa-fundo" cor="text-tinta" />
         <CartaoNumero rotulo="Cancelamento agendado" valor={String(dados.resumo.cancelando)} fundo="bg-azul-fundo" cor="text-tinta" apoio={`${dados.resumo.canceladas} canceladas · ${dados.resumo.expiradas} expiradas`} />
       </div>
-      <div className="overflow-x-auto rounded-[26px] bg-fundo">
+      <div className="overflow-x-auto admin-surface bg-fundo">
         <table className="w-full text-left text-sm"><caption className="p-4 text-left font-bold">{dados.total} contrato(s) encontrado(s)</caption><thead><tr>{["Tutor", "Plano contratado", "Período até", "Status", "Detalhes"].map(t => <th key={t} className="px-4 py-3">{t}</th>)}</tr></thead><tbody>
           {dados.itens.map(a => <tr key={a.id} className="border-t border-[#DDE1E8]"><td className="px-4 py-3"><p className="font-bold">{a.nome || "Tutor"}</p><p className="text-xs text-cinza">{a.email}</p></td><td className="px-4 py-3">Premium {a.ciclo}<p className="text-xs text-cinza">{PROVEDORES[a.provedor]}</p></td><td className="px-4 py-3">{data(a.periodo_fim)}</td><td className="px-4 py-3">{ESTADOS[a.status]}</td><td className="px-4 py-3"><button type="button" className="rounded-full bg-azul-fundo px-4 py-2 font-bold" aria-label={`Ver contrato de ${a.nome || a.email}`} onClick={() => setDetalhe(a)}>Ver contrato</button></td></tr>)}
           {!dados.itens.length ? <tr><td colSpan={5} className="p-6">Nenhuma assinatura encontrada para estes filtros.</td></tr> : null}
         </tbody></table>
       </div>
       <nav aria-label="Páginas de assinaturas" className="my-4 flex items-center gap-3"><button className={campo} disabled={pagina === 0} onClick={() => { setDetalhe(null); setPagina(p => p - 1); }}>Anterior</button><span>Página {pagina + 1} de {Math.max(1, Math.ceil(dados.total / 25))}</span><button className={campo} disabled={(pagina + 1) * 25 >= dados.total} onClick={() => { setDetalhe(null); setPagina(p => p + 1); }}>Próxima</button></nav>
-      {detalhe ? <section aria-label="Detalhes do contrato" className="rounded-[26px] bg-fundo p-6"><div className="flex justify-between gap-4"><h2 className="text-lg font-bold">Contrato de {detalhe.nome || "Tutor"}</h2><button type="button" onClick={() => setDetalhe(null)} className="font-bold">Fechar</button></div>
+      {detalhe ? <section aria-label="Detalhes do contrato" className="admin-surface bg-fundo p-6"><div className="flex justify-between gap-4"><h2 className="text-lg font-bold">Contrato de {detalhe.nome || "Tutor"}</h2><button type="button" onClick={() => setDetalhe(null)} className="font-bold">Fechar</button></div>
         <dl className="mt-4 grid gap-3 sm:grid-cols-2">{[
           ["Status", ESTADOS[detalhe.status]], ["Status recebido do provedor", ESTADOS[detalhe.status_registrado]],
           ["Período", `${data(detalhe.periodo_inicio)} a ${data(detalhe.periodo_fim)}`],

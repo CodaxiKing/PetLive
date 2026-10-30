@@ -83,7 +83,7 @@ export default function Lgpd() {
     }
   }
 
-  if (!dados) return <p className="text-sm text-cinza">{erro ?? "Carregando…"}</p>;
+  if (!dados) return <><Cabecalho titulo="Privacidade e LGPD" subtitulo="Acompanhe os dados e as atividades desta área" /><div className="admin-bloco" role={erro ? "alert" : "status"}><p className={erro ? "text-sm text-perigo" : "text-sm text-cinza"}>{erro ?? "Carregando dados…"}</p></div></>;
   const termo = busca.trim().toLowerCase();
   const pedidos = dados.pedidos.filter((p) => !termo || p.nome.toLowerCase().includes(termo) || p.email.toLowerCase().includes(termo));
 
@@ -117,7 +117,7 @@ export default function Lgpd() {
       </div>
 
       <div className="mt-4 grid gap-4 xl:grid-cols-[1.7fr_1fr]">
-        <section className="overflow-hidden rounded-[28px] bg-fundo">
+        <section className="overflow-hidden admin-surface border border-borda bg-fundo shadow-sm">
           <table className="w-full text-left text-[13px]">
             <thead className="text-[11px] font-bold uppercase tracking-wider text-[#6A7484]">
               <tr>
@@ -162,7 +162,7 @@ export default function Lgpd() {
           </table>
         </section>
 
-        <section className="h-fit min-w-0 rounded-[28px] bg-fundo p-6">
+        <section className="h-fit min-w-0 admin-surface border border-borda bg-fundo shadow-sm p-6">
           <h2 className="font-bold">Regras de retenção</h2>
           <dl className="mt-3 space-y-2 text-[13px]">
             {RETENCAO.map(([rotulo, valor]) => (

@@ -37,7 +37,7 @@ export function Organizadores({ pode }: { pode: boolean }) {
     } catch (e) { setErro(e instanceof Error ? e.message : "Não foi possível salvar."); }
     finally { trava.current = false; setSalvando(false); }
   }
-  return <section aria-label="Organizadores de eventos" className="mt-5 space-y-4 rounded-[28px] bg-white p-5">
+  return <section aria-label="Organizadores de eventos" className="mt-5 space-y-4 admin-surface bg-white p-5">
     <h2 className="text-lg font-bold">Organizadores</h2>
     <p className="text-sm text-cinza">Contas com eventos enviados ou perfil de organizador. Verificar permite publicação direta de novos eventos. Revogar não oculta eventos já publicados; use a moderação para tratar cada evento.</p>
     <label className="block text-sm">Buscar pelo nome<input disabled={salvando} maxLength={100} className="mt-1 w-full rounded-2xl border border-borda px-4 py-3" value={busca} onChange={e => { setBusca(e.target.value); setPagina(0); }} /></label>

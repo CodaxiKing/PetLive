@@ -53,7 +53,7 @@ export function Comunidade({ pode }: { pode: boolean }) {
   }
 
   return (
-    <section className="mt-4 rounded-[28px] bg-fundo p-5">
+    <section className="mt-4 admin-surface bg-fundo p-5">
       <div className="flex flex-wrap items-baseline justify-between gap-3">
         <h2 className="font-bold">Comunidade: denúncias</h2>
         {dados ? (

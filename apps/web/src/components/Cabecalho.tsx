@@ -12,11 +12,11 @@ const LINKS = [
 /** Cabeçalho do site: uma barra simples com a marca, quatro links e uma ação. */
 export function Cabecalho() {
   return (
-    <header className="relative z-20 bg-[var(--papel)]">
-      <div className="site-moldura flex h-[72px] items-center justify-between gap-3">
+    <header className="relative z-20 bg-[#F2F4F7]">
+      <div className="site-moldura flex h-[76px] items-center justify-between gap-3">
         <Logo />
 
-        <nav aria-label="Principal" className="hidden gap-8 text-[16px] font-semibold lg:flex">
+        <nav aria-label="Principal" className="hidden gap-[26px] text-[15px] font-semibold lg:flex">
           {LINKS.map((link) => (
             <Link key={link.href} href={link.href} className="link-sublinhado decoration-transparent hover:decoration-current">
               {link.rotulo}

@@ -64,7 +64,7 @@ export function PetsPerdidos({ pode }: { pode: boolean }) {
   }
 
   return (
-    <section className="mt-4 rounded-[28px] bg-fundo p-5">
+    <section className="mt-4 admin-surface bg-fundo p-5">
       <div className="flex items-baseline justify-between gap-3">
         <h2 className="font-bold">Pets perdidos</h2>
         <span className="text-xs text-cinza">Ativos e dos últimos 30 dias</span>

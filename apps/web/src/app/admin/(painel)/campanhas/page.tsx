@@ -160,7 +160,7 @@ export default function CampanhasPagina() {
     agir(() => rpcAdmin("admin_campanha_cancelar_v2", { p_id: form.id, p_revisao: form.revisao }), "Campanha cancelada.", true);
   }
 
-  if (!dados) return <p className="text-sm text-cinza">{erro ?? "Carregando…"}</p>;
+  if (!dados) return <><Cabecalho titulo="Campanhas e notificações" subtitulo="Acompanhe os dados e as atividades desta área" /><div className="admin-bloco" role={erro ? "alert" : "status"}><p className={erro ? "text-sm text-perigo" : "text-sm text-cinza"}>{erro ?? "Carregando dados…"}</p></div></>;
   const alcance = estimativa?.publico === form.publico ? estimativa : null;
   const valido = form.titulo.trim().length >= 3 && form.mensagem.trim().length >= 3;
   const campo = "w-full rounded-2xl bg-suave px-4 pb-2.5 pt-6 text-[13px] font-semibold outline-none disabled:text-cinza";
@@ -193,7 +193,7 @@ export default function CampanhasPagina() {
       </div>
 
       <div className="mt-4 grid gap-4 xl:grid-cols-[1.7fr_1fr]">
-        <section className="min-w-0 rounded-[28px] bg-fundo p-5">
+        <section className="min-w-0 admin-surface border border-borda bg-fundo shadow-sm p-5">
           <table className="w-full text-left text-[13px]">
             <thead className="text-[11px] font-bold uppercase tracking-wider text-[#6A7484]">
               <tr>
@@ -242,7 +242,7 @@ export default function CampanhasPagina() {
           </table>
         </section>
 
-        <section aria-busy={ocupado} className="h-fit min-w-0 rounded-[28px] bg-fundo p-6">
+        <section aria-busy={ocupado} className="h-fit min-w-0 admin-surface border border-borda bg-fundo shadow-sm p-6">
           <div className="flex items-center justify-between gap-3">
             <h2 className="font-bold">{form.id ? "Editar campanha" : "Nova campanha"}</h2>
             {form.id ? (

@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { Cabecalho, CartaoNumero, haQuanto, numero, useAdmin } from "@/components/admin/Painel";
+import { Cabecalho, EstadoPainel, CartaoNumero, haQuanto, numero, useAdmin } from "@/components/admin/Painel";
 import { rpcAdmin } from "@/lib/admin/supabase";
 import { PetsPerdidos } from "./PetsPerdidos";
 import { Comunidade } from "./Comunidade";
@@ -76,7 +76,7 @@ export default function ModeracaoPagina() {
     }
   }
 
-  if (!dados) return <p className="text-sm text-cinza">{erro ?? "Carregando…"}</p>;
+  if (!dados) return <><Cabecalho titulo="Moderação" subtitulo="Acompanhe os dados e as atividades desta área" /><div className="admin-bloco" role={erro ? "alert" : "status"}><p className={erro ? "text-sm text-perigo" : "text-sm text-cinza"}>{erro ?? "Carregando dados…"}</p></div></>;
   const itens = dados.itens.filter((i) => i.status === aba);
 
   return (
@@ -98,7 +98,7 @@ export default function ModeracaoPagina() {
       </div>
 
       <div className="mt-4 grid gap-4 xl:grid-cols-[1.6fr_1fr]">
-        <section className="rounded-[28px] bg-fundo p-5">
+        <section className="admin-surface border border-borda bg-fundo shadow-sm p-5">
           <div className="flex flex-wrap gap-2">
             {ABAS.map((a) => (
               <button
@@ -146,9 +146,9 @@ export default function ModeracaoPagina() {
           </table>
         </section>
 
-        <section className="h-fit min-w-0 rounded-[28px] bg-fundo p-6">
+        <section className="h-fit min-w-0 admin-surface border border-borda bg-fundo shadow-sm p-6">
           {!selecionado ? (
-            <p className="text-sm text-cinza">Escolha uma indicação para revisar.</p>
+            <EstadoPainel titulo="Revisar indicação">Escolha uma indicação para revisar.</EstadoPainel>
           ) : (
             <>
               <h2 className="font-bold">Revisar indicação</h2>

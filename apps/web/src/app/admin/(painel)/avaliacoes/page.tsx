@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { Cabecalho, CartaoNumero, haQuanto, numero, useAdmin } from "@/components/admin/Painel";
+import { Cabecalho, EstadoPainel, CartaoNumero, haQuanto, numero, useAdmin } from "@/components/admin/Painel";
 import { rpcAdmin } from "@/lib/admin/supabase";
 
 type Plataforma = "play" | "app_store";
@@ -98,7 +98,7 @@ export default function AvaliacoesPagina() {
     URL.revokeObjectURL(url);
   }
 
-  if (!dados) return <p className="text-sm text-cinza">{erro ?? "Carregando…"}</p>;
+  if (!dados) return <><Cabecalho titulo="Avaliações dos apps" subtitulo="Acompanhe os dados e as atividades desta área" /><div className="admin-bloco" role={erro ? "alert" : "status"}><p className={erro ? "text-sm text-perigo" : "text-sm text-cinza"}>{erro ?? "Carregando dados…"}</p></div></>;
   const totalNotas = Object.values(dados.distribuicao).reduce((s, n) => s + n, 0);
   const semConexao = (["play", "app_store"] as Plataforma[]).filter((p) => !dados.sync[p]?.ok);
 
@@ -138,7 +138,7 @@ export default function AvaliacoesPagina() {
       </div>
 
       <div className="mt-4 grid gap-4 xl:grid-cols-[1.6fr_1fr]">
-        <section className="rounded-[28px] bg-fundo p-6">
+        <section className="admin-surface border border-borda bg-fundo shadow-sm p-6">
           <div className="flex items-baseline justify-between">
             <h2 className="font-bold">Nota ao longo do tempo</h2>
             <span className="text-xs text-cinza">Média das duas lojas</span>
@@ -153,7 +153,7 @@ export default function AvaliacoesPagina() {
             ))}
           </div>
         </section>
-        <section className="rounded-[28px] bg-fundo p-6">
+        <section className="admin-surface border border-borda bg-fundo shadow-sm p-6">
           <h2 className="font-bold">Distribuição das notas</h2>
           <ul className="mt-4 space-y-2.5">
             {[5, 4, 3, 2, 1].map((n) => {
@@ -173,7 +173,7 @@ export default function AvaliacoesPagina() {
       </div>
 
       <div className="mt-4 grid gap-4 xl:grid-cols-[1.6fr_1fr]">
-        <section className="min-w-0 rounded-[28px] bg-fundo p-5">
+        <section className="min-w-0 admin-surface border border-borda bg-fundo shadow-sm p-5">
           <div className="flex flex-wrap gap-2">
             {FILTROS.map((f) => (
               <button
@@ -231,9 +231,9 @@ export default function AvaliacoesPagina() {
           </table>
         </section>
 
-        <section className="h-fit min-w-0 rounded-[28px] bg-fundo p-6">
+        <section className="h-fit min-w-0 admin-surface border border-borda bg-fundo shadow-sm p-6">
           {!selecionada ? (
-            <p className="text-sm text-cinza">Escolha uma avaliação para ler e responder.</p>
+            <EstadoPainel titulo="Detalhes da avaliação">Escolha uma avaliação para ler e responder.</EstadoPainel>
           ) : (
             <>
               <p className="text-amarelo-texto">{estrelas(selecionada.rating)}</p>

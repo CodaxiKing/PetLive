@@ -102,7 +102,7 @@ export default function Equipe() {
       {aviso ? <p className="mb-3 rounded-2xl bg-verde-fundo p-3 text-sm text-verde-texto">{aviso}</p> : null}
 
       <div className="grid gap-4 xl:grid-cols-[1.4fr_1fr]">
-        <section className="rounded-[28px] bg-fundo p-6">
+        <section className="admin-surface border border-borda bg-fundo shadow-sm p-6">
           <div className="flex items-baseline justify-between">
             <h2 className="font-bold">Equipe</h2>
             <span className="text-xs text-cinza">{ativos.length} {ativos.length === 1 ? "pessoa" : "pessoas"}</span>
@@ -177,7 +177,7 @@ export default function Equipe() {
           <p className="mt-2 text-xs text-cinza">A pessoa precisa ter uma conta no PetLive (pelo app) antes.</p>
         </section>
 
-        <section className="rounded-[28px] bg-fundo p-6">
+        <section className="admin-surface border border-borda bg-fundo shadow-sm p-6">
           <h2 className="font-bold">Permissões por função</h2>
           <table className="mt-3 w-full text-[12px]">
             <thead>
@@ -210,7 +210,7 @@ export default function Equipe() {
         </section>
       </div>
 
-      <section className="mt-4 rounded-[28px] bg-fundo p-6">
+      <section className="mt-4 admin-surface border border-borda bg-fundo shadow-sm p-6">
         <div className="flex items-baseline justify-between">
           <h2 className="font-bold">Registro de ações</h2>
           <span className="text-xs text-cinza">Auditoria</span>

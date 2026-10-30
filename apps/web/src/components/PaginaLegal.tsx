@@ -32,10 +32,10 @@ export function PaginaLegal({ titulo, resumo, atualizado, secoes, foto = FOTO_PA
       .replace(/^-|-$/g, "");
 
   return (
-    <div className="bg-[var(--ceu)]">
+    <div className="bg-suave">
       <section className="site-moldura grid items-end gap-8 py-[clamp(48px,6vw,96px)] lg:grid-cols-12">
         <div className="lg:col-span-6">
-          <h1 data-revelar className="t-display max-w-[12ch]" style={{ fontSize: "clamp(44px, 5.4vw, 84px)" }}>
+          <h1 data-revelar className="t-display max-w-[12ch]" style={{ fontSize: "clamp(36px, 4vw, 56px)" }}>
             {titulo}
           </h1>
           <p data-revelar style={{ ["--ordem" as string]: 1 }} className="t-lead mt-8 max-w-[40ch]">
@@ -51,7 +51,7 @@ export function PaginaLegal({ titulo, resumo, atualizado, secoes, foto = FOTO_PA
       </section>
 
       <div className="site-moldura pb-[clamp(56px,8vw,120px)]">
-        <div className="grid gap-10 rounded-[var(--raio-g)] bg-[var(--papel)] p-6 md:p-12 lg:grid-cols-12">
+        <div className="grid gap-10 rounded-[32px] border border-borda bg-fundo shadow-sm p-6 md:p-12 lg:grid-cols-12">
           <nav aria-label="Nesta página" className="hidden lg:col-span-3 lg:block">
             <ul className="sticky top-6 space-y-2 text-[16px]">
               {secoes.map((secao) => (

@@ -156,7 +156,7 @@ export default function ConteudoPagina() {
     await agir(() => rpcAdmin("admin_pacote_publicar", { p_id: p.id, p_revisado_por: revisor, p_crmv: crmv }), `${TIPO_PACOTE[p.tipo]} v${p.versao} publicado.`);
   }
 
-  if (!dados) return <p className="text-sm text-cinza">{erro ?? "Carregando…"}</p>;
+  if (!dados) return <><Cabecalho titulo="Conteúdo mestre" subtitulo="Acompanhe os dados e as atividades desta área" /><div className="admin-bloco" role={erro ? "alert" : "status"}><p className={erro ? "text-sm text-perigo" : "text-sm text-cinza"}>{erro ?? "Carregando dados…"}</p></div></>;
   const caes = dados.vacinas.filter((v) => v.especie === "cao").length;
   const atual = dados.versoes[0];
   const publicados = dados.pacotes.filter((p) => p.publicado);
@@ -203,7 +203,7 @@ export default function ConteudoPagina() {
       </div>
 
       <div className="mt-4 grid gap-4 xl:grid-cols-[1.7fr_1fr]">
-        <section className="min-w-0 rounded-[28px] bg-fundo p-5">
+        <section className="min-w-0 admin-surface border border-borda bg-fundo shadow-sm p-5">
           <div className="flex flex-wrap gap-2">
             {ABAS.map((a) => (
               <button key={a.valor} onClick={() => setAba(a.valor)} className={`h-9 rounded-full px-4 text-[13px] font-bold ${aba === a.valor ? "bg-tinta text-white" : "border border-[#DDE1E8]"}`}>
@@ -331,7 +331,7 @@ export default function ConteudoPagina() {
           )}
         </section>
 
-        {aba === "vacinas" ? <section className="h-fit min-w-0 rounded-[28px] bg-fundo p-6">
+        {aba === "vacinas" ? <section className="h-fit min-w-0 admin-surface border border-borda bg-fundo shadow-sm p-6">
           <div className="flex items-center justify-between gap-3">
             <h2 className="font-bold">{form.id ? "Editar vacina" : "Nova vacina"}</h2>
             {form.id ? (

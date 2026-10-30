@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { Cabecalho, CartaoNumero, haQuanto, numero, useAdmin } from "@/components/admin/Painel";
+import { Cabecalho, EstadoPainel, CartaoNumero, haQuanto, numero, useAdmin } from "@/components/admin/Painel";
 import { rpcAdmin, supabaseAdmin } from "@/lib/admin/supabase";
 
 type Status = "rascunho" | "em_analise" | "aprovada" | "correcao_pedida" | "recusada" | "suspensa";
@@ -106,7 +106,7 @@ export default function LojistasPagina() {
     }
   }
 
-  if (!dados) return <p className="text-sm text-cinza">{erro ?? "Carregando…"}</p>;
+  if (!dados) return <><Cabecalho titulo="Lojistas" subtitulo="Acompanhe os dados e as atividades desta área" /><div className="admin-bloco" role={erro ? "alert" : "status"}><p className={erro ? "text-sm text-perigo" : "text-sm text-cinza"}>{erro ?? "Carregando dados…"}</p></div></>;
 
   return (
     <>
@@ -121,7 +121,7 @@ export default function LojistasPagina() {
       </div>
 
       <div className="mt-4 grid gap-4 xl:grid-cols-[1.4fr_1fr]">
-        <section className="min-w-0 rounded-[28px] bg-fundo p-5">
+        <section className="min-w-0 admin-surface border border-borda bg-fundo shadow-sm p-5">
           <div className="flex flex-wrap gap-2">
             {ABAS.map((a) => (
               <button key={a.valor} onClick={() => { setAba(a.valor); setSel(null); }} className={`h-9 rounded-full px-4 text-[13px] font-bold ${aba === a.valor ? "bg-tinta text-white" : "border border-[#DDE1E8]"}`}>
@@ -158,9 +158,9 @@ export default function LojistasPagina() {
           </table>
         </section>
 
-        <section className="h-fit min-w-0 rounded-[28px] bg-fundo p-6">
+        <section className="h-fit min-w-0 admin-surface border border-borda bg-fundo shadow-sm p-6">
           {!sel ? (
-            <p className="text-sm text-cinza">Escolha uma loja para revisar.</p>
+            <EstadoPainel titulo="Análise da loja">Escolha uma loja para revisar.</EstadoPainel>
           ) : (
             <>
               <h2 className="text-lg font-bold">{sel.name}</h2>
@@ -226,7 +226,7 @@ export default function LojistasPagina() {
         </section>
       </div>
 
-      <section className="mt-4 rounded-[28px] bg-fundo p-5">
+      <section className="mt-4 admin-surface border border-borda bg-fundo shadow-sm p-5">
         <h2 className="font-bold">Denúncias de produtos, avaliações e lojas</h2>
         {denuncias.length === 0 ? <p className="mt-3 text-sm text-cinza">Nenhuma denúncia aberta.</p> : (
           <ul className="mt-3 space-y-2">

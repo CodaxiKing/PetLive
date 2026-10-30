@@ -74,7 +74,7 @@ export default function SistemaPagina() {
     if (await agir(() => rpcAdmin("admin_definir_versao_minima", { p_plataforma: minima.plataforma, p_versao: minima.versao }))) setMinima(null);
   }
 
-  if (!dados) return <p className="text-sm text-cinza">{erro ?? "Carregando…"}</p>;
+  if (!dados) return <><Cabecalho titulo="Sistema" subtitulo="Acompanhe os dados e as atividades desta área" /><div className="admin-bloco" role={erro ? "alert" : "status"}><p className={erro ? "text-sm text-perigo" : "text-sm text-cinza"}>{erro ?? "Carregando dados…"}</p></div></>;
   const atual = dados.versoes.find((v) => v.versao !== "anterior")?.versao;
 
   return (
@@ -96,7 +96,7 @@ export default function SistemaPagina() {
       </div>
 
       <div className="mt-4 grid gap-4 xl:grid-cols-[1fr_1.1fr]">
-        <section className="min-w-0 rounded-[28px] bg-fundo p-6">
+        <section className="min-w-0 admin-surface border border-borda bg-fundo shadow-sm p-6">
           <h2 className="font-bold">Versões em uso</h2>
           <p className="text-xs text-cinza">Versão mais recente de cada tutor que abriu o app nos últimos 30 dias</p>
           <table className="mt-3 w-full text-left text-[13px]">
@@ -175,7 +175,7 @@ export default function SistemaPagina() {
         </section>
 
         <div className="flex min-w-0 flex-col gap-4">
-          <section className="rounded-[28px] bg-fundo p-6">
+          <section className="admin-surface border border-borda bg-fundo shadow-sm p-6">
             <h2 className="font-bold">Recursos ligados</h2>
             <p className="text-xs text-cinza">Desligar some com o recurso do app na próxima abertura, sem publicar versão nova.</p>
             <ul className="mt-3 space-y-2">
@@ -202,7 +202,7 @@ export default function SistemaPagina() {
             {!pode ? <p className="mt-2 text-[11px] text-cinza">Só o super admin liga e desliga recursos.</p> : null}
           </section>
 
-          <section className="rounded-[28px] bg-fundo p-6">
+          <section className="admin-surface border border-borda bg-fundo shadow-sm p-6">
             <div className="flex items-baseline justify-between gap-3">
               <h2 className="font-bold">Erros do app</h2>
               <span className="text-xs text-cinza">Sentry</span>

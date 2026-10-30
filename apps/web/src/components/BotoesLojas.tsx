@@ -24,14 +24,14 @@ function Botao({
   escuro: boolean;
 }) {
   const classe = escuro
-    ? "bg-tinta pl-3.5 pr-6.5 text-white"
-    : "bg-fundo pl-3.5 pr-6";
+    ? "bg-tinta px-[22px] text-white"
+    : "bg-fundo px-[22px]";
   const conteudo = (
     <>
       <span
-        className={`flex h-9.5 w-9.5 items-center justify-center rounded-full ${escuro ? "bg-azul" : "bg-tinta"}`}
+        className={`flex items-center justify-center ${escuro ? "bg-transparent" : "bg-transparent"}`}
       >
-        <Seta cor={escuro ? "#111" : "#9AD6F8"} />
+        <Seta cor={escuro ? "#fff" : "#0e1726"} />
       </span>
       {rotulo}
       {href ? null : (
@@ -48,7 +48,7 @@ function Botao({
     return (
       <span
         aria-disabled="true"
-        className={`flex h-16 cursor-default items-center gap-3 rounded-full text-[15px] font-bold ${classe}`}
+        className={`flex h-[54px] cursor-default items-center gap-3 rounded-full text-[15px] font-bold ${classe}`}
       >
         {conteudo}
       </span>
@@ -60,7 +60,7 @@ function Botao({
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      className={`flex h-16 items-center gap-3 rounded-full text-[15px] font-bold transition-transform hover:-translate-y-0.5 active:scale-[0.97] ${classe}`}
+      className={`flex h-[54px] items-center gap-3 rounded-full text-[15px] font-bold transition-transform hover:-translate-y-0.5 active:scale-[0.97] ${classe}`}
     >
       {conteudo}
     </a>
@@ -70,8 +70,8 @@ function Botao({
 export function BotoesLojas() {
   return (
     <div className="mt-9 flex flex-wrap gap-3.5">
-      <Botao href={URL_GOOGLE_PLAY} rotulo="Baixar no Google Play" escuro />
-      <Botao href={URL_APP_STORE} rotulo="Baixar na App Store" escuro={false} />
+      <Botao href={URL_GOOGLE_PLAY} rotulo="Google Play" escuro />
+      <Botao href={URL_APP_STORE} rotulo="App Store" escuro={false} />
     </div>
   );
 }

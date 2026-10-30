@@ -88,7 +88,7 @@ export default function RelatoriosPagina() {
     URL.revokeObjectURL(url);
   }
 
-  if (!dados) return <p className="text-sm text-cinza">{erro ?? "Carregando…"}</p>;
+  if (!dados) return <><Cabecalho titulo="Relatórios" subtitulo="Acompanhe os dados e as atividades desta área" /><div className="admin-bloco" role={erro ? "alert" : "status"}><p className={erro ? "text-sm text-perigo" : "text-sm text-cinza"}>{erro ?? "Carregando dados…"}</p></div></>;
   const funil: [string, number, string][] = [
     ["Cadastrou a conta", dados.funil.contas, "bg-azul"],
     ["Cadastrou um pet", dados.funil.com_pet, "bg-azul"],
@@ -118,7 +118,7 @@ export default function RelatoriosPagina() {
       {erro ? <p className="mb-3 rounded-2xl bg-perigo-fundo p-3 text-sm text-perigo">{erro}</p> : null}
 
       <div className="grid gap-4 xl:grid-cols-[1fr_1.4fr]">
-        <section className="min-w-0 rounded-[28px] bg-fundo p-6">
+        <section className="min-w-0 admin-surface border border-borda bg-fundo shadow-sm p-6">
           <div className="flex items-baseline justify-between gap-3">
             <h2 className="font-bold">Funil do tutor</h2>
             <span className="text-xs text-cinza">Contas criadas: {periodo.toLowerCase()}</span>
@@ -139,7 +139,7 @@ export default function RelatoriosPagina() {
           <p className="mt-4 text-[11px] leading-relaxed text-cinza">Assinou: pagou ao menos um período (teste grátis cancelado não conta).</p>
         </section>
 
-        <section className="min-w-0 overflow-x-auto rounded-[28px] bg-fundo p-6">
+        <section className="min-w-0 overflow-x-auto admin-surface border border-borda bg-fundo shadow-sm p-6">
           <div className="flex items-baseline justify-between gap-3">
             <h2 className="font-bold">Retenção por mês de entrada</h2>
             <span className="text-xs text-cinza">Tutores que voltaram ao app</span>
@@ -177,7 +177,7 @@ export default function RelatoriosPagina() {
       </div>
 
       <div className="mt-4 grid gap-4 xl:grid-cols-[1.4fr_1fr_1fr]">
-        <section className="min-w-0 rounded-[28px] bg-fundo p-6">
+        <section className="min-w-0 admin-surface border border-borda bg-fundo shadow-sm p-6">
           <div className="flex items-baseline justify-between gap-3">
             <h2 className="font-bold">Raças mais comuns</h2>
             <span className="text-xs text-cinza">Top 5</span>
@@ -199,7 +199,7 @@ export default function RelatoriosPagina() {
           )}
         </section>
 
-        <section className="min-w-0 rounded-[28px] bg-fundo p-6">
+        <section className="min-w-0 admin-surface border border-borda bg-fundo shadow-sm p-6">
           <h2 className="font-bold">Tempo até a 1ª vacina</h2>
           <p className="mt-3 text-4xl font-medium tracking-tight">
             {dados.dias_ate_vacina === null ? "—" : `${String(dados.dias_ate_vacina).replace(".", ",")} dias`}
@@ -210,7 +210,7 @@ export default function RelatoriosPagina() {
           </p>
         </section>
 
-        <section className="min-w-0 rounded-[28px] bg-fundo p-6">
+        <section className="min-w-0 admin-surface border border-borda bg-fundo shadow-sm p-6">
           <h2 className="font-bold">Pets por espécie</h2>
           <div className="mt-4 flex h-3 overflow-hidden rounded-full bg-suave">
             {totalPets ? (
@@ -232,7 +232,7 @@ export default function RelatoriosPagina() {
           </dl>
         </section>
       </div>
-      <section className="mt-4 rounded-[28px] bg-fundo p-6">
+      <section className="mt-4 admin-surface border border-borda bg-fundo shadow-sm p-6">
         <div className="flex items-baseline justify-between gap-3">
           <h2 className="font-bold">Tutores por cidade</h2>
           <span className="text-xs text-cinza">Cidade do perfil · {numero(dados.sem_cidade)} sem cidade</span>

@@ -117,7 +117,7 @@ export default function FinanceiroPagina() {
       </div>
 
       <div className="mt-4 grid gap-4 xl:grid-cols-[1.6fr_1fr]">
-        <section className="min-w-0 rounded-[28px] bg-fundo p-6">
+        <section className="min-w-0 admin-surface border border-borda bg-fundo shadow-sm p-6">
           <div className="flex items-baseline justify-between gap-3">
             <h2 className="font-bold">Faturamento por mês</h2>
             <span className="text-xs text-cinza">Toque num mês para ver o detalhe</span>
@@ -167,7 +167,7 @@ export default function FinanceiroPagina() {
         </section>
 
         <div className="flex min-w-0 flex-col gap-4">
-          <section className="rounded-[28px] bg-fundo p-6">
+          <section className="admin-surface border border-borda bg-fundo shadow-sm p-6">
             <h2 className="font-bold first-letter:uppercase">{mesLongo(foco.mes)}</h2>
             <p className="mt-1 text-4xl font-medium tracking-tight">{reais(foco.total)}</p>
             <p className="text-xs text-cinza">{numero(foco.pagamentos)} {foco.pagamentos === 1 ? "pagamento" : "pagamentos"}</p>
@@ -184,7 +184,7 @@ export default function FinanceiroPagina() {
             </dl>
           </section>
 
-          <section className="rounded-[28px] bg-fundo p-6">
+          <section className="admin-surface border border-borda bg-fundo shadow-sm p-6">
             <h2 className="font-bold">Últimos pagamentos</h2>
             {ultimas.length === 0 ? (
               <p className="mt-2 text-sm text-cinza">Nenhum pagamento ainda.</p>

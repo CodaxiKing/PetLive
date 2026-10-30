@@ -54,14 +54,14 @@ function Inventario() {
       <button type="button" className="rounded-full bg-tinta px-5 py-3 text-sm font-bold text-white" onClick={() => setTentativa(t => t + 1)}>Atualizar inventário</button>
     </Cabecalho>
     <p className="mb-5 rounded-2xl bg-amarelo-fundo p-4 text-sm">O diagnóstico confere os jobs, a fila e a resposta do gateway. Credenciais das lojas, FCM/APNs e entrega no aparelho exigem homologação. A integração de cobrança está adiada.</p>
-    <section aria-label="Componentes do banco" className="mb-7 rounded-[26px] bg-white p-6">
+    <section aria-label="Componentes do banco" className="mb-7 admin-surface bg-white p-6">
       <h2 className="mb-3 text-lg font-bold">Componentes instalados</h2>
       {!resultado ? <p role="status">Consultando o servidor…</p> : resultado.erro ? <p role="alert">Não foi possível consultar. Confira o acesso e a conexão e tente atualizar novamente.</p> : resultado.dados ? <>
         <p className="mb-4 text-xs text-cinza">Consultado em {new Date(resultado.dados.consultado_em).toLocaleString("pt-BR")}. Presença no banco não confirma operação.</p>
         <dl className="grid gap-3 sm:grid-cols-2">{COMPONENTES.map(([id, nome]) => <div key={id} className="rounded-2xl bg-fundo p-4"><dt className="text-sm font-bold">{nome}</dt><dd className="mt-1 text-sm">{resultado.dados!.componentes[id] === true ? "Instalado" : "Não encontrado"}</dd></div>)}</dl>
       </> : null}
     </section>
-    <section aria-label="Diagnóstico operacional" className="mb-7 rounded-[26px] bg-white p-6">
+    <section aria-label="Diagnóstico operacional" className="mb-7 admin-surface bg-white p-6">
       <h2 className="mb-3 text-lg font-bold">Operação dos serviços</h2>
       {!verificacao ? <p role="status">Verificando…</p> : verificacao.erro ? <p role="alert">Diagnóstico indisponível. Confira a implantação de integracoes-verificar e da RPC de diagnóstico, sua sessão com 2FA e tente atualizar.</p> : saude ? <>
         <p className="mb-4 text-xs text-cinza">Verificado em {new Date(saude.operacao.consultado_em).toLocaleString("pt-BR")}. Resposta HTTP não comprova entrega de notificações.</p>
@@ -77,6 +77,6 @@ function Inventario() {
     </section>
     <h2 className="mb-3 text-lg font-bold">Validações externas</h2>
     <p className="mb-4 text-sm text-cinza">Roteiro de conferência manual. O estado dessas contas não é consultado por esta tela.</p>
-    <div className="grid gap-4 lg:grid-cols-2">{EXTERNOS.map(([nome, orientacao]) => <section key={nome} className="rounded-[26px] bg-white p-6"><h3 className="font-bold">{nome}</h3><p className="my-2 text-xs font-semibold text-cinza">Não verificado pelo painel</p><p className="text-sm">{orientacao}</p></section>)}</div>
+    <div className="grid gap-4 lg:grid-cols-2">{EXTERNOS.map(([nome, orientacao]) => <section key={nome} className="admin-surface bg-white p-6"><h3 className="font-bold">{nome}</h3><p className="my-2 text-xs font-semibold text-cinza">Não verificado pelo painel</p><p className="text-sm">{orientacao}</p></section>)}</div>
   </>;
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState, type FormEvent } from "react";
-import { Cabecalho, CartaoNumero, haQuanto, numero, useAdmin } from "@/components/admin/Painel";
+import { Cabecalho, EstadoPainel, CartaoNumero, haQuanto, numero, useAdmin } from "@/components/admin/Painel";
 import { rpcAdmin } from "@/lib/admin/supabase";
 
 type Chamado = {
@@ -118,7 +118,7 @@ export default function SuportePagina() {
     setTexto("");
   }
 
-  if (!dados) return <p className="text-sm text-cinza">{erro ?? "Carregando…"}</p>;
+  if (!dados) return <><Cabecalho titulo="Suporte" subtitulo="Acompanhe os dados e as atividades desta área" /><div className="admin-bloco" role={erro ? "alert" : "status"}><p className={erro ? "text-sm text-perigo" : "text-sm text-cinza"}>{erro ?? "Carregando dados…"}</p></div></>;
 
   const visiveis = dados.chamados.filter((c) =>
     aba === "abertos" ? c.status === "aberto" : aba === "meus" ? c.meu && c.status !== "fechado" : aba === "lojistas" ? c.tipo === "lojista" && c.status !== "fechado" : c.status !== "aberto",
@@ -143,7 +143,7 @@ export default function SuportePagina() {
       </div>
 
       <div className="mt-4 grid gap-4 xl:grid-cols-[1fr_1.15fr]">
-        <section className="min-w-0 rounded-[28px] bg-fundo p-5">
+        <section className="min-w-0 admin-surface border border-borda bg-fundo shadow-sm p-5">
           <div className="flex flex-wrap gap-2">
             {ABAS.map((a) => (
               <button
@@ -183,9 +183,9 @@ export default function SuportePagina() {
           </ul>
         </section>
 
-        <section className="flex min-h-[420px] min-w-0 flex-col rounded-[28px] bg-fundo p-5">
+        <section className="flex min-h-[420px] min-w-0 flex-col admin-surface border border-borda bg-fundo shadow-sm p-5">
           {!selecionado ? (
-            <p className="text-sm text-cinza">Escolha um chamado para ver a conversa.</p>
+            <EstadoPainel titulo="Conversa do chamado">Escolha um chamado para ver a conversa.</EstadoPainel>
           ) : (
             <>
               <div className="flex items-start gap-3">
