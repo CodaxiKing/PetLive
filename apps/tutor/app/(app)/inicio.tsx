@@ -1,16 +1,18 @@
-import { Fragment, useCallback, useState } from 'react';
-import { Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { useCallback, useState } from 'react';
+import { Alert, Image, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useFocusEffect, useRouter, type Href } from 'expo-router';
-import { IconeLocal, IconePerfil, IconeSino } from '../../src/components/Layout';
+import { useAuth } from '../../src/auth/AuthProvider';
+import { IconeSino } from '../../src/components/Layout';
+import { Mascote } from '../../src/components/Mascote';
 import { Gradiente } from '../../src/components/Gradiente';
 import { Icone, type NomeIcone } from '../../src/components/Icone';
-import { BarraProgresso, Surgir, Tocavel } from '../../src/components/Animacoes';
+import { Surgir, Tocavel } from '../../src/components/Animacoes';
 import { AvisoOffline } from '../../src/components/AvisoOffline';
 import { AVISO_SEM_SALVAR } from '../../src/lib/cacheOffline';
 import { useLembretes } from '../../src/lembretes/LembretesProvider';
 import type { Lembrete, TipoLembrete } from '../../src/lembretes/types';
-import { useCidade } from '../../src/mapa/useCidade';
 import { AvatarPet } from '../../src/pets/AvatarPet';
+import { coresDoPet } from '../../src/pets/coresPet';
 import {
   antirrabicaEmDia,
   proximaVacina,
@@ -44,19 +46,13 @@ const ATALHOS: { nome: string; fundo: string; icone: NomeIcone; cor?: string; de
   { nome: 'Calcular', fundo: colors.healthSurface, icone: 'calculadora', cor: colors.healthText, destino: '/ferramentas/calculadoras' },
   { nome: 'Lugares', fundo: colors.primarySurface, icone: 'local', cor: colors.primaryDeep, destino: '/mapa' },
   { nome: 'Rotina', fundo: colors.premiumSurface, icone: 'relogio', cor: colors.premiumText, destino: '/lembretes/rotina' },
-  { nome: 'Ver todos', fundo: '#F3F5F8', icone: 'grade', destino: '/atalhos' },
+  { nome: 'Ver todos', fundo: colors.white, icone: 'grade', destino: '/atalhos' },
 ];
 
 /** Item da lista Hoje: lembrete ou dose de remédio do pet escolhido. */
 type ItemHoje =
   | { tipo: 'lembrete'; chave: string; titulo: string; quando: string; icone: NomeIcone; lembrete: Lembrete }
   | { tipo: 'dose'; chave: string; titulo: string; quando: string; icone: NomeIcone; dose: DoseHoje };
-
-/** Cartões de "Hoje", alternados (protótipo Início). */
-const PALETA_HOJE = [
-  { fundo: colors.healthSurface, texto: '#4A5568' },
-  { fundo: colors.healthSurface, texto: '#4A5568' },
-];
 
 const ICONE_TIPO: Record<TipoLembrete, NomeIcone> = {
   vacina: 'vacina',
@@ -91,11 +87,13 @@ function quandoHoje(iso: string): string {
 }
 
 /**
- * Início (protótipo Inicio): saudação e pets no herói, próxima vacina,
- * atalhos, o que vence hoje com "Feito" e a carteirinha do pet ativo.
+ * Início (versão 2 do protótipo, Inicio): data e saudação, os pets em
+ * pílulas, o pet ativo em foto grande com a próxima vacina e Registrar, o
+ * que vence hoje com "Feito" e os atalhos em grade.
  */
 export default function Inicio() {
   const router = useRouter();
+  const { user } = useAuth();
 
   const { pets, petAtivo, definirPetAtivo, seniores } = usePets();
   const { lembretes, concluirLembrete } = useLembretes();
@@ -110,7 +108,6 @@ export default function Inicio() {
     }, []),
   );
   const { vacinas } = useVacinas();
-  const cidade = useCidade();
   const [ola] = useState(saudacao);
   const [limiteHoje] = useState(fimDeHoje);
   const [concluindo, setConcluindo] = useState<string | null>(null);
@@ -189,79 +186,71 @@ export default function Inicio() {
       .finally(() => setConcluindo(null));
   }
 
+  const dataHoje = new Date().toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' });
+  const dataTexto = dataHoje.charAt(0).toUpperCase() + dataHoje.slice(1);
+  const nomeTutor =
+    (typeof user?.user_metadata?.nome === 'string' && user.user_metadata.nome.trim().split(' ')[0]) ||
+    (typeof user?.user_metadata?.full_name === 'string' && user.user_metadata.full_name.trim().split(' ')[0]) ||
+    '';
+  const coresAtivo = petAtivo ? coresDoPet(petAtivo, Math.max(0, pets.findIndex((p) => p.id === petAtivo.id))) : null;
+
   return (
     <ScrollView style={estilos.tela} contentContainerStyle={estilos.conteudo} showsVerticalScrollIndicator={false}>
-      <View style={estilos.heroi}>
-        <View style={estilos.cabecalho}>
-          <View style={estilos.local} accessibilityLabel={`Local: ${cidade}`}>
-            <IconeLocal size={18} />
-            <Text style={estilos.localNome} numberOfLines={1}>
-              {cidade}
-            </Text>
-          </View>
-          <View style={estilos.flex} />
-          <Tocavel
-            accessibilityRole="button"
-            accessibilityLabel={naoLidos > 0 ? `Avisos, ${naoLidos} ${naoLidos === 1 ? 'novo' : 'novos'}` : 'Avisos'}
-            onPress={() => router.push('/avisos/caixa')}
-            style={estilos.botaoRedondo}
-          >
-            <IconeSino />
-            {naoLidos > 0 ? <View style={estilos.pontoSino} /> : null}
-          </Tocavel>
-          <Tocavel
-            accessibilityRole="button"
-            accessibilityLabel="Perfil"
-            onPress={() => router.navigate('/perfil')}
-            style={[estilos.botaoRedondo, estilos.botaoPerfil]}
-          >
-            <IconePerfil />
-          </Tocavel>
+      <View style={estilos.cabecalho}>
+        <View style={estilos.flex}>
+          <Text style={estilos.data} numberOfLines={1}>{dataTexto}</Text>
+          <Text style={estilos.titulo} numberOfLines={1} accessibilityRole="header">
+            {nomeTutor ? `${ola}, ${nomeTutor}` : ola}
+          </Text>
         </View>
-
-        <Text style={estilos.ola}>{ola}</Text>
-        <Text style={estilos.titulo} numberOfLines={1}>
-          {petAtivo ? `Como está ${petAtivo.sexo === 'femea' ? 'a' : 'o'} ${petAtivo.nome}?` : 'Olá!'}
-        </Text>
-
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          style={estilos.petsRolagem}
-          contentContainerStyle={estilos.pets}
+        <Tocavel
+          accessibilityRole="button"
+          accessibilityLabel={naoLidos > 0 ? `Avisos, ${naoLidos} ${naoLidos === 1 ? 'novo' : 'novos'}` : 'Avisos'}
+          onPress={() => router.push('/avisos/caixa')}
+          style={estilos.botaoRedondo}
         >
-          {pets.map((pet) => {
-            const ativo = pet.id === petAtivo?.id;
-            return (
-              <Tocavel
-                key={pet.id}
-                accessibilityRole="button"
-                accessibilityState={{ selected: ativo }}
-                accessibilityLabel={ativo ? `Abrir ${pet.nome}` : `Mostrar ${pet.nome}`}
-                onPress={() =>
-                  ativo
-                    ? router.push({ pathname: '/pet/[id]', params: { id: pet.id } })
-                    : definirPetAtivo(pet.id)
-                }
-                style={[estilos.petChip, ativo ? estilos.petChipAtivo : estilos.petChipInativo]}
-              >
-                <AvatarPet especie={pet.especie} foto={pet.foto_url} size={30} />
-                <Text style={[estilos.petNome, ativo && estilos.petNomeAtivo]}>{pet.nome}</Text>
-                {seniores.has(pet.id) ? <Text style={estilos.etiquetaSenior}>Sênior</Text> : null}
-              </Tocavel>
-            );
-          })}
-          <Tocavel
-            accessibilityRole="button"
-            accessibilityLabel="Adicionar pet"
-            onPress={() => router.push('/pet/novo')}
-            style={estilos.petMais}
-          >
-            <Icone nome="cruz" size={16} espessura={2.6} />
-          </Tocavel>
-        </ScrollView>
-
+          <IconeSino size={22} />
+          {naoLidos > 0 ? <View style={estilos.pontoSino} /> : null}
+        </Tocavel>
       </View>
+
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        style={estilos.petsRolagem}
+        contentContainerStyle={estilos.pets}
+      >
+        {pets.map((pet) => {
+          const ativo = pet.id === petAtivo?.id;
+          return (
+            <Tocavel
+              key={pet.id}
+              accessibilityRole="button"
+              accessibilityState={{ selected: ativo }}
+              accessibilityLabel={ativo ? `Abrir ${pet.nome}` : `Mostrar ${pet.nome}`}
+              onPress={() =>
+                ativo
+                  ? router.push({ pathname: '/pet/[id]', params: { id: pet.id } })
+                  : definirPetAtivo(pet.id)
+              }
+              style={[estilos.petChip, ativo ? estilos.petChipAtivo : estilos.petChipInativo]}
+            >
+              <AvatarPet especie={pet.especie} foto={pet.foto_url} size={32} />
+              <Text style={[estilos.petNome, ativo && estilos.petNomeAtivo]}>{pet.nome}</Text>
+              {seniores.has(pet.id) ? <Text style={estilos.etiquetaSenior}>Sênior</Text> : null}
+            </Tocavel>
+          );
+        })}
+        <Tocavel
+          accessibilityRole="button"
+          accessibilityLabel="Adicionar pet"
+          onPress={() => router.push('/pet/novo')}
+          style={[estilos.petChip, estilos.petChipInativo, estilos.petMais]}
+        >
+          <Icone nome="cruz" size={16} espessura={2.2} />
+          <Text style={estilos.petNome}>Adicionar</Text>
+        </Tocavel>
+      </ScrollView>
 
       <View style={estilos.corpo}>
         <AvisoOffline />
@@ -269,108 +258,83 @@ export default function Inicio() {
           <Surgir indice={0}>
             <Tocavel
               accessibilityRole="button"
-              accessibilityLabel={proxima ? `Próxima vacina: ${textoProximaVacina(proxima)}. Registrar` : 'Registrar vacina'}
-              onPress={() => router.push({ pathname: '/pet/[id]/vacina/nova', params: { id: petAtivo.id } })}
-              escala={0.97}
-              style={estilos.vacina}
+              accessibilityLabel={`Abrir ${petAtivo.nome}`}
+              onPress={() => router.push({ pathname: '/pet/[id]', params: { id: petAtivo.id } })}
+              escala={0.98}
+              style={[estilos.destaque, { backgroundColor: coresAtivo?.fundo ?? colors.primarySurface }]}
             >
-              <View style={estilos.flex}>
-                <Text style={estilos.vacinaRotulo}>{proxima ? 'Próxima vacina' : 'Vacinas'}</Text>
-                <Text style={estilos.vacinaTitulo} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.7}>
-                  {proxima ? textoProximaVacina(proxima) : 'Nenhuma dose agendada'}
-                </Text>
-                {proxima ? (
-                  <View style={estilos.vacinaBarra}>
-                    <BarraProgresso
-                      fracao={proxima.fracao}
-                      cor={colors.healthText}
-                      fundo={colors.healthSurface}
-                      altura={6}
-                    />
-                  </View>
-                ) : null}
-              </View>
-              <View style={estilos.vacinaBotao}>
-                <Text style={estilos.vacinaBotaoTexto}>Registrar</Text>
+              {petAtivo.foto_url ? (
+                <Image source={{ uri: petAtivo.foto_url }} style={estilos.destaqueFoto} accessibilityLabel={`Foto de ${petAtivo.nome}`} />
+              ) : (
+                <View style={estilos.destaqueMascote}>
+                  <Mascote especie={petAtivo.especie} size={210} recorte />
+                </View>
+              )}
+              <Gradiente de={colors.black} ate={colors.black} opacidadeDe={0} opacidadeAte={0.72} />
+              <View style={estilos.destaqueRodape}>
+                <View style={estilos.flex}>
+                  {proxima ? (
+                    <Text style={estilos.destaqueSelo} numberOfLines={1}>{seloProximaVacina(proxima)}</Text>
+                  ) : antirrabicaEmDia(vacinas) ? (
+                    <Text style={[estilos.destaqueSelo, estilos.destaqueSeloOk]}>Antirrábica em dia</Text>
+                  ) : null}
+                  <Text style={estilos.destaqueTitulo} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.75}>
+                    {proxima ? textoProximaVacina(proxima) : `Vacinas ${petAtivo.sexo === 'femea' ? 'da' : 'do'} ${nomePet}`}
+                  </Text>
+                </View>
+                <Tocavel
+                  accessibilityRole="button"
+                  accessibilityLabel="Registrar vacina"
+                  onPress={() => router.push({ pathname: '/pet/[id]/vacina/nova', params: { id: petAtivo.id } })}
+                  style={estilos.registrar}
+                >
+                  <Text style={estilos.registrarTexto}>Registrar</Text>
+                </Tocavel>
               </View>
             </Tocavel>
           </Surgir>
         ) : null}
 
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          style={estilos.atalhosRolagem}
-          contentContainerStyle={estilos.atalhos}
-          accessibilityLabel="Atalhos"
-        >
-          {ATALHOS.map((atalho, i) => (
-            <Fragment key={atalho.nome}>
-            {i === 4 ? <View style={estilos.atalhosDivisor} /> : null}
-            <Surgir indice={Math.min(i, 4)}>
-              <Tocavel
-                accessibilityRole="button"
-                onPress={() => router.push(typeof atalho.destino === 'object' && 'pet' in atalho.destino
-                  ? petAtivo ? `/pet/${petAtivo.id}/${atalho.destino.pet}` as Href : '/pet/novo'
-                  : atalho.destino)}
-                style={[estilos.atalho, i >= 4 && estilos.atalhoSecundario]}
-              >
-                <View style={[estilos.atalhoIcone, i >= 4 && estilos.atalhoIconeSecundario, { backgroundColor: atalho.fundo }]}>
-                  <Icone nome={atalho.icone} size={i < 4 ? 26 : 20} cor={atalho.cor} espessura={2} />
-                </View>
-                <Text
-                  style={[estilos.atalhoTexto, i >= 4 && estilos.atalhoTextoSecundario]}
-                  numberOfLines={atalho.nome.includes(' ') ? 2 : 1}
-                  adjustsFontSizeToFit
-                  minimumFontScale={0.8}
-                >
-                  {atalho.nome}
-                </Text>
-              </Tocavel>
-            </Surgir>
-            </Fragment>
-          ))}
-        </ScrollView>
-
         <View style={estilos.secao}>
           <Text style={estilos.secaoTitulo}>Hoje</Text>
           <Pressable accessibilityRole="button" hitSlop={8} onPress={() => router.push('/lembretes')}>
-            <Text style={estilos.secaoAcao}>Ver todos ›</Text>
+            <Text style={estilos.secaoAcao}>Ver tudo</Text>
           </Pressable>
         </View>
 
-        <View style={estilos.hoje}>
+        <View style={estilos.lista}>
           {hoje.length === 0 ? (
             <Tocavel
               accessibilityRole="button"
               accessibilityLabel="Nada para hoje. Criar lembrete"
               onPress={() => router.push('/lembretes/novo')}
-              style={[estilos.lembrete, estilos.lembreteVazio]}
+              style={estilos.linha}
             >
-              <View style={estilos.lembreteIcone}>
-                <Icone nome="check" size={18} espessura={2.2} />
+              <View style={[estilos.linhaIcone, { backgroundColor: colors.successSurface }]}>
+                <Icone nome="check" size={20} cor={colors.successText} espessura={2.2} />
               </View>
               <View style={estilos.flex}>
-                <Text style={estilos.lembreteTitulo}>Nada para hoje</Text>
-                <Text style={[estilos.lembreteSub, { color: colors.textMuted }]}>Toque para criar um lembrete</Text>
+                <Text style={estilos.linhaTitulo}>Nada para hoje</Text>
+                <Text style={estilos.linhaSub}>Toque para criar um lembrete</Text>
               </View>
+              <Icone nome="seta" size={18} cor={colors.textMuted} />
             </Tocavel>
           ) : (
             hoje.map((item, i) => {
-              const cores = PALETA_HOJE[i % PALETA_HOJE.length];
               const pet = item.tipo === 'dose' ? petAtivo : pets.find((p) => p.id === item.lembrete.pet_id);
               const quando = quandoHoje(item.quando);
+              const saude = item.tipo === 'dose' || item.icone === 'vacina' || item.icone === 'capsula';
               return (
                 <Surgir key={item.chave} indice={i}>
-                  <View style={[estilos.lembrete, { backgroundColor: cores.fundo }]}>
-                    <View style={estilos.lembreteIcone}>
-                      <Icone nome={item.icone} size={18} />
+                  <View style={[estilos.linha, i > 0 && estilos.divisoria]}>
+                    <View style={[estilos.linhaIcone, { backgroundColor: saude ? colors.healthSurface : colors.premiumSurface }]}>
+                      <Icone nome={item.icone} size={20} cor={saude ? colors.healthText : colors.premiumText} />
                     </View>
                     <View style={estilos.flex}>
-                      <Text style={estilos.lembreteTitulo} numberOfLines={1}>
+                      <Text style={estilos.linhaTitulo} numberOfLines={1}>
                         {item.titulo}
                       </Text>
-                      <Text style={[estilos.lembreteSub, { color: cores.texto }]} numberOfLines={1}>
+                      <Text style={estilos.linhaSub} numberOfLines={1}>
                         {pet ? `${pet.nome} · ${quando}` : quando}
                       </Text>
                     </View>
@@ -379,9 +343,8 @@ export default function Inicio() {
                       accessibilityLabel={`Marcar ${item.titulo} como feito`}
                       disabled={concluindo !== null}
                       onPress={() => feito(item)}
-                      style={[estilos.feito, estilos.feitoClaro]}
+                      style={estilos.feito}
                     >
-                      <Icone nome="check" size={18} espessura={2.4} />
                       <Text style={estilos.feitoTexto}>Feito</Text>
                     </Tocavel>
                   </View>
@@ -391,68 +354,27 @@ export default function Inicio() {
           )}
         </View>
 
-        {petAtivo ? (
-          <Surgir indice={2} style={estilos.carteirinha}>
-            <Gradiente de={colors.hero} ate={colors.premiumSurface} />
-            <Tocavel
-              accessibilityRole="button"
-              accessibilityLabel={`Carteirinha de ${nomePet}`}
-              onPress={() => router.push({ pathname: '/pet/[id]/carteirinha', params: { id: petAtivo.id } })}
-              escala={0.98}
-              style={estilos.carteirinhaTopo}
-            >
-              <View style={estilos.carteirinhaAvatar}>
-                <AvatarPet especie={petAtivo.especie} foto={petAtivo.foto_url} size={46} />
-              </View>
-              <View style={estilos.flex}>
-                <Text style={estilos.carteirinhaTitulo} numberOfLines={1}>
-                  Carteirinha {petAtivo.sexo === 'femea' ? 'da' : 'do'} {petAtivo.nome}
-                </Text>
-                <View style={estilos.carteirinhaSelos}>
-                  {proxima ? (
-                    <Text style={[estilos.selo, estilos.seloBranco]}>{seloProximaVacina(proxima)}</Text>
-                  ) : null}
-                  {antirrabicaEmDia(vacinas) ? (
-                    <Text style={[estilos.selo, estilos.seloVerde]}>Antirrábica ok</Text>
-                  ) : null}
+        <Text style={[estilos.secaoTitulo, estilos.atalhosTitulo]}>Atalhos</Text>
+        <View style={estilos.atalhos}>
+          {ATALHOS.map((atalho, i) => (
+            <Surgir key={atalho.nome} indice={Math.min(i, 5)} style={estilos.atalhoCelula}>
+              <Tocavel
+                accessibilityRole="button"
+                onPress={() => router.push(typeof atalho.destino === 'object' && 'pet' in atalho.destino
+                  ? petAtivo ? `/pet/${petAtivo.id}/${atalho.destino.pet}` as Href : '/pet/novo'
+                  : atalho.destino)}
+                style={[estilos.atalho, { backgroundColor: atalho.fundo }]}
+              >
+                <View style={estilos.atalhoIcone}>
+                  <Icone nome={atalho.icone} size={22} cor={atalho.cor ?? colors.black} espessura={2} />
                 </View>
-              </View>
-              <Icone nome="seta" size={16} espessura={2} />
-            </Tocavel>
-
-            <View style={estilos.carteirinhaAcoes}>
-              <Tocavel
-                accessibilityRole="button"
-                accessibilityLabel={`Escanear cartão de vacina de ${petAtivo.nome}`}
-                onPress={() => router.push(`/pet/${petAtivo.id}/documentos-saude`)}
-                estiloExterno={estilos.flex}
-                style={estilos.acao}
-              >
-                <Icone nome="camera" size={16} espessura={1.9} />
-                <Text style={estilos.acaoTexto}>Escanear</Text>
+                <Text style={estilos.atalhoTexto} numberOfLines={1}>
+                  {atalho.nome}
+                </Text>
               </Tocavel>
-              <Tocavel
-                accessibilityRole="button"
-                onPress={() => router.push({ pathname: '/pet/[id]/medicamentos', params: { id: petAtivo.id } })}
-                estiloExterno={estilos.flex}
-                style={estilos.acao}
-              >
-                <Icone nome="capsula" size={16} espessura={1.9} />
-                <Text style={estilos.acaoTexto}>Remédios</Text>
-              </Tocavel>
-              <Tocavel
-                accessibilityRole="button"
-                accessibilityLabel={`Enviar a carteirinha de ${petAtivo.nome}`}
-                onPress={() => router.push(`/pet/${petAtivo.id}/compartilhar`)}
-                estiloExterno={estilos.flex}
-                style={estilos.acao}
-              >
-                <Icone nome="compartilhar" size={16} espessura={1.9} />
-                <Text style={estilos.acaoTexto}>Enviar</Text>
-              </Tocavel>
-            </View>
-          </Surgir>
-        ) : null}
+            </Surgir>
+          ))}
+        </View>
       </View>
 
       {/* Espaço para o menu inferior flutuante não cobrir o conteúdo. */}
@@ -465,28 +387,13 @@ const estilos = StyleSheet.create({
   tela: { flex: 1, backgroundColor: colors.background },
   conteudo: { paddingBottom: 24 },
   flex: { flex: 1, minWidth: 0 },
-  // Versão 2: o topo é o próprio fundo da tela, sem o azul e a onda.
-  heroi: {
-    paddingTop: 50,
-    paddingBottom: 18,
-  },
-  cabecalho: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingHorizontal: 24 },
-  local: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    height: 44,
-    maxWidth: 182,
-    borderRadius: 22,
-    backgroundColor: colors.white,
-    paddingHorizontal: 14,
-    ...shadow.card,
-  },
-  localNome: { flexShrink: 1, fontFamily: fontFamily.bold, fontSize: 13, color: colors.black },
+  cabecalho: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingHorizontal: 24, paddingTop: 60 },
+  data: { fontFamily: fontFamily.semiBold, fontSize: 13, color: colors.textMuted },
+  titulo: { fontFamily: fontFamily.bold, fontSize: 28, lineHeight: 34, letterSpacing: -0.9, color: colors.black },
   botaoRedondo: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
+    width: 46,
+    height: 46,
+    borderRadius: 23,
     backgroundColor: colors.white,
     alignItems: 'center',
     justifyContent: 'center',
@@ -494,167 +401,70 @@ const estilos = StyleSheet.create({
   },
   pontoSino: {
     position: 'absolute',
-    right: 9,
-    top: 9,
+    right: 10,
+    top: 10,
     width: 10,
     height: 10,
     borderRadius: 5,
-    backgroundColor: '#D93B5A',
+    backgroundColor: colors.healthText,
     borderWidth: 2,
     borderColor: colors.white,
   },
-  botaoPerfil: { backgroundColor: colors.white },
-  ola: { fontFamily: fontFamily.semiBold, fontSize: 13, lineHeight: 18, color: colors.textMuted, marginTop: 18, paddingHorizontal: 24 },
-  titulo: {
-    fontFamily: fontFamily.bold,
-    fontSize: 30,
-    lineHeight: 36,
-    letterSpacing: -1,
-    color: colors.black,
-    marginTop: 0,
-    paddingHorizontal: 24,
-  },
-  petsRolagem: { marginTop: 10, flexGrow: 0 },
-  pets: { gap: 8, paddingHorizontal: 24 },
+  petsRolagem: { marginTop: 16, flexGrow: 0 },
+  pets: { gap: 8, paddingHorizontal: 24, paddingVertical: 4 },
   petChip: {
-    height: 40,
-    borderRadius: 20,
+    height: 44,
+    borderRadius: 22,
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
-    paddingLeft: 5,
-    paddingRight: 14,
+    paddingLeft: 6,
+    paddingRight: 16,
   },
   petChipAtivo: { backgroundColor: colors.black },
   petChipInativo: { backgroundColor: colors.white, ...shadow.card },
-  petNome: { fontFamily: fontFamily.bold, fontSize: 13, color: colors.black },
-  etiquetaSenior: { fontFamily: fontFamily.bold, fontSize: 10, color: '#8A6414', backgroundColor: '#FFF0C9', borderRadius: 999, overflow: 'hidden', paddingVertical: 2, paddingHorizontal: 7 },
+  petMais: { paddingLeft: 14 },
+  petNome: { fontFamily: fontFamily.bold, fontSize: 14, color: colors.black },
   petNomeAtivo: { color: colors.white },
-  petMais: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: colors.white,
-    alignItems: 'center',
-    justifyContent: 'center',
-    ...shadow.card,
-  },
-  corpo: { paddingHorizontal: 24, gap: 12 },
-  vacina: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-    backgroundColor: colors.white,
-    borderRadius: 28,
-    paddingVertical: 14,
-    paddingRight: 14,
-    paddingLeft: 20,
-    shadowColor: '#111111',
-    shadowOffset: { width: 0, height: 12 },
-    shadowOpacity: 0.10,
-    shadowRadius: 17,
-    elevation: 4,
-  },
-  vacinaRotulo: { fontFamily: fontFamily.semiBold, fontSize: 12, color: colors.healthText },
-  vacinaTitulo: { fontFamily: fontFamily.bold, fontSize: 20, letterSpacing: -0.2, color: colors.black, marginTop: 2 },
-  vacinaBarra: { marginTop: 8 },
-  vacinaBotao: {
-    height: 44,
-    paddingHorizontal: 18,
-    borderRadius: 22,
-    backgroundColor: colors.black,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  vacinaBotaoTexto: { fontFamily: fontFamily.bold, fontSize: 13, color: colors.white },
-  atalhosRolagem: { marginHorizontal: -24, flexGrow: 0 },
-  atalhos: { gap: 6, paddingHorizontal: 24, paddingBottom: 2, alignItems: 'flex-start' },
-  atalho: {
-    width: 72,
-    alignItems: 'center',
-    gap: 7,
-  },
-  atalhoSecundario: { width: 66, gap: 5, paddingTop: 8 },
-  atalhosDivisor: { width: 1, height: 60, backgroundColor: colors.border, marginHorizontal: 8, marginTop: 10 },
-  atalhoIcone: {
-    width: 68,
-    height: 68,
-    borderRadius: 24,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  atalhoIconeSecundario: { width: 48, height: 48, borderRadius: 18 },
-  atalhoTexto: { fontFamily: fontFamily.bold, fontSize: 13, color: colors.black, textAlign: 'center' },
-  atalhoTextoSecundario: { fontFamily: fontFamily.semiBold, fontSize: 12, color: colors.textMuted },
-  secao: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'baseline', marginTop: 2 },
-  secaoTitulo: { fontFamily: fontFamily.bold, fontSize: 16, color: colors.black },
-  secaoAcao: { fontFamily: fontFamily.semiBold, fontSize: 12, color: colors.textMuted },
-  hoje: { gap: 8 },
-  lembrete: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-    borderRadius: 24,
-    paddingVertical: 8,
-    paddingRight: 8,
-    paddingLeft: 12,
-  },
-  lembreteVazio: { backgroundColor: colors.background, minHeight: 60 },
-  lembreteIcone: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: colors.white,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  lembreteTitulo: { fontFamily: fontFamily.bold, fontSize: 14, color: colors.black },
-  lembreteSub: { fontFamily: fontFamily.regular, fontSize: 12 },
-  feito: {
-    height: 44,
-    borderRadius: 22,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    paddingLeft: 12,
-    paddingRight: 16,
-  },
-  feitoDestaque: { backgroundColor: colors.black },
-  feitoClaro: { backgroundColor: colors.white },
-  feitoTexto: { fontFamily: fontFamily.bold, fontSize: 14, color: colors.black },
-  feitoTextoDestaque: { color: colors.white },
-  carteirinha: {
-    borderRadius: 28,
-    padding: 12,
-    gap: 10,
-    overflow: 'hidden',
-  },
-  carteirinhaTopo: { flexDirection: 'row', alignItems: 'center', gap: 10 },
-  carteirinhaAvatar: { width: 46, height: 46, borderRadius: 23, backgroundColor: colors.white, overflow: 'hidden' },
-  carteirinhaTitulo: { fontFamily: fontFamily.bold, fontSize: 15, color: colors.black },
-  carteirinhaSelos: { flexDirection: 'row', flexWrap: 'wrap', gap: 6, marginTop: 4 },
-  selo: {
+  etiquetaSenior: { fontFamily: fontFamily.bold, fontSize: 10, color: colors.warningText, backgroundColor: colors.warningSurface, borderRadius: 999, overflow: 'hidden', paddingVertical: 2, paddingHorizontal: 7 },
+  corpo: { paddingHorizontal: 20, gap: 12, marginTop: 12 },
+  // Versão 2: o pet ativo em foto grande, com a próxima vacina por cima.
+  destaque: { height: 210, borderRadius: 28, overflow: 'hidden', justifyContent: 'flex-end' },
+  destaqueFoto: { position: 'absolute', left: 0, right: 0, top: 0, bottom: 0, width: '100%', height: '100%' },
+  destaqueMascote: { position: 'absolute', left: 0, right: 0, bottom: 0, alignItems: 'center' },
+  destaqueRodape: { flexDirection: 'row', alignItems: 'flex-end', gap: 12, padding: 18 },
+  destaqueSelo: {
+    alignSelf: 'flex-start',
     fontFamily: fontFamily.bold,
-    fontSize: 11,
+    fontSize: 12,
+    color: colors.healthText,
+    backgroundColor: colors.healthSurface,
     borderRadius: 999,
     overflow: 'hidden',
-    paddingHorizontal: 9,
-    paddingVertical: 3,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    marginBottom: 6,
   },
-  seloBranco: { backgroundColor: colors.white, color: colors.black },
-  seloVerde: { backgroundColor: colors.successSurface, color: '#1F6B45' },
-  carteirinhaAcoes: { flexDirection: 'row', gap: 6 },
-  acao: {
-    height: 44,
-    borderRadius: 22,
-    backgroundColor: colors.white,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 5,
-  },
-  acaoEscura: { backgroundColor: colors.black },
-  acaoTexto: { fontFamily: fontFamily.bold, fontSize: 12, color: colors.black },
-  acaoTextoEscuro: { color: colors.white },
-  respiro: { height: 90 },
+  destaqueSeloOk: { color: colors.successText, backgroundColor: colors.successSurface },
+  destaqueTitulo: { fontFamily: fontFamily.bold, fontSize: 24, lineHeight: 29, letterSpacing: -0.6, color: colors.white },
+  registrar: { height: 44, paddingHorizontal: 18, borderRadius: 22, backgroundColor: colors.primary, justifyContent: 'center' },
+  registrarTexto: { fontFamily: fontFamily.bold, fontSize: 14, color: colors.black },
+  secao: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'baseline', marginTop: 10, marginHorizontal: 4 },
+  secaoTitulo: { fontFamily: fontFamily.bold, fontSize: 18, color: colors.black },
+  secaoAcao: { fontFamily: fontFamily.bold, fontSize: 13, color: colors.primaryDeep },
+  lista: { backgroundColor: colors.surface, borderRadius: 24, overflow: 'hidden', ...shadow.card },
+  linha: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingHorizontal: 16, paddingVertical: 14 },
+  divisoria: { borderTopWidth: 1, borderTopColor: colors.border },
+  linhaIcone: { width: 42, height: 42, borderRadius: 14, alignItems: 'center', justifyContent: 'center' },
+  linhaTitulo: { fontFamily: fontFamily.bold, fontSize: 15, color: colors.black },
+  linhaSub: { fontFamily: fontFamily.regular, fontSize: 13, color: colors.textMuted, marginTop: 1 },
+  feito: { height: 38, paddingHorizontal: 16, borderRadius: 19, backgroundColor: colors.black, justifyContent: 'center' },
+  feitoTexto: { fontFamily: fontFamily.bold, fontSize: 13, color: colors.white },
+  atalhosTitulo: { marginTop: 10, marginHorizontal: 4 },
+  atalhos: { flexDirection: 'row', flexWrap: 'wrap', marginHorizontal: -5 },
+  atalhoCelula: { width: '50%', padding: 5 },
+  atalho: { height: 96, borderRadius: 24, padding: 14, justifyContent: 'space-between' },
+  atalhoIcone: { width: 40, height: 40, borderRadius: 14, backgroundColor: colors.white, alignItems: 'center', justifyContent: 'center' },
+  atalhoTexto: { fontFamily: fontFamily.bold, fontSize: 15, color: colors.black },
+  respiro: { height: 110 },
 });

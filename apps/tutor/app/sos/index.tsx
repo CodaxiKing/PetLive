@@ -12,11 +12,21 @@ import {
   View,
 } from 'react-native';
 import { router } from 'expo-router';
+import { ArrowLeft } from 'phosphor-react-native/src/icons/ArrowLeft';
+import { Camera } from 'phosphor-react-native/src/icons/Camera';
+import { CaretRight } from 'phosphor-react-native/src/icons/CaretRight';
+import { FirstAidKit } from 'phosphor-react-native/src/icons/FirstAidKit';
+import { Flask } from 'phosphor-react-native/src/icons/Flask';
+import { NavigationArrow } from 'phosphor-react-native/src/icons/NavigationArrow';
+import { PencilSimple } from 'phosphor-react-native/src/icons/PencilSimple';
+import { Phone } from 'phosphor-react-native/src/icons/Phone';
+import { Stethoscope } from 'phosphor-react-native/src/icons/Stethoscope';
 import { BotaoPrimario } from '../../src/components/BotaoPrimario';
 import { Campo } from '../../src/components/Campo';
-import { HeroiOnda } from '../../src/components/HeroiOnda';
-import { Icone } from '../../src/components/Icone';
-import { LinhaIcone } from '../../src/components/LinhaIcone';
+import { BotaoRedondo } from '../../src/components/Layout';
+import { voltarOuInicio } from '../../src/lib/voltar';
+import { AvatarPet } from '../../src/pets/AvatarPet';
+import { usePets } from '../../src/pets/PetsProvider';
 import { useRecurso } from '../../src/lib/configApp';
 import { registrarEvento } from '../../src/lib/eventos';
 import { ligarPara, tracarRota } from '../../src/mapa/acoes';
@@ -32,21 +42,20 @@ import {
   type ResultadoEmergencia,
 } from '../../src/sos/emergencia';
 import { colors } from '../../src/theme/colors';
-import { spacing } from '../../src/theme/tokens';
-import { typography } from '../../src/theme/typography';
-
-const ROSA = '#FDE0E6';
-const ROSA_TEXTO = '#A3324F';
+import { shadow, spacing } from '../../src/theme/tokens';
+import { fontFamily, typography } from '../../src/theme/typography';
 
 /**
- * SOS (tela 46, protótipo SOS; board P1 "Tela SOS com a clínica 24 h mais
- * perto, ligar e rota"). Só o essencial: a clínica 24 h mais perto, os
- * guias offline e o veterinário do pet. Ligar fica sempre à vista no
- * rodapé. Sem sinal, mostra a última clínica 24 h guardada no aparelho.
+ * SOS (versão 2 do protótipo, SOS; board P1 "Tela SOS com a clínica 24 h
+ * mais perto, ligar e rota"). Só o essencial: o cartão vermelho da clínica
+ * 24 h mais perto com Ligar agora e Rota, enviar a ficha do pet e, em
+ * "Enquanto isso", os guias offline e o veterinário do pet. Sem sinal,
+ * mostra a última clínica 24 h guardada no aparelho.
  */
 export default function Sos() {
   // Achei um pet por foto: começa desligado até a equipe medir a precisão (BUSINESS.md 5.38).
   const acheiFoto = useRecurso('achei_foto', false);
+  const { pets, petAtivo } = usePets();
   const [clinica, setClinica] = useState<ClinicaEmergencia | null>(null);
   const [buscando, setBuscando] = useState(true);
   const [semLocalizacao, setSemLocalizacao] = useState(false);
@@ -118,19 +127,28 @@ export default function Sos() {
     clinica?.confirmada24h ? 'Aberta 24 h' : null,
   ].filter(Boolean);
 
+  const nomePet = petAtivo?.nome ?? pets[0]?.nome;
+  const fotoPet = petAtivo ?? pets[0] ?? null;
+
   return (
     <View style={estilos.tela}>
-      <HeroiOnda fundo={ROSA} subtitulo="Emergência" titulo="SOS" selo="Funciona sem internet" />
-
       <ScrollView contentContainerStyle={estilos.conteudo} showsVerticalScrollIndicator={false}>
+        <View style={estilos.topo}>
+          <BotaoRedondo acessibilidade="Voltar" onPress={voltarOuInicio}>
+            <ArrowLeft size={22} color={colors.black} />
+          </BotaoRedondo>
+          <Text style={estilos.titulo} accessibilityRole="header">Emergência</Text>
+          <Text style={estilos.offline}>Funciona sem internet</Text>
+        </View>
+
         <View style={estilos.cartaoClinica} accessibilityLiveRegion="polite">
           <Text style={estilos.cartaoRotulo}>
-            {clinica && !clinica.confirmada24h ? 'Clínica mais perto' : 'Clínica 24 h mais perto'}
+            {clinica && !clinica.confirmada24h ? 'Clínica mais perto · confirme por telefone' : 'Clínica 24 h mais perto'}
           </Text>
 
           {buscando ? (
             <View style={estilos.buscando}>
-              <ActivityIndicator color={ROSA_TEXTO} />
+              <ActivityIndicator color={colors.white} />
               <Text style={estilos.detalhe}>Procurando a clínica mais perto…</Text>
             </View>
           ) : clinica ? (
@@ -143,41 +161,37 @@ export default function Sos() {
                   {new Date(clinica.consultadaEm).toLocaleDateString('pt-BR')}
                 </Text>
               ) : null}
-              <View style={estilos.chips}>
-                {clinica.confirmada24h ? (
-                  <Text style={[estilos.chip, estilos.chipVerde]}>Atende 24 h</Text>
-                ) : (
-                  <Text style={[estilos.chip, estilos.chipAmarelo]}>Confirme por telefone</Text>
-                )}
-                <Pressable
-                  accessibilityRole="button"
-                  onPress={() => rota(clinica.lugar)}
-                  hitSlop={6}
-                >
-                  <Text style={[estilos.chip, estilos.chipCinza]}>Rota</Text>
-                </Pressable>
-                <Pressable
-                  accessibilityRole="button"
-                  onPress={() =>
-                    router.push({
-                      pathname: '/ficha/enviar',
-                      params: { lugar: clinica.lugar.id, nome: clinica.lugar.nome, telefone: telefoneClinica ?? '' },
-                    })
-                  }
-                  hitSlop={6}
-                >
-                  <Text style={[estilos.chip, estilos.chipCinza]}>Enviar ficha</Text>
-                </Pressable>
-                {clinica.doAparelho ? null : (
+              <View style={estilos.acoes}>
+                {telefoneClinica ? (
                   <Pressable
                     accessibilityRole="button"
-                    onPress={() => router.push({ pathname: '/lugar', params: { id: clinica.lugar.id } })}
-                    hitSlop={6}
+                    accessibilityLabel={clinica.confirmada24h ? 'Ligar para a clínica 24 h' : 'Ligar para a clínica'}
+                    onPress={() => ligar(telefoneClinica, 'clinica')}
+                    style={({ pressed }) => [estilos.ligar, pressed && { opacity: 0.85 }]}
                   >
-                    <Text style={[estilos.chip, estilos.chipCinza]}>Ver ficha</Text>
+                    <Phone size={20} color={colors.emergency} weight="fill" />
+                    <Text style={estilos.ligarTexto}>Ligar agora</Text>
                   </Pressable>
-                )}
+                ) : null}
+                <Pressable
+                  accessibilityRole="button"
+                  accessibilityLabel="Traçar rota até a clínica"
+                  onPress={() => rota(clinica.lugar)}
+                  style={({ pressed }) => [estilos.rota, !telefoneClinica && estilos.rotaSozinha, pressed && { opacity: 0.85 }]}
+                >
+                  <NavigationArrow size={18} color={colors.white} />
+                  <Text style={estilos.rotaTexto}>Rota</Text>
+                </Pressable>
               </View>
+              {clinica.doAparelho ? null : (
+                <Pressable
+                  accessibilityRole="link"
+                  onPress={() => router.push({ pathname: '/lugar', params: { id: clinica.lugar.id } })}
+                  hitSlop={6}
+                >
+                  <Text style={estilos.verFicha}>Ver a ficha da clínica</Text>
+                </Pressable>
+              )}
             </>
           ) : (
             <Text style={estilos.detalhe}>
@@ -208,69 +222,83 @@ export default function Sos() {
           ) : null}
         </View>
 
-        <LinhaIcone
-          icone={<Icone nome="cruz" />}
-          rotulo="Primeiros socorros"
-          valor="Passo a passo para agir agora"
-          fundo="#FFF0C9"
-          onPress={() => router.push('/sos/primeiros-socorros')}
-        />
-        <LinhaIcone
-          icone={<Icone nome="frasco" />}
-          rotulo="O que intoxica o pet"
-          valor="Chocolate, uva, cebola e mais"
-          fundo="#FFF0C9"
-          onPress={() => router.push('/sos/intoxicacao')}
-        />
-        {acheiFoto ? (
-          <LinhaIcone
-            icone={<Icone nome="camera" />}
-            rotulo="Achei um pet"
-            valor="Compare a foto com alertas por perto"
-            fundo={colors.primarySurface}
-            onPress={() => router.push('/achei')}
-          />
+        {clinica ? (
+          <Pressable
+            accessibilityRole="button"
+            onPress={() =>
+              router.push({
+                pathname: '/ficha/enviar',
+                params: { lugar: clinica.lugar.id, nome: clinica.lugar.nome, telefone: telefoneClinica ?? '' },
+              })
+            }
+            style={({ pressed }) => [estilos.ficha, pressed && { opacity: 0.85 }]}
+          >
+            {fotoPet ? <AvatarPet especie={fotoPet.especie} foto={fotoPet.foto_url} size={46} /> : null}
+            <View style={estilos.flex}>
+              <Text style={estilos.linhaTitulo} numberOfLines={1}>
+                {nomePet ? `Enviar a ficha ${fotoPet?.sexo === 'femea' ? 'da' : 'do'} ${nomePet} à clínica` : 'Enviar a ficha à clínica'}
+              </Text>
+              <Text style={estilos.linhaSub} numberOfLines={1}>A equipe chega sabendo das alergias</Text>
+            </View>
+            <CaretRight size={18} color={colors.textMuted} />
+          </Pressable>
         ) : null}
-        <LinhaIcone
-          icone={<Icone nome="telefone" />}
-          rotulo="Meu veterinário"
-          valor={veterinario ? `Ligar para ${veterinario.nome}` : 'Adicionar o telefone'}
-          onPress={() => (veterinario ? ligar(veterinario.telefone, 'veterinario') : abrirEdicaoVet())}
-          direita={
-            veterinario ? (
-              <Pressable accessibilityRole="button" onPress={abrirEdicaoVet} hitSlop={10}>
-                <Text style={estilos.editar}>Editar</Text>
-              </Pressable>
-            ) : null
-          }
-        />
+
+        <Text style={estilos.secao}>Enquanto isso</Text>
+        <View style={estilos.lista}>
+          <Pressable accessibilityRole="button" onPress={() => router.push('/sos/primeiros-socorros')} style={({ pressed }) => [estilos.linha, pressed && { opacity: 0.6 }]}>
+            <View style={[estilos.linhaIcone, { backgroundColor: colors.warningSurface }]}><FirstAidKit size={20} color={colors.warningText} /></View>
+            <View style={estilos.flex}>
+              <Text style={estilos.linhaTitulo}>Primeiros socorros</Text>
+              <Text style={estilos.linhaSub}>Passo a passo, funciona sem internet</Text>
+            </View>
+            <CaretRight size={18} color={colors.textMuted} />
+          </Pressable>
+          <Pressable accessibilityRole="button" onPress={() => router.push('/sos/intoxicacao')} style={({ pressed }) => [estilos.linha, estilos.divisoria, pressed && { opacity: 0.6 }]}>
+            <View style={[estilos.linhaIcone, { backgroundColor: colors.warningSurface }]}><Flask size={20} color={colors.warningText} /></View>
+            <View style={estilos.flex}>
+              <Text style={estilos.linhaTitulo}>O que intoxica o pet</Text>
+              <Text style={estilos.linhaSub}>Chocolate, uva, cebola e mais</Text>
+            </View>
+            <CaretRight size={18} color={colors.textMuted} />
+          </Pressable>
+          {acheiFoto ? (
+            <Pressable accessibilityRole="button" onPress={() => router.push('/achei')} style={({ pressed }) => [estilos.linha, estilos.divisoria, pressed && { opacity: 0.6 }]}>
+              <View style={[estilos.linhaIcone, { backgroundColor: colors.primarySurface }]}><Camera size={20} color={colors.primaryDeep} /></View>
+              <View style={estilos.flex}>
+                <Text style={estilos.linhaTitulo}>Achei um pet</Text>
+                <Text style={estilos.linhaSub}>Compare a foto com alertas por perto</Text>
+              </View>
+              <CaretRight size={18} color={colors.textMuted} />
+            </Pressable>
+          ) : null}
+          <Pressable
+            accessibilityRole="button"
+            onPress={() => (veterinario ? ligar(veterinario.telefone, 'veterinario') : abrirEdicaoVet())}
+            style={({ pressed }) => [estilos.linha, estilos.divisoria, pressed && { opacity: 0.6 }]}
+          >
+            <View style={[estilos.linhaIcone, { backgroundColor: colors.background }]}><Stethoscope size={20} color={colors.textMuted} /></View>
+            <View style={estilos.flex}>
+              <Text style={estilos.linhaTitulo}>Meu veterinário</Text>
+              <Text style={estilos.linhaSub} numberOfLines={1}>{veterinario ? veterinario.nome : 'Adicionar o telefone'}</Text>
+            </View>
+            {veterinario ? (
+              <>
+                <Pressable accessibilityRole="button" accessibilityLabel="Editar o veterinário" onPress={abrirEdicaoVet} hitSlop={10}>
+                  <PencilSimple size={18} color={colors.textMuted} />
+                </Pressable>
+                <Phone size={20} color={colors.black} />
+              </>
+            ) : (
+              <CaretRight size={18} color={colors.textMuted} />
+            )}
+          </Pressable>
+        </View>
 
         <Text style={estilos.nota}>
-          Em emergência, vá à clínica. O app não substitui o atendimento veterinário.
+          O PetLive organiza informações e não substitui o atendimento veterinário. Em emergência, vá à clínica.
         </Text>
       </ScrollView>
-
-      <View style={estilos.rodape}>
-        {telefoneClinica ? (
-          <BotaoPrimario
-            titulo={clinica?.confirmada24h ? 'Ligar para a clínica 24 h' : 'Ligar para a clínica'}
-            icone={<Icone nome="telefone" size={22} />}
-            onPress={() => ligar(telefoneClinica, 'clinica')}
-          />
-        ) : clinica ? (
-          <BotaoPrimario
-            titulo="Traçar rota até a clínica"
-            icone={<Icone nome="rota" size={22} />}
-            onPress={() => rota(clinica.lugar)}
-          />
-        ) : veterinario ? (
-          <BotaoPrimario
-            titulo="Ligar para o veterinário"
-            icone={<Icone nome="telefone" size={22} />}
-            onPress={() => ligar(veterinario.telefone, 'veterinario')}
-          />
-        ) : null}
-      </View>
 
       <Modal visible={editandoVet} animationType="slide" transparent onRequestClose={() => setEditandoVet(false)}>
         <KeyboardAvoidingView
@@ -308,56 +336,88 @@ export default function Sos() {
 }
 
 const estilos = StyleSheet.create({
-  tela: { flex: 1, backgroundColor: colors.surface },
-  conteudo: { paddingHorizontal: 24, paddingBottom: spacing.lg, gap: 10 },
-  cartaoClinica: {
-    backgroundColor: ROSA,
-    borderRadius: 28,
-    paddingVertical: 16,
-    paddingHorizontal: 18,
-    gap: 10,
-  },
-  cartaoRotulo: { fontSize: 12, fontFamily: typography.h1.fontFamily, color: ROSA_TEXTO },
-  buscando: { flexDirection: 'row', alignItems: 'center', gap: 10 },
-  nomeClinica: {
-    fontSize: 22,
-    lineHeight: 27,
-    letterSpacing: -0.44,
-    fontFamily: typography.h3.fontFamily,
-    color: colors.black,
-  },
-  detalhe: { fontSize: 13, lineHeight: 18, fontFamily: typography.caption.fontFamily, color: colors.textMuted },
-  chips: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
-  chip: {
+  tela: { flex: 1, backgroundColor: colors.background },
+  flex: { flex: 1, minWidth: 0 },
+  conteudo: { paddingHorizontal: 20, paddingTop: 56, paddingBottom: 40, gap: 12 },
+  topo: { flexDirection: 'row', alignItems: 'center', gap: 12, marginBottom: 4 },
+  titulo: { flex: 1, fontFamily: fontFamily.bold, fontSize: 28, letterSpacing: -0.9, color: colors.black },
+  offline: {
     fontSize: 11,
-    fontFamily: typography.h1.fontFamily,
+    fontFamily: fontFamily.bold,
+    color: colors.successText,
+    backgroundColor: colors.successSurface,
+    borderRadius: 999,
+    overflow: 'hidden',
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+  },
+  // Versão 2: o cartão vermelho é o único lugar do app com o vermelho do SOS.
+  cartaoClinica: { backgroundColor: colors.emergency, borderRadius: 28, padding: 20, gap: 8 },
+  cartaoRotulo: {
+    alignSelf: 'flex-start',
+    fontSize: 12,
+    fontFamily: fontFamily.bold,
+    color: colors.white,
+    backgroundColor: 'rgba(255,255,255,0.2)',
     borderRadius: 999,
     overflow: 'hidden',
     paddingHorizontal: 10,
     paddingVertical: 4,
   },
-  chipVerde: { backgroundColor: '#D8F2E3', color: '#1F6B45' },
-  chipAmarelo: { backgroundColor: '#FFF0C9', color: '#8A6414' },
-  chipCinza: { backgroundColor: '#F1F3F7', color: '#4A5568' },
-  bairro: { gap: 8 },
+  buscando: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingVertical: 6 },
+  nomeClinica: { fontSize: 24, lineHeight: 29, letterSpacing: -0.6, fontFamily: fontFamily.bold, color: colors.white },
+  detalhe: { fontSize: 14, lineHeight: 20, fontFamily: fontFamily.regular, color: '#FFE1DD' },
+  acoes: { flexDirection: 'row', gap: 10, marginTop: 8 },
+  ligar: {
+    flex: 1,
+    height: 52,
+    borderRadius: 26,
+    backgroundColor: colors.white,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+  },
+  ligarTexto: { fontSize: 16, fontFamily: fontFamily.bold, color: colors.emergency },
+  rota: {
+    height: 52,
+    paddingHorizontal: 20,
+    borderRadius: 26,
+    backgroundColor: 'rgba(255,255,255,0.2)',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+  },
+  rotaSozinha: { flex: 1 },
+  rotaTexto: { fontSize: 16, fontFamily: fontFamily.bold, color: colors.white },
+  verFicha: { fontSize: 13, fontFamily: fontFamily.bold, color: colors.white, textDecorationLine: 'underline', marginTop: 4 },
+  bairro: { gap: 8, marginTop: 4 },
   botaoBairro: {
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: colors.black,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: colors.white,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  botaoBairroTexto: { fontSize: 13, fontFamily: typography.h1.fontFamily, color: colors.white },
-  editar: { fontSize: 12, fontFamily: typography.label.fontFamily, color: colors.primaryDeep },
-  nota: {
-    fontSize: 11,
-    lineHeight: 16,
-    fontFamily: typography.small.fontFamily,
-    color: '#566070',
-    textAlign: 'center',
-    paddingHorizontal: 6,
+  botaoBairroTexto: { fontSize: 14, fontFamily: fontFamily.bold, color: colors.emergency },
+  ficha: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    backgroundColor: colors.surface,
+    borderRadius: 24,
+    padding: 14,
+    ...shadow.card,
   },
-  rodape: { paddingHorizontal: 24, paddingTop: 12, paddingBottom: 28 },
+  secao: { fontSize: 17, fontFamily: fontFamily.bold, color: colors.black, marginTop: 12, marginLeft: 4 },
+  lista: { backgroundColor: colors.surface, borderRadius: 24, overflow: 'hidden', ...shadow.card },
+  linha: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingHorizontal: 16, paddingVertical: 14 },
+  divisoria: { borderTopWidth: 1, borderTopColor: colors.border },
+  linhaIcone: { width: 42, height: 42, borderRadius: 14, alignItems: 'center', justifyContent: 'center' },
+  linhaTitulo: { fontSize: 15, fontFamily: fontFamily.bold, color: colors.black },
+  linhaSub: { fontSize: 13, fontFamily: fontFamily.regular, color: colors.textMuted, marginTop: 1 },
+  nota: { fontSize: 12, lineHeight: 18, fontFamily: fontFamily.regular, color: colors.textMuted, marginHorizontal: 4, marginTop: 4 },
   fundoModal: { flex: 1, backgroundColor: colors.overlay, justifyContent: 'flex-end' },
   folha: {
     backgroundColor: colors.surface,
