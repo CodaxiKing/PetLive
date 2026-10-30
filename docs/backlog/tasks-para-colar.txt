@@ -60,7 +60,11 @@
 [APP-CLIENTE] Qualidade: Acessibilidade: contraste, leitor de tela e tamanhos de fonte
 [APP-CLIENTE] Qualidade: Publicar nas lojas de apps (EAS Build e EAS Update)
 [APP-LOJISTA] Cadastro da loja: Passo 1: dados da loja (CNPJ ou CPF) e conta de acesso
-[APP-LOJISTA] Cadastro da loja: Passo 2: endereço, contato e assumir lugar do mapa
+[APP-LOJISTA] Cadastro da loja: Passo 2: endereço, contato e marcação no mapa (pino que o lojista arrasta até a porta; atende no local ou só a domicílio)
+[APP-LOJISTA] Cadastro da loja: Verificação de identidade: CNPJ ativo do ramo pet e responsável entre os sócios (ou procuração); autônomo com CPF e documento com foto
+[APP-LOJISTA] Cadastro da loja: Verificação de localização: código por SMS ou WhatsApp no telefone do lugar e foto da fachada com GPS a até 100 m (selo Verificada)
+[APP-LOJISTA] Cadastro da loja: "Esta é a sua loja?": mostrar lugares parecidos perto do pino, assumir o existente ou criar um novo
+[APP-LOJISTA] Cadastro da loja: Loja em análise: painel liberado para montar o catálogo, loja invisível para os tutores até a aprovação
 [APP-LOJISTA] Cadastro da loja: Passo 3: o que a loja oferece (produtos, serviços ou os dois)
 [APP-LOJISTA] Cadastro da loja: Passo 4: escolher serviços
 [APP-LOJISTA] Cadastro da loja: Passo 5: checklist e publicar a loja
@@ -114,6 +118,9 @@
 [WEB] Painel do lojista: Notificações web (push) de novas solicitações
 [WEB] Painel do lojista: Recebimentos: saldo, a receber, movimentações e saque via Pix
 [WEB] Painel do lojista: Extrato e exportação
+[WEB] Painel admin: Fila de reivindicações de lojas: provas lado a lado (CNPJ, código, foto e endereço), aprovar, pedir documento ou recusar
+[WEB] Painel admin: Disputa de lugar já assumido por outra conta e junção de lugares duplicados
+[WEB] Painel admin: Mudança de endereço da loja: mover o pino e marcar o lugar antigo como "mudou de endereço"
 [BACKEND] Base: Criar projeto Supabase e ambientes (desenvolvimento e produção)
 [BACKEND] Base: Schema: profiles, pets, vaccinations, dewormings, weights, visits, medications, reminders e push_tokens
 [BACKEND] Base: Regras de acesso (RLS) por tutor
@@ -136,7 +143,12 @@
 [BACKEND] Marketplace: Regras por serviço: lodging_rates, daycare_plans e walk_rules
 [BACKEND] Marketplace: Função de horários livres (horários da loja, folgas, reservas, vagas e duração)
 [BACKEND] Marketplace: Máquina de estados da solicitação e notificações
-[BACKEND] Marketplace: Assumir lugar do mapa com verificação do dono
+[BACKEND] Marketplace: Consulta de CNPJ (BrasilAPI): situação, atividade (CNAE), sócios e endereço, guardados como prova da verificação
+[BACKEND] Marketplace: Correspondência de lugar: busca a até 100 m do pino por nome parecido, telefone ou CNPJ
+[BACKEND] Marketplace: Assumir lugar existente: mantém o mesmo lugar (avaliações, favoritos e visitas) e os dados do dono passam a valer sobre os importados
+[BACKEND] Marketplace: Criar lugar novo de origem PetLive, oculto no mapa até a aprovação
+[BACKEND] Marketplace: Código de verificação por SMS ou WhatsApp para o telefone que já está no lugar do mapa
+[BACKEND] Mapa: Importações do mapa não sobrescrevem campos editados pelo dono do lugar
 [BACKEND] Marketplace: Fluxo de cadastro e publicação da loja
 [BACKEND] Marketplace: Moderação básica de anúncios e denúncias
 [BACKEND] Pagamentos: Integração Pix (provedor) com QR Code e webhook

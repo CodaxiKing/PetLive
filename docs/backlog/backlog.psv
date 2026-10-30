@@ -61,7 +61,11 @@ APP-CLIENTE|Qualidade|F1|Sentry para monitorar erros
 APP-CLIENTE|Qualidade|F1|Acessibilidade: contraste, leitor de tela e tamanhos de fonte
 APP-CLIENTE|Qualidade|F1|Publicar nas lojas de apps (EAS Build e EAS Update)
 APP-LOJISTA|Cadastro da loja|F5-E1|Passo 1: dados da loja (CNPJ ou CPF) e conta de acesso
-APP-LOJISTA|Cadastro da loja|F5-E1|Passo 2: endereço, contato e assumir lugar do mapa
+APP-LOJISTA|Cadastro da loja|F5-E1|Passo 2: endereço, contato e marcação no mapa (pino que o lojista arrasta até a porta; atende no local ou só a domicílio)
+APP-LOJISTA|Cadastro da loja|F5-E1|Verificação de identidade: CNPJ ativo do ramo pet e responsável entre os sócios (ou procuração); autônomo com CPF e documento com foto
+APP-LOJISTA|Cadastro da loja|F5-E1|Verificação de localização: código por SMS ou WhatsApp no telefone do lugar e foto da fachada com GPS a até 100 m (selo Verificada)
+APP-LOJISTA|Cadastro da loja|F5-E1|"Esta é a sua loja?": mostrar lugares parecidos perto do pino, assumir o existente ou criar um novo
+APP-LOJISTA|Cadastro da loja|F5-E1|Loja em análise: painel liberado para montar o catálogo, loja invisível para os tutores até a aprovação
 APP-LOJISTA|Cadastro da loja|F5-E1|Passo 3: o que a loja oferece (produtos, serviços ou os dois)
 APP-LOJISTA|Cadastro da loja|F5-E1|Passo 4: escolher serviços
 APP-LOJISTA|Cadastro da loja|F5-E1|Passo 5: checklist e publicar a loja
@@ -115,6 +119,9 @@ WEB|Painel do lojista|F5-E1|Configurações: retirada, entrega, pagamentos e pol
 WEB|Painel do lojista|F5-E1|Notificações web (push) de novas solicitações
 WEB|Painel do lojista|F5-E2|Recebimentos: saldo, a receber, movimentações e saque via Pix
 WEB|Painel do lojista|F5-E2|Extrato e exportação
+WEB|Painel admin|F5-E1|Fila de reivindicações de lojas: provas lado a lado (CNPJ, código, foto e endereço), aprovar, pedir documento ou recusar
+WEB|Painel admin|F5-E1|Disputa de lugar já assumido por outra conta e junção de lugares duplicados
+WEB|Painel admin|F5-E1|Mudança de endereço da loja: mover o pino e marcar o lugar antigo como "mudou de endereço"
 BACKEND|Base|F1|Criar projeto Supabase e ambientes (desenvolvimento e produção)
 BACKEND|Base|F1|Schema: profiles, pets, vaccinations, dewormings, weights, visits, medications, reminders e push_tokens
 BACKEND|Base|F1|Regras de acesso (RLS) por tutor
@@ -137,7 +144,12 @@ BACKEND|Marketplace|F5-E1|Bloquear requests e payments para produtos local_com_r
 BACKEND|Marketplace|F5-E1|Regras por serviço: lodging_rates, daycare_plans e walk_rules
 BACKEND|Marketplace|F5-E1|Função de horários livres (horários da loja, folgas, reservas, vagas e duração)
 BACKEND|Marketplace|F5-E1|Máquina de estados da solicitação e notificações
-BACKEND|Marketplace|F5-E1|Assumir lugar do mapa com verificação do dono
+BACKEND|Marketplace|F5-E1|Consulta de CNPJ (BrasilAPI): situação, atividade (CNAE), sócios e endereço, guardados como prova da verificação
+BACKEND|Marketplace|F5-E1|Correspondência de lugar: busca a até 100 m do pino por nome parecido, telefone ou CNPJ
+BACKEND|Marketplace|F5-E1|Assumir lugar existente: mantém o mesmo lugar (avaliações, favoritos e visitas) e os dados do dono passam a valer sobre os importados
+BACKEND|Marketplace|F5-E1|Criar lugar novo de origem PetLive, oculto no mapa até a aprovação
+BACKEND|Marketplace|F5-E1|Código de verificação por SMS ou WhatsApp para o telefone que já está no lugar do mapa
+BACKEND|Mapa|F5-E1|Importações do mapa não sobrescrevem campos editados pelo dono do lugar
 BACKEND|Marketplace|F5-E1|Fluxo de cadastro e publicação da loja
 BACKEND|Marketplace|F5-E1|Moderação básica de anúncios e denúncias
 BACKEND|Pagamentos|F5-E2|Integração Pix (provedor) com QR Code e webhook
