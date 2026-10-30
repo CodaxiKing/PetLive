@@ -8,7 +8,6 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  useWindowDimensions,
   View,
 } from 'react-native'
 import Svg, { Path } from 'react-native-svg'
@@ -63,7 +62,6 @@ function dataPorExtenso(iso: string): string {
  * conclui e recalcula a próxima; segurar apaga.
  */
 export default function Lembretes() {
-  const { width } = useWindowDimensions()
   const { lembretes, carregando, concluirLembrete, removerLembrete, recarregar } = useLembretes()
   const { pets } = usePets()
   const [remedios, setRemedios] = useState<RemedioDoTutor[]>([])
@@ -237,12 +235,6 @@ export default function Lembretes() {
           })}
         </View>
 
-        <Svg style={estilos.onda} width={width} height={46} viewBox="0 0 390 46" preserveAspectRatio="none">
-          <Path
-            d="M0 46V26C28 8 56 10 80 24C104 38 132 40 154 26C180 8 214 10 238 26C262 42 300 38 322 22C346 6 372 12 390 24V46z"
-            fill={colors.surface}
-          />
-        </Svg>
       </View>
 
       <ScrollView
@@ -390,7 +382,7 @@ export default function Lembretes() {
 const estilos = StyleSheet.create({
   tela: { flex: 1, backgroundColor: colors.surface },
   flex: { flex: 1, minWidth: 0 },
-  heroi: { height: 290, backgroundColor: colors.hero, overflow: 'hidden', paddingHorizontal: 24, paddingTop: 56 },
+  heroi: { height: 290, backgroundColor: colors.primarySurface, overflow: 'hidden', paddingHorizontal: 24, paddingTop: 56 },
   topo: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
   topoDireita: { flexDirection: 'row', alignItems: 'center', gap: 14 },
   botaoBranco: {

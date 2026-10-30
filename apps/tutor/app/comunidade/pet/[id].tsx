@@ -164,7 +164,7 @@ const estilos = StyleSheet.create({
   centro: { alignItems: 'center', justifyContent: 'center', padding: 24, gap: 8 },
   flex: { flex: 1, minWidth: 0 },
   conteudo: { paddingBottom: 32 },
-  topo: { alignItems: 'center', paddingTop: 52, paddingHorizontal: 24, gap: 6, backgroundColor: colors.hero, borderBottomLeftRadius: 36, borderBottomRightRadius: 36, paddingBottom: 22 },
+  topo: { alignItems: 'center', paddingTop: 52, paddingHorizontal: 24, gap: 6, backgroundColor: colors.primarySurface, borderBottomLeftRadius: 36, borderBottomRightRadius: 36, paddingBottom: 22 },
   botaoVoltar: { position: 'absolute', left: 24, top: 52, width: 46, height: 46, borderRadius: 23, backgroundColor: colors.white, alignItems: 'center', justifyContent: 'center', transform: [{ scaleX: -1 }] },
   avatar: { width: 120, height: 120, borderRadius: 60, borderWidth: 4, borderColor: colors.white },
   nome: { fontFamily: fontFamily.medium, fontSize: 30, letterSpacing: -0.8, color: colors.black, marginTop: 6 },

@@ -171,7 +171,7 @@ const estilos = StyleSheet.create({
   centro: { alignItems: 'center', justifyContent: 'center', padding: 24, gap: 8 },
   flex: { flex: 1, minWidth: 0 },
   conteudo: { paddingBottom: 32 },
-  heroi: { backgroundColor: colors.hero, paddingTop: 52, paddingHorizontal: 24, paddingBottom: 22, borderBottomLeftRadius: 36, borderBottomRightRadius: 36, gap: 4 },
+  heroi: { backgroundColor: colors.primarySurface, paddingTop: 52, paddingHorizontal: 24, paddingBottom: 22, borderBottomLeftRadius: 36, borderBottomRightRadius: 36, gap: 4 },
   botaoVoltar: { width: 46, height: 46, borderRadius: 23, backgroundColor: colors.white, alignItems: 'center', justifyContent: 'center', transform: [{ scaleX: -1 }], marginBottom: 12 },
   selos: { flexDirection: 'row', gap: 6 },
   selo: { fontFamily: fontFamily.bold, fontSize: 12, color: colors.black, backgroundColor: colors.white, paddingHorizontal: 10, paddingVertical: 4, borderRadius: 999, overflow: 'hidden' },

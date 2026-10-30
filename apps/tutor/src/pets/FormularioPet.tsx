@@ -1,10 +1,9 @@
 import type { ReactNode } from 'react';
-import { Image, Pressable, ScrollView, StyleSheet, Text, View, useWindowDimensions } from 'react-native';
+import { Image, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 import { router } from 'expo-router';
 import { Campo } from '../components/Campo';
 import { ControleSegmentado } from '../components/ControleSegmentado';
-import { MarcaPata } from '../components/MarcaPata';
 import { Mascote } from '../components/Mascote';
 import { colors } from '../theme/colors';
 import { fontFamily } from '../theme/typography';
@@ -44,7 +43,6 @@ function Rotulo({ children }: { children: string }) {
  * nascimento no passo 1; sexo, peso e castração no passo 2.
  */
 export function FormularioPet({ form, onChange, titulo, passo, foto, onFoto, onVoltar }: Props) {
-  const { width } = useWindowDimensions();
   const mostrar1 = passo !== 2;
   const mostrar2 = passo !== 1;
 
@@ -56,7 +54,6 @@ export function FormularioPet({ form, onChange, titulo, passo, foto, onFoto, onV
       showsVerticalScrollIndicator={false}
     >
       <View style={estilos.heroi}>
-        <MarcaPata size={110} style={estilos.pata} />
         <View style={estilos.retrato}>
           {foto ? (
             <Image source={{ uri: foto }} style={estilos.foto} accessibilityLabel="Foto do pet" />
@@ -94,12 +91,6 @@ export function FormularioPet({ form, onChange, titulo, passo, foto, onFoto, onV
           </Pressable>
         ) : null}
 
-        <Svg style={estilos.onda} width={width} height={46} viewBox="0 0 390 46" preserveAspectRatio="none">
-          <Path
-            d="M0 46V26C28 8 56 10 80 24C104 38 132 40 154 26C180 8 214 10 238 26C262 42 300 38 322 22C346 6 372 12 390 24V46z"
-            fill={colors.surface}
-          />
-        </Svg>
       </View>
 
       <View style={estilos.corpo}>
@@ -190,7 +181,7 @@ export function FormularioPet({ form, onChange, titulo, passo, foto, onFoto, onV
 const estilos = StyleSheet.create({
   flex: { flex: 1, minWidth: 0 },
   conteudo: { paddingBottom: 130 },
-  heroi: { height: 300, backgroundColor: colors.hero, overflow: 'hidden' },
+  heroi: { height: 300, backgroundColor: colors.primarySurface, overflow: 'hidden' },
   pata: { position: 'absolute', right: 24, top: 56 },
   retrato: { position: 'absolute', left: 0, right: 0, bottom: 6, alignItems: 'center' },
   foto: { width: 200, height: 200, borderRadius: 100, marginBottom: 30, borderWidth: 4, borderColor: colors.white },

@@ -31,7 +31,7 @@ export function TelaAtualizar() {
 }
 
 const estilos = StyleSheet.create({
-  tela: { flex: 1, backgroundColor: colors.hero, paddingHorizontal: 24, paddingTop: 80, paddingBottom: 32 },
+  tela: { flex: 1, backgroundColor: colors.primarySurface, paddingHorizontal: 24, paddingTop: 80, paddingBottom: 32 },
   centro: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 14 },
   titulo: { fontFamily: fontFamily.bold, fontSize: 30, letterSpacing: -0.8, color: colors.black, textAlign: 'center' },
   texto: { fontFamily: fontFamily.regular, fontSize: 15, lineHeight: 22, color: '#2B3A4A', textAlign: 'center' },

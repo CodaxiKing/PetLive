@@ -168,12 +168,6 @@ export default function TelaAvisos() {
 
         {larguraHero > 0 ? (
           <View style={estilos.onda}>
-            <Svg width={larguraHero} height={46} viewBox="0 0 390 46" preserveAspectRatio="none">
-              <Path
-                d="M0 46V26C28 8 56 10 80 24C104 38 132 40 154 26C180 8 214 10 238 26C262 42 300 38 322 22C346 6 372 12 390 24V46z"
-                fill={colors.surface}
-              />
-            </Svg>
           </View>
         ) : null}
       </View>
@@ -317,7 +311,7 @@ const estilos = StyleSheet.create({
   tela: { flex: 1, backgroundColor: colors.surface },
   flex: { flex: 1 },
   hero: {
-    backgroundColor: colors.hero,
+    backgroundColor: colors.primarySurface,
     height: 196,
     overflow: 'hidden',
     justifyContent: 'space-between',

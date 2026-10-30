@@ -9,7 +9,6 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  useWindowDimensions,
   View,
 } from 'react-native'
 import Svg, { Path } from 'react-native-svg'
@@ -21,7 +20,6 @@ import { Surgir, Tocavel } from '../../../src/components/Animacoes'
 import { AvisoOffline } from '../../../src/components/AvisoOffline'
 import { BotaoPrimario } from '../../../src/components/BotaoPrimario'
 import { Icone } from '../../../src/components/Icone'
-import { MarcaPata } from '../../../src/components/MarcaPata'
 import { Mascote } from '../../../src/components/Mascote'
 import { AbaCalendario } from '../../../src/pets/AbaCalendario'
 import { conferirSelos, SELOS, type Selo } from '../../../src/pets/selos'
@@ -35,6 +33,7 @@ import { dataParaExibicao, diasAte, rotuloDose } from '../../../src/saude/types'
 import { useVacinas } from '../../../src/saude/VacinasProvider'
 import { colors } from '../../../src/theme/colors'
 import { fontFamily, typography } from '../../../src/theme/typography'
+import { shadow } from '../../../src/theme/tokens'
 
 const ABAS = ['Vacinas', 'Peso', 'Consultas'] as const
 type Aba = (typeof ABAS)[number]
@@ -69,7 +68,6 @@ function BotaoRedondo({ rotulo, onPress, children }: { rotulo: string; onPress: 
  */
 export default function PetDetalhe() {
   const { id } = useLocalSearchParams<{ id: string }>()
-  const { width } = useWindowDimensions()
   const { session } = useAuth()
   const limites = useLimitesPlano()
   const somenteLeitura = limites?.dados?.petsSomenteLeitura.includes(id) === true
@@ -182,14 +180,13 @@ export default function PetDetalhe() {
     <View style={estilos.tela}>
       <ScrollView contentContainerStyle={estilos.conteudo} showsVerticalScrollIndicator={false}>
         <View style={estilos.heroi}>
-          <MarcaPata size={90} style={estilos.pata} />
-          <View style={estilos.retrato}>
-            {petAtual.foto_url ? (
-              <Image source={{ uri: petAtual.foto_url }} style={estilos.foto} accessibilityLabel={`Foto de ${petAtual.nome}`} />
-            ) : (
+          {petAtual.foto_url ? (
+            <Image source={{ uri: petAtual.foto_url }} style={estilos.foto} accessibilityLabel={`Foto de ${petAtual.nome}`} />
+          ) : (
+            <View style={estilos.retrato}>
               <Mascote especie={petAtual.especie} size={260} recorte />
-            )}
-          </View>
+            </View>
+          )}
 
           <View style={estilos.topo}>
             <BotaoRedondo rotulo="Voltar" onPress={() => router.back()}>
@@ -207,12 +204,6 @@ export default function PetDetalhe() {
             </View>
           </View>
 
-          <Svg style={estilos.onda} width={width} height={46} viewBox="0 0 390 46" preserveAspectRatio="none">
-            <Path
-              d="M0 46V26C28 8 56 10 80 24C104 38 132 40 154 26C180 8 214 10 238 26C262 42 300 38 322 22C346 6 372 12 390 24V46z"
-              fill={colors.surface}
-            />
-          </Svg>
         </View>
 
         <View style={estilos.corpo}>
@@ -523,10 +514,10 @@ const estilos = StyleSheet.create({
   atalho: { height: 68, borderRadius: 24, alignItems: 'center', justifyContent: 'center', gap: 6, paddingHorizontal: 4 },
   atalhoTexto: { fontFamily: fontFamily.bold, fontSize: 12, color: colors.black },
   conteudo: { paddingBottom: 24 },
-  heroi: { height: 320, backgroundColor: colors.hero, overflow: 'hidden' },
-  pata: { position: 'absolute', left: 30, top: 110 },
-  retrato: { position: 'absolute', left: 0, right: 0, bottom: 4, alignItems: 'center' },
-  foto: { width: 210, height: 210, borderRadius: 105, marginBottom: 34, borderWidth: 4, borderColor: colors.white },
+  // Versão 2: a foto ocupa o topo inteiro e a folha branca sobe por cima.
+  heroi: { height: 340, backgroundColor: colors.primarySurface, overflow: 'hidden' },
+  retrato: { position: 'absolute', left: 0, right: 0, bottom: 24, alignItems: 'center' },
+  foto: { position: 'absolute', left: 0, right: 0, top: 0, bottom: 0, width: '100%', height: '100%' },
   topo: {
     position: 'absolute',
     left: 24,
@@ -543,17 +534,25 @@ const estilos = StyleSheet.create({
     backgroundColor: colors.white,
     alignItems: 'center',
     justifyContent: 'center',
+    ...shadow.card,
   },
   mais: { fontSize: 22, lineHeight: 24, color: colors.black, fontFamily: fontFamily.bold },
-  onda: { position: 'absolute', left: 0, bottom: -1 },
-  corpo: { paddingHorizontal: 24, gap: 14 },
+  corpo: {
+    marginTop: -32,
+    paddingTop: 24,
+    paddingHorizontal: 24,
+    gap: 14,
+    backgroundColor: colors.surface,
+    borderTopLeftRadius: 32,
+    borderTopRightRadius: 32,
+  },
   linhaNome: { flexDirection: 'row', alignItems: 'center', gap: 10 },
   nome: {
     flex: 1,
-    fontSize: 40,
-    lineHeight: 46,
+    fontSize: 36,
+    lineHeight: 42,
     letterSpacing: -1.2,
-    fontFamily: fontFamily.medium,
+    fontFamily: fontFamily.bold,
     color: colors.black,
   },
   alerta: {

@@ -106,7 +106,7 @@ const estilos = StyleSheet.create({
   tela: { flex: 1, backgroundColor: colors.surface },
   centro: { alignItems: 'center', justifyContent: 'center', padding: 24 },
   flex: { flex: 1, minWidth: 0 },
-  barra: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingTop: 52, paddingHorizontal: 24, paddingBottom: 12, backgroundColor: colors.hero },
+  barra: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingTop: 52, paddingHorizontal: 24, paddingBottom: 12, backgroundColor: colors.primarySurface },
   botaoVoltar: { width: 46, height: 46, borderRadius: 23, backgroundColor: colors.white, alignItems: 'center', justifyContent: 'center', transform: [{ scaleX: -1 }] },
   titulo: { fontFamily: fontFamily.bold, fontSize: 17, color: colors.black },
   sub: { fontFamily: fontFamily.regular, fontSize: 12, color: colors.textMuted },
