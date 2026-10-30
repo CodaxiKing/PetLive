@@ -8,7 +8,6 @@ import {
   StyleSheet,
   Text,
   View,
-  useWindowDimensions,
 } from 'react-native';
 import Svg, { Circle, Path, Rect } from 'react-native-svg';
 import { useRouter, useLocalSearchParams } from 'expo-router';
@@ -23,7 +22,7 @@ import { pedirNovaSenha } from '../../src/auth/senha';
 import { telefoneValido } from '../../src/lib/mascaras';
 import { supabase, supabaseConfigurado } from '../../src/lib/supabase';
 import { colors } from '../../src/theme/colors';
-import { spacing } from '../../src/theme/tokens';
+import { shadow, spacing } from '../../src/theme/tokens';
 import { fontFamily, typography } from '../../src/theme/typography';
 
 type Modo = 'criar' | 'entrar';
@@ -67,7 +66,6 @@ function IconeSenha() {
 }
 
 export default function CriarConta() {
-  const { width } = useWindowDimensions();
   const router = useRouter();
   const parametros = useLocalSearchParams<{ modo?: string }>();
   const [modo, setModo] = useState<Modo>(() => parametros.modo === 'entrar' ? 'entrar' : 'criar');
@@ -219,19 +217,6 @@ export default function CriarConta() {
           </Svg>
         </Pressable>
 
-        <View style={estilos.patinha}>
-          <Svg width={130} height={130} viewBox="0 0 24 24" fill="none" stroke={colors.white} strokeWidth={1.1} strokeLinecap="round" strokeLinejoin="round">
-            <Circle cx={6} cy={10} r={1.8} />
-            <Circle cx={10} cy={6} r={1.8} />
-            <Circle cx={14} cy={6} r={1.8} />
-            <Circle cx={18} cy={10} r={1.8} />
-            <Path d="M12 12c-3 0-5 2.5-5 4.5 0 1.5 1.2 2 2.6 2 1 0 1.6-.4 2.4-.4s1.4.4 2.4.4c1.4 0 2.6-.5 2.6-2 0-2-2-4.5-5-4.5z" />
-          </Svg>
-        </View>
-
-        <Svg width={width} height={46} viewBox="0 0 390 46" preserveAspectRatio="none" style={estilos.onda}>
-          <Path d="M0 46V26C28 8 56 10 80 24C104 38 132 40 154 26C180 8 214 10 238 26C262 42 300 38 322 22C346 6 372 12 390 24V46z" fill="#fff" />
-        </Svg>
       </View>
 
       <ScrollView
@@ -462,10 +447,9 @@ const estilos = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.white,
   },
+  // Versão 2: topo limpo, só o voltar (sem o azul e a onda).
   heroi: {
-    height: 210,
-    backgroundColor: colors.hero,
-    overflow: 'hidden',
+    height: 118,
   },
   voltar: {
     position: 'absolute',
@@ -478,16 +462,7 @@ const estilos = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     zIndex: 2,
-  },
-  patinha: {
-    position: 'absolute',
-    right: 16,
-    top: 30,
-  },
-  onda: {
-    position: 'absolute',
-    left: 0,
-    bottom: -1,
+    ...shadow.card,
   },
   conteudo: {
     paddingHorizontal: 24,
@@ -497,10 +472,9 @@ const estilos = StyleSheet.create({
   },
   titulo: {
     ...typography.h1,
-    fontFamily: fontFamily.medium,
-    fontSize: 38,
-    lineHeight: 40,
-    letterSpacing: -1.1,
+    fontSize: 34,
+    lineHeight: 38,
+    letterSpacing: -1.2,
     color: colors.black,
   },
   aceite: {
