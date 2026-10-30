@@ -162,7 +162,7 @@ function ItemAviso({ aviso, indice, abrindo, onAbrir }: { aviso: Aviso; indice: 
   );
 }
 const estilos = StyleSheet.create({
-  tela: { flex: 1, backgroundColor: colors.surface },
+  tela: { flex: 1, backgroundColor: colors.background },
   flex: { flex: 1, minWidth: 0 },
   engrenagem: {
     position: 'absolute',
@@ -182,7 +182,7 @@ const estilos = StyleSheet.create({
   grupoTitulo: { fontFamily: fontFamily.bold, fontSize: 13, color: colors.textMuted },
   aviso: { flexDirection: 'row', alignItems: 'center', gap: 12, borderRadius: 24, padding: 12 },
   avisoNovo: { backgroundColor: colors.white, borderWidth: 1.5, borderColor: colors.border },
-  avisoLido: { backgroundColor: colors.background },
+  avisoLido: { backgroundColor: colors.surface },
   icone: { width: 44, height: 44, borderRadius: 22, alignItems: 'center', justifyContent: 'center' },
   titulo: { fontFamily: fontFamily.bold, fontSize: 15, color: colors.black },
   corpo: { fontFamily: fontFamily.regular, fontSize: 13, color: colors.textMuted },

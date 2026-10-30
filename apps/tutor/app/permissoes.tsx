@@ -212,7 +212,7 @@ export default function Permissoes() {
 }
 
 const estilos = StyleSheet.create({
-  tela: { flex: 1, backgroundColor: colors.surface },
+  tela: { flex: 1, backgroundColor: colors.background },
   flex: { flex: 1 },
   conteudo: { paddingHorizontal: 24, paddingBottom: spacing.lg, gap: 10 },
   cartao: { borderRadius: 24, paddingVertical: 14, paddingHorizontal: 16, gap: 8 },

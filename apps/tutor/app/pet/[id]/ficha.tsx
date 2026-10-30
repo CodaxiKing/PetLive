@@ -161,11 +161,11 @@ export default function TelaFicha() {
 }
 
 const estilos = StyleSheet.create({
-  tela: { flex: 1, backgroundColor: colors.surface },
+  tela: { flex: 1, backgroundColor: colors.background },
   centro: { alignItems: 'center', justifyContent: 'center' },
   flex: { flex: 1, minWidth: 0 },
   conteudo: { paddingHorizontal: 24, paddingBottom: 24, gap: 10 },
-  pet: { flexDirection: 'row', alignItems: 'center', gap: 14, backgroundColor: colors.background, borderRadius: 26, padding: 12 },
+  pet: { flexDirection: 'row', alignItems: 'center', gap: 14, backgroundColor: colors.surface, borderRadius: 26, padding: 12 },
   avatar: { width: 60, height: 60, borderRadius: 30, overflow: 'hidden', backgroundColor: '#FFF0C9' },
   petNome: { fontFamily: fontFamily.bold, fontSize: 17, color: colors.black },
   petSub: { fontFamily: fontFamily.regular, fontSize: 13, color: colors.textMuted },
@@ -180,7 +180,7 @@ const estilos = StyleSheet.create({
     paddingHorizontal: 14,
   },
   secao: { fontFamily: fontFamily.bold, fontSize: 15, color: colors.black, marginTop: 6 },
-  item: { backgroundColor: colors.background, borderRadius: 24, paddingVertical: 12, paddingHorizontal: 16, gap: 10 },
+  item: { backgroundColor: colors.surface, borderRadius: 24, paddingVertical: 12, paddingHorizontal: 16, gap: 10 },
   itemLinha: { flexDirection: 'row', alignItems: 'center', gap: 12 },
   itemTitulo: { fontFamily: fontFamily.bold, fontSize: 16, color: colors.black },
   itemSub: { fontFamily: fontFamily.regular, fontSize: 13, color: '#566070' },

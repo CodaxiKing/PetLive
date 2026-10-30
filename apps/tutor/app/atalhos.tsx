@@ -79,7 +79,7 @@ export default function TodosAtalhos() {
 }
 
 const estilos = StyleSheet.create({
-  tela: { flex: 1, backgroundColor: colors.surface },
+  tela: { flex: 1, backgroundColor: colors.background },
   grade: { flexDirection: 'row', flexWrap: 'wrap', gap: 10, paddingHorizontal: 24, paddingBottom: 40 },
   celula: { width: '48.4%' },
   cartao: { borderRadius: 24, padding: 14, gap: 10, minHeight: 112 },

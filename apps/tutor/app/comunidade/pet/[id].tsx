@@ -160,7 +160,7 @@ export default function PerfilPet() {
 }
 
 const estilos = StyleSheet.create({
-  tela: { flex: 1, backgroundColor: colors.surface },
+  tela: { flex: 1, backgroundColor: colors.background },
   centro: { alignItems: 'center', justifyContent: 'center', padding: 24, gap: 8 },
   flex: { flex: 1, minWidth: 0 },
   conteudo: { paddingBottom: 32 },
@@ -176,7 +176,7 @@ const estilos = StyleSheet.create({
   numeroRotulo: { fontFamily: fontFamily.regular, fontSize: 12, color: colors.textMuted },
   botao: { alignSelf: 'stretch', marginTop: 12, gap: 8 },
   privado: { fontFamily: fontFamily.semiBold, fontSize: 12, color: colors.primaryDeep, textAlign: 'center' },
-  edicao: { margin: 24, marginBottom: 0, backgroundColor: colors.background, borderRadius: 24, padding: 16, gap: 12 },
+  edicao: { margin: 24, marginBottom: 0, backgroundColor: colors.surface, borderRadius: 24, padding: 16, gap: 12 },
   linha: { flexDirection: 'row', alignItems: 'center', gap: 12 },
   linhaTitulo: { fontFamily: fontFamily.bold, fontSize: 15, color: colors.black },
   linhaSub: { fontFamily: fontFamily.regular, fontSize: 12, color: colors.textMuted },

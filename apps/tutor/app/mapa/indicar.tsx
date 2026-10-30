@@ -259,7 +259,7 @@ export default function IndicarLugar() {
 }
 
 const estilos = StyleSheet.create({
-  tela: { flex: 1, backgroundColor: colors.surface },
+  tela: { flex: 1, backgroundColor: colors.background },
   flex: { flex: 1, minWidth: 0 },
   pata: { position: 'absolute', right: 30, top: 54 },
   conteudo: { paddingHorizontal: 24, paddingBottom: 40, gap: 12 },
@@ -275,7 +275,7 @@ const estilos = StyleSheet.create({
     borderWidth: 1.5,
     borderColor: colors.border,
   },
-  tipoAtivo: { borderColor: colors.black, backgroundColor: colors.background },
+  tipoAtivo: { borderColor: colors.black, backgroundColor: colors.surface },
   tipoFoto: { width: 44, height: 44, borderRadius: 14, overflow: 'hidden' },
   tipoTexto: { fontFamily: fontFamily.semiBold, fontSize: 12, color: colors.textMuted },
   tipoTextoAtivo: { color: colors.black, fontFamily: fontFamily.bold },
@@ -293,7 +293,7 @@ const estilos = StyleSheet.create({
   obrigadoTitulo: { fontFamily: fontFamily.bold, fontSize: 15, color: colors.successText },
   obrigadoTexto: { fontFamily: fontFamily.regular, fontSize: 13, lineHeight: 19, color: colors.successText },
   minhas: { gap: 8, marginTop: 8 },
-  minha: { flexDirection: 'row', alignItems: 'center', gap: 10, backgroundColor: colors.background, borderRadius: 20, padding: 8 },
+  minha: { flexDirection: 'row', alignItems: 'center', gap: 10, backgroundColor: colors.surface, borderRadius: 20, padding: 8 },
   minhaFoto: { width: 40, height: 40, borderRadius: 12, overflow: 'hidden' },
   minhaNome: { fontFamily: fontFamily.bold, fontSize: 14, color: colors.black },
   minhaSub: { fontFamily: fontFamily.regular, fontSize: 12, color: colors.textMuted },

@@ -69,12 +69,12 @@ export default function Seguro() {
 }
 
 const estilos = StyleSheet.create({
-  tela: { flex: 1, backgroundColor: colors.surface },
+  tela: { flex: 1, backgroundColor: colors.background },
   flex: { flex: 1, minWidth: 0 },
   conteudo: { paddingHorizontal: 24, paddingBottom: 32, gap: 12 },
   carregando: { marginTop: 24 },
-  vazio: { fontFamily: fontFamily.regular, fontSize: 14, lineHeight: 20, color: colors.textMuted, backgroundColor: colors.background, borderRadius: 22, padding: 16 },
-  cartao: { backgroundColor: colors.background, borderRadius: 24, padding: 16, gap: 10 },
+  vazio: { fontFamily: fontFamily.regular, fontSize: 14, lineHeight: 20, color: colors.textMuted, backgroundColor: colors.surface, borderRadius: 22, padding: 16 },
+  cartao: { backgroundColor: colors.surface, borderRadius: 24, padding: 16, gap: 10 },
   topo: { flexDirection: 'row', alignItems: 'center', gap: 12 },
   icone: { width: 44, height: 44, borderRadius: 22, backgroundColor: colors.primarySurface, alignItems: 'center', justifyContent: 'center' },
   nome: { fontFamily: fontFamily.bold, fontSize: 16, color: colors.black },

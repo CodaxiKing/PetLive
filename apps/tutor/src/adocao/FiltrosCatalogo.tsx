@@ -20,7 +20,7 @@ export function FiltrosCatalogo({ valor, alterar, aplicar }: { valor: FiltrosAdo
     <BotaoPrimario titulo="Aplicar filtros" onPress={aplicar} /><Pressable accessibilityRole="button" style={s.opcao} onPress={() => alterar({ ...FILTROS_ADOCAO })}><Text style={s.texto}>Limpar seleção</Text></Pressable>
   </View>;
 }
-const s = StyleSheet.create({ card: { borderRadius: 24, backgroundColor: colors.background, padding: 18, gap: 14 },
+const s = StyleSheet.create({ card: { borderRadius: 24, backgroundColor: colors.surface, padding: 18, gap: 14 },
   grupo: { gap: 8 }, titulo: { ...typography.body, fontWeight: '700', color: colors.black }, texto: { ...typography.body, color: colors.textMuted },
   opcoes: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 }, opcao: { minHeight: 44, padding: 12, borderWidth: 1, borderColor: colors.border, borderRadius: 20, justifyContent: 'center' },
   ativo: { backgroundColor: colors.hero, borderColor: colors.primaryDeep }, campo: { ...typography.body, color: colors.black, borderWidth: 1, borderColor: colors.border, borderRadius: 16, padding: 14, minHeight: 48 } });

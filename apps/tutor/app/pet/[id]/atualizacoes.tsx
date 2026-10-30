@@ -133,7 +133,7 @@ export default function AtualizacoesPet() {
 }
 
 const estilos = StyleSheet.create({
-  tela: { flex: 1, backgroundColor: colors.surface },
+  tela: { flex: 1, backgroundColor: colors.background },
   flex: { flex: 1, minWidth: 0 },
   conteudo: { paddingHorizontal: 24, paddingBottom: 32, gap: 8 },
   topo: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 8 },
@@ -143,11 +143,11 @@ const estilos = StyleSheet.create({
   vivoTexto: { fontFamily: fontFamily.bold, fontSize: 12, color: colors.successText },
   erro: { fontFamily: fontFamily.medium, fontSize: 13, color: colors.danger },
   carregando: { marginTop: 24 },
-  vazio: { fontFamily: fontFamily.regular, fontSize: 13, lineHeight: 19, color: colors.textMuted, backgroundColor: colors.background, borderRadius: 20, padding: 16 },
+  vazio: { fontFamily: fontFamily.regular, fontSize: 13, lineHeight: 19, color: colors.textMuted, backgroundColor: colors.surface, borderRadius: 20, padding: 16 },
   grupo: { gap: 2, marginTop: 6 },
   dia: { fontFamily: fontFamily.bold, fontSize: 15, color: colors.black, marginBottom: 2 },
   item: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingVertical: 10 },
-  inicial: { width: 42, height: 42, borderRadius: 21, backgroundColor: colors.background, alignItems: 'center', justifyContent: 'center' },
+  inicial: { width: 42, height: 42, borderRadius: 21, backgroundColor: colors.surface, alignItems: 'center', justifyContent: 'center' },
   inicialTexto: { fontFamily: fontFamily.bold, fontSize: 17, color: colors.black },
   selo: {
     position: 'absolute', right: -4, bottom: -4, width: 22, height: 22, borderRadius: 11,

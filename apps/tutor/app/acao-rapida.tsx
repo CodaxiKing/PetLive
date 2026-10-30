@@ -35,6 +35,6 @@ function AcaoDaConta({ acao, tutorId }: { acao: AcaoRapida; tutorId: string }) {
     </>}
   </ScrollView></View>;
 }
-const s = StyleSheet.create({ tela: { flex: 1, backgroundColor: colors.surface }, conteudo: { padding: 24, gap: 18 },
+const s = StyleSheet.create({ tela: { flex: 1, backgroundColor: colors.background }, conteudo: { padding: 24, gap: 18 },
   titulo: { ...typography.h3, color: colors.black }, texto: { ...typography.body, color: colors.textMuted },
-  pet: { minHeight: 80, padding: 18, gap: 6, borderRadius: 24, backgroundColor: colors.background } });
+  pet: { minHeight: 80, padding: 18, gap: 6, borderRadius: 24, backgroundColor: colors.surface } });

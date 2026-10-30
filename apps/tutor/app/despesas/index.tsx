@@ -210,12 +210,12 @@ function DespesasDaConta() {
 }
 
 const estilos = StyleSheet.create({
-  tela: { flex: 1, backgroundColor: colors.surface },
+  tela: { flex: 1, backgroundColor: colors.background },
   flex: { flex: 1, minWidth: 0 },
   carregando: { marginTop: 40 },
   conteudo: { paddingHorizontal: 24, paddingBottom: 24, gap: 14 },
   filtros: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
-  filtro: { paddingVertical: 7, paddingHorizontal: 14, borderRadius: 999, backgroundColor: colors.background },
+  filtro: { paddingVertical: 7, paddingHorizontal: 14, borderRadius: 999, backgroundColor: colors.surface },
   filtroAtivo: { backgroundColor: colors.black },
   filtroTexto: { fontFamily: fontFamily.bold, fontSize: 13, color: colors.black },
   filtroTextoAtivo: { color: colors.white },
@@ -241,7 +241,7 @@ const estilos = StyleSheet.create({
   categoriaNome: { flex: 1, fontFamily: fontFamily.medium, fontSize: 16, color: colors.black },
   categoriaPct: { fontFamily: fontFamily.semiBold, fontSize: 16, color: colors.black },
   secao: { fontFamily: fontFamily.bold, fontSize: 15, color: colors.black, marginTop: 4 },
-  item: { flexDirection: 'row', alignItems: 'center', gap: 12, backgroundColor: colors.background, borderRadius: 22, padding: 12 },
+  item: { flexDirection: 'row', alignItems: 'center', gap: 12, backgroundColor: colors.surface, borderRadius: 22, padding: 12 },
   itemIcone: { width: 40, height: 40, borderRadius: 20, alignItems: 'center', justifyContent: 'center' },
   itemTitulo: { fontFamily: fontFamily.bold, fontSize: 15, color: colors.black },
   itemSub: { fontFamily: fontFamily.regular, fontSize: 12, color: '#566070' },

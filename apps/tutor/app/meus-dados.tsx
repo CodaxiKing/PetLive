@@ -265,12 +265,12 @@ function FormularioPerfil({ tutorId }: { tutorId: string }) {
 }
 
 const estilos = StyleSheet.create({
-  tela: { flex: 1, backgroundColor: colors.surface },
+  tela: { flex: 1, backgroundColor: colors.background },
   centro: { alignItems: 'center', justifyContent: 'center' },
   falhaCarga: { paddingHorizontal: 24, gap: 20, width: '100%' },
   flex: { flex: 1, minWidth: 0 },
   conteudo: { paddingHorizontal: 24, paddingBottom: 24, gap: 12 },
-  linha: { flexDirection: 'row', alignItems: 'center', gap: 12, backgroundColor: colors.background, borderRadius: 24, paddingVertical: 12, paddingHorizontal: 18 },
+  linha: { flexDirection: 'row', alignItems: 'center', gap: 12, backgroundColor: colors.surface, borderRadius: 24, paddingVertical: 12, paddingHorizontal: 18 },
   linhaTitulo: { fontFamily: fontFamily.bold, fontSize: 15, color: colors.black },
   linhaSub: { fontFamily: fontFamily.regular, fontSize: 12, color: '#566070' },
   secao: { fontFamily: fontFamily.bold, fontSize: 16, color: colors.black, marginTop: 8 },
@@ -278,7 +278,7 @@ const estilos = StyleSheet.create({
   nota: { fontFamily: fontFamily.regular, fontSize: 12, lineHeight: 17, color: '#566070', marginTop: 4 },
   rodape: { paddingHorizontal: 24, paddingTop: 12, paddingBottom: 28 },
   fotoBloco: { alignItems: 'center', gap: 6, paddingTop: 8, marginBottom: 4 },
-  foto: { width: 92, height: 92, borderRadius: 46, backgroundColor: colors.background, alignItems: 'center', justifyContent: 'center' },
+  foto: { width: 92, height: 92, borderRadius: 46, backgroundColor: colors.surface, alignItems: 'center', justifyContent: 'center' },
   fotoImagem: { width: 92, height: 92, borderRadius: 46 },
   fotoLetra: { fontFamily: fontFamily.semiBold, fontSize: 38, color: colors.black },
   fotoBotao: {

@@ -59,7 +59,7 @@ function Acoes({ tutorId, mes, petId }: { tutorId: string; mes: string; petId: s
   </View>;
 }
 const s = StyleSheet.create({
-  card: { backgroundColor: colors.background, borderRadius: 24, padding: 18, gap: 14 },
+  card: { backgroundColor: colors.surface, borderRadius: 24, padding: 18, gap: 14 },
   titulo: { ...typography.h3, color: colors.black }, texto: { ...typography.body, color: colors.textMuted },
   erro: { ...typography.body, color: colors.danger }, botoes: { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
   botao: { flex: 1, minWidth: 130 }, linha: { flexDirection: 'row', alignItems: 'center', gap: 12 }, flex: { flex: 1 }, repetir: { minHeight: 48, justifyContent: 'center' },

@@ -216,9 +216,6 @@ export default function NovoLembrete() {
         showsVerticalScrollIndicator={false}
       >
         <HeroiOnda titulo="Novo lembrete" altura={210}>
-          <View style={estilos.sino}>
-            <Icone nome="sino" size={120} cor={colors.white} espessura={1.1} />
-          </View>
         </HeroiOnda>
 
         <View style={estilos.corpo}>
@@ -339,12 +336,12 @@ export default function NovoLembrete() {
 }
 
 const estilos = StyleSheet.create({
-  tela: { flex: 1, backgroundColor: colors.surface },
+  tela: { flex: 1, backgroundColor: colors.background },
   flex: { flex: 1, minWidth: 0 },
   conteudo: { paddingBottom: 130 },
   pata: { position: 'absolute', right: 24, top: 56 },
   sino: { position: 'absolute', right: 30, top: 44 },
-  petChipLugar: { position: 'absolute', left: 24, top: 160 },
+  petChipLugar: { marginTop: 12, marginLeft: 58, alignSelf: 'flex-start' },
   petChip: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -414,7 +411,7 @@ const estilos = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 12,
-    backgroundColor: colors.background,
+    backgroundColor: colors.surface,
     borderRadius: 26,
     padding: 10,
     paddingRight: 18,
@@ -435,7 +432,7 @@ const estilos = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 12,
-    backgroundColor: colors.background,
+    backgroundColor: colors.surface,
     borderRadius: 24,
     paddingVertical: 14,
     paddingHorizontal: 18,
@@ -451,7 +448,7 @@ const estilos = StyleSheet.create({
     paddingHorizontal: 24,
     paddingTop: 12,
     paddingBottom: 32,
-    backgroundColor: colors.surface,
+    backgroundColor: colors.background,
   },
   fundoModal: { flex: 1, backgroundColor: colors.overlay, justifyContent: 'flex-end' },
   folha: {
@@ -463,7 +460,7 @@ const estilos = StyleSheet.create({
     gap: 8,
   },
   folhaTitulo: { fontSize: 18, fontFamily: fontFamily.bold, color: colors.black, marginBottom: 4 },
-  opcaoPet: { backgroundColor: colors.background, borderRadius: 20, paddingVertical: 14, paddingHorizontal: 18 },
+  opcaoPet: { backgroundColor: colors.surface, borderRadius: 20, paddingVertical: 14, paddingHorizontal: 18 },
   opcaoPetAtiva: { backgroundColor: colors.primarySurface },
   opcaoPetTexto: { fontSize: 15, fontFamily: fontFamily.semiBold, color: colors.black },
 })

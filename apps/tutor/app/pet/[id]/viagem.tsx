@@ -193,10 +193,10 @@ export default function TelaViagem() {
 }
 
 const estilos = StyleSheet.create({
-  tela: { flex: 1, backgroundColor: colors.surface },
+  tela: { flex: 1, backgroundColor: colors.background },
   flex: { flex: 1, minWidth: 0 },
   conteudo: { paddingHorizontal: 24, paddingBottom: 24, gap: 10 },
-  destino: { backgroundColor: colors.background, borderRadius: 24, paddingVertical: 12, paddingHorizontal: 18, gap: 4 },
+  destino: { backgroundColor: colors.surface, borderRadius: 24, paddingVertical: 12, paddingHorizontal: 18, gap: 4 },
   rotulo: { fontFamily: fontFamily.semiBold, fontSize: 12, color: '#566070' },
   linha: { flexDirection: 'row', gap: 10 },
   entrada: { fontFamily: fontFamily.bold, fontSize: 16, color: colors.black, paddingVertical: 2 },
@@ -206,7 +206,7 @@ const estilos = StyleSheet.create({
   chipAtivo: { backgroundColor: colors.black, borderColor: colors.black },
   chipTexto: { fontFamily: fontFamily.bold, fontSize: 14, color: colors.black },
   chipTextoAtivo: { color: colors.white },
-  item: { flexDirection: 'row', alignItems: 'center', gap: 14, backgroundColor: colors.background, borderRadius: 24, paddingVertical: 14, paddingHorizontal: 16 },
+  item: { flexDirection: 'row', alignItems: 'center', gap: 14, backgroundColor: colors.surface, borderRadius: 24, paddingVertical: 14, paddingHorizontal: 16 },
   caixa: { width: 34, height: 34, borderRadius: 10, borderWidth: 2, borderColor: '#D5DAE2', alignItems: 'center', justifyContent: 'center', backgroundColor: colors.white },
   caixaFeita: { backgroundColor: colors.black, borderColor: colors.black },
   itemTitulo: { fontFamily: fontFamily.bold, fontSize: 16, color: colors.black },

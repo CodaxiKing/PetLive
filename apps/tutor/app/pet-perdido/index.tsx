@@ -157,11 +157,11 @@ export default function PetPerdido() {
 }
 
 const estilos = StyleSheet.create({
-  tela: { flex: 1, backgroundColor: colors.surface },
+  tela: { flex: 1, backgroundColor: colors.background },
   flex: { flex: 1, minWidth: 0 },
   conteudo: { paddingHorizontal: 24, paddingBottom: 24, gap: 10 },
   pets: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
-  pet: { flexDirection: 'row', alignItems: 'center', gap: 8, paddingLeft: 4, paddingRight: 14, height: 42, borderRadius: 21, backgroundColor: colors.background },
+  pet: { flexDirection: 'row', alignItems: 'center', gap: 8, paddingLeft: 4, paddingRight: 14, height: 42, borderRadius: 21, backgroundColor: colors.surface },
   petAtivo: { backgroundColor: colors.black },
   petNome: { fontFamily: fontFamily.bold, fontSize: 14, color: colors.black },
   textoClaro: { color: colors.white },
@@ -174,10 +174,10 @@ const estilos = StyleSheet.create({
   chip: { height: 38, paddingHorizontal: 14, borderRadius: 19, borderWidth: 1.5, borderColor: colors.border, justifyContent: 'center' },
   chipAtivo: { backgroundColor: colors.black, borderColor: colors.black },
   chipTexto: { fontFamily: fontFamily.semiBold, fontSize: 13, color: colors.black },
-  campo: { backgroundColor: colors.background, borderRadius: 22, padding: 14, gap: 4, marginTop: 6 },
+  campo: { backgroundColor: colors.surface, borderRadius: 22, padding: 14, gap: 4, marginTop: 6 },
   rotulo: { fontFamily: fontFamily.semiBold, fontSize: 12, color: colors.textMuted },
   texto: { fontFamily: fontFamily.regular, fontSize: 15, color: colors.black, minHeight: 60, textAlignVertical: 'top' },
-  linha: { flexDirection: 'row', alignItems: 'center', gap: 12, backgroundColor: colors.background, borderRadius: 22, padding: 14 },
+  linha: { flexDirection: 'row', alignItems: 'center', gap: 12, backgroundColor: colors.surface, borderRadius: 22, padding: 14 },
   linhaTitulo: { fontFamily: fontFamily.bold, fontSize: 15, color: colors.black },
   linhaSub: { fontFamily: fontFamily.regular, fontSize: 12, color: colors.textMuted },
   erro: { fontFamily: fontFamily.medium, fontSize: 13, color: colors.danger },

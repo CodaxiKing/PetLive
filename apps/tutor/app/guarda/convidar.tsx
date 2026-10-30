@@ -123,7 +123,7 @@ export default function ConvidarGuarda() {
 }
 
 const estilos = StyleSheet.create({
-  tela: { flex: 1, backgroundColor: colors.surface },
+  tela: { flex: 1, backgroundColor: colors.background },
   flex: { flex: 1, minWidth: 0 },
   conteudo: { paddingHorizontal: 24, paddingBottom: 24, gap: 12 },
   secao: { fontFamily: fontFamily.bold, fontSize: 15, color: colors.black, marginTop: 4 },
@@ -140,7 +140,7 @@ const estilos = StyleSheet.create({
   regras: { flexDirection: 'row', gap: 8 },
   regra: { flex: 1, borderRadius: 22, padding: 12, gap: 2 },
   regraPode: { backgroundColor: colors.successSurface },
-  regraNao: { backgroundColor: colors.background },
+  regraNao: { backgroundColor: colors.surface },
   regraTitulo: { fontFamily: fontFamily.bold, fontSize: 13, color: colors.black },
   regraTexto: { fontFamily: fontFamily.regular, fontSize: 12, lineHeight: 17, color: colors.textMuted },
   textoOk: { color: colors.successText },

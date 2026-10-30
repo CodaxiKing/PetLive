@@ -87,12 +87,12 @@ export default function PetAchado() {
 }
 
 const estilos = StyleSheet.create({
-  tela: { flex: 1, backgroundColor: colors.surface },
+  tela: { flex: 1, backgroundColor: colors.background },
   flex: { flex: 1, minWidth: 0 },
   conteudo: { paddingHorizontal: 24, paddingBottom: 32, gap: 12 },
   erro: { fontFamily: fontFamily.medium, fontSize: 13, color: colors.danger },
   carregando: { marginTop: 24 },
-  vazio: { fontFamily: fontFamily.regular, fontSize: 14, color: colors.textMuted, backgroundColor: colors.background, borderRadius: 20, padding: 16 },
+  vazio: { fontFamily: fontFamily.regular, fontSize: 14, color: colors.textMuted, backgroundColor: colors.surface, borderRadius: 20, padding: 16 },
   destaque: { backgroundColor: colors.primarySurface, borderRadius: 26, padding: 18, gap: 8 },
   rotulo: { fontFamily: fontFamily.bold, fontSize: 13, color: colors.primaryDeep },
   recado: { fontFamily: fontFamily.semiBold, fontSize: 17, lineHeight: 23, color: colors.black },
@@ -100,7 +100,7 @@ const estilos = StyleSheet.create({
   botao: { marginTop: 6, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, height: 52, borderRadius: 26, backgroundColor: colors.black },
   botaoTexto: { fontFamily: fontFamily.bold, fontSize: 15, color: colors.white },
   secao: { fontFamily: fontFamily.bold, fontSize: 15, color: colors.black, marginTop: 6 },
-  linha: { flexDirection: 'row', alignItems: 'center', gap: 12, backgroundColor: colors.background, borderRadius: 20, padding: 14 },
+  linha: { flexDirection: 'row', alignItems: 'center', gap: 12, backgroundColor: colors.surface, borderRadius: 20, padding: 14 },
   linhaTitulo: { fontFamily: fontFamily.semiBold, fontSize: 14, color: colors.black },
   nota: { fontFamily: fontFamily.regular, fontSize: 12, lineHeight: 17, color: colors.textMuted, paddingHorizontal: 4 },
 });

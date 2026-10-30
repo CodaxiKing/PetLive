@@ -221,7 +221,7 @@ export default function Privacidade() {
 }
 
 const estilos = StyleSheet.create({
-  tela: { flex: 1, backgroundColor: colors.surface },
+  tela: { flex: 1, backgroundColor: colors.background },
   flex: { flex: 1, minWidth: 0 },
   conteudo: { paddingHorizontal: 24, paddingBottom: 40, gap: 8 },
   secao: { fontSize: 12, fontFamily: typography.h1.fontFamily, color: '#566070' },
@@ -230,7 +230,7 @@ const estilos = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 12,
-    backgroundColor: colors.background,
+    backgroundColor: colors.surface,
     borderRadius: 22,
     paddingVertical: 12,
     paddingHorizontal: 16,

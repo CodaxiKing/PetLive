@@ -114,7 +114,7 @@ export default function AcheiUmPet() {
 }
 
 const estilos = StyleSheet.create({
-  tela: { flex: 1, backgroundColor: colors.surface },
+  tela: { flex: 1, backgroundColor: colors.background },
   flex: { flex: 1, minWidth: 0, gap: 4 },
   conteudo: { paddingHorizontal: 24, paddingBottom: 24, gap: 12 },
   moldura: {
@@ -126,10 +126,10 @@ const estilos = StyleSheet.create({
   galeria: { alignSelf: 'center', paddingHorizontal: 16, paddingVertical: 8 },
   galeriaTexto: { fontFamily: fontFamily.bold, fontSize: 14, color: colors.primaryDeep },
   nota: { fontFamily: fontFamily.regular, fontSize: 12, lineHeight: 17, color: colors.textMuted, textAlign: 'center', paddingHorizontal: 8 },
-  vazio: { backgroundColor: colors.background, borderRadius: 24, padding: 18, gap: 6 },
+  vazio: { backgroundColor: colors.surface, borderRadius: 24, padding: 18, gap: 6 },
   vazioTitulo: { fontFamily: fontFamily.bold, fontSize: 16, color: colors.black },
   vazioTexto: { fontFamily: fontFamily.regular, fontSize: 14, lineHeight: 20, color: colors.textMuted },
-  candidato: { flexDirection: 'row', alignItems: 'center', gap: 12, backgroundColor: colors.background, borderRadius: 24, padding: 12 },
+  candidato: { flexDirection: 'row', alignItems: 'center', gap: 12, backgroundColor: colors.surface, borderRadius: 24, padding: 12 },
   fotoCandidato: { width: 64, height: 64, borderRadius: 20 },
   nome: { fontFamily: fontFamily.bold, fontSize: 16, color: colors.black },
   nivel: { alignSelf: 'flex-start', fontFamily: fontFamily.bold, fontSize: 11, paddingHorizontal: 8, paddingVertical: 3, borderRadius: 999, overflow: 'hidden' },

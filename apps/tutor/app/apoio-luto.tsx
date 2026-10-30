@@ -56,10 +56,10 @@ export default function ApoioLuto() {
 }
 
 const estilos = StyleSheet.create({
-  tela: { flex: 1, backgroundColor: colors.surface },
+  tela: { flex: 1, backgroundColor: colors.background },
   flex: { flex: 1, minWidth: 0 },
   conteudo: { paddingHorizontal: 24, paddingBottom: 32, gap: 12 },
-  cartao: { backgroundColor: colors.background, borderRadius: 26, padding: 18, gap: 6 },
+  cartao: { backgroundColor: colors.surface, borderRadius: 26, padding: 18, gap: 6 },
   titulo: { fontFamily: fontFamily.bold, fontSize: 16, color: colors.black },
   texto: { fontFamily: fontFamily.regular, fontSize: 15, lineHeight: 22, color: '#2B3A4A' },
   cvv: { backgroundColor: colors.premiumSurface },

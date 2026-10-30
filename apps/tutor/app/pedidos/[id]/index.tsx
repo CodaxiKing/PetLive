@@ -200,17 +200,17 @@ export default function AcompanharPedido() {
 }
 
 const estilos = StyleSheet.create({
-  tela: { flex: 1, backgroundColor: colors.surface },
+  tela: { flex: 1, backgroundColor: colors.background },
   centro: { alignItems: 'center', justifyContent: 'center', padding: 24 },
   flex: { flex: 1, minWidth: 0 },
   conteudo: { paddingHorizontal: 24, paddingBottom: 24, gap: 12 },
   codigo: { backgroundColor: colors.successSurface, borderRadius: 24, padding: 16, alignItems: 'center', gap: 2 },
   codigoRotulo: { fontFamily: fontFamily.bold, fontSize: 13, color: colors.successText },
   codigoValor: { fontFamily: fontFamily.extraBold, fontSize: 36, letterSpacing: 8, color: colors.black },
-  aviso: { backgroundColor: colors.background, borderRadius: 22, padding: 16, gap: 4 },
+  aviso: { backgroundColor: colors.surface, borderRadius: 22, padding: 16, gap: 4 },
   avisoTitulo: { fontFamily: fontFamily.bold, fontSize: 16, color: colors.black },
   avisoTexto: { fontFamily: fontFamily.regular, fontSize: 14, lineHeight: 20, color: colors.textMuted },
-  cartao: { backgroundColor: colors.background, borderRadius: 22, padding: 16, gap: 8 },
+  cartao: { backgroundColor: colors.surface, borderRadius: 22, padding: 16, gap: 8 },
   secao: { fontFamily: fontFamily.bold, fontSize: 15, color: colors.black },
   passo: { flexDirection: 'row', gap: 12, minHeight: 44 },
   bolinha: { width: 16, height: 16, borderRadius: 8, borderWidth: 2, borderColor: colors.borderStrong, backgroundColor: colors.surface, marginTop: 2 },

@@ -105,5 +105,5 @@ function PainelDaConta({ tutorId }: { tutorId: string }) {
         ListFooterComponent={mais ? <BotaoPrimario titulo="Mais pets" carregando={carregando} desabilitado={acao} onPress={() => { void buscar(null, true); }} /> : undefined} />}
   </View>;
 }
-const s = StyleSheet.create({ tela: { flex: 1, backgroundColor: colors.surface }, lista: { paddingHorizontal: 24, paddingBottom: 48, gap: 18 }, grupo: { gap: 14 },
-  card: { padding: 18, borderRadius: 24, backgroundColor: colors.background, gap: 14 }, titulo: { ...typography.h3, color: colors.black }, texto: { ...typography.body, color: colors.textMuted }, erro: { ...typography.body, color: colors.danger }, voltar: { minHeight: 48, justifyContent: 'center' } });
+const s = StyleSheet.create({ tela: { flex: 1, backgroundColor: colors.background }, lista: { paddingHorizontal: 24, paddingBottom: 48, gap: 18 }, grupo: { gap: 14 },
+  card: { padding: 18, borderRadius: 24, backgroundColor: colors.surface, gap: 14 }, titulo: { ...typography.h3, color: colors.black }, texto: { ...typography.body, color: colors.textMuted }, erro: { ...typography.body, color: colors.danger }, voltar: { minHeight: 48, justifyContent: 'center' } });

@@ -147,7 +147,7 @@ export default function TelaMemorial() {
 }
 
 const estilos = StyleSheet.create({
-  tela: { flex: 1, backgroundColor: colors.surface },
+  tela: { flex: 1, backgroundColor: colors.background },
   centro: { alignItems: 'center', justifyContent: 'center' },
   flex: { flex: 1, minWidth: 0 },
   conteudo: { paddingBottom: 40 },

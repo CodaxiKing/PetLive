@@ -331,7 +331,7 @@ export default function TelaMedicamentos() {
 }
 
 const estilos = StyleSheet.create({
-  tela: { flex: 1, backgroundColor: colors.surface },
+  tela: { flex: 1, backgroundColor: colors.background },
   flex: { flex: 1 },
   mais: {
     position: 'absolute',
@@ -406,7 +406,7 @@ const estilos = StyleSheet.create({
   vazioTexto: { ...typography.body, color: colors.textMuted, textAlign: 'center', lineHeight: 22 },
   listaConcluidos: { gap: spacing.sm },
   ficha: {
-    backgroundColor: colors.background,
+    backgroundColor: colors.surface,
     borderRadius: 24,
     paddingHorizontal: spacing.lg,
     paddingVertical: spacing.md,
@@ -431,6 +431,6 @@ const estilos = StyleSheet.create({
     paddingHorizontal: spacing.xl,
     paddingTop: spacing.md,
     paddingBottom: 32,
-    backgroundColor: colors.surface,
+    backgroundColor: colors.background,
   },
 })

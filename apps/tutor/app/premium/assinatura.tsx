@@ -57,10 +57,10 @@ function Consulta({ tutorId }: { tutorId: string }) {
 }
 
 const s = StyleSheet.create({
-  tela: { flex: 1, backgroundColor: colors.surface }, rolagem: { paddingBottom: 40 },
+  tela: { flex: 1, backgroundColor: colors.background }, rolagem: { paddingBottom: 40 },
   corpo: { paddingHorizontal: 24, gap: 12 },
   card: { backgroundColor: colors.premiumSurface, padding: 18, borderRadius: 26, gap: 8 },
-  linha: { backgroundColor: colors.background, borderRadius: 22, padding: 16, gap: 6 },
+  linha: { backgroundColor: colors.surface, borderRadius: 22, padding: 16, gap: 6 },
   titulo: { fontFamily: fontFamily.bold, fontSize: 18, color: colors.text },
   texto: { fontFamily: fontFamily.regular, fontSize: 14, lineHeight: 21, color: colors.textMuted },
   legenda: { fontFamily: fontFamily.regular, fontSize: 12, color: colors.textMuted },

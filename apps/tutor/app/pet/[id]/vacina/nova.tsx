@@ -240,14 +240,14 @@ export default function NovaVacina() {
 }
 
 const estilos = StyleSheet.create({
-  tela: { flex: 1, backgroundColor: colors.surface },
+  tela: { flex: 1, backgroundColor: colors.background },
   flex: { flex: 1, minWidth: 0 },
   conteudo: { paddingBottom: 130 },
   pata: { position: 'absolute', right: 24, top: 56 },
   petChip: {
-    position: 'absolute',
-    left: 24,
-    top: 160,
+    alignSelf: 'flex-start',
+    marginTop: 12,
+    marginLeft: 58,
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
@@ -284,7 +284,7 @@ const estilos = StyleSheet.create({
   datas: { flexDirection: 'row', gap: 10 },
   data: { flex: 1, gap: 8 },
   atalhos: { flexDirection: 'row', gap: 6, flexWrap: 'wrap' },
-  atalho: { borderRadius: 999, paddingHorizontal: 12, paddingVertical: 6, backgroundColor: colors.background },
+  atalho: { borderRadius: 999, paddingHorizontal: 12, paddingVertical: 6, backgroundColor: colors.surface },
   atalhoAtivo: { backgroundColor: colors.black },
   atalhoTexto: { fontSize: 13, fontFamily: fontFamily.semiBold, color: colors.black },
   atalhoTextoAtivo: { color: colors.white },
@@ -292,7 +292,7 @@ const estilos = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 12,
-    backgroundColor: colors.background,
+    backgroundColor: colors.surface,
     borderRadius: 24,
     paddingVertical: 14,
     paddingHorizontal: 18,
@@ -308,6 +308,6 @@ const estilos = StyleSheet.create({
     paddingHorizontal: 24,
     paddingTop: 12,
     paddingBottom: 32,
-    backgroundColor: colors.surface,
+    backgroundColor: colors.background,
   },
 })

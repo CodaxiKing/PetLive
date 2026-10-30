@@ -68,4 +68,4 @@ export default function ConfirmarDoseDoWidget() {
     </View>
   </View>;
 }
-const s = StyleSheet.create({ tela: { flex: 1, backgroundColor: colors.surface }, corpo: { padding: 24, gap: 18 }, texto: { ...typography.body, color: colors.text }, titulo: { ...typography.h2, color: colors.text } });
+const s = StyleSheet.create({ tela: { flex: 1, backgroundColor: colors.background }, corpo: { padding: 24, gap: 18 }, texto: { ...typography.body, color: colors.text }, titulo: { ...typography.h2, color: colors.text } });

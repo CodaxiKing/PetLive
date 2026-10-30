@@ -10,7 +10,7 @@ import {
 } from 'react-native'
 import Svg, { Circle, Path } from 'react-native-svg'
 import { BotaoPrimario } from '../src/components/BotaoPrimario'
-import { CabecalhoTela } from '../src/components/CabecalhoTela'
+import { HeroiOnda } from '../src/components/HeroiOnda'
 import { Interruptor } from '../src/components/Interruptor'
 import {
   CARTOES_AVISO,
@@ -105,7 +105,6 @@ export default function TelaAvisos() {
   const [estado, setEstado] = useState<EstadoAvisos | null>(null)
   const [salvando, setSalvando] = useState(false)
   const [escolhendoHorario, setEscolhendoHorario] = useState(false)
-  const [larguraHero, setLarguraHero] = useState(0)
 
   useEffect(() => {
     carregarAvisos().then(
@@ -138,39 +137,7 @@ export default function TelaAvisos() {
 
   return (
     <View style={estilos.tela}>
-      <View
-        style={estilos.hero}
-        onLayout={(e) => setLarguraHero(Math.round(e.nativeEvent.layout.width))}
-      >
-        <CabecalhoTela titulo="" />
-
-        {/* Marca d'água de sino (decorativa, como no protótipo). */}
-        <Svg
-          style={estilos.marcadagua}
-          width={120}
-          height={120}
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke={colors.white}
-          strokeWidth={1.1}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          aria-hidden
-        >
-          <Path d="M6 17V11a6 6 0 0 1 12 0v6l1.5 2h-15z" />
-          <Path d="M10 21h4" />
-        </Svg>
-
-        <View style={estilos.blocoTitulo}>
-          <Text style={estilos.subtitulo}>Quando o app avisa você</Text>
-          <Text style={estilos.titulo}>Avisos</Text>
-        </View>
-
-        {larguraHero > 0 ? (
-          <View style={estilos.onda}>
-          </View>
-        ) : null}
-      </View>
+      <HeroiOnda subtitulo="Quando o app avisa você" titulo="Avisos" />
 
       <ScrollView
         style={estilos.flex}
@@ -308,7 +275,7 @@ export default function TelaAvisos() {
 }
 
 const estilos = StyleSheet.create({
-  tela: { flex: 1, backgroundColor: colors.surface },
+  tela: { flex: 1, backgroundColor: colors.background },
   flex: { flex: 1 },
   hero: {
     backgroundColor: colors.primarySurface,
@@ -338,7 +305,7 @@ const estilos = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: spacing.md,
-    backgroundColor: colors.background,
+    backgroundColor: colors.surface,
     borderRadius: 24,
     padding: 10,
     paddingRight: spacing.lg,

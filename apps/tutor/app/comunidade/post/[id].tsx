@@ -132,14 +132,14 @@ export default function PostComunidade() {
 }
 
 const estilos = StyleSheet.create({
-  tela: { flex: 1, backgroundColor: colors.surface },
+  tela: { flex: 1, backgroundColor: colors.background },
   centro: { alignItems: 'center', justifyContent: 'center', padding: 24 },
   barra: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingTop: 52, paddingHorizontal: 24, paddingBottom: 12 },
-  botaoVoltar: { width: 46, height: 46, borderRadius: 23, backgroundColor: colors.background, alignItems: 'center', justifyContent: 'center', transform: [{ scaleX: -1 }] },
+  botaoVoltar: { width: 46, height: 46, borderRadius: 23, backgroundColor: colors.surface, alignItems: 'center', justifyContent: 'center', transform: [{ scaleX: -1 }] },
   titulo: { flex: 1, fontFamily: fontFamily.bold, fontSize: 18, color: colors.black },
   conteudo: { paddingHorizontal: 24, paddingBottom: 24, gap: 10 },
   secao: { fontFamily: fontFamily.bold, fontSize: 15, color: colors.black, marginTop: 6 },
-  comentario: { backgroundColor: colors.background, borderRadius: 18, paddingHorizontal: 14, paddingVertical: 10, gap: 2 },
+  comentario: { backgroundColor: colors.surface, borderRadius: 18, paddingHorizontal: 14, paddingVertical: 10, gap: 2 },
   comentarioAutor: { fontFamily: fontFamily.bold, fontSize: 13, color: colors.black },
   comentarioQuando: { fontFamily: fontFamily.regular, color: colors.textMuted },
   comentarioTexto: { fontFamily: fontFamily.regular, fontSize: 14, lineHeight: 20, color: colors.black },
@@ -148,7 +148,7 @@ const estilos = StyleSheet.create({
   rodape: { paddingHorizontal: 24, paddingTop: 8, paddingBottom: 24, gap: 6 },
   erro: { fontFamily: fontFamily.medium, fontSize: 13, color: colors.danger },
   entrada: { flexDirection: 'row', alignItems: 'center', gap: 8 },
-  campo: { flex: 1, height: 48, borderRadius: 24, backgroundColor: colors.background, paddingHorizontal: 18, fontFamily: fontFamily.regular, fontSize: 15, color: colors.black },
+  campo: { flex: 1, height: 48, borderRadius: 24, backgroundColor: colors.surface, paddingHorizontal: 18, fontFamily: fontFamily.regular, fontSize: 15, color: colors.black },
   enviar: { height: 48, paddingHorizontal: 18, borderRadius: 24, backgroundColor: colors.black, alignItems: 'center', justifyContent: 'center' },
   desligado: { opacity: 0.4 },
   enviarTexto: { fontFamily: fontFamily.bold, fontSize: 14, color: colors.white },

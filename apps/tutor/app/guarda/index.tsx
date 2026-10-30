@@ -201,7 +201,7 @@ export default function GuardaCompartilhada() {
 }
 
 const estilos = StyleSheet.create({
-  tela: { flex: 1, backgroundColor: colors.surface },
+  tela: { flex: 1, backgroundColor: colors.background },
   flex: { flex: 1, minWidth: 0 },
   conteudo: { paddingHorizontal: 24, paddingBottom: 24, gap: 12 },
   info: { backgroundColor: colors.primarySurface, borderRadius: 24, padding: 16 },
@@ -210,11 +210,11 @@ const estilos = StyleSheet.create({
   erro: { fontFamily: fontFamily.medium, fontSize: 13, color: colors.danger },
   carregando: { marginTop: 24 },
   secao: { fontFamily: fontFamily.bold, fontSize: 15, color: colors.black, marginTop: 4 },
-  vazio: { fontFamily: fontFamily.regular, fontSize: 13, color: colors.textMuted, backgroundColor: colors.background, borderRadius: 20, padding: 16 },
+  vazio: { fontFamily: fontFamily.regular, fontSize: 13, color: colors.textMuted, backgroundColor: colors.surface, borderRadius: 20, padding: 16 },
   cartao: { backgroundColor: colors.white, borderWidth: 1.5, borderColor: colors.border, borderRadius: 26, padding: 14, gap: 10 },
   cartaoConvite: { borderColor: colors.black },
   linha: { flexDirection: 'row', alignItems: 'center', gap: 12 },
-  inicial: { width: 44, height: 44, borderRadius: 22, backgroundColor: colors.background, alignItems: 'center', justifyContent: 'center' },
+  inicial: { width: 44, height: 44, borderRadius: 22, backgroundColor: colors.surface, alignItems: 'center', justifyContent: 'center' },
   inicialTexto: { fontFamily: fontFamily.bold, fontSize: 18, color: colors.black },
   nome: { fontFamily: fontFamily.bold, fontSize: 16, color: colors.black },
   sub: { fontFamily: fontFamily.regular, fontSize: 12, color: colors.textMuted, marginTop: 1 },

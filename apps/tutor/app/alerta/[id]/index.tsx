@@ -108,7 +108,7 @@ export default function AlertaPerdido() {
 }
 
 const estilos = StyleSheet.create({
-  tela: { flex: 1, backgroundColor: colors.surface },
+  tela: { flex: 1, backgroundColor: colors.background },
   centro: { alignItems: 'center', justifyContent: 'center', padding: 24, gap: 8 },
   conteudo: { paddingBottom: 24, gap: 8 },
   fotoCaixa: { height: 340, backgroundColor: colors.healthSurface, alignItems: 'center', justifyContent: 'flex-end', overflow: 'hidden' },
@@ -120,7 +120,7 @@ const estilos = StyleSheet.create({
   voltarTopo: { position: 'absolute', left: 24, top: 52, width: 46, height: 46, borderRadius: 23, backgroundColor: colors.white, alignItems: 'center', justifyContent: 'center', transform: [{ scaleX: -1 }] },
   nome: { fontFamily: fontFamily.bold, fontSize: 34, letterSpacing: -1, color: colors.black, paddingHorizontal: 24, marginTop: 8 },
   sub: { fontFamily: fontFamily.regular, fontSize: 14, color: colors.textMuted, paddingHorizontal: 24 },
-  info: { marginHorizontal: 24, backgroundColor: colors.background, borderRadius: 22, padding: 16, gap: 6, marginTop: 6 },
+  info: { marginHorizontal: 24, backgroundColor: colors.surface, borderRadius: 22, padding: 16, gap: 6, marginTop: 6 },
   infoForte: { fontFamily: fontFamily.bold, fontSize: 15, color: colors.black },
   recado: { fontFamily: fontFamily.regular, fontSize: 15, lineHeight: 21, color: colors.black },
   aviso: { fontFamily: fontFamily.regular, fontSize: 12, lineHeight: 17, color: colors.textMuted, paddingHorizontal: 28, marginTop: 4 },

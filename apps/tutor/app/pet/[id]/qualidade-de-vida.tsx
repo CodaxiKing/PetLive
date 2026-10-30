@@ -161,9 +161,9 @@ export default function TelaQualidadeVida() {
 }
 
 const estilos = StyleSheet.create({
-  tela: { flex: 1, backgroundColor: colors.surface },
+  tela: { flex: 1, backgroundColor: colors.background },
   conteudo: { paddingHorizontal: 24, paddingBottom: 24, gap: 10 },
-  item: { backgroundColor: colors.background, borderRadius: 24, paddingVertical: 12, paddingHorizontal: 18, gap: 8 },
+  item: { backgroundColor: colors.surface, borderRadius: 24, paddingVertical: 12, paddingHorizontal: 18, gap: 8 },
   itemTopo: { flexDirection: 'row', justifyContent: 'space-between' },
   itemRotulo: { fontFamily: fontFamily.semiBold, fontSize: 16, color: colors.black },
   itemValor: { fontFamily: fontFamily.semiBold, fontSize: 16, color: colors.black },
@@ -174,7 +174,7 @@ const estilos = StyleSheet.create({
   totalRotulo: { fontFamily: fontFamily.bold, fontSize: 14, color: colors.primaryDeep },
   totalValor: { fontFamily: fontFamily.bold, fontSize: 38, letterSpacing: -1, color: colors.black },
   totalAviso: { fontFamily: fontFamily.regular, fontSize: 13, lineHeight: 19, color: colors.primaryDeep },
-  observacao: { backgroundColor: colors.background, borderRadius: 22, padding: 16, minHeight: 70, fontFamily: fontFamily.medium, fontSize: 14, color: colors.black },
+  observacao: { backgroundColor: colors.surface, borderRadius: 22, padding: 16, minHeight: 70, fontFamily: fontFamily.medium, fontSize: 14, color: colors.black },
   secao: { fontFamily: fontFamily.bold, fontSize: 15, color: colors.black, marginTop: 6 },
   registro: { flexDirection: 'row', alignItems: 'center', gap: 12 },
   registroData: { width: 70, fontFamily: fontFamily.semiBold, fontSize: 13, color: '#566070' },

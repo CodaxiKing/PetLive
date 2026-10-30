@@ -143,12 +143,12 @@ export default function TelaLinhaDoTempo() {
 }
 
 const estilos = StyleSheet.create({
-  tela: { flex: 1, backgroundColor: colors.surface },
+  tela: { flex: 1, backgroundColor: colors.background },
   flex: { flex: 1, minWidth: 0 },
   carregando: { marginTop: 40 },
   conteudo: { paddingHorizontal: 24, paddingBottom: 24 },
   filtros: { flexDirection: 'row', gap: 8, marginBottom: 16 },
-  filtro: { paddingVertical: 7, paddingHorizontal: 14, borderRadius: 999, backgroundColor: colors.background },
+  filtro: { paddingVertical: 7, paddingHorizontal: 14, borderRadius: 999, backgroundColor: colors.surface },
   filtroAtivo: { backgroundColor: colors.black },
   filtroTexto: { fontFamily: fontFamily.bold, fontSize: 13, color: colors.black },
   filtroTextoAtivo: { color: colors.white },

@@ -134,7 +134,7 @@ export default function AlertaDoTutor() {
 }
 
 const estilos = StyleSheet.create({
-  tela: { flex: 1, backgroundColor: colors.surface },
+  tela: { flex: 1, backgroundColor: colors.background },
   centro: { alignItems: 'center', justifyContent: 'center', padding: 24 },
   flex: { flex: 1, minWidth: 0 },
   conteudo: { paddingHorizontal: 24, paddingBottom: 24, gap: 10 },
@@ -143,8 +143,8 @@ const estilos = StyleSheet.create({
   recado: { fontFamily: fontFamily.semiBold, fontSize: 15, lineHeight: 21, color: colors.black },
   link: { fontFamily: fontFamily.bold, fontSize: 13, color: colors.primaryDeep, marginTop: 2 },
   secao: { fontFamily: fontFamily.bold, fontSize: 15, color: colors.black, marginTop: 6 },
-  vazio: { fontFamily: fontFamily.regular, fontSize: 13, lineHeight: 19, color: colors.textMuted, backgroundColor: colors.background, borderRadius: 20, padding: 14 },
-  avistamento: { flexDirection: 'row', alignItems: 'center', gap: 12, backgroundColor: colors.background, borderRadius: 22, padding: 12 },
+  vazio: { fontFamily: fontFamily.regular, fontSize: 13, lineHeight: 19, color: colors.textMuted, backgroundColor: colors.surface, borderRadius: 20, padding: 14 },
+  avistamento: { flexDirection: 'row', alignItems: 'center', gap: 12, backgroundColor: colors.surface, borderRadius: 22, padding: 12 },
   comPessoa: { backgroundColor: colors.successSurface },
   foto: { width: 56, height: 56, borderRadius: 16 },
   avTitulo: { fontFamily: fontFamily.bold, fontSize: 14, color: colors.black },

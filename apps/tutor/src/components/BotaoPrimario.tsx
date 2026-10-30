@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import { cloneElement, isValidElement, type ReactElement, type ReactNode } from 'react';
 import { ActivityIndicator, StyleSheet, Text, View, type ViewStyle } from 'react-native';
 import { colors } from '../theme/colors';
 import { Tocavel } from './Animacoes';
@@ -20,8 +20,8 @@ type Props = {
 
 /**
  * Botão principal da versão 2 do protótipo: pílula escura com o texto ao
- * centro. Um ícone próprio aparece num círculo azul-céu antes do texto
- * (os ícones das telas são escuros, e o círculo os mantém legíveis).
+ * centro. Um ícone próprio aparece pequeno e branco antes do texto ("+ Novo
+ * remédio"): as telas passam ícones escuros, então o botão os recolore.
  */
 export function BotaoPrimario({ titulo, onPress, carregando, desabilitado, icone, estilo }: Props) {
   const inativo = desabilitado || carregando;
@@ -43,7 +43,7 @@ export function BotaoPrimario({ titulo, onPress, carregando, desabilitado, icone
         <ActivityIndicator size="small" color={colors.white} />
       ) : (
         <View style={estilos.conteudo}>
-          {icone ? <View style={estilos.circulo}>{icone}</View> : null}
+          {icone ? iconeBranco(icone) : null}
           <Text style={estilos.titulo} numberOfLines={1}>
             {titulo}
           </Text>
@@ -51,6 +51,18 @@ export function BotaoPrimario({ titulo, onPress, carregando, desabilitado, icone
       )}
     </Tocavel>
   );
+}
+
+/** Ícone das telas (Icone, Phosphor ou um "+" em texto) em branco e no tamanho do botão. */
+function iconeBranco(icone: ReactNode): ReactNode {
+  if (!isValidElement(icone)) return icone;
+  const props = icone.props as { style?: unknown };
+  return cloneElement(icone as ReactElement<Record<string, unknown>>, {
+    cor: colors.white,
+    color: colors.white,
+    size: 20,
+    style: [props.style, { color: colors.white, fontSize: 22, lineHeight: 24 }],
+  });
 }
 
 const estilos = StyleSheet.create({
@@ -71,15 +83,6 @@ const estilos = StyleSheet.create({
     justifyContent: 'center',
     gap: 10,
     maxWidth: '100%',
-  },
-  circulo: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    backgroundColor: colors.primary,
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexShrink: 0,
   },
   titulo: {
     ...typography.button,

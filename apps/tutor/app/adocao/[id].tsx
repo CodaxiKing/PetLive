@@ -84,7 +84,7 @@ function Foto({ uri, rotulo }: { uri: string; rotulo: string }) {
   const [falhou, setFalhou] = useState(false);
   return falhou ? <View style={[s.foto, s.semFoto]}><Text style={s.texto}>Foto não disponível</Text></View> : <Image source={{ uri }} accessibilityLabel={rotulo} style={s.foto} resizeMode="cover" onError={() => setFalhou(true)} />;
 }
-const s = StyleSheet.create({ tela: { flex: 1, backgroundColor: colors.surface }, conteudo: { paddingHorizontal: 24, paddingBottom: 48, gap: 18 },
+const s = StyleSheet.create({ tela: { flex: 1, backgroundColor: colors.background }, conteudo: { paddingHorizontal: 24, paddingBottom: 48, gap: 18 },
   titulo: { ...typography.h2, color: colors.black }, subtitulo: { ...typography.h3, color: colors.black }, texto: { ...typography.body, color: colors.textMuted }, erro: { ...typography.body, color: colors.danger },
-  card: { padding: 18, borderRadius: 24, backgroundColor: colors.background, gap: 14 }, foto: { width: '100%', height: 280, borderRadius: 24, backgroundColor: colors.hero }, semFoto: { alignItems: 'center', justifyContent: 'center' },
+  card: { padding: 18, borderRadius: 24, backgroundColor: colors.surface, gap: 14 }, foto: { width: '100%', height: 280, borderRadius: 24, backgroundColor: colors.hero }, semFoto: { alignItems: 'center', justifyContent: 'center' },
   campo: { ...typography.body, color: colors.black, minHeight: 48, padding: 14, borderRadius: 16, borderWidth: 1, borderColor: colors.border }, mensagem: { minHeight: 130 }, consentimento: { minHeight: 48, justifyContent: 'center', paddingVertical: 10 } });

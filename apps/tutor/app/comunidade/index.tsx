@@ -113,7 +113,7 @@ export default function Comunidade() {
 }
 
 const estilos = StyleSheet.create({
-  tela: { flex: 1, backgroundColor: colors.surface },
+  tela: { flex: 1, backgroundColor: colors.background },
   centro: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: 24 },
   lista: { paddingHorizontal: 24, paddingBottom: 32 },
   cabecalho: { marginBottom: 12, gap: 8 },
@@ -125,7 +125,7 @@ const estilos = StyleSheet.create({
   historiaNome: { fontFamily: fontFamily.semiBold, fontSize: 12, color: colors.black, maxWidth: 64 },
   dica: { fontFamily: fontFamily.regular, fontSize: 12, color: colors.textMuted },
   separador: { height: 12 },
-  vazioCartao: { backgroundColor: colors.background, borderRadius: 24, padding: 18, gap: 6 },
+  vazioCartao: { backgroundColor: colors.surface, borderRadius: 24, padding: 18, gap: 6 },
   vazioTitulo: { fontFamily: fontFamily.bold, fontSize: 16, color: colors.black },
   vazio: { fontFamily: fontFamily.regular, fontSize: 14, lineHeight: 20, color: colors.textMuted },
 });

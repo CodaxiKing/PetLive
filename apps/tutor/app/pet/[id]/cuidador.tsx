@@ -205,10 +205,10 @@ export default function TelaCuidador() {
 }
 
 const estilos = StyleSheet.create({
-  tela: { flex: 1, backgroundColor: colors.surface },
+  tela: { flex: 1, backgroundColor: colors.background },
   flex: { flex: 1, minWidth: 0 },
   conteudo: { paddingHorizontal: 24, paddingBottom: 24, gap: 10 },
-  campo: { backgroundColor: colors.background, borderRadius: 24, paddingVertical: 12, paddingHorizontal: 16, gap: 8 },
+  campo: { backgroundColor: colors.surface, borderRadius: 24, paddingVertical: 12, paddingHorizontal: 16, gap: 8 },
   rotulo: { fontFamily: fontFamily.semiBold, fontSize: 12, color: '#566070' },
   chips: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
   chip: { paddingVertical: 8, paddingHorizontal: 14, borderRadius: 999, backgroundColor: colors.white },
@@ -217,7 +217,7 @@ const estilos = StyleSheet.create({
   chipTextoAtivo: { color: colors.white },
   entrada: { fontFamily: fontFamily.bold, fontSize: 16, color: colors.black, paddingVertical: 2 },
   secao: { fontFamily: fontFamily.bold, fontSize: 15, color: colors.black, marginTop: 6 },
-  item: { flexDirection: 'row', alignItems: 'center', gap: 12, backgroundColor: colors.background, borderRadius: 24, paddingVertical: 12, paddingHorizontal: 16 },
+  item: { flexDirection: 'row', alignItems: 'center', gap: 12, backgroundColor: colors.surface, borderRadius: 24, paddingVertical: 12, paddingHorizontal: 16 },
   itemTitulo: { fontFamily: fontFamily.bold, fontSize: 16, color: colors.black },
   itemSub: { fontFamily: fontFamily.regular, fontSize: 13, color: '#566070' },
   acesso: { flexDirection: 'row', alignItems: 'center', gap: 12, backgroundColor: colors.primarySurface, borderRadius: 24, paddingVertical: 14, paddingHorizontal: 18 },

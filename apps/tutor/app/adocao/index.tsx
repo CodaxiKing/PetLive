@@ -73,8 +73,8 @@ function Cartao({ pet, ocupado, favoritar }: { pet: PetAdocao; ocupado: boolean;
       {expandido ? <><Text style={s.texto}>{pet.descricao}</Text><Text style={s.texto}>{[['Castrado', pet.castrado], ['Vacinado', pet.vacinado], ['Vermifugado', pet.vermifugado]].map(([rotulo, valor]) => `${rotulo}: ${valor === null ? 'não informado' : valor ? 'sim' : 'não'}`).join(' · ')}</Text><Text style={s.texto}>Informações fornecidas pela ONG. Confirme os cuidados e a disponibilidade com ela.</Text></> : null}
     </View></View>;
 }
-const s = StyleSheet.create({ tela: { flex: 1, backgroundColor: colors.surface }, lista: { flex: 1 }, conteudo: { paddingHorizontal: 24, paddingBottom: 40, gap: 18 },
+const s = StyleSheet.create({ tela: { flex: 1, backgroundColor: colors.background }, lista: { flex: 1 }, conteudo: { paddingHorizontal: 24, paddingBottom: 40, gap: 18 },
   cabecalho: { gap: 14, paddingBottom: 8 }, titulo: { ...typography.h3, color: colors.black }, texto: { ...typography.body, color: colors.textMuted },
   filtro: { ...typography.body, fontWeight: '700', color: colors.black }, aviso: { gap: 12 }, erro: { ...typography.body, color: colors.danger },
-  card: { backgroundColor: colors.background, borderRadius: 24, overflow: 'hidden' }, dados: { padding: 18, gap: 10 }, foto: { width: '100%', height: 220, backgroundColor: colors.hero },
+  card: { backgroundColor: colors.surface, borderRadius: 24, overflow: 'hidden' }, dados: { padding: 18, gap: 10 }, foto: { width: '100%', height: 220, backgroundColor: colors.hero },
   semFoto: { justifyContent: 'center', alignItems: 'center' }, acao: { minHeight: 48, justifyContent: 'center', alignItems: 'center', borderRadius: 20, borderWidth: 1, borderColor: colors.border, padding: 12 }, ativo: { backgroundColor: colors.hero } });

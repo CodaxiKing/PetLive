@@ -154,7 +154,7 @@ export default function DocumentosSaude() {
 }
 
 const estilos = StyleSheet.create({
-  tela: { flex: 1, backgroundColor: colors.surface },
+  tela: { flex: 1, backgroundColor: colors.background },
   conteudo: { padding: 24, paddingBottom: 120, gap: 12 },
   ajuda: { fontFamily: fontFamily.regular, fontSize: 14, lineHeight: 21, color: colors.textMuted },
   rotulo: { fontFamily: fontFamily.semiBold, fontSize: 14, color: colors.black, marginTop: 4 },
@@ -166,11 +166,11 @@ const estilos = StyleSheet.create({
   mais: { fontSize: 20, color: colors.black },
   secao: { fontFamily: fontFamily.bold, fontSize: 18, color: colors.black, marginTop: 12 },
   vazio: { fontFamily: fontFamily.regular, fontSize: 14, color: colors.textMuted },
-  documento: { flexDirection: 'row', alignItems: 'center', gap: 8, backgroundColor: colors.background, borderRadius: 22, padding: 16 },
+  documento: { flexDirection: 'row', alignItems: 'center', gap: 8, backgroundColor: colors.surface, borderRadius: 22, padding: 16 },
   detalhe: { flex: 1, gap: 3 },
   categoria: { fontFamily: fontFamily.bold, fontSize: 11, color: colors.premiumText, textTransform: 'uppercase' },
   titulo: { fontFamily: fontFamily.semiBold, fontSize: 15, color: colors.black },
   data: { fontFamily: fontFamily.regular, fontSize: 12, color: colors.textMuted },
   remover: { fontFamily: fontFamily.semiBold, fontSize: 12, color: colors.danger },
-  rodape: { paddingHorizontal: 24, paddingTop: 12, paddingBottom: 28, backgroundColor: colors.surface },
+  rodape: { paddingHorizontal: 24, paddingTop: 12, paddingBottom: 28, backgroundColor: colors.background },
 })

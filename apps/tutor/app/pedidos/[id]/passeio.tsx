@@ -115,20 +115,20 @@ export default function PasseioLoja() {
 }
 
 const estilos = StyleSheet.create({
-  tela: { flex: 1, backgroundColor: colors.surface },
+  tela: { flex: 1, backgroundColor: colors.background },
   centro: { alignItems: 'center', justifyContent: 'center', padding: 24 },
   conteudo: { paddingHorizontal: 24, paddingBottom: 24, gap: 12 },
   sub: { fontFamily: fontFamily.regular, fontSize: 13, color: colors.textMuted },
   titulo: { fontFamily: fontFamily.bold, fontSize: 16, color: colors.black },
   secao: { fontFamily: fontFamily.bold, fontSize: 15, color: colors.black },
   texto: { fontFamily: fontFamily.regular, fontSize: 14, lineHeight: 20, color: colors.black },
-  cartao: { backgroundColor: colors.background, borderRadius: 22, padding: 16, gap: 6 },
+  cartao: { backgroundColor: colors.surface, borderRadius: 22, padding: 16, gap: 6 },
   numeros: { flexDirection: 'row', gap: 10 },
   numero: { flex: 1, backgroundColor: colors.primarySurface, borderRadius: 20, padding: 12, gap: 2 },
   numeroRotulo: { fontFamily: fontFamily.semiBold, fontSize: 12, color: colors.primaryDeep },
   numeroValor: { fontFamily: fontFamily.bold, fontSize: 20, color: colors.black },
   fases: { flexDirection: 'row', flexWrap: 'wrap', gap: 6 },
-  fase: { fontFamily: fontFamily.semiBold, fontSize: 13, color: colors.textMuted, backgroundColor: colors.background, paddingHorizontal: 12, paddingVertical: 6, borderRadius: 999, overflow: 'hidden' },
+  fase: { fontFamily: fontFamily.semiBold, fontSize: 13, color: colors.textMuted, backgroundColor: colors.surface, paddingHorizontal: 12, paddingVertical: 6, borderRadius: 999, overflow: 'hidden' },
   faseFeita: { color: colors.successText, backgroundColor: colors.successSurface },
   fotos: { gap: 8 },
   foto: { width: 120, height: 120, borderRadius: 18 },

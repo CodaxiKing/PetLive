@@ -269,14 +269,14 @@ function CartaoLugar({ lugar, indice, nomes }: { lugar: Lugar; indice: number; n
 }
 
 const estilos = StyleSheet.create({
-  tela: { flex: 1, backgroundColor: colors.surface },
+  tela: { flex: 1, backgroundColor: colors.background },
   flex: { flex: 1, minWidth: 0 },
   pata: { position: 'absolute', right: 30, top: 54 },
   corpo: { flex: 1, paddingHorizontal: 24, gap: 8 },
   busca: {
     height: 50,
     borderRadius: 25,
-    backgroundColor: colors.background,
+    backgroundColor: colors.surface,
     flexDirection: 'row',
     alignItems: 'center',
     gap: 10,

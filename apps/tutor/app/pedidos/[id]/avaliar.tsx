@@ -81,7 +81,7 @@ export default function AvaliarPedido() {
 }
 
 const estilos = StyleSheet.create({
-  tela: { flex: 1, backgroundColor: colors.surface },
+  tela: { flex: 1, backgroundColor: colors.background },
   conteudo: { paddingHorizontal: 24, paddingBottom: 24, gap: 12 },
   secao: { fontFamily: fontFamily.bold, fontSize: 15, color: colors.black, marginTop: 4 },
   estrelas: { flexDirection: 'row', gap: 10, justifyContent: 'center' },
@@ -93,7 +93,7 @@ const estilos = StyleSheet.create({
   chipAtivo: { backgroundColor: colors.black, borderColor: colors.black },
   chipTexto: { fontFamily: fontFamily.semiBold, fontSize: 13, color: colors.black },
   textoClaro: { color: colors.white },
-  campo: { backgroundColor: colors.background, borderRadius: 22, padding: 14 },
+  campo: { backgroundColor: colors.surface, borderRadius: 22, padding: 14 },
   texto: { fontFamily: fontFamily.regular, fontSize: 15, color: colors.black, minHeight: 70, textAlignVertical: 'top' },
   foto: { flexDirection: 'row', alignItems: 'center', gap: 12, borderWidth: 1.5, borderStyle: 'dashed', borderColor: colors.borderStrong, borderRadius: 22, padding: 12 },
   previa: { width: 48, height: 48, borderRadius: 14 },

@@ -59,7 +59,7 @@ export function CartaoPost({ post, foto, onCurtir, onMudou }: { post: Post; foto
 }
 
 const estilos = StyleSheet.create({
-  cartao: { backgroundColor: colors.background, borderRadius: 26, padding: 12, gap: 10 },
+  cartao: { backgroundColor: colors.surface, borderRadius: 26, padding: 12, gap: 10 },
   topo: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   autor: { flex: 1, flexDirection: 'row', alignItems: 'center', gap: 10, minWidth: 0 },
   flex: { flex: 1, minWidth: 0 },

@@ -118,7 +118,7 @@ export default function TelaPartida() {
 }
 
 const estilos = StyleSheet.create({
-  tela: { flex: 1, backgroundColor: colors.surface },
+  tela: { flex: 1, backgroundColor: colors.background },
   flex: { flex: 1, minWidth: 0 },
   conteudo: { paddingHorizontal: 24, paddingBottom: 24, gap: 12 },
   intro: { fontFamily: fontFamily.regular, fontSize: 16, lineHeight: 24, color: '#566070' },
@@ -133,7 +133,7 @@ const estilos = StyleSheet.create({
   alca: { alignSelf: 'center', width: 44, height: 5, borderRadius: 3, backgroundColor: '#D5DAE2' },
   folhaTitulo: { fontFamily: fontFamily.bold, fontSize: 24, letterSpacing: -0.5, color: colors.black },
   folhaTexto: { fontFamily: fontFamily.regular, fontSize: 15, lineHeight: 22, color: '#566070' },
-  folhaNota: { fontFamily: fontFamily.regular, fontSize: 14, lineHeight: 20, color: '#2B3A4A', backgroundColor: colors.background, borderRadius: 18, overflow: 'hidden', padding: 14 },
+  folhaNota: { fontFamily: fontFamily.regular, fontSize: 14, lineHeight: 20, color: '#2B3A4A', backgroundColor: colors.surface, borderRadius: 18, overflow: 'hidden', padding: 14 },
   negrito: { fontFamily: fontFamily.bold },
   botaoVoltar: { height: 52, borderRadius: 26, borderWidth: 1.5, borderColor: '#E1E6EE', alignItems: 'center', justifyContent: 'center' },
   botaoVoltarTexto: { fontFamily: fontFamily.bold, fontSize: 15, color: colors.black },

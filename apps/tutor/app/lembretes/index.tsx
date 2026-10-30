@@ -27,6 +27,7 @@ import type { Especie } from '../../src/pets/types'
 import { progressoDias } from '../../src/remedios/doses'
 import { normalizarHorarios, type Remedio } from '../../src/remedios/types'
 import { colors } from '../../src/theme/colors'
+import { shadow } from '../../src/theme/tokens'
 import { fontFamily, typography } from '../../src/theme/typography'
 
 const DIAS_SEMANA = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom']
@@ -182,10 +183,15 @@ export default function Lembretes() {
           >
             <ArrowLeft size={22} color={colors.black} />
           </Pressable>
-          <View style={estilos.topoDireita}>
+          <View style={estilos.topoTextos}>
             <Text style={estilos.mes}>
               {MESES[hoje.getMonth()]} {hoje.getFullYear()}
             </Text>
+            <Text style={estilos.titulo} accessibilityRole="header">
+              Lembretes
+            </Text>
+          </View>
+          <View style={estilos.topoDireita}>
             <Pressable
               accessibilityRole="button"
               accessibilityLabel="Novo lembrete"
@@ -197,10 +203,6 @@ export default function Lembretes() {
             </Pressable>
           </View>
         </View>
-
-        <Text style={estilos.titulo} accessibilityRole="header">
-          Lembretes
-        </Text>
 
         <View style={estilos.semana}>
           {semana.map((dia, i) => {
@@ -214,20 +216,13 @@ export default function Lembretes() {
                 accessibilityState={{ selected: escolhido }}
                 accessibilityLabel={`${DIAS_SEMANA[i]} ${Number(dia.slice(8))}${temLembrete ? ', tem lembrete' : ''}`}
                 onPress={() => setDiaEscolhido(escolhido ? null : dia)}
-                style={estilos.dia}
+                style={[estilos.dia, (ehHoje || escolhido) && estilos.diaHoje]}
               >
-                <Text style={estilos.diaNome}>{DIAS_SEMANA[i]}</Text>
-                <View
-                  style={[
-                    estilos.diaCirculo,
-                    temLembrete && estilos.diaComLembrete,
-                    (ehHoje || escolhido) && estilos.diaHoje,
-                  ]}
-                >
-                  <Text style={[estilos.diaNumero, (ehHoje || escolhido) && estilos.diaNumeroHoje]}>
-                    {Number(dia.slice(8))}
-                  </Text>
-                </View>
+                <Text style={[estilos.diaNome, (ehHoje || escolhido) && estilos.diaNumeroHoje]}>{DIAS_SEMANA[i]}</Text>
+                <Text style={[estilos.diaNumero, (ehHoje || escolhido) && estilos.diaNumeroHoje]}>
+                  {Number(dia.slice(8))}
+                </Text>
+                <View style={[estilos.diaPonto, temLembrete && estilos.diaComLembrete, temLembrete && (ehHoje || escolhido) && estilos.diaPontoHoje]} />
               </Pressable>
             )
           })}
@@ -378,10 +373,12 @@ export default function Lembretes() {
 }
 
 const estilos = StyleSheet.create({
-  tela: { flex: 1, backgroundColor: colors.surface },
+  tela: { flex: 1, backgroundColor: colors.background },
   flex: { flex: 1, minWidth: 0 },
-  heroi: { height: 290, backgroundColor: colors.primarySurface, overflow: 'hidden', paddingHorizontal: 24, paddingTop: 56 },
-  topo: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+  // Versão 2: voltar, título e o + na mesma linha; a semana em blocos brancos.
+  heroi: { paddingHorizontal: 20, paddingTop: 56, paddingBottom: 8 },
+  topo: { flexDirection: 'row', alignItems: 'center', gap: 12 },
+  topoTextos: { flex: 1, minWidth: 0 },
   topoDireita: { flexDirection: 'row', alignItems: 'center', gap: 14 },
   botaoBranco: {
     width: 46,
@@ -390,6 +387,7 @@ const estilos = StyleSheet.create({
     backgroundColor: colors.white,
     alignItems: 'center',
     justifyContent: 'center',
+    ...shadow.card,
   },
   botaoPreto: {
     width: 46,
@@ -400,25 +398,24 @@ const estilos = StyleSheet.create({
     justifyContent: 'center',
   },
   botaoPretoSinal: { fontFamily: fontFamily.regular, fontSize: 26, lineHeight: 30, color: colors.white },
-  mes: { fontSize: 15, fontFamily: fontFamily.medium, color: colors.black },
+  mes: { fontSize: 13, fontFamily: fontFamily.medium, color: colors.textMuted },
   titulo: {
-    marginTop: 14,
-    fontSize: 36,
-    lineHeight: 42,
-    letterSpacing: -1.2,
+    fontSize: 26,
+    lineHeight: 31,
+    letterSpacing: -0.8,
     fontFamily: fontFamily.bold,
     color: colors.black,
   },
-  semana: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 16, marginHorizontal: -8 },
-  dia: { alignItems: 'center', gap: 4, flex: 1 },
-  diaNome: { fontSize: 12, fontFamily: fontFamily.medium, color: colors.primaryDark },
-  diaCirculo: { width: 40, height: 40, borderRadius: 20, alignItems: 'center', justifyContent: 'center' },
-  diaComLembrete: { backgroundColor: colors.white },
+  semana: { flexDirection: 'row', gap: 6, marginTop: 16 },
+  dia: { flex: 1, alignItems: 'center', gap: 1, paddingVertical: 8, borderRadius: 18, backgroundColor: colors.white, ...shadow.card },
+  diaNome: { fontSize: 11, fontFamily: fontFamily.semiBold, color: colors.textMuted },
+  diaPonto: { width: 5, height: 5, borderRadius: 3, marginTop: 2 },
+  diaComLembrete: { backgroundColor: colors.primaryDeep },
+  diaPontoHoje: { backgroundColor: colors.primary },
   diaHoje: { backgroundColor: colors.black },
-  diaNumero: { fontSize: 15, fontFamily: fontFamily.semiBold, color: colors.black },
+  diaNumero: { fontSize: 18, fontFamily: fontFamily.bold, color: colors.black },
   diaNumeroHoje: { color: colors.white },
-  onda: { position: 'absolute', left: 0, bottom: -1 },
-  conteudo: { paddingHorizontal: 24, paddingTop: 4, paddingBottom: 48, gap: 16 },
+  conteudo: { paddingHorizontal: 20, paddingTop: 12, paddingBottom: 48, gap: 16 },
   banner: { backgroundColor: colors.warningSurface, borderRadius: 24, padding: 16, gap: 2 },
   bannerTitulo: { fontSize: 15, fontFamily: fontFamily.bold, color: colors.warningText },
   bannerTexto: { ...typography.caption, color: colors.warningText },

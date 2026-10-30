@@ -87,14 +87,14 @@ export default function PrimeirosSocorros() {
 }
 
 const estilos = StyleSheet.create({
-  tela: { flex: 1, backgroundColor: colors.surface },
+  tela: { flex: 1, backgroundColor: colors.background },
   conteudo: { paddingHorizontal: 24, paddingBottom: spacing.lg, gap: 8 },
   bloco: { gap: 8 },
   situacao: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: colors.background,
+    backgroundColor: colors.surface,
     borderRadius: 20,
     paddingVertical: 12,
     paddingHorizontal: 16,

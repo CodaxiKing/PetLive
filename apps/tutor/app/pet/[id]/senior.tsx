@@ -113,13 +113,13 @@ export default function TelaSenior() {
 }
 
 const estilos = StyleSheet.create({
-  tela: { flex: 1, backgroundColor: colors.surface },
+  tela: { flex: 1, backgroundColor: colors.background },
   flex: { flex: 1, minWidth: 0 },
   conteudo: { paddingHorizontal: 24, paddingBottom: 32, gap: 12 },
   aviso: { backgroundColor: '#FFF0C9', borderRadius: 28, paddingVertical: 16, paddingHorizontal: 20, gap: 4 },
   avisoTitulo: { fontFamily: fontFamily.bold, fontSize: 14, color: '#8A5A00' },
   avisoTexto: { fontFamily: fontFamily.regular, fontSize: 16, lineHeight: 23, color: '#2B3A4A' },
-  item: { flexDirection: 'row', alignItems: 'center', gap: 12, backgroundColor: colors.background, borderRadius: 24, paddingVertical: 14, paddingHorizontal: 18 },
+  item: { flexDirection: 'row', alignItems: 'center', gap: 12, backgroundColor: colors.surface, borderRadius: 24, paddingVertical: 14, paddingHorizontal: 18 },
   itemTitulo: { fontFamily: fontFamily.bold, fontSize: 16, color: colors.black },
   itemSub: { fontFamily: fontFamily.regular, fontSize: 13, color: '#566070' },
   sinais: { paddingVertical: 12 },

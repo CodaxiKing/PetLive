@@ -107,7 +107,7 @@ export default function NovaSenha() {
 }
 
 const estilos = StyleSheet.create({
-  tela: { flex: 1, backgroundColor: colors.surface },
+  tela: { flex: 1, backgroundColor: colors.background },
   pata: { position: 'absolute', right: 30, top: 54 },
   conteudo: { paddingHorizontal: 24, paddingBottom: 32, gap: 14 },
   carregando: { marginTop: 32 },

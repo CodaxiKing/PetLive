@@ -58,7 +58,7 @@ export function ConfigurarRegiaoPerdidos() {
 }
 
 const s = StyleSheet.create({
-  card: { backgroundColor: colors.background, padding: 18, borderRadius: 24, gap: 10 },
+  card: { backgroundColor: colors.surface, padding: 18, borderRadius: 24, gap: 10 },
   linha: { flexDirection: 'row', alignItems: 'center', gap: 12 },
   flex: { flex: 1, minWidth: 0, gap: 4 },
   titulo: { ...typography.h3, color: colors.black },

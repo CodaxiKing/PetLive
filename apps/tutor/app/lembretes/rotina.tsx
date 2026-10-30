@@ -219,11 +219,11 @@ export default function Rotina() {
 }
 
 const estilos = StyleSheet.create({
-  tela: { flex: 1, backgroundColor: colors.surface },
+  tela: { flex: 1, backgroundColor: colors.background },
   flex: { flex: 1, minWidth: 0 },
   conteudo: { paddingHorizontal: 24, paddingBottom: spacing.lg, gap: 10 },
   pets: { gap: 8 },
-  pilula: { borderRadius: 999, paddingHorizontal: 14, paddingVertical: 7, backgroundColor: colors.background },
+  pilula: { borderRadius: 999, paddingHorizontal: 14, paddingVertical: 7, backgroundColor: colors.surface },
   pilulaAtiva: { backgroundColor: colors.black },
   pilulaTexto: { fontSize: 13, fontFamily: typography.label.fontFamily, color: colors.black },
   pilulaTextoAtiva: { color: colors.white },

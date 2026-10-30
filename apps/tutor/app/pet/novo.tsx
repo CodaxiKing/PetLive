@@ -99,7 +99,7 @@ export default function NovoPet() {
 }
 
 const estilos = StyleSheet.create({
-  tela: { flex: 1, backgroundColor: colors.surface },
+  tela: { flex: 1, backgroundColor: colors.background },
   erro: { color: colors.danger, fontFamily: fontFamily.medium, fontSize: 13, marginBottom: 10 },
   check: { fontSize: 20, fontFamily: fontFamily.bold, color: colors.black },
   rodape: {
@@ -110,6 +110,6 @@ const estilos = StyleSheet.create({
     paddingHorizontal: 24,
     paddingTop: 12,
     paddingBottom: 32,
-    backgroundColor: colors.surface,
+    backgroundColor: colors.background,
   },
 })

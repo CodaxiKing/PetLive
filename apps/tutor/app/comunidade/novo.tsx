@@ -95,10 +95,10 @@ export default function NovoPost() {
 }
 
 const estilos = StyleSheet.create({
-  tela: { flex: 1, backgroundColor: colors.surface },
+  tela: { flex: 1, backgroundColor: colors.background },
   conteudo: { paddingHorizontal: 24, paddingBottom: 24, gap: 12 },
   pets: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
-  pet: { flexDirection: 'row', alignItems: 'center', gap: 8, paddingLeft: 4, paddingRight: 14, height: 42, borderRadius: 21, backgroundColor: colors.background },
+  pet: { flexDirection: 'row', alignItems: 'center', gap: 8, paddingLeft: 4, paddingRight: 14, height: 42, borderRadius: 21, backgroundColor: colors.surface },
   petAtivo: { backgroundColor: colors.black },
   petNome: { fontFamily: fontFamily.bold, fontSize: 14, color: colors.black },
   textoClaro: { color: colors.white },
@@ -110,7 +110,7 @@ const estilos = StyleSheet.create({
   molduraTexto: { fontFamily: fontFamily.semiBold, fontSize: 14, color: colors.primaryDeep },
   camera: { alignSelf: 'center', paddingHorizontal: 16, paddingVertical: 6 },
   cameraTexto: { fontFamily: fontFamily.bold, fontSize: 14, color: colors.primaryDeep },
-  campo: { backgroundColor: colors.background, borderRadius: 22, padding: 14, gap: 4 },
+  campo: { backgroundColor: colors.surface, borderRadius: 22, padding: 14, gap: 4 },
   rotulo: { fontFamily: fontFamily.semiBold, fontSize: 12, color: colors.textMuted },
   texto: { fontFamily: fontFamily.regular, fontSize: 15, color: colors.black, minHeight: 60, textAlignVertical: 'top' },
   nota: { fontFamily: fontFamily.regular, fontSize: 12, lineHeight: 17, color: colors.textMuted, paddingHorizontal: 4 },

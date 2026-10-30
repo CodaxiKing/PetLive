@@ -129,7 +129,7 @@ export default function Intoxicacao() {
 }
 
 const estilos = StyleSheet.create({
-  tela: { flex: 1, backgroundColor: colors.surface },
+  tela: { flex: 1, backgroundColor: colors.background },
   flex: { flex: 1, minWidth: 0 },
   conteudo: { paddingHorizontal: 24, paddingBottom: spacing.lg, gap: 8 },
   busca: {
@@ -149,7 +149,7 @@ const estilos = StyleSheet.create({
     paddingVertical: 0,
   },
   item: {
-    backgroundColor: colors.background,
+    backgroundColor: colors.surface,
     borderRadius: 20,
     paddingVertical: 10,
     paddingHorizontal: 14,

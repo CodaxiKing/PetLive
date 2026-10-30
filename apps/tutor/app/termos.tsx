@@ -189,14 +189,14 @@ export default function Termos() {
 }
 
 const estilos = StyleSheet.create({
-  tela: { flex: 1, backgroundColor: colors.surface },
+  tela: { flex: 1, backgroundColor: colors.background },
   flex: { flex: 1 },
   conteudo: { paddingHorizontal: 24, paddingBottom: spacing.lg, gap: spacing.sm },
   item: {
     flexDirection: 'row',
     alignItems: 'flex-start',
     gap: 12,
-    backgroundColor: colors.background,
+    backgroundColor: colors.surface,
     borderRadius: 20,
     paddingVertical: 12,
     paddingHorizontal: 14,

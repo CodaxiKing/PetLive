@@ -32,7 +32,7 @@ export function LinhaIcone({ indice = 0, ...props }: Props) {
   );
 }
 
-function Linha({ icone, rotulo, valor, fundo = colors.background, onPress, desabilitado, direita }: Props) {
+function Linha({ icone, rotulo, valor, fundo = colors.surface, onPress, desabilitado, direita }: Props) {
   const conteudo = (
     <>
       <View style={estilos.circulo}>{icone}</View>

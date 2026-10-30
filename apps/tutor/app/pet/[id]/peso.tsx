@@ -11,7 +11,7 @@ import {
 } from 'react-native'
 import { useLocalSearchParams } from 'expo-router'
 import { BotaoPrimario } from '../../../src/components/BotaoPrimario'
-import { CabecalhoTela } from '../../../src/components/CabecalhoTela'
+import { HeroiOnda } from '../../../src/components/HeroiOnda'
 import { Campo } from '../../../src/components/Campo'
 import { usePets } from '../../../src/pets/PetsProvider'
 import { GraficoPeso } from '../../../src/saude/GraficoPeso'
@@ -26,7 +26,7 @@ import {
 import { dataParaExibicao } from '../../../src/saude/types'
 import { colors } from '../../../src/theme/colors'
 import { fontFamily, typography } from '../../../src/theme/typography'
-import { spacing } from '../../../src/theme/tokens'
+import { shadow, spacing } from '../../../src/theme/tokens'
 
 /**
  * Peso do pet (board: [APP-CLIENTE] "Registrar peso" e "Peso: gráfico e
@@ -89,10 +89,10 @@ export default function TelaPeso() {
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
       <View style={estilos.hero}>
-        <CabecalhoTela titulo="" />
+        <HeroiOnda titulo={`Peso ${pet?.sexo === 'femea' ? 'da' : 'do'} ${pet?.nome ?? 'pet'}`} />
 
         <View style={estilos.heroConteudo}>
-          <Text style={estilos.sobre}>Peso {pet?.sexo === 'femea' ? 'da' : 'do'} {pet?.nome ?? 'pet'}</Text>
+          <Text style={estilos.sobre}>Peso atual</Text>
           <Text style={estilos.kg} accessibilityRole="header">
             {carregando ? '—' : atual ? formatarKg(atual.peso) : '—'}
             <Text style={estilos.kgUnidade}> kg</Text>
@@ -163,26 +163,29 @@ export default function TelaPeso() {
 }
 
 const estilos = StyleSheet.create({
-  tela: { flex: 1, backgroundColor: colors.surface },
+  tela: { flex: 1, backgroundColor: colors.background },
   flex: { flex: 1 },
   hero: {
-    backgroundColor: colors.primarySurface,
-    paddingBottom: 24,
-    overflow: 'hidden',
+    paddingBottom: 12,
   },
   pata: { position: 'absolute', right: 30, top: 60 },
   maisCta: { fontFamily: fontFamily.regular, fontSize: 28, lineHeight: 32, color: colors.black },
   sobre: { ...typography.captionMedium, color: colors.textMuted, marginBottom: -spacing.sm },
+  // Versão 2: o peso atual num cartão branco.
   heroConteudo: {
-    paddingHorizontal: 24,
-    paddingTop: spacing.lg,
-    gap: spacing.md,
+    marginHorizontal: 20,
+    paddingHorizontal: 20,
+    paddingVertical: 16,
+    gap: spacing.sm,
+    backgroundColor: colors.surface,
+    borderRadius: 24,
+    ...shadow.card,
   },
   kg: {
     ...typography.h1,
     fontFamily: fontFamily.bold,
-    fontSize: 64,
-    lineHeight: 72,
+    fontSize: 52,
+    lineHeight: 60,
     letterSpacing: -2.5,
     color: colors.black,
   },
@@ -215,7 +218,7 @@ const estilos = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    backgroundColor: colors.background,
+    backgroundColor: colors.surface,
     borderRadius: 20,
     paddingHorizontal: 18,
     paddingVertical: spacing.md,
@@ -231,6 +234,6 @@ const estilos = StyleSheet.create({
     paddingHorizontal: spacing.xl,
     paddingTop: spacing.md,
     paddingBottom: 32,
-    backgroundColor: colors.surface,
+    backgroundColor: colors.background,
   },
 })

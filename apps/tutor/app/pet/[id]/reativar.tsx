@@ -83,14 +83,14 @@ export default function TelaReativar() {
 }
 
 const estilos = StyleSheet.create({
-  tela: { flex: 1, backgroundColor: colors.surface },
+  tela: { flex: 1, backgroundColor: colors.background },
   flex: { flex: 1, minWidth: 0 },
   conteudo: { paddingHorizontal: 24, paddingBottom: 24, gap: 12 },
   intro: { fontFamily: fontFamily.regular, fontSize: 16, lineHeight: 24, color: '#566070' },
   secao: { fontFamily: fontFamily.bold, fontSize: 15, color: colors.black, marginTop: 6 },
   item: { flexDirection: 'row', alignItems: 'center', gap: 14 },
   check: { width: 34, height: 34, borderRadius: 10, backgroundColor: colors.black, alignItems: 'center', justifyContent: 'center' },
-  traco: { backgroundColor: colors.background, borderRadius: 17 },
+  traco: { backgroundColor: colors.surface, borderRadius: 17 },
   tracoTexto: { fontFamily: fontFamily.bold, fontSize: 18, color: '#566070' },
   itemTexto: { flex: 1, fontFamily: fontFamily.regular, fontSize: 15, lineHeight: 21, color: colors.black },
   rodape: { paddingHorizontal: 24, paddingTop: 12, paddingBottom: 28, gap: 10 },

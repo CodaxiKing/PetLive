@@ -257,7 +257,7 @@ export default function TelaCompartilhar() {
 }
 
 const estilos = StyleSheet.create({
-  tela: { flex: 1, backgroundColor: colors.surface },
+  tela: { flex: 1, backgroundColor: colors.background },
   centro: { alignItems: 'center', justifyContent: 'center' },
   flex: { flex: 1, minWidth: 0 },
   conteudo: { paddingHorizontal: 24, paddingBottom: 24, gap: 10 },
@@ -279,7 +279,7 @@ const estilos = StyleSheet.create({
   familiaSub: { color: colors.premiumText },
   emergenciaSub: { fontFamily: fontFamily.regular, fontSize: 13, color: '#A3324F' },
   intro: { fontFamily: fontFamily.regular, fontSize: 15, lineHeight: 22, color: '#566070', marginBottom: 2 },
-  item: { backgroundColor: colors.background, borderRadius: 24, paddingVertical: 12, paddingHorizontal: 16, gap: 10 },
+  item: { backgroundColor: colors.surface, borderRadius: 24, paddingVertical: 12, paddingHorizontal: 16, gap: 10 },
   itemLinha: { flexDirection: 'row', alignItems: 'center', gap: 12 },
   itemTitulo: { fontFamily: fontFamily.bold, fontSize: 16, color: colors.black },
   itemDescricao: { fontFamily: fontFamily.regular, fontSize: 13, color: '#566070' },

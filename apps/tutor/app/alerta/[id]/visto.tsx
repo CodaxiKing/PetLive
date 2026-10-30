@@ -93,7 +93,7 @@ export default function ViEstePet() {
 }
 
 const estilos = StyleSheet.create({
-  tela: { flex: 1, backgroundColor: colors.surface },
+  tela: { flex: 1, backgroundColor: colors.background },
   flex: { flex: 1, minWidth: 0 },
   conteudo: { paddingHorizontal: 24, paddingBottom: 24, gap: 10 },
   local: { flexDirection: 'row', alignItems: 'center', gap: 10, backgroundColor: colors.primarySurface, borderRadius: 20, padding: 14 },
@@ -104,13 +104,13 @@ const estilos = StyleSheet.create({
   chipAtivo: { backgroundColor: colors.black, borderColor: colors.black },
   chipTexto: { fontFamily: fontFamily.semiBold, fontSize: 13, color: colors.black },
   textoClaro: { color: colors.white },
-  campo: { backgroundColor: colors.background, borderRadius: 22, padding: 14, gap: 4, marginTop: 6 },
+  campo: { backgroundColor: colors.surface, borderRadius: 22, padding: 14, gap: 4, marginTop: 6 },
   rotulo: { fontFamily: fontFamily.semiBold, fontSize: 12, color: colors.textMuted },
   texto: { fontFamily: fontFamily.regular, fontSize: 15, color: colors.black, minHeight: 60, textAlignVertical: 'top' },
   fotoBotao: { flexDirection: 'row', alignItems: 'center', gap: 12, borderWidth: 1.5, borderStyle: 'dashed', borderColor: colors.borderStrong, borderRadius: 22, padding: 12 },
   fotoPrevia: { width: 48, height: 48, borderRadius: 14 },
   fotoTexto: { fontFamily: fontFamily.semiBold, fontSize: 14, color: colors.black },
-  linha: { flexDirection: 'row', alignItems: 'center', gap: 12, backgroundColor: colors.background, borderRadius: 22, padding: 14 },
+  linha: { flexDirection: 'row', alignItems: 'center', gap: 12, backgroundColor: colors.surface, borderRadius: 22, padding: 14 },
   linhaTitulo: { fontFamily: fontFamily.bold, fontSize: 15, color: colors.black },
   linhaSub: { fontFamily: fontFamily.regular, fontSize: 12, color: colors.textMuted },
   nota: { fontFamily: fontFamily.regular, fontSize: 12, color: colors.textMuted, paddingHorizontal: 4 },

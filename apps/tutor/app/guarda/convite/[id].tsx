@@ -143,7 +143,7 @@ export default function ConviteGuarda() {
 }
 
 const estilos = StyleSheet.create({
-  tela: { flex: 1, backgroundColor: colors.surface },
+  tela: { flex: 1, backgroundColor: colors.background },
   centro: { alignItems: 'center', justifyContent: 'center' },
   flex: { flex: 1, minWidth: 0 },
   conteudo: { paddingHorizontal: 24, paddingBottom: 24, gap: 12 },
@@ -158,7 +158,7 @@ const estilos = StyleSheet.create({
   petSub: { fontFamily: fontFamily.regular, fontSize: 12, color: colors.textMuted },
   check: { width: 28, height: 28, borderRadius: 14, borderWidth: 2, borderColor: colors.borderStrong, alignItems: 'center', justifyContent: 'center' },
   checkMarcado: { backgroundColor: colors.black, borderColor: colors.black },
-  resumo: { backgroundColor: colors.background, borderRadius: 22, padding: 14 },
+  resumo: { backgroundColor: colors.surface, borderRadius: 22, padding: 14 },
   resumoTexto: { fontFamily: fontFamily.regular, fontSize: 13, lineHeight: 19, color: colors.textMuted },
   linhaValidade: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   validade: {

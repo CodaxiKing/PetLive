@@ -53,11 +53,11 @@ export default function Pedidos() {
 }
 
 const estilos = StyleSheet.create({
-  tela: { flex: 1, backgroundColor: colors.surface },
+  tela: { flex: 1, backgroundColor: colors.background },
   centro: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: 24 },
   lista: { paddingHorizontal: 24, paddingBottom: 32 },
   separador: { height: 10 },
-  cartao: { backgroundColor: colors.background, borderRadius: 22, padding: 14, gap: 4 },
+  cartao: { backgroundColor: colors.surface, borderRadius: 22, padding: 14, gap: 4 },
   topo: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   loja: { flex: 1, fontFamily: fontFamily.bold, fontSize: 15, color: colors.black },
   status: { fontFamily: fontFamily.bold, fontSize: 11, paddingHorizontal: 8, paddingVertical: 3, borderRadius: 999, overflow: 'hidden' },

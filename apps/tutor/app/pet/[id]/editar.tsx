@@ -84,7 +84,7 @@ function Editor({ pet }: { pet: Pet }) {
 }
 
 const estilos = StyleSheet.create({
-  tela: { flex: 1, backgroundColor: colors.surface },
+  tela: { flex: 1, backgroundColor: colors.background },
   flex: { flex: 1 },
   rodape: {
     position: 'absolute',
@@ -94,6 +94,6 @@ const estilos = StyleSheet.create({
     paddingHorizontal: 24,
     paddingTop: 12,
     paddingBottom: 32,
-    backgroundColor: colors.surface,
+    backgroundColor: colors.background,
   },
 })

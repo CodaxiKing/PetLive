@@ -359,7 +359,7 @@ export default function Calculadoras() {
 }
 
 const estilos = StyleSheet.create({
-  tela: { flex: 1, backgroundColor: colors.surface },
+  tela: { flex: 1, backgroundColor: colors.background },
   flex: { flex: 1 },
   conteudo: { paddingHorizontal: 24, paddingBottom: spacing.lg, gap: 10 },
   linha: { flexDirection: 'row', gap: 8 },

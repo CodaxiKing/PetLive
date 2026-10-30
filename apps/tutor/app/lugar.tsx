@@ -475,7 +475,7 @@ const estilos = StyleSheet.create({
   enviarFichaSeta: { fontFamily: fontFamily.bold, fontSize: 24, color: colors.black },
   tela: {
     flex: 1,
-    backgroundColor: colors.surface,
+    backgroundColor: colors.background,
   },
   hero: {
     height: 280,
@@ -560,7 +560,7 @@ const estilos = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: spacing.md,
-    backgroundColor: colors.background,
+    backgroundColor: colors.surface,
     borderRadius: 22,
     padding: spacing.md,
     paddingRight: spacing.lg,
@@ -636,7 +636,7 @@ const estilos = StyleSheet.create({
     width: 64,
     height: 64,
     borderRadius: 32,
-    backgroundColor: colors.background,
+    backgroundColor: colors.surface,
     flexShrink: 0,
   },
   rotaBotao: {

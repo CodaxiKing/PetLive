@@ -177,11 +177,11 @@ export default function RevisarVacinas() {
 }
 
 const estilos = StyleSheet.create({
-  tela: { flex: 1, backgroundColor: colors.surface },
+  tela: { flex: 1, backgroundColor: colors.background },
   conteudo: { paddingHorizontal: 24, paddingBottom: 24, gap: 12 },
   texto: { fontFamily: fontFamily.regular, fontSize: 14, lineHeight: 20, color: colors.textMuted },
   cartao: { backgroundColor: colors.healthSurface, borderRadius: 24, padding: 14, gap: 10 },
-  cartaoFora: { backgroundColor: colors.background, opacity: 0.7 },
+  cartaoFora: { backgroundColor: colors.surface, opacity: 0.7 },
   linhaTopo: { flexDirection: 'row', alignItems: 'center', gap: 10 },
   check: { width: 28, height: 28, borderRadius: 14, borderWidth: 2, borderColor: colors.borderStrong, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.white },
   checkMarcado: { backgroundColor: colors.black, borderColor: colors.black },
@@ -196,7 +196,7 @@ const estilos = StyleSheet.create({
   valor: { fontFamily: fontFamily.semiBold, fontSize: 14, color: colors.black, paddingVertical: 2 },
   nota: { fontFamily: fontFamily.regular, fontSize: 12, color: colors.textMuted, paddingHorizontal: 4 },
   grupo: { fontFamily: fontFamily.bold, fontSize: 15, color: colors.black, marginTop: 4 },
-  jaCadastrada: { flexDirection: 'row', alignItems: 'center', gap: 10, backgroundColor: colors.background, borderRadius: 18, paddingVertical: 12, paddingHorizontal: 14 },
+  jaCadastrada: { flexDirection: 'row', alignItems: 'center', gap: 10, backgroundColor: colors.surface, borderRadius: 18, paddingVertical: 12, paddingHorizontal: 14 },
   jaTexto: { fontFamily: fontFamily.semiBold, fontSize: 14, color: colors.textMuted },
   erro: { fontFamily: fontFamily.medium, fontSize: 13, color: colors.danger },
   rodape: { paddingHorizontal: 24, paddingTop: 12, paddingBottom: 28 },

@@ -157,7 +157,7 @@ export default function TelaConsultas() {
 }
 
 const estilos = StyleSheet.create({
-  tela: { flex: 1, backgroundColor: colors.surface },
+  tela: { flex: 1, backgroundColor: colors.background },
   flex: { flex: 1 },
   pata: { position: 'absolute', right: 30, top: 56 },
   maisCta: { fontFamily: fontFamily.regular, fontSize: 28, lineHeight: 32, color: colors.black },
@@ -198,7 +198,7 @@ const estilos = StyleSheet.create({
   vazio: { ...typography.body, color: colors.textMuted, lineHeight: 22 },
   lista: { gap: spacing.sm },
   ficha: {
-    backgroundColor: colors.background,
+    backgroundColor: colors.surface,
     borderRadius: 24,
     padding: 10,
     paddingRight: spacing.lg,
@@ -232,6 +232,6 @@ const estilos = StyleSheet.create({
     paddingHorizontal: spacing.xl,
     paddingTop: spacing.md,
     paddingBottom: 32,
-    backgroundColor: colors.surface,
+    backgroundColor: colors.background,
   },
 })

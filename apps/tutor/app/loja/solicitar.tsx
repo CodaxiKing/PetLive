@@ -191,11 +191,11 @@ export default function Solicitar() {
 }
 
 const estilos = StyleSheet.create({
-  tela: { flex: 1, backgroundColor: colors.surface },
+  tela: { flex: 1, backgroundColor: colors.background },
   centro: { alignItems: 'center', justifyContent: 'center', padding: 24 },
   flex: { flex: 1, minWidth: 0 },
   conteudo: { paddingHorizontal: 24, paddingBottom: 24, gap: 12 },
-  item: { flexDirection: 'row', alignItems: 'center', gap: 12, backgroundColor: colors.background, borderRadius: 22, padding: 12 },
+  item: { flexDirection: 'row', alignItems: 'center', gap: 12, backgroundColor: colors.surface, borderRadius: 22, padding: 12 },
   itemNome: { fontFamily: fontFamily.semiBold, fontSize: 14, color: colors.black },
   sub: { fontFamily: fontFamily.regular, fontSize: 13, color: colors.textMuted },
   contador: { flexDirection: 'row', alignItems: 'center', backgroundColor: colors.surface, borderRadius: 22, height: 44 },
@@ -208,7 +208,7 @@ const estilos = StyleSheet.create({
   modoTitulo: { fontFamily: fontFamily.bold, fontSize: 14, color: colors.black },
   modoSub: { fontFamily: fontFamily.regular, fontSize: 12, color: colors.textMuted },
   textoClaro: { color: colors.white },
-  cartao: { backgroundColor: colors.background, borderRadius: 22, padding: 14, gap: 8 },
+  cartao: { backgroundColor: colors.surface, borderRadius: 22, padding: 14, gap: 8 },
   secao: { fontFamily: fontFamily.bold, fontSize: 15, color: colors.black },
   alerta: { fontFamily: fontFamily.semiBold, fontSize: 13, color: colors.warningText },
   endereco: { borderRadius: 16, borderWidth: 1.5, borderColor: colors.border, padding: 12 },

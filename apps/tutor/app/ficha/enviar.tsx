@@ -104,7 +104,7 @@ export default function TelaEnviarFicha() {
           </View>
         ) : null}
 
-        <View style={[estilos.cartao, { backgroundColor: colors.background }]}>
+        <View style={[estilos.cartao, { backgroundColor: colors.surface }]}>
           <View style={estilos.avatar}>
             <AvatarPet especie={pet.especie} foto={pet.foto_url} size={44} />
           </View>
@@ -158,7 +158,7 @@ export default function TelaEnviarFicha() {
 }
 
 const estilos = StyleSheet.create({
-  tela: { flex: 1, backgroundColor: colors.surface },
+  tela: { flex: 1, backgroundColor: colors.background },
   flex: { flex: 1, minWidth: 0 },
   conteudo: { paddingHorizontal: 24, paddingBottom: 24, gap: 10 },
   vazio: { padding: 24, gap: 16 },
@@ -170,7 +170,7 @@ const estilos = StyleSheet.create({
   cartaoValor: { fontFamily: fontFamily.bold, fontSize: 15, color: colors.black },
   nota: { fontFamily: fontFamily.regular, fontSize: 12, lineHeight: 17, color: '#566070', paddingHorizontal: 6 },
   pets: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
-  petChip: { paddingVertical: 8, paddingHorizontal: 16, borderRadius: 999, backgroundColor: colors.background },
+  petChip: { paddingVertical: 8, paddingHorizontal: 16, borderRadius: 999, backgroundColor: colors.surface },
   petChipAtivo: { backgroundColor: colors.black },
   petChipTexto: { fontFamily: fontFamily.bold, fontSize: 14, color: colors.black },
   petChipTextoAtivo: { color: colors.white },

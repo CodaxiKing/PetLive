@@ -15,7 +15,6 @@ import { router, useLocalSearchParams } from 'expo-router'
 import { BotaoPrimario } from '../../../../src/components/BotaoPrimario'
 import { Campo } from '../../../../src/components/Campo'
 import { HeroiOnda } from '../../../../src/components/HeroiOnda'
-import { Icone } from '../../../../src/components/Icone'
 import { usePets } from '../../../../src/pets/PetsProvider'
 import { useRemedios } from '../../../../src/remedios/RemediosProvider'
 import { REMEDIO_FORM_VAZIO, hojeComoCampo, parseHorarios } from '../../../../src/remedios/types'
@@ -115,9 +114,6 @@ export default function NovoRemedio() {
       <ScrollView contentContainerStyle={estilos.conteudo} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
         <HeroiOnda titulo="Novo remédio" altura={210}>
           {pet ? <Text style={estilos.paraPet}>Para {pet.sexo === 'femea' ? 'a' : 'o'} {pet.nome}</Text> : null}
-          <View style={estilos.capsula}>
-            <Icone nome="capsula" size={120} cor={colors.white} espessura={1.2} />
-          </View>
         </HeroiOnda>
 
         <View style={estilos.corpo}>
@@ -262,10 +258,10 @@ export default function NovoRemedio() {
 }
 
 const estilos = StyleSheet.create({
-  tela: { flex: 1, backgroundColor: colors.surface },
+  tela: { flex: 1, backgroundColor: colors.background },
   flex: { flex: 1, minWidth: 0 },
   conteudo: { paddingBottom: 130 },
-  paraPet: { position: 'absolute', left: 86, top: 68, fontSize: 15, fontFamily: fontFamily.medium, color: colors.black },
+  paraPet: { marginTop: 10, marginLeft: 58, fontSize: 15, fontFamily: fontFamily.medium, color: colors.black },
   capsula: { position: 'absolute', right: 24, top: 70 },
   corpo: { paddingHorizontal: 24, gap: 12 },
   linha: { flexDirection: 'row', gap: 10 },
@@ -300,7 +296,7 @@ const estilos = StyleSheet.create({
     justifyContent: 'center',
   },
   horarioMaisTexto: { fontSize: 22, fontFamily: fontFamily.regular, color: colors.textMuted },
-  segmentado: { flexDirection: 'row', backgroundColor: colors.background, borderRadius: 26, padding: 4 },
+  segmentado: { flexDirection: 'row', backgroundColor: colors.surface, borderRadius: 26, padding: 4 },
   segmento: { flex: 1, height: 44, borderRadius: 22, alignItems: 'center', justifyContent: 'center' },
   segmentoAtivo: { backgroundColor: colors.black },
   segmentoTexto: { fontSize: 14, fontFamily: fontFamily.semiBold, color: colors.textMuted },
@@ -314,7 +310,7 @@ const estilos = StyleSheet.create({
     paddingHorizontal: 24,
     paddingTop: 12,
     paddingBottom: 32,
-    backgroundColor: colors.surface,
+    backgroundColor: colors.background,
   },
   fundoModal: { flex: 1, backgroundColor: colors.overlay, justifyContent: 'flex-end' },
   folha: {

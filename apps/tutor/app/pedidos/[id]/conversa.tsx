@@ -103,7 +103,7 @@ export default function ConversaLoja() {
 }
 
 const estilos = StyleSheet.create({
-  tela: { flex: 1, backgroundColor: colors.surface },
+  tela: { flex: 1, backgroundColor: colors.background },
   centro: { alignItems: 'center', justifyContent: 'center', padding: 24 },
   flex: { flex: 1, minWidth: 0 },
   barra: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingTop: 52, paddingHorizontal: 24, paddingBottom: 12, backgroundColor: colors.primarySurface },
@@ -113,7 +113,7 @@ const estilos = StyleSheet.create({
   mensagens: { padding: 16, gap: 8, flexGrow: 1 },
   balao: { maxWidth: '80%', borderRadius: 20, paddingHorizontal: 14, paddingVertical: 10, gap: 2 },
   minha: { alignSelf: 'flex-end', backgroundColor: colors.black, borderBottomRightRadius: 6 },
-  dela: { alignSelf: 'flex-start', backgroundColor: colors.background, borderBottomLeftRadius: 6 },
+  dela: { alignSelf: 'flex-start', backgroundColor: colors.surface, borderBottomLeftRadius: 6 },
   balaoTexto: { fontFamily: fontFamily.regular, fontSize: 15, lineHeight: 21, color: colors.black },
   textoClaro: { color: colors.white },
   balaoHora: { fontFamily: fontFamily.regular, fontSize: 11, color: colors.textMuted, alignSelf: 'flex-end' },
@@ -126,7 +126,7 @@ const estilos = StyleSheet.create({
   rapidaTexto: { fontFamily: fontFamily.semiBold, fontSize: 13, color: colors.black },
   erro: { fontFamily: fontFamily.medium, fontSize: 13, color: colors.danger },
   entrada: { flexDirection: 'row', alignItems: 'flex-end', gap: 8 },
-  campo: { flex: 1, minHeight: 48, maxHeight: 120, borderRadius: 24, backgroundColor: colors.background, paddingHorizontal: 18, paddingVertical: 12, fontFamily: fontFamily.regular, fontSize: 15, color: colors.black },
+  campo: { flex: 1, minHeight: 48, maxHeight: 120, borderRadius: 24, backgroundColor: colors.surface, paddingHorizontal: 18, paddingVertical: 12, fontFamily: fontFamily.regular, fontSize: 15, color: colors.black },
   enviar: { height: 48, paddingHorizontal: 18, borderRadius: 24, backgroundColor: colors.black, alignItems: 'center', justifyContent: 'center' },
   desligado: { opacity: 0.4 },
   enviarTexto: { fontFamily: fontFamily.bold, fontSize: 14, color: colors.white },

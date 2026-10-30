@@ -91,7 +91,7 @@ function EditorQr({ pet, nome }: { pet: string; nome: string }) {
   </ScrollView>;
 }
 const s = StyleSheet.create({
-  tela: { flex: 1, backgroundColor: colors.surface }, titulo: { fontFamily: fontFamily.bold, fontSize: 25, color: colors.black },
+  tela: { flex: 1, backgroundColor: colors.background }, titulo: { fontFamily: fontFamily.bold, fontSize: 25, color: colors.black },
   texto: { fontFamily: fontFamily.regular, fontSize: 14, lineHeight: 21, color: colors.black },
   link: { color: colors.primaryDeep, fontFamily: fontFamily.bold, paddingVertical: 10 },
   linha: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },

@@ -52,7 +52,7 @@ function Configuracao({ tutorId, eventosLigados }: { tutorId: string; eventosLig
   </View>;
 }
 const s = StyleSheet.create({
-  card: { backgroundColor: colors.background, padding: 18, borderRadius: 24, gap: 14 },
+  card: { backgroundColor: colors.surface, padding: 18, borderRadius: 24, gap: 14 },
   titulo: { ...typography.h3, color: colors.black }, texto: { ...typography.body, color: colors.textMuted },
   erro: { ...typography.body, color: colors.danger }, opcoes: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
   opcao: { minHeight: 48, paddingHorizontal: 14, justifyContent: 'center', borderRadius: 24, borderWidth: 2, borderColor: colors.border },

@@ -73,7 +73,7 @@ export default function AlterarSenha() {
 }
 
 const estilos = StyleSheet.create({
-  tela: { flex: 1, backgroundColor: colors.surface },
+  tela: { flex: 1, backgroundColor: colors.background },
   conteudo: { paddingHorizontal: 24, paddingBottom: 32, gap: 14 },
   texto: { fontFamily: fontFamily.regular, fontSize: 14, lineHeight: 20, color: colors.textMuted },
   erro: { fontFamily: fontFamily.medium, fontSize: 13, color: colors.danger },
