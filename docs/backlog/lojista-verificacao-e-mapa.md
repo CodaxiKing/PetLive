@@ -4,6 +4,17 @@ Como o cadastro do lojista confirma que a loja é mesmo dele e como a loja entra
 
 O fluxo tem cinco partes: verificação de identidade, verificação de localização, marcação no mapa, correspondência com um lugar existente (ou criação de um) e revisão do admin.
 
+## O que já existe
+
+A migração `20270110030000_loja_cadastro_moderacao.sql` já tem:
+
+- validação dos dígitos verificadores do CPF ou CNPJ, sem consultar a Receita;
+- envio de documentos da loja (CNPJ, documento do responsável, comprovante de endereço, alvará, CRMV);
+- o pedido para assumir um lugar (`loja_assumir_lugar`), que fica pendente e é bloqueado se outra loja já assumiu o lugar;
+- a decisão do admin (`admin_loja_decidir`), que liga o lugar à loja só quando o dono foi conferido.
+
+Os itens abaixo completam essa base.
+
 ## 1. Verificação de identidade
 
 Quem está cadastrando a loja tem o direito de representá-la?
