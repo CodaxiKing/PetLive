@@ -2481,6 +2481,502 @@
       "y": 16480,
       "title": "74 · Widget e atalhos · nova",
       "is_interactive": true
+    },
+    "v2/AdminAdocao.html": {
+      "w": 1280,
+      "h": 800,
+      "x": 10760,
+      "y": 29290,
+      "title": "Painel admin · 20 · Adoção e ONGs · nova",
+      "is_interactive": true
+    },
+    "v2/AdminAssinaturas.html": {
+      "w": 1280,
+      "h": 800,
+      "x": 10760,
+      "y": 30210,
+      "title": "Painel admin · 4 · Assinaturas Premium · nova",
+      "is_interactive": true
+    },
+    "v2/AdminAvaliacoes.html": {
+      "w": 1280,
+      "h": 800,
+      "x": 13480,
+      "y": 30210,
+      "title": "Painel admin · 8 · Avaliações nas lojas de apps · nova",
+      "is_interactive": true
+    },
+    "v2/AdminCampanhas.html": {
+      "w": 1280,
+      "h": 800,
+      "x": 12120,
+      "y": 31130,
+      "title": "Painel admin · 13 · Campanhas e notificações · nova",
+      "is_interactive": true
+    },
+    "v2/AdminConteudo.html": {
+      "w": 1280,
+      "h": 800,
+      "x": 13480,
+      "y": 31130,
+      "title": "Painel admin · 14 · Conteúdo mestre · nova",
+      "is_interactive": true
+    },
+    "v2/AdminEquipe.html": {
+      "w": 1280,
+      "h": 800,
+      "x": 13480,
+      "y": 32050,
+      "title": "Painel admin · 18 · Equipe e permissões · nova",
+      "is_interactive": true
+    },
+    "v2/AdminEventos.html": {
+      "w": 1280,
+      "h": 800,
+      "x": 9400,
+      "y": 29290,
+      "title": "Painel admin · 19 · Eventos · nova",
+      "is_interactive": true
+    },
+    "v2/AdminFinanceiro.html": {
+      "w": 1280,
+      "h": 800,
+      "x": 10760,
+      "y": 55818,
+      "title": "Painel admin · 7 · Financeiro · nova",
+      "is_interactive": true
+    },
+    "v2/AdminIntegracoes.html": {
+      "w": 1280,
+      "h": 800,
+      "x": 9400,
+      "y": 32050,
+      "title": "Painel admin · 15 · Integrações · nova",
+      "is_interactive": true
+    },
+    "v2/AdminLGPD.html": {
+      "w": 1280,
+      "h": 800,
+      "x": 12120,
+      "y": 32050,
+      "title": "Painel admin · 17 · Privacidade e LGPD · nova",
+      "is_interactive": true
+    },
+    "v2/AdminLogin.html": {
+      "w": 1280,
+      "h": 800,
+      "x": 12120,
+      "y": 29290,
+      "title": "Painel admin · 1 · Entrar com verificação · nova",
+      "is_interactive": true
+    },
+    "v2/AdminLojistas.html": {
+      "w": 1280,
+      "h": 800,
+      "x": 12120,
+      "y": 55818,
+      "title": "Painel admin · 10 · Lojistas e aprovação · nova",
+      "is_interactive": true
+    },
+    "v2/AdminModeracao.html": {
+      "w": 1280,
+      "h": 800,
+      "x": 13480,
+      "y": 55818,
+      "title": "Painel admin · 12 · Moderação · nova",
+      "is_interactive": true
+    },
+    "v2/AdminPedidos.html": {
+      "w": 1280,
+      "h": 800,
+      "x": 9400,
+      "y": 55818,
+      "title": "Painel admin · 6 · Pedidos e disputas · nova",
+      "is_interactive": true
+    },
+    "v2/AdminPlanos.html": {
+      "w": 1280,
+      "h": 800,
+      "x": 12120,
+      "y": 30210,
+      "title": "Painel admin · 5 · Planos, preços e cupons · nova",
+      "is_interactive": true
+    },
+    "v2/AdminRelatorios.html": {
+      "w": 1280,
+      "h": 800,
+      "x": 9400,
+      "y": 30210,
+      "title": "Painel admin · 3 · Relatórios · nova",
+      "is_interactive": true
+    },
+    "v2/AdminSistema.html": {
+      "w": 1280,
+      "h": 800,
+      "x": 10760,
+      "y": 32050,
+      "title": "Painel admin · 16 · Sistema · nova",
+      "is_interactive": true
+    },
+    "v2/AdminSuporte.html": {
+      "w": 1280,
+      "h": 800,
+      "x": 10760,
+      "y": 31130,
+      "title": "Painel admin · 11 · Suporte · nova",
+      "is_interactive": true
+    },
+    "v2/AdminUsuarios.html": {
+      "w": 1280,
+      "h": 800,
+      "x": 9400,
+      "y": 31130,
+      "title": "Painel admin · 9 · Usuários e pets · nova",
+      "is_interactive": true
+    },
+    "v2/AdminVisao.html": {
+      "w": 1280,
+      "h": 800,
+      "x": 13480,
+      "y": 29290,
+      "title": "Painel admin · 2 · Visão geral · nova",
+      "is_interactive": true
+    },
+    "v2/Agenda.html": {
+      "w": 390,
+      "h": 844,
+      "x": 9400,
+      "y": 47962,
+      "title": "Lojista celular · 4 · Agenda · nova",
+      "is_interactive": true
+    },
+    "v2/Catalogo.html": {
+      "w": 390,
+      "h": 844,
+      "x": 9400,
+      "y": 44638,
+      "title": "Lojista celular · 3 · Catálogo · nova",
+      "is_interactive": true
+    },
+    "v2/ConfigLoja.html": {
+      "w": 390,
+      "h": 844,
+      "x": 9870,
+      "y": 40394,
+      "title": "Lojista celular · 8 · Configurações da loja · nova",
+      "is_interactive": true
+    },
+    "v2/FichaVistaPC.html": {
+      "w": 1280,
+      "h": 800,
+      "x": 9400,
+      "y": 23300,
+      "title": "Link da ficha · No computador da clínica · nova",
+      "is_interactive": true
+    },
+    "v2/Horarios.html": {
+      "w": 390,
+      "h": 844,
+      "x": 9870,
+      "y": 47962,
+      "title": "Lojista celular · 5 · Horários de atendimento · nova",
+      "is_interactive": true
+    },
+    "v2/LojaCadastro1.html": {
+      "w": 390,
+      "h": 844,
+      "x": 11280,
+      "y": 39430,
+      "title": "Lojista celular · 14 · Cadastro, dados da loja · nova",
+      "is_interactive": true
+    },
+    "v2/LojaCadastro2.html": {
+      "w": 390,
+      "h": 844,
+      "x": 11750,
+      "y": 39430,
+      "title": "Lojista celular · 15 · Cadastro, endereço e contato · nova",
+      "is_interactive": true
+    },
+    "v2/LojaEntrega.html": {
+      "w": 390,
+      "h": 844,
+      "x": 10340,
+      "y": 44638,
+      "title": "Lojista celular · 18 · Entrega e retirada · nova",
+      "is_interactive": true
+    },
+    "v2/LojaPublicar.html": {
+      "w": 390,
+      "h": 844,
+      "x": 9400,
+      "y": 40394,
+      "title": "Lojista celular · 16 · Publicar loja · nova",
+      "is_interactive": true
+    },
+    "v2/LojaServicos.html": {
+      "w": 390,
+      "h": 844,
+      "x": 10810,
+      "y": 39430,
+      "title": "Lojista celular · 10 · Escolher serviços · nova",
+      "is_interactive": true
+    },
+    "v2/LojaTipo.html": {
+      "w": 390,
+      "h": 844,
+      "x": 10340,
+      "y": 39430,
+      "title": "Lojista celular · 9 · O que a loja oferece · nova",
+      "is_interactive": true
+    },
+    "v2/NovoProdutoMobile.html": {
+      "w": 390,
+      "h": 844,
+      "x": 9870,
+      "y": 44638,
+      "title": "Lojista celular · 7 · Cadastrar produto · nova",
+      "is_interactive": true
+    },
+    "v2/Painel.html": {
+      "w": 390,
+      "h": 844,
+      "x": 9400,
+      "y": 39430,
+      "title": "Lojista celular · 1 · Painel · nova",
+      "is_interactive": true
+    },
+    "v2/PaletaCores.html": {
+      "w": 1280,
+      "h": 1361,
+      "x": 9400,
+      "y": 640,
+      "title": "Paleta de cores, tipografia e formas · nova",
+      "is_interactive": false
+    },
+    "v2/PasseioIniciar.html": {
+      "w": 390,
+      "h": 844,
+      "x": 9870,
+      "y": 54334,
+      "title": "Passeador · Passeio de hoje · nova",
+      "is_interactive": true
+    },
+    "v2/Pedidos.html": {
+      "w": 390,
+      "h": 844,
+      "x": 9870,
+      "y": 39430,
+      "title": "Lojista celular · 2 · Solicitações · nova",
+      "is_interactive": true
+    },
+    "v2/ServicoCreche.html": {
+      "w": 390,
+      "h": 844,
+      "x": 9400,
+      "y": 52850,
+      "title": "Lojista celular · 13 · Creche pet · nova",
+      "is_interactive": true
+    },
+    "v2/ServicoEditar.html": {
+      "w": 390,
+      "h": 844,
+      "x": 10340,
+      "y": 47962,
+      "title": "Lojista celular · 6 · Editar serviço · nova",
+      "is_interactive": true
+    },
+    "v2/ServicoHotel.html": {
+      "w": 390,
+      "h": 844,
+      "x": 9400,
+      "y": 50366,
+      "title": "Lojista celular · 11 · Hotelzinho pet · nova",
+      "is_interactive": true
+    },
+    "v2/ServicoPasseio.html": {
+      "w": 390,
+      "h": 844,
+      "x": 9400,
+      "y": 54334,
+      "title": "Lojista celular · 12 · Passeador · nova",
+      "is_interactive": true
+    },
+    "v2/SiteLojistas.html": {
+      "w": 1440,
+      "h": 3350,
+      "x": 9400,
+      "y": 57238,
+      "title": "Site PetLive · Para lojistas · nova",
+      "is_interactive": true
+    },
+    "v2/SitePetLive.html": {
+      "w": 1440,
+      "h": 4206,
+      "x": 9400,
+      "y": 24720,
+      "title": "Site PetLive · Página inicial · nova",
+      "is_interactive": true
+    },
+    "v2/WebAgenda.html": {
+      "w": 1280,
+      "h": 800,
+      "x": 9400,
+      "y": 48926,
+      "title": "Lojista computador · 4 · Agenda · nova",
+      "is_interactive": true
+    },
+    "v2/WebAvaliacoes.html": {
+      "w": 1280,
+      "h": 800,
+      "x": 9400,
+      "y": 42278,
+      "title": "Lojista computador · 13 · Avaliações da loja · nova",
+      "is_interactive": true
+    },
+    "v2/WebCatalogo.html": {
+      "w": 1280,
+      "h": 800,
+      "x": 9400,
+      "y": 45602,
+      "title": "Lojista computador · 2 · Catálogo · nova",
+      "is_interactive": true
+    },
+    "v2/WebConfigLoja.html": {
+      "w": 1280,
+      "h": 800,
+      "x": 9400,
+      "y": 43198,
+      "title": "Lojista computador · 7 · Configurações: perfil e contato · nova",
+      "is_interactive": true
+    },
+    "v2/WebConfigOperacao.html": {
+      "w": 1280,
+      "h": 800,
+      "x": 10760,
+      "y": 43198,
+      "title": "Lojista computador · 8 · Retirada, entrega e pagamentos · nova",
+      "is_interactive": true
+    },
+    "v2/WebEmergencias.html": {
+      "w": 1280,
+      "h": 800,
+      "x": 10760,
+      "y": 48926,
+      "title": "Lojista computador · 18 · Emergências a caminho · nova",
+      "is_interactive": true
+    },
+    "v2/WebEntrega.html": {
+      "w": 1280,
+      "h": 800,
+      "x": 9400,
+      "y": 46522,
+      "title": "Lojista computador · 16 · Entrega e retirada (configuração) · nova",
+      "is_interactive": true
+    },
+    "v2/WebEntregas.html": {
+      "w": 1280,
+      "h": 800,
+      "x": 10760,
+      "y": 46522,
+      "title": "Lojista computador · 17 · Entregas · nova",
+      "is_interactive": true
+    },
+    "v2/WebEquipe.html": {
+      "w": 1280,
+      "h": 800,
+      "x": 12120,
+      "y": 42278,
+      "title": "Lojista computador · 15 · Equipe da loja · nova",
+      "is_interactive": true
+    },
+    "v2/WebEstoque.html": {
+      "w": 1280,
+      "h": 800,
+      "x": 13480,
+      "y": 45602,
+      "title": "Lojista computador · 11 · Estoque · nova",
+      "is_interactive": true
+    },
+    "v2/WebHospede.html": {
+      "w": 1280,
+      "h": 800,
+      "x": 10760,
+      "y": 51330,
+      "title": "Lojista computador · Hóspede, carteirinha e cuidador · nova",
+      "is_interactive": true
+    },
+    "v2/WebHospedes.html": {
+      "w": 1280,
+      "h": 800,
+      "x": 9400,
+      "y": 51330,
+      "title": "Lojista computador · Hóspedes do hotelzinho · nova",
+      "is_interactive": true
+    },
+    "v2/WebMensagens.html": {
+      "w": 1280,
+      "h": 800,
+      "x": 12120,
+      "y": 41358,
+      "title": "Lojista computador · 10 · Mensagens · nova",
+      "is_interactive": true
+    },
+    "v2/WebNovoProduto.html": {
+      "w": 1280,
+      "h": 800,
+      "x": 12120,
+      "y": 45602,
+      "title": "Lojista computador · 6 · Cadastrar produto · nova",
+      "is_interactive": true
+    },
+    "v2/WebProduto.html": {
+      "w": 1280,
+      "h": 800,
+      "x": 10760,
+      "y": 45602,
+      "title": "Lojista computador · 3 · Produto com receita · nova",
+      "is_interactive": true
+    },
+    "v2/WebPromocoes.html": {
+      "w": 1280,
+      "h": 800,
+      "x": 13480,
+      "y": 41358,
+      "title": "Lojista computador · 12 · Promoções e cupons · nova",
+      "is_interactive": true
+    },
+    "v2/WebRecebimentos.html": {
+      "w": 1280,
+      "h": 800,
+      "x": 13480,
+      "y": 42278,
+      "title": "Lojista computador · 5 · Recebimentos · nova",
+      "is_interactive": true
+    },
+    "v2/WebRelatorios.html": {
+      "w": 1280,
+      "h": 800,
+      "x": 10760,
+      "y": 42278,
+      "title": "Lojista computador · 14 · Relatórios · nova",
+      "is_interactive": true
+    },
+    "v2/WebServicos.html": {
+      "w": 1280,
+      "h": 800,
+      "x": 10760,
+      "y": 41358,
+      "title": "Lojista computador · 9 · Serviços da loja · nova",
+      "is_interactive": true
+    },
+    "v2/WebSolicitacoes.html": {
+      "w": 1280,
+      "h": 800,
+      "x": 9400,
+      "y": 41358,
+      "title": "Lojista computador · 1 · Solicitações e aceite · nova",
+      "is_interactive": true
     }
   },
   "createdOnFiles": {
@@ -2817,6 +3313,98 @@
       "text": "App do tutor: pet perdido (com a tela que as pessoas recebem) e parceiros de plano e seguro (nova versão)",
       "kind": "title1",
       "maxW": 2740
+    },
+    "v2_f1": {
+      "x": 9400,
+      "y": 0,
+      "text": "Nova versão · Identidade visual",
+      "kind": "title1",
+      "size": "xxl",
+      "maxW": 4400
+    },
+    "v2_s2": {
+      "x": 9400,
+      "y": 340,
+      "text": "Paleta de cores (nova versão)",
+      "kind": "title1",
+      "maxW": 1280
+    },
+    "v2_s13": {
+      "x": 9400,
+      "y": 23000,
+      "text": "Link da ficha de emergência: como a clínica vê (computador) (nova versão)",
+      "kind": "title1",
+      "maxW": 1280
+    },
+    "v2_s14": {
+      "x": 9400,
+      "y": 24420,
+      "text": "Site do PetLive (nova versão)",
+      "kind": "title1",
+      "maxW": 1440
+    },
+    "v2_s15": {
+      "x": 9400,
+      "y": 28990,
+      "text": "Painel admin (computador), com Eventos e Adoção no início (nova versão)",
+      "kind": "title1",
+      "maxW": 5360
+    },
+    "v2_lj1": {
+      "x": 9400,
+      "y": 39130,
+      "text": "Todas as lojas · cadastro, gestão e atendimento (nova versão)",
+      "kind": "title1",
+      "maxW": 5360
+    },
+    "v2_lj2": {
+      "x": 9400,
+      "y": 44338,
+      "text": "Petshop e produtos · catálogo, estoque e entrega (nova versão)",
+      "kind": "title1",
+      "maxW": 5360
+    },
+    "v2_lj3": {
+      "x": 9400,
+      "y": 47662,
+      "text": "Banho e tosa e clínica veterinária · agenda, horários e emergências (nova versão)",
+      "kind": "title1",
+      "maxW": 2640
+    },
+    "v2_lj4": {
+      "x": 9400,
+      "y": 50066,
+      "text": "Hotelzinho pet · serviço, hóspedes e carteirinha (nova versão)",
+      "kind": "title1",
+      "maxW": 2640
+    },
+    "v2_lj5": {
+      "x": 9400,
+      "y": 52550,
+      "text": "Creche pet · serviço (nova versão)",
+      "kind": "title1",
+      "maxW": 860
+    },
+    "v2_lj6": {
+      "x": 9400,
+      "y": 54034,
+      "text": "Passeador · serviço e passeio do dia (nova versão)",
+      "kind": "title1",
+      "maxW": 860
+    },
+    "v2_s20": {
+      "x": 9400,
+      "y": 55518,
+      "text": "Painel admin: operação das lojas (nova versão)",
+      "kind": "title1",
+      "maxW": 5360
+    },
+    "v2_s21": {
+      "x": 9400,
+      "y": 56938,
+      "text": "Site: página para lojistas (nova versão)",
+      "kind": "title1",
+      "maxW": 1440
     }
   },
   "order": [
@@ -3129,7 +3717,69 @@
     "v2/TermosConsentimento.html",
     "v2/TodosAtalhos.html",
     "v2/Viagem.html",
-    "v2/WidgetAtalhos.html"
+    "v2/WidgetAtalhos.html",
+    "v2/AdminAdocao.html",
+    "v2/AdminAssinaturas.html",
+    "v2/AdminAvaliacoes.html",
+    "v2/AdminCampanhas.html",
+    "v2/AdminConteudo.html",
+    "v2/AdminEquipe.html",
+    "v2/AdminEventos.html",
+    "v2/AdminFinanceiro.html",
+    "v2/AdminIntegracoes.html",
+    "v2/AdminLGPD.html",
+    "v2/AdminLogin.html",
+    "v2/AdminLojistas.html",
+    "v2/AdminModeracao.html",
+    "v2/AdminPedidos.html",
+    "v2/AdminPlanos.html",
+    "v2/AdminRelatorios.html",
+    "v2/AdminSistema.html",
+    "v2/AdminSuporte.html",
+    "v2/AdminUsuarios.html",
+    "v2/AdminVisao.html",
+    "v2/Agenda.html",
+    "v2/Catalogo.html",
+    "v2/ConfigLoja.html",
+    "v2/FichaVistaPC.html",
+    "v2/Horarios.html",
+    "v2/LojaCadastro1.html",
+    "v2/LojaCadastro2.html",
+    "v2/LojaEntrega.html",
+    "v2/LojaPublicar.html",
+    "v2/LojaServicos.html",
+    "v2/LojaTipo.html",
+    "v2/NovoProdutoMobile.html",
+    "v2/Painel.html",
+    "v2/PaletaCores.html",
+    "v2/PasseioIniciar.html",
+    "v2/Pedidos.html",
+    "v2/ServicoCreche.html",
+    "v2/ServicoEditar.html",
+    "v2/ServicoHotel.html",
+    "v2/ServicoPasseio.html",
+    "v2/SiteLojistas.html",
+    "v2/SitePetLive.html",
+    "v2/WebAgenda.html",
+    "v2/WebAvaliacoes.html",
+    "v2/WebCatalogo.html",
+    "v2/WebConfigLoja.html",
+    "v2/WebConfigOperacao.html",
+    "v2/WebEmergencias.html",
+    "v2/WebEntrega.html",
+    "v2/WebEntregas.html",
+    "v2/WebEquipe.html",
+    "v2/WebEstoque.html",
+    "v2/WebHospede.html",
+    "v2/WebHospedes.html",
+    "v2/WebMensagens.html",
+    "v2/WebNovoProduto.html",
+    "v2/WebProduto.html",
+    "v2/WebPromocoes.html",
+    "v2/WebRecebimentos.html",
+    "v2/WebRelatorios.html",
+    "v2/WebServicos.html",
+    "v2/WebSolicitacoes.html"
   ],
   "pages": [],
   "title": "Wireframes App de Pets"

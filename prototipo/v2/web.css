@@ -1,0 +1,99 @@
+/*
+ * PetLive v2 no computador: painel admin, painel do lojista e páginas abertas.
+ * Usa os tokens e componentes de estilo.css; aqui ficam só a moldura de
+ * 1280 px, a barra lateral escura (a mesma tinta da barra de abas do app),
+ * a faixa de números, as tabelas e o painel de detalhe.
+ */
+.tela-web { position: relative; width: 1280px; height: 800px; overflow: hidden; background: var(--papel); display: flex; }
+
+/* Barra lateral */
+.lateral { width: 232px; flex: none; background: var(--tinta); color: #C9D0DB; display: flex; flex-direction: column; padding: 20px 12px 14px; }
+.marca-web { display: flex; align-items: center; gap: 10px; padding: 0 10px 16px; color: #fff; }
+.marca-web .logo { width: 34px; height: 34px; border-radius: 11px; background: var(--ceu); color: var(--tinta); display: grid; place-items: center; font-size: 18px; }
+.marca-web b { font-size: 17px; letter-spacing: -0.02em; }
+.marca-web small { display: block; font-size: 11px; font-weight: 600; color: #8A93A3; }
+.menu { flex: 1; overflow: hidden; }
+.menu h6 { margin: 10px 10px 4px; font-size: 10.5px; font-weight: 700; color: #6B7586; text-transform: uppercase; letter-spacing: .08em; }
+.menu a { display: flex; align-items: center; gap: 10px; height: 30px; padding: 0 10px; border-radius: 999px; font-size: 13px; font-weight: 600; }
+.menu a i { font-size: 16px; }
+.menu a .cont { margin-left: auto; min-width: 20px; height: 18px; border-radius: 999px; background: #2A3445; color: #fff; font-size: 11px; display: grid; place-items: center; padding: 0 6px; }
+.menu a.ativa { background: var(--ceu); color: var(--tinta); }
+.menu a.ativa .cont { background: var(--tinta); }
+.menu.folgado a { height: 36px; font-size: 14px; }
+.quem { display: flex; align-items: center; gap: 10px; padding: 12px 8px 0; border-top: 1px solid #222C3B; }
+.quem .ini { width: 34px; height: 34px; border-radius: 50%; background: #2A3445; color: #fff; display: grid; place-items: center; font-weight: 800; font-size: 13px; flex: none; }
+.quem b { display: block; color: #fff; font-size: 13px; }
+.quem small { font-size: 11px; color: #8A93A3; }
+
+/* Área principal */
+.principal { flex: 1; min-width: 0; display: flex; flex-direction: column; padding: 22px 28px 0; }
+.cabeca { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
+.cabeca .tit { flex: 1; min-width: 0; }
+.cabeca h1 { margin: 0; font-size: 26px; font-weight: 700; letter-spacing: -0.03em; }
+.cabeca p { margin: 2px 0 0; font-size: 13px; color: var(--suave); }
+.busca { height: 40px; width: 250px; border-radius: 999px; background: #fff; box-shadow: var(--sombra); display: flex; align-items: center; gap: 8px; padding: 0 14px; font-size: 13px; color: var(--fraco); }
+.btn { height: 40px; padding: 0 16px; border-radius: 999px; background: var(--tinta); color: #fff; display: inline-flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 700; white-space: nowrap; }
+.btn.claro { background: #fff; color: var(--tinta); box-shadow: var(--sombra); }
+.btn.ceu { background: var(--ceu); color: var(--tinta); }
+.btn.perigo { background: #fff; color: var(--rosa); box-shadow: var(--sombra); }
+.btn.mini { height: 32px; padding: 0 12px; font-size: 12px; }
+.corpo { flex: 1; min-height: 0; display: grid; gap: 14px; align-content: start; overflow: hidden; padding-bottom: 22px; }
+
+/* Faixa de números */
+.numeros { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.kpi { background: #fff; border-radius: 22px; padding: 14px 16px; box-shadow: var(--sombra); min-width: 0; }
+.kpi small { display: block; font-size: 12px; font-weight: 600; color: var(--suave); }
+.kpi b { display: block; font-size: 26px; letter-spacing: -0.03em; margin: 2px 0 1px; }
+.kpi em { font-style: normal; font-size: 12px; font-weight: 600; color: var(--suave); }
+.kpi em.sobe { color: var(--verde); }
+.kpi em.cai { color: var(--rosa); }
+.kpi.escuro { background: var(--tinta); color: #fff; }
+.kpi.escuro small, .kpi.escuro em { color: #C9D0DB; }
+
+/* Blocos */
+.bloco { background: #fff; border-radius: 24px; box-shadow: var(--sombra); padding: 16px 18px; min-width: 0; overflow: hidden; }
+.bloco > h3 { margin: 0 0 10px; font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+.bloco > h3 .dir { margin-left: auto; font-size: 12px; font-weight: 600; color: var(--suave); }
+.filtros { display: flex; gap: 6px; margin-bottom: 10px; }
+.filtros span { height: 30px; padding: 0 12px; border-radius: 999px; background: var(--papel); font-size: 12px; font-weight: 600; color: var(--suave); display: inline-flex; align-items: center; gap: 6px; }
+.filtros span.ativo { background: var(--tinta); color: #fff; }
+
+/* Tabela */
+.tabela { width: 100%; border-collapse: collapse; font-size: 13px; }
+.tabela th { text-align: left; font-size: 11.5px; font-weight: 700; color: var(--fraco); padding: 0 10px 8px; white-space: nowrap; }
+.tabela td { padding: 0 10px; height: 46px; border-top: 1px solid var(--linha); white-space: nowrap; }
+.tabela td.quebra { white-space: normal; }
+.tabela tr.sel td { background: var(--ceu-fundo); }
+.tabela tr.sel td:first-child { border-radius: 14px 0 0 14px; }
+.tabela tr.sel td:last-child { border-radius: 0 14px 14px 0; }
+.tabela tr.sel + tr td, .tabela tr.sel td { border-top-color: transparent; }
+.pessoa-c { display: flex; align-items: center; gap: 10px; font-weight: 700; }
+.ini-c { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; font-size: 12px; font-weight: 800; flex: none; }
+.fraco { color: var(--suave); font-weight: 500; }
+.dir { text-align: right; }
+
+/* Barras simples, sem trilho de fundo */
+.barras { display: flex; align-items: flex-end; gap: 10px; height: 130px; }
+.barras div { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px; height: 100%; justify-content: flex-end; }
+.barras span { width: 100%; border-radius: 8px 8px 4px 4px; background: var(--ceu); }
+.barras small { font-size: 11px; font-weight: 600; color: var(--fraco); }
+.legenda { display: flex; gap: 14px; flex-wrap: wrap; font-size: 12px; color: var(--suave); }
+.legenda i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 5px; vertical-align: -1px; }
+
+/* Detalhe à direita */
+.detalhe { background: #fff; border-radius: 24px; box-shadow: var(--sombra); padding: 18px; display: flex; flex-direction: column; gap: 12px; min-width: 0; overflow: hidden; }
+.detalhe h3 { margin: 0; font-size: 18px; letter-spacing: -0.02em; }
+.dado { display: flex; justify-content: space-between; gap: 12px; font-size: 13px; padding: 7px 0; border-top: 1px solid var(--linha); }
+.dado span { color: var(--suave); }
+.dado b { text-align: right; }
+.campo-w { display: block; }
+.campo-w span { display: block; font-size: 12px; font-weight: 600; color: var(--suave); margin: 0 2px 5px; }
+.campo-w div { height: 42px; border-radius: 14px; border: 1.5px solid var(--linha); background: #fff; padding: 0 14px; display: flex; align-items: center; font-size: 14px; }
+.campo-w.alto div { height: 76px; align-items: flex-start; padding-top: 11px; line-height: 1.45; }
+.chave { display: inline-block; vertical-align: middle; width: 40px; height: 24px; border-radius: 999px; background: var(--tinta); position: relative; flex: none; }
+.chave::after { content: ''; position: absolute; right: 3px; top: 3px; width: 18px; height: 18px; border-radius: 50%; background: #fff; }
+.chave.off { background: #D5DAE2; }
+.chave.off::after { right: auto; left: 3px; }
+
+/* Página aberta (navegador, sem login) */
+.pagina-aberta { width: 1280px; min-height: 800px; background: var(--papel); }
