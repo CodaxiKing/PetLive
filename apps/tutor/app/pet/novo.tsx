@@ -2,7 +2,6 @@ import { useRef, useState } from 'react'
 import { Alert, KeyboardAvoidingView, Platform, StyleSheet, Text, View } from 'react-native'
 import { router, useLocalSearchParams } from 'expo-router'
 import { BotaoPrimario } from '../../src/components/BotaoPrimario'
-import { MarcaPata } from '../../src/components/MarcaPata'
 import { FormularioPet } from '../../src/pets/FormularioPet'
 import type { AtivoFoto } from '../../src/pets/CampoFoto'
 import { usePets } from '../../src/pets/PetsProvider'
@@ -85,11 +84,10 @@ export default function NovoPet() {
         {cadastroBloqueado ? <Text accessibilityRole="alert" style={estilos.erro}>O limite de cadastro do seu plano foi atingido. Seus pets e históricos continuam disponíveis.</Text> : null}
         {erro ? <Text accessibilityRole="alert" style={estilos.erro}>{erro}</Text> : null}
         {passo === 1 ? (
-          <BotaoPrimario titulo="Continuar" desabilitado={cadastroBloqueado} icone={<MarcaPata size={24} cor={colors.black} />} onPress={continuar} />
+          <BotaoPrimario titulo="Continuar" desabilitado={cadastroBloqueado} onPress={continuar} />
         ) : (
           <BotaoPrimario
             titulo="Salvar pet"
-            icone={<Text style={estilos.check}>✓</Text>}
             onPress={salvar}
             desabilitado={cadastroBloqueado}
             carregando={salvando || enviando}

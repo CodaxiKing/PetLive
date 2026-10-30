@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { router } from 'expo-router';
 import { Tabs } from 'expo-router/js-tabs';
 import { useAuth } from '../../src/auth/AuthProvider';
+import { usePets } from '../../src/pets/PetsProvider';
 import { precisaAceitarTermos } from '../../src/privacidade/consentimentos';
 import { MenuInferior } from '../../src/components/MenuInferior';
 import { colors } from '../../src/theme/colors';
@@ -13,22 +14,33 @@ import { colors } from '../../src/theme/colors';
 /** Tutores já conferidos nesta execução do app (evita repetir a consulta). */
 const termosConferidos = new Set<string>();
 
+/** Conta criada há menos de um dia: ainda é o primeiro acesso. */
+function contaNova(criadaEm: string | undefined): boolean {
+  const quando = criadaEm ? Date.parse(criadaEm) : NaN;
+  return Number.isFinite(quando) && Date.now() - quando < 24 * 60 * 60 * 1000;
+}
+
 /**
  * Primeiro acesso (BUSINESS.md 19.1): sem o aceite dos termos e da política
- * na versão vigente, abre Termos e depois Permissões. Sem rede, não trava.
+ * na versão vigente, abre Termos e depois Permissões (que leva ao cadastro
+ * do pet). Quem aceitou os termos já ao criar a conta pula esse caminho, então
+ * a conta nova sem pet vai direto para "Conheça seu pet". Sem rede, não trava.
  */
 function useConferirTermos() {
   const { user } = useAuth();
+  const { pets, carregando } = usePets();
+  const semPet = pets.length === 0;
   useEffect(() => {
-    if (!user || termosConferidos.has(user.id)) return;
+    if (!user || carregando || termosConferidos.has(user.id)) return;
     precisaAceitarTermos().then(
       (precisa) => {
         termosConferidos.add(user.id);
         if (precisa) router.push('/termos?primeiroAcesso=1');
+        else if (semPet && contaNova(user.created_at)) router.push('/pet/novo?primeiroAcesso=1');
       },
       () => undefined,
     );
-  }, [user]);
+  }, [user, carregando, semPet]);
 }
 
 export default function AppLayout() {
