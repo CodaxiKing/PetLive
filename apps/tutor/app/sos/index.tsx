@@ -11,9 +11,10 @@ import {
   Text,
   View,
 } from 'react-native';
-import { router } from 'expo-router';
+import { router, useFocusEffect } from 'expo-router';
 import { ArrowLeft } from 'phosphor-react-native/src/icons/ArrowLeft';
 import { Camera } from 'phosphor-react-native/src/icons/Camera';
+import { Car } from 'phosphor-react-native/src/icons/Car';
 import { CaretRight } from 'phosphor-react-native/src/icons/CaretRight';
 import { FirstAidKit } from 'phosphor-react-native/src/icons/FirstAidKit';
 import { Flask } from 'phosphor-react-native/src/icons/Flask';
@@ -41,6 +42,7 @@ import {
   type MeuVeterinario,
   type ResultadoEmergencia,
 } from '../../src/sos/emergencia';
+import { chegadaAtual } from '../../src/sos/chegada';
 import { colors } from '../../src/theme/colors';
 import { shadow, spacing } from '../../src/theme/tokens';
 import { fontFamily, typography } from '../../src/theme/typography';
@@ -63,6 +65,13 @@ export default function Sos() {
   const [veterinario, setVeterinario] = useState<MeuVeterinario | null>(null);
   const [editandoVet, setEditandoVet] = useState(false);
   const [formVet, setFormVet] = useState<MeuVeterinario>({ nome: '', telefone: '' });
+  // Aviso "Estou a caminho" em curso: o SOS leva direto ao acompanhamento.
+  const [chegadaId, setChegadaId] = useState<string | null>(null);
+  useFocusEffect(
+    useCallback(() => {
+      chegadaAtual().then(setChegadaId, () => undefined);
+    }, []),
+  );
 
   // Métrica do SOS (BUSINESS.md 14): quantos segundos até ligar.
   const abertoEm = useRef(0);
@@ -221,6 +230,25 @@ export default function Sos() {
             </View>
           ) : null}
         </View>
+
+        {pets.length ? (
+          <Pressable
+            accessibilityRole="button"
+            onPress={() => (chegadaId ? router.push({ pathname: '/sos/chegada/[id]', params: { id: chegadaId } }) : router.push('/sos/caminho'))}
+            style={({ pressed }) => [estilos.ficha, pressed && { opacity: 0.85 }]}
+          >
+            <View style={[estilos.linhaIcone, estilos.caminhoIcone]}>
+              <Car size={22} color={colors.emergency} weight="fill" />
+            </View>
+            <View style={estilos.flex}>
+              <Text style={estilos.linhaTitulo} numberOfLines={1}>{chegadaId ? 'Acompanhar a chegada' : 'Estou a caminho'}</Text>
+              <Text style={estilos.linhaSub} numberOfLines={1}>
+                {chegadaId ? 'Veja a resposta da clínica e toque em Cheguei' : 'Avise uma clínica 24 h do PetLive com a ficha'}
+              </Text>
+            </View>
+            <CaretRight size={18} color={colors.textMuted} />
+          </Pressable>
+        ) : null}
 
         {clinica ? (
           <Pressable
@@ -401,6 +429,7 @@ const estilos = StyleSheet.create({
     justifyContent: 'center',
   },
   botaoBairroTexto: { fontSize: 14, fontFamily: fontFamily.bold, color: colors.emergency },
+  caminhoIcone: { width: 46, height: 46, backgroundColor: '#FDE0E6' },
   ficha: {
     flexDirection: 'row',
     alignItems: 'center',

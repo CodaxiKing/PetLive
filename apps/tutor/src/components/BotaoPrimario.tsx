@@ -1,6 +1,7 @@
 import { cloneElement, isValidElement, type ReactElement, type ReactNode } from 'react';
 import { ActivityIndicator, StyleSheet, Text, View, type ViewStyle } from 'react-native';
 import { colors } from '../theme/colors';
+import { shadow } from '../theme/tokens';
 import { Tocavel } from './Animacoes';
 import { fontFamily, typography } from '../theme/typography';
 
@@ -18,6 +19,8 @@ type Props = {
   estilo?: ViewStyle;
   /** Cor da pílula: escura por padrão, vermelha nas ações de emergência. */
   fundo?: string;
+  /** Ação secundária: pílula branca com sombra e texto escuro. */
+  claro?: boolean;
 };
 
 /**
@@ -25,7 +28,7 @@ type Props = {
  * centro. Um ícone próprio aparece pequeno e branco antes do texto ("+ Novo
  * remédio"): as telas passam ícones escuros, então o botão os recolore.
  */
-export function BotaoPrimario({ titulo, onPress, carregando, desabilitado, icone, estilo, fundo }: Props) {
+export function BotaoPrimario({ titulo, onPress, carregando, desabilitado, icone, estilo, fundo, claro }: Props) {
   const inativo = desabilitado || carregando;
 
   return (
@@ -39,14 +42,14 @@ export function BotaoPrimario({ titulo, onPress, carregando, desabilitado, icone
       // Sem isto, um flex: 1 no estilo ficava na camada de dentro e o botão
       // encolhia numa linha (ex.: "Começar" cortado nas boas-vindas).
       estiloExterno={estilo}
-      style={[estilos.botao, fundo ? { backgroundColor: fundo } : null, inativo && estilos.botaoInativo]}
+      style={[estilos.botao, claro && estilos.botaoClaro, fundo ? { backgroundColor: fundo } : null, inativo && estilos.botaoInativo]}
     >
       {carregando ? (
-        <ActivityIndicator size="small" color={colors.white} />
+        <ActivityIndicator size="small" color={claro ? colors.black : colors.white} />
       ) : (
         <View style={estilos.conteudo}>
-          {icone ? iconeBranco(icone) : null}
-          <Text style={estilos.titulo} numberOfLines={1}>
+          {icone ? (claro ? icone : iconeBranco(icone)) : null}
+          <Text style={[estilos.titulo, claro && estilos.tituloClaro]} numberOfLines={1}>
             {titulo}
           </Text>
         </View>
@@ -75,6 +78,13 @@ const estilos = StyleSheet.create({
     borderRadius: 28,
     backgroundColor: colors.black,
     paddingHorizontal: 20,
+  },
+  botaoClaro: {
+    backgroundColor: colors.surface,
+    ...shadow.card,
+  },
+  tituloClaro: {
+    color: colors.black,
   },
   botaoInativo: {
     opacity: 0.55,

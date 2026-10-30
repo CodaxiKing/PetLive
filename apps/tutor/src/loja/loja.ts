@@ -58,11 +58,13 @@ export type Loja = {
   horarios: { weekday: number; opens: string; closes: string }[]
 }
 
-export type Servico = { id: string; name: string; description: string | null; modelo: string; duration_min: number | null; price_cents: number | null }
+export type TipoClinico = 'consulta' | 'vacina' | 'retorno'
+export type Servico = { id: string; name: string; description: string | null; modelo: string; duration_min: number | null; price_cents: number | null; tipo_clinico?: TipoClinico | null }
 export type Vitrine = { disponivel: false } | { disponivel: true; loja: Loja; produtos: Produto[]; servicos: Servico[] }
 
-export type StatusSolicitacao = 'enviada' | 'confirmada' | 'recusada' | 'expirada' | 'cancelada' | 'pronta' | 'em_entrega' | 'em_andamento' | 'concluida' | 'nao_compareceu'
+export type StatusSolicitacao = 'aguardando_pagamento' | 'enviada' | 'confirmada' | 'recusada' | 'expirada' | 'cancelada' | 'pronta' | 'em_entrega' | 'em_andamento' | 'concluida' | 'nao_compareceu'
 export const TEXTO_STATUS: Record<StatusSolicitacao, string> = {
+  aguardando_pagamento: 'Aguardando o Pix',
   enviada: 'Aguardando a loja',
   confirmada: 'Confirmada',
   recusada: 'Recusada',
@@ -87,6 +89,8 @@ export type Solicitacao = {
   discount_cents: number
   total_cents: number
   pay_method: 'pix_app' | 'na_loja'
+  cupom: string | null
+  pagamento: { id: string; status: 'criando' | 'pendente' | 'pago' | 'expirado' | 'cancelado' | 'estorno_pendente' | 'estornado'; paid_at: string | null } | null
   message: string | null
   motivo: string | null
   endereco: string | null
@@ -155,15 +159,24 @@ export async function lojaDoLugar(placeId: string): Promise<string | null> {
   return rpc<string | null>('loja_do_lugar', { p_place: placeId }).catch(() => null)
 }
 
-export async function enviarSolicitacao(lojaId: string, itens: { product_id: string; qty: number }[], fulfillment: 'retirada' | 'entrega', mensagem: string, enderecoId: string | null) {
+export async function enviarSolicitacao(
+  lojaId: string,
+  itens: { product_id: string; qty: number }[],
+  fulfillment: 'retirada' | 'entrega',
+  mensagem: string,
+  enderecoId: string | null,
+  pagamento: 'pix_app' | 'na_loja' = 'na_loja',
+  cupom: string | null = null,
+) {
   if (!itens.length) throw new Error('Escolha ao menos um produto.')
-  return rpc<{ id: string; status: StatusSolicitacao; total_cents: number }>('solicitacao_criar', {
+  return rpc<{ id: string; status: StatusSolicitacao; total_cents: number; pay_method: 'pix_app' | 'na_loja' }>('solicitacao_criar', {
     p_store: lojaId,
     p_itens: itens,
     p_fulfillment: fulfillment,
     p_message: mensagem.trim() || null,
     p_address_id: fulfillment === 'entrega' ? enderecoId : null,
-    p_pay_method: 'na_loja',
+    p_pay_method: pagamento,
+    p_cupom: cupom,
   })
 }
 

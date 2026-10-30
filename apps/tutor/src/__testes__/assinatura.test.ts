@@ -1,5 +1,6 @@
-import { describe, expect, it } from 'vitest';
-import { lerAssinatura, resumoAssinatura, type Assinatura } from '../perfil/assinatura';
+import { describe, expect, it, vi } from 'vitest';
+import { lerAssinatura, podeCancelar, resumoAssinatura, type Assinatura } from '../perfil/assinatura';
+vi.mock('../lib/supabase', () => ({ supabase: {} }));
 const assinatura: Assinatura = { id: 'a', ciclo: 'anual', status: 'ativa', periodo_inicio: '2026-01-01T00:00:00Z', periodo_fim: '2027-01-01T00:00:00Z', forma_pagamento: 'pix', valor_centavos: 9900, moeda: 'BRL', provedor: 'asaas' };
 describe('minha assinatura', () => {
   it('distingue Premium sem contrato de uma cobrança registrada', () => {
@@ -20,5 +21,13 @@ describe('minha assinatura', () => {
   it('não inventa valor ou forma de pagamento ausentes', () => {
     const r = resumoAssinatura({ ...assinatura, valor_centavos: null, forma_pagamento: null });
     expect(r.valor).toBe('Valor não informado'); expect(r.pagamento).toBe('Não informado');
+  });
+  it('cancela pelo app só assinatura do PetLive, vigente e renovando', () => {
+    const agora = Date.parse('2026-10-25');
+    expect(podeCancelar({ plano: 'premium', assinatura, gestao_disponivel: true }, agora)).toBe(true);
+    expect(podeCancelar({ plano: 'premium', assinatura, gestao_disponivel: false }, agora)).toBe(false);
+    expect(podeCancelar({ plano: 'premium', assinatura: { ...assinatura, status: 'cancelando' }, gestao_disponivel: true }, agora)).toBe(false);
+    expect(podeCancelar({ plano: 'premium', assinatura, gestao_disponivel: true }, Date.parse('2028-01-01'))).toBe(false);
+    expect(lerAssinatura({ plano: 'premium', assinatura, gestao_disponivel: true }).gestao_disponivel).toBe(true);
   });
 });

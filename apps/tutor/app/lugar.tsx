@@ -29,7 +29,7 @@ import {
 } from '../src/mapa/lugares';
 import { MapaLugares } from '../src/mapa/MapaLugares';
 import { usePets } from '../src/pets/PetsProvider';
-import { lojaDoLugar } from '../src/loja/loja';
+import { abrirVitrine, lojaDoLugar, type TipoClinico } from '../src/loja/loja';
 import { colors } from '../src/theme/colors';
 import { radius, shadow, spacing } from '../src/theme/tokens';
 import { fontFamily, typography } from '../src/theme/typography';
@@ -70,10 +70,21 @@ export default function Lugar() {
   const [salvando, setSalvando] = useState(false);
   const [rotaAberta, setRotaAberta] = useState(false);
   const [lojaId, setLojaId] = useState<string | null>(null);
+  // Clínica que assumiu o lugar e tem agenda pelo app: tipo de atendimento a abrir primeiro.
+  const [agendaClinica, setAgendaClinica] = useState<TipoClinico | 'horario' | null>(null);
 
   // Lugar assumido por uma loja do PetLive: mostra a vitrine (BUSINESS.md 5.1).
   useEffect(() => {
-    if (id) lojaDoLugar(id).then(setLojaId, () => undefined);
+    if (!id) return;
+    lojaDoLugar(id).then((loja) => {
+      setLojaId(loja);
+      if (!loja) return;
+      abrirVitrine(loja).then((v) => {
+        if (!v.disponivel || v.loja.kind !== 'clinica') return;
+        const porHorario = v.servicos.filter((sv) => sv.modelo === 'horario');
+        if (porHorario.length) setAgendaClinica(porHorario.find((sv) => sv.tipo_clinico === 'consulta') ? 'consulta' : 'horario');
+      }, () => undefined);
+    }, () => undefined);
   }, [id]);
   const destaques = useDestaques(typeof id === 'string' ? [id] : []);
 
@@ -298,7 +309,21 @@ export default function Lugar() {
             />
           )}
 
-          {lojaId ? (
+          {lojaId && agendaClinica ? (
+            <Pressable
+              accessibilityRole="button"
+              onPress={() =>
+                router.push({ pathname: '/loja/agendar', params: { loja: lojaId, ...(agendaClinica === 'horario' ? {} : { tipo: agendaClinica }) } })
+              }
+              style={estilos.agendar}
+            >
+              <View style={estilos.flexMin}>
+                <Text style={estilos.agendarTitulo}>Agendar pelo PetLive</Text>
+                <Text style={estilos.agendarSub}>Consulta, vacina ou retorno com horário confirmado pela clínica</Text>
+              </View>
+              <Text style={[estilos.enviarFichaSeta, estilos.agendarSeta]}>›</Text>
+            </Pressable>
+          ) : lojaId ? (
             <Pressable accessibilityRole="button" onPress={() => router.push(`/loja/${lojaId}`)} style={estilos.verLoja}>
               <View style={estilos.flexMin}>
                 <Text style={estilos.verLojaTitulo}>Ver a loja no PetLive</Text>
@@ -665,6 +690,10 @@ const estilos = StyleSheet.create({
     textAlign: 'center',
     marginRight: 52,
   },
+  agendar: { flexDirection: 'row', alignItems: 'center', gap: 12, backgroundColor: colors.black, borderRadius: 22, padding: 16, marginTop: 12 },
+  agendarTitulo: { fontFamily: fontFamily.bold, fontSize: 15, color: colors.white },
+  agendarSub: { fontFamily: fontFamily.regular, fontSize: 13, color: 'rgba(255,255,255,0.75)' },
+  agendarSeta: { color: colors.white },
   verLoja: { flexDirection: 'row', alignItems: 'center', gap: 12, backgroundColor: colors.primarySurface, borderRadius: 22, padding: 16, marginTop: 12 },
   verLojaTitulo: { fontFamily: fontFamily.bold, fontSize: 15, color: colors.black },
   verLojaSub: { fontFamily: fontFamily.regular, fontSize: 13, color: colors.textMuted },

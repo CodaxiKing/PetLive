@@ -1,17 +1,17 @@
 import { useCallback, useEffect, useState } from 'react'
-import { ActivityIndicator, Alert, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native'
+import { ActivityIndicator, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native'
 import { router, useFocusEffect } from 'expo-router'
 import { Tocavel } from '../../src/components/Animacoes'
 import { BotaoPrimario } from '../../src/components/BotaoPrimario'
 import { HeroiOnda } from '../../src/components/HeroiOnda'
 import { reais } from '../../src/despesas/despesas'
-import { abrirVitrine, enviarSolicitacao, esvaziarCarrinho, mudarQuantidade, subtotalCarrinho, taxaEntrega, useCarrinho, type Loja } from '../../src/loja/loja'
+import { abrirVitrine, mudarQuantidade, subtotalCarrinho, taxaEntrega, useCarrinho, type Loja } from '../../src/loja/loja'
 import { carregarEnderecos, salvarEndereco, type Endereco } from '../../src/loja/enderecos'
 import { posicaoAtual } from '../../src/perdido/perdido'
 import { colors } from '../../src/theme/colors'
 import { fontFamily } from '../../src/theme/typography'
 
-/** Sua solicitação (protótipo Solicitar): itens, retirada ou entrega, mensagem e pagamento na loja. */
+/** Sua solicitação (protótipo Solicitar): itens, retirada ou entrega e mensagem; o pagamento vem na tela seguinte. */
 export default function Solicitar() {
   const carrinho = useCarrinho()
   const [loja, setLoja] = useState<Loja | null>(null)
@@ -20,7 +20,6 @@ export default function Solicitar() {
   const [enderecos, setEnderecos] = useState<Endereco[]>([])
   const [enderecoId, setEnderecoId] = useState<string | null>(null)
   const [novo, setNovo] = useState<{ street: string; number: string; complement: string } | null>(null)
-  const [enviando, setEnviando] = useState(false)
   const [erro, setErro] = useState<string | null>(null)
 
   useFocusEffect(
@@ -62,19 +61,12 @@ export default function Solicitar() {
     }
   }
 
-  async function enviar() {
+  function continuar() {
     if (!loja || !carrinho.itens.length) return
-    setEnviando(true)
-    setErro(null)
-    try {
-      const r = await enviarSolicitacao(loja.id, carrinho.itens.map((i) => ({ product_id: i.produto.id, qty: i.qty })), modo, mensagem, enderecoId)
-      esvaziarCarrinho()
-      router.replace(`/pedidos/${r.id}`)
-    } catch (e) {
-      setErro(e instanceof Error ? e.message : String(e))
-    } finally {
-      setEnviando(false)
-    }
+    router.push({
+      pathname: '/loja/pagamento',
+      params: { modo, mensagem, ...(modo === 'entrega' && enderecoId ? { endereco: enderecoId } : {}) },
+    })
   }
 
   if (!carrinho.itens.length) {
@@ -161,10 +153,6 @@ export default function Solicitar() {
           <TextInput value={mensagem} onChangeText={setMensagem} placeholder="Ex.: pode separar até as 17h?" placeholderTextColor={colors.textMuted} multiline maxLength={500} style={estilos.mensagem} />
         </View>
 
-        <View style={estilos.info}>
-          <Text style={estilos.infoTexto}>O pagamento é feito na loja, na retirada ou na entrega. A loja confirma a disponibilidade em até {loja.response_deadline_min} min e avisa você aqui.</Text>
-        </View>
-
         <View style={estilos.totais}>
           <View style={estilos.linhaTotal}><Text style={estilos.sub}>Produtos</Text><Text style={estilos.sub}>{reais(subtotal)}</Text></View>
           {modo === 'entrega' ? <View style={estilos.linhaTotal}><Text style={estilos.sub}>Entrega</Text><Text style={estilos.sub}>{entrega.ok ? (entrega.taxa ? reais(entrega.taxa) : 'Grátis') : '—'}</Text></View> : null}
@@ -174,15 +162,9 @@ export default function Solicitar() {
       </ScrollView>
       <View style={estilos.rodape}>
         <BotaoPrimario
-          titulo="Enviar solicitação"
-          carregando={enviando}
+          titulo="Continuar para o pagamento"
           desabilitado={!loja.aberta || (modo === 'entrega' && (!entrega.ok || !enderecoId))}
-          onPress={() =>
-            Alert.alert('Enviar a solicitação?', `${reais(total)} para pagar na loja. Você pode cancelar enquanto a loja não confirmar.`, [
-              { text: 'Voltar', style: 'cancel' },
-              { text: 'Enviar', onPress: enviar },
-            ])
-          }
+          onPress={continuar}
         />
         {!loja.aberta ? <Text style={estilos.notaRodape}>A loja está fechada agora.</Text> : null}
       </View>
@@ -219,8 +201,6 @@ const estilos = StyleSheet.create({
   adicionar: { paddingVertical: 6 },
   adicionarTexto: { fontFamily: fontFamily.bold, fontSize: 14, color: colors.primaryDeep },
   mensagem: { fontFamily: fontFamily.regular, fontSize: 15, color: colors.black, minHeight: 56, textAlignVertical: 'top' },
-  info: { backgroundColor: colors.primarySurface, borderRadius: 20, padding: 14 },
-  infoTexto: { fontFamily: fontFamily.regular, fontSize: 13, lineHeight: 19, color: colors.primaryDeep },
   totais: { gap: 4, paddingHorizontal: 4 },
   linhaTotal: { flexDirection: 'row', justifyContent: 'space-between' },
   totalRotulo: { fontFamily: fontFamily.bold, fontSize: 15, color: colors.black },

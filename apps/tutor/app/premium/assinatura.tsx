@@ -1,5 +1,5 @@
 import { ReactNode, useCallback, useState } from 'react';
-import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { router, useFocusEffect } from 'expo-router';
 import { ArrowsLeftRight } from 'phosphor-react-native/src/icons/ArrowsLeftRight';
 import { CaretRight } from 'phosphor-react-native/src/icons/CaretRight';
@@ -9,7 +9,7 @@ import { Sparkle } from 'phosphor-react-native/src/icons/Sparkle';
 import { useAuth } from '../../src/auth/AuthProvider';
 import { BotaoPrimario } from '../../src/components/BotaoPrimario';
 import { HeroiOnda } from '../../src/components/HeroiOnda';
-import { lerAssinatura, resumoAssinatura, type MinhaAssinatura } from '../../src/perfil/assinatura';
+import { lerAssinatura, podeCancelar, podeManter, reativarAssinatura, resumoAssinatura, type MinhaAssinatura } from '../../src/perfil/assinatura';
 import { supabase } from '../../src/lib/supabase';
 import { colors } from '../../src/theme/colors';
 import { shadow } from '../../src/theme/tokens';
@@ -64,12 +64,33 @@ function Consulta({ tutorId }: { tutorId: string }) {
         <View style={s.lista}>
           {resumo ? <Linha icone={<Diamond size={20} color={colors.text} />} titulo="Forma de pagamento" texto={resumo.pagamento} /> : null}
           <Linha icone={<Sparkle size={20} color={colors.text} />} titulo="O que está incluído" texto="Vários pets, PDF, guarda e cartão por foto" onPress={() => router.push('/premium')} />
-          <Linha icone={<ArrowsLeftRight size={20} color={colors.text} />} titulo="Gerenciar assinatura" texto="Compra, mudança de plano e cancelamento ainda não estão disponíveis nesta versão." ultima />
+          <Gerenciar dados={dados} aoMudar={() => setTentativa(n => n + 1)} />
         </View>
-        <Text style={s.nota}>Se você já possui uma assinatura, esta tela apenas consulta os dados registrados. Nenhuma cobrança ou alteração é realizada aqui.</Text>
+        <Text style={s.nota}>
+          {contrato?.status === 'cancelando'
+            ? 'Nenhuma nova cobrança será feita. Depois do fim do período, sua conta volta ao plano grátis e seus dados continuam aqui.'
+            : 'Cancelar não apaga nada: o Premium continua até o fim do período já pago.'}
+        </Text>
       </>}
     </View>
   </ScrollView>;
+}
+
+/** Cancelar, manter (desfazer o cancelamento) ou o caminho da loja de apps. */
+function Gerenciar({ dados, aoMudar }: { dados: MinhaAssinatura; aoMudar: () => void }) {
+  const a = dados.assinatura;
+  const icone = <ArrowsLeftRight size={20} color={colors.text} />;
+  if (podeCancelar(dados)) {
+    return <Linha icone={icone} titulo="Cancelar assinatura" texto="O Premium continua até o fim do período pago" onPress={() => router.push('/premium/cancelar')} ultima />;
+  }
+  if (podeManter(dados)) {
+    return <Linha icone={icone} titulo="Manter o Premium" texto="Desfaz o cancelamento e volta a renovar" ultima onPress={() =>
+      reativarAssinatura().then(aoMudar, (e: Error) => Alert.alert('Não deu para manter', e.message))} />;
+  }
+  if (a?.provedor === 'google_play' || a?.provedor === 'app_store') {
+    return <Linha icone={icone} titulo="Gerenciar assinatura" texto={`Mudança e cancelamento ficam na ${a.provedor === 'google_play' ? 'Google Play' : 'App Store'}, em Assinaturas.`} ultima />;
+  }
+  return <Linha icone={icone} titulo="Gerenciar assinatura" texto={dados.plano === 'premium' ? 'Não há cobrança recorrente para gerenciar.' : 'Assine pela tela Premium.'} onPress={dados.plano === 'premium' ? undefined : () => router.push('/premium')} ultima />;
 }
 
 function Linha({ icone, titulo, texto, onPress, ultima }: { icone: ReactNode; titulo: string; texto: string; onPress?: () => void; ultima?: boolean }) {

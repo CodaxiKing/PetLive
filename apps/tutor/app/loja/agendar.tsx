@@ -5,18 +5,29 @@ import { Tocavel } from '../../src/components/Animacoes'
 import { BotaoPrimario } from '../../src/components/BotaoPrimario'
 import { HeroiOnda } from '../../src/components/HeroiOnda'
 import { reais } from '../../src/despesas/despesas'
-import { abrirVitrine, type Loja, type Servico } from '../../src/loja/loja'
+import { abrirVitrine, type Loja, type Servico, type TipoClinico } from '../../src/loja/loja'
 import { diaIso, duracaoTexto, hhmm, horariosLivres, proximosDias, remarcar, reservar, type HorarioLivre } from '../../src/loja/reservas'
 import { AvatarPet } from '../../src/pets/AvatarPet'
+import { resumoPet } from '../../src/pets/fichaEmergencia'
 import { usePets } from '../../src/pets/PetsProvider'
 import { colors } from '../../src/theme/colors'
+import { shadow } from '../../src/theme/tokens'
 import { fontFamily } from '../../src/theme/typography'
 
 const SEMANA = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb']
+const TIPOS: { valor: TipoClinico; rotulo: string }[] = [
+  { valor: 'consulta', rotulo: 'Consulta' },
+  { valor: 'vacina', rotulo: 'Vacina' },
+  { valor: 'retorno', rotulo: 'Retorno' },
+]
 
-/** Agendar serviço por horário (protótipo Agendar). Com ?remarcar=<id>, troca o horário da reserva. */
+/**
+ * Agendar serviço por horário (protótipo Agendar). Com ?remarcar=<id>, troca o
+ * horário da reserva. Na clínica (protótipo ConsultaClinica), escolhe consulta,
+ * vacina ou retorno e o pet, e a consulta confirmada entra no histórico dele.
+ */
 export default function Agendar() {
-  const { loja: lojaId, servico: servicoParam, remarcar: reservaId } = useLocalSearchParams<{ loja: string; servico?: string; remarcar?: string }>()
+  const { loja: lojaId, servico: servicoParam, remarcar: reservaId, tipo: tipoParam } = useLocalSearchParams<{ loja: string; servico?: string; remarcar?: string; tipo?: TipoClinico }>()
   const { pets, petAtivo } = usePets()
   const [loja, setLoja] = useState<Loja | null>(null)
   const [servicos, setServicos] = useState<Servico[]>([])
@@ -34,6 +45,7 @@ export default function Agendar() {
   const [mensagem, setMensagem] = useState('')
   const [enviando, setEnviando] = useState(false)
   const [erro, setErro] = useState<string | null>(null)
+  const [trocarPet, setTrocarPet] = useState(false)
 
   useEffect(() => {
     if (!lojaId) return
@@ -42,8 +54,11 @@ export default function Agendar() {
       setLoja(v.loja)
       const porHorario = v.servicos.filter((s) => s.modelo === 'horario')
       setServicos(porHorario)
-      setServicoId((atual) => atual ?? porHorario[0]?.id ?? null)
+      const doTipo = tipoParam ? porHorario.find((s) => s.tipo_clinico === tipoParam) : undefined
+      setServicoId((atual) => atual ?? doTipo?.id ?? porHorario[0]?.id ?? null)
     }, (e: Error) => setErro(e.message))
+    // O tipo pedido pela ficha do lugar só vale na primeira carga.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lojaId])
 
   useEffect(() => {
@@ -64,6 +79,11 @@ export default function Agendar() {
   }, [servicoId, dia, reservaId, chave])
 
   const servico = servicos.find((s) => s.id === servicoId) ?? null
+  const clinica = loja?.kind === 'clinica'
+  // Tipos que a clínica oferece; serviços sem tipo aparecem na lista comum.
+  const tipos = clinica ? TIPOS.filter((t) => servicos.some((s) => s.tipo_clinico === t.valor)) : []
+  const semTipo = clinica ? servicos.filter((s) => !s.tipo_clinico) : servicos
+  const pet = pets.find((p) => p.id === petId) ?? null
 
   async function confirmar() {
     if (!escolhido || !servico) return
@@ -90,14 +110,46 @@ export default function Agendar() {
 
   return (
     <KeyboardAvoidingView style={estilos.tela} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-      <HeroiOnda subtitulo={loja.name} titulo={reservaId ? 'Remarcar horário' : 'Agendar horário'} altura={176} />
+      <HeroiOnda subtitulo={loja.name} titulo={reservaId ? 'Remarcar horário' : clinica ? 'Agendar consulta' : 'Agendar horário'} />
       <ScrollView contentContainerStyle={estilos.conteudo} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
-        {!reservaId && pets.length > 1 ? (
+        {!reservaId && tipos.length ? (
+          <>
+            <Text style={estilos.secao}>Tipo</Text>
+            <View style={estilos.segmentos}>
+              {tipos.map((t) => {
+                const ativo = servico?.tipo_clinico === t.valor
+                return (
+                  <Tocavel key={t.valor} accessibilityRole="radio" accessibilityState={{ selected: ativo }} estiloExterno={estilos.flex} onPress={() => setServicoId(servicos.find((s) => s.tipo_clinico === t.valor)?.id ?? null)} style={[estilos.segmento, ativo && estilos.ativo]}>
+                    <Text style={[estilos.chipTexto, ativo && estilos.textoClaro]}>{t.rotulo}</Text>
+                  </Tocavel>
+                )
+              })}
+            </View>
+          </>
+        ) : null}
+
+        {!reservaId && clinica && pet && !trocarPet ? (
+          <View style={estilos.petCartao}>
+            <AvatarPet especie={pet.especie} foto={pet.foto_url} size={46} />
+            <View style={estilos.flex}>
+              <Text style={estilos.petNome}>{pet.nome}</Text>
+              <Text style={estilos.sub} numberOfLines={1}>{resumoPet(pet).slice(pet.nome.length + 3) || 'Seu pet'}</Text>
+            </View>
+            {pets.length > 1 ? (
+              <Tocavel accessibilityRole="button" accessibilityLabel={'Trocar o pet (' + pet.nome + ')'} onPress={() => setTrocarPet(true)}>
+                <Text style={estilos.trocar}>Trocar</Text>
+              </Tocavel>
+            ) : null}
+          </View>
+        ) : !reservaId && pets.length > 1 ? (
           <>
             <Text style={estilos.secao}>Pet</Text>
             <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={estilos.linhaChips}>
               {pets.map((p) => (
-                <Tocavel key={p.id} accessibilityRole="radio" accessibilityState={{ selected: p.id === petId }} onPress={() => setPetId(p.id)} style={[estilos.pet, p.id === petId && estilos.ativo]}>
+                <Tocavel key={p.id} accessibilityRole="radio" accessibilityState={{ selected: p.id === petId }} onPress={() => {
+                  setPetId(p.id)
+                  setTrocarPet(false)
+                }} style={[estilos.pet, p.id === petId && estilos.ativo]}>
                   <AvatarPet especie={p.especie} foto={p.foto_url} size={30} />
                   <Text style={[estilos.chipTexto, p.id === petId && estilos.textoClaro]}>{p.nome}</Text>
                 </Tocavel>
@@ -106,11 +158,11 @@ export default function Agendar() {
           </>
         ) : null}
 
-        {!reservaId && servicos.length > 1 ? (
+        {!reservaId && semTipo.length > (clinica && tipos.length ? 0 : 1) ? (
           <>
-            <Text style={estilos.secao}>Serviço</Text>
+            <Text style={estilos.secao}>{clinica && tipos.length ? 'Outros serviços' : 'Serviço'}</Text>
             <View style={estilos.chips}>
-              {servicos.map((s) => (
+              {semTipo.map((s) => (
                 <Tocavel key={s.id} accessibilityRole="radio" accessibilityState={{ selected: s.id === servicoId }} onPress={() => setServicoId(s.id)} style={[estilos.chip, s.id === servicoId && estilos.ativo]}>
                   <Text style={[estilos.chipTexto, s.id === servicoId && estilos.textoClaro]}>{s.name}</Text>
                 </Tocavel>
@@ -154,7 +206,12 @@ export default function Agendar() {
             })}
           </View>
         )}
-        <Text style={estilos.nota}>A loja define os dias, horários e vagas. {loja.cancel_until_min ? `Cancelamento grátis até ${duracaoTexto(loja.cancel_until_min)} antes.` : ''}</Text>
+        {clinica && servico?.tipo_clinico && pet ? (
+          <View style={estilos.info}>
+            <Text style={estilos.infoTexto}>Depois da consulta, ela entra no histórico {pet.especie === 'gato' ? 'da' : 'do'} {pet.nome} e você pode anexar o exame ou a receita.</Text>
+          </View>
+        ) : null}
+        <Text style={estilos.nota}>{clinica ? 'A clínica' : 'A loja'} define os dias, horários e vagas. {loja.cancel_until_min ? `Cancelamento grátis até ${duracaoTexto(loja.cancel_until_min)} antes.` : ''}</Text>
 
         {!reservaId ? (
           <View style={estilos.campo}>
@@ -166,11 +223,11 @@ export default function Agendar() {
       <View style={estilos.rodape}>
         {escolhido && servico ? (
           <Text style={estilos.resumo}>
-            {dia.toLocaleDateString('pt-BR', { weekday: 'short', day: 'numeric' })} · {hhmm(escolhido.inicio)} · {servico.name}
+            {dia.toLocaleDateString('pt-BR', { weekday: 'short', day: 'numeric' })} · {hhmm(escolhido.inicio)} · {TIPOS.find((t) => t.valor === servico.tipo_clinico)?.rotulo ?? servico.name}
             {servico.price_cents !== null ? ` · ${reais(servico.price_cents)}` : ''}
           </Text>
         ) : null}
-        <BotaoPrimario titulo={reservaId ? 'Confirmar novo horário' : 'Reservar horário'} carregando={enviando} desabilitado={!escolhido} onPress={confirmar} />
+        <BotaoPrimario titulo={reservaId ? 'Confirmar novo horário' : clinica ? 'Solicitar' : 'Reservar horário'} carregando={enviando} desabilitado={!escolhido} onPress={confirmar} />
       </View>
     </KeyboardAvoidingView>
   )
@@ -179,7 +236,15 @@ export default function Agendar() {
 const estilos = StyleSheet.create({
   tela: { flex: 1, backgroundColor: colors.background },
   centro: { alignItems: 'center', justifyContent: 'center', padding: 24 },
-  conteudo: { paddingHorizontal: 24, paddingBottom: 24, gap: 10 },
+  conteudo: { paddingHorizontal: 20, paddingBottom: 24, gap: 10 },
+  flex: { flex: 1, minWidth: 0 },
+  segmentos: { flexDirection: 'row', gap: 8 },
+  segmento: { height: 44, borderRadius: 22, backgroundColor: colors.surface, alignItems: 'center', justifyContent: 'center', ...shadow.card },
+  petCartao: { flexDirection: 'row', alignItems: 'center', gap: 12, backgroundColor: colors.surface, borderRadius: 24, padding: 12, ...shadow.card },
+  petNome: { fontFamily: fontFamily.bold, fontSize: 16, color: colors.black },
+  trocar: { fontFamily: fontFamily.bold, fontSize: 14, color: colors.primaryDeep, paddingHorizontal: 6 },
+  info: { backgroundColor: colors.primarySurface, borderRadius: 20, padding: 14 },
+  infoTexto: { fontFamily: fontFamily.regular, fontSize: 13, lineHeight: 19, color: colors.primaryDeep },
   secao: { fontFamily: fontFamily.bold, fontSize: 15, color: colors.black, marginTop: 6 },
   sub: { fontFamily: fontFamily.regular, fontSize: 13, color: colors.textMuted },
   linhaChips: { gap: 8 },
@@ -199,6 +264,6 @@ const estilos = StyleSheet.create({
   campo: { backgroundColor: colors.surface, borderRadius: 22, padding: 14 },
   texto: { fontFamily: fontFamily.regular, fontSize: 15, color: colors.black, minHeight: 50, textAlignVertical: 'top' },
   erro: { fontFamily: fontFamily.medium, fontSize: 13, color: colors.danger },
-  rodape: { paddingHorizontal: 24, paddingTop: 12, paddingBottom: 28, gap: 8 },
+  rodape: { paddingHorizontal: 20, paddingTop: 12, paddingBottom: 28, gap: 8 },
   resumo: { fontFamily: fontFamily.semiBold, fontSize: 14, color: colors.black, textAlign: 'center' },
 })

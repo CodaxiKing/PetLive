@@ -1,16 +1,19 @@
+import { supabase } from '../lib/supabase';
+
 export type Assinatura = {
   id: string; ciclo: 'mensal' | 'anual'; status: 'em_teste' | 'ativa' | 'pagamento_falhou' | 'cancelando' | 'cancelada' | 'expirada';
   periodo_inicio: string; periodo_fim: string;
   forma_pagamento: 'pix' | 'cartao' | 'loja_apps' | null;
   valor_centavos: number | null; moeda: 'BRL'; provedor: 'asaas' | 'google_play' | 'app_store';
 };
-export type MinhaAssinatura = { plano: 'gratis' | 'premium'; assinatura: Assinatura | null; gestao_disponivel: false };
+/** gestao_disponivel: o cancelamento é feito pelo PetLive (assinatura no Asaas); pela loja de apps, não. */
+export type MinhaAssinatura = { plano: 'gratis' | 'premium'; assinatura: Assinatura | null; gestao_disponivel: boolean };
 const estados = { em_teste: 'Em teste', ativa: 'Ativa', pagamento_falhou: 'Pagamento pendente', cancelando: 'Cancelamento agendado', cancelada: 'Cancelada', expirada: 'Expirada' };
 
 export function lerAssinatura(valor: unknown): MinhaAssinatura {
   if (!valor || typeof valor !== 'object') throw new Error('Resposta de assinatura inválida.');
   const r = valor as MinhaAssinatura;
-  if (!['gratis', 'premium'].includes(r.plano) || r.gestao_disponivel !== false) throw new Error('Resposta de assinatura inválida.');
+  if (!['gratis', 'premium'].includes(r.plano) || typeof r.gestao_disponivel !== 'boolean') throw new Error('Resposta de assinatura inválida.');
   const a = r.assinatura;
   if (a !== null && (!a || typeof a.id !== 'string' || !['mensal', 'anual'].includes(a.ciclo)
     || !Object.hasOwn(estados, a.status) || !['asaas', 'google_play', 'app_store'].includes(a.provedor)
@@ -38,4 +41,32 @@ export function resumoAssinatura(a: Assinatura, agora = Date.now()) {
     pagamento: a.forma_pagamento === 'pix' ? 'Pix' : a.forma_pagamento === 'cartao' ? 'Cartão' : a.forma_pagamento === 'loja_apps' ? 'Loja de aplicativos' : 'Não informado',
     valor: a.valor_centavos === null ? 'Valor não informado' : (a.valor_centavos / 100).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }),
   };
+}
+
+/** Pode cancelar pelo app: assinatura do PetLive, vigente e ainda renovando. */
+export function podeCancelar(m: MinhaAssinatura, agora = Date.now()): boolean {
+  const a = m.assinatura;
+  return m.gestao_disponivel && !!a && ['em_teste', 'ativa', 'pagamento_falhou'].includes(a.status) && Date.parse(a.periodo_fim) > agora;
+}
+
+/** Cancelamento agendado pelo app, ainda dentro do período: dá para manter o Premium. */
+export function podeManter(m: MinhaAssinatura, agora = Date.now()): boolean {
+  const a = m.assinatura;
+  return m.gestao_disponivel && !!a && a.status === 'cancelando' && Date.parse(a.periodo_fim) > agora;
+}
+
+/** Agenda o cancelamento e para a recorrência no pagamento (função subscription-cancel). */
+export async function cancelarAssinatura(motivo: string | null): Promise<{ periodo_fim: string }> {
+  const { data, error } = await supabase.functions.invoke<{ periodo_fim: string }>('subscription-cancel', { body: { motivo } });
+  if (error) {
+    const contexto = (error as { context?: Response }).context;
+    const corpo: { mensagem?: string } = contexto ? await contexto.json().catch(() => ({})) : {};
+    throw new Error(corpo.mensagem ?? 'Não deu para cancelar agora. Confira a internet e tente de novo.');
+  }
+  return data as { periodo_fim: string };
+}
+
+export async function reativarAssinatura(): Promise<void> {
+  const { error } = await supabase.rpc('assinatura_reativar');
+  if (error) throw new Error(error.message);
 }

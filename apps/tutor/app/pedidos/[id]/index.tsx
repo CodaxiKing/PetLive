@@ -10,10 +10,21 @@ import { avaliacaoDoPedido } from '../../../src/loja/avaliacoes'
 import { abrirSolicitacao, cancelarSolicitacao, entregaDetalhe, textoChegada, TEXTO_ENTREGA, type Entrega, podeCancelar, STATUS_FINAIS, TEXTO_STATUS, type Solicitacao, type StatusSolicitacao } from '../../../src/loja/loja'
 import { ligarPara, tracarRota } from '../../../src/mapa/acoes'
 import { hhmm, linkAgenda } from '../../../src/loja/reservas'
+import { desistirDoPix } from '../../../src/pagamentos/pagamentos'
 import { colors } from '../../../src/theme/colors'
 import { fontFamily } from '../../../src/theme/typography'
 
 const quando = (iso: string) => new Date(iso).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })
+
+/** Como o pedido é pago, para a linha abaixo dos itens. */
+function textoPagamento(s: Solicitacao): string {
+  if (s.pay_method === 'na_loja') return 'pagar na loja'
+  const st = s.pagamento?.status
+  if (st === 'pago') return 'pago por Pix'
+  if (st === 'estorno_pendente') return 'Pix em estorno'
+  if (st === 'estornado') return 'Pix devolvido'
+  return 'Pix esperando o pagamento'
+}
 
 /** Passos que o tutor espera ver, conforme retirada ou entrega. */
 function passos(s: Solicitacao): StatusSolicitacao[] {
@@ -56,6 +67,14 @@ export default function AcompanharPedido() {
   const final = STATUS_FINAIS.includes(s.status)
   const feitos = new Map(s.eventos.map((e) => [e.status, e.at]))
   const fora = ['recusada', 'expirada', 'cancelada', 'nao_compareceu'].includes(s.status)
+
+  function desistir() {
+    if (s === null || s === 'indisponivel') return
+    Alert.alert('Desistir do pedido?', 'O pedido não vai para a loja.', [
+      { text: 'Voltar', style: 'cancel' },
+      { text: 'Desistir', style: 'destructive', onPress: () => desistirDoPix(s.id).then(carregar, (e: Error) => Alert.alert('Não deu para desistir', e.message)) },
+    ])
+  }
 
   function cancelar() {
     if (!s || s === 'indisponivel') return
@@ -153,8 +172,14 @@ export default function AcompanharPedido() {
             </View>
           ))}
           {s.delivery_fee_cents ? <View style={estilos.linha}><Text style={[estilos.sub, estilos.flex]}>Entrega</Text><Text style={estilos.sub}>{reais(s.delivery_fee_cents)}</Text></View> : null}
+          {s.discount_cents ? <View style={estilos.linha}><Text style={[estilos.sub, estilos.flex]}>Desconto{s.cupom ? ` ${s.cupom}` : ''}</Text><Text style={estilos.sub}>− {reais(s.discount_cents)}</Text></View> : null}
           <View style={estilos.linha}><Text style={[estilos.total, estilos.flex]}>Total</Text><Text style={estilos.total}>{reais(s.total_cents)}</Text></View>
-          <Text style={estilos.sub}>{s.fulfillment === 'entrega' ? `Entrega em ${s.endereco ?? 'seu endereço'}` : `Retirar em ${s.loja.name}`} · pagar na loja</Text>
+          <Text style={estilos.sub}>{s.fulfillment === 'entrega' ? `Entrega em ${s.endereco ?? 'seu endereço'}` : `Retirar em ${s.loja.name}`} · {textoPagamento(s)}</Text>
+          {s.pagamento && ['pago', 'estorno_pendente', 'estornado'].includes(s.pagamento.status) ? (
+            <Tocavel accessibilityRole="link" onPress={() => router.push({ pathname: '/pagamento/[id]', params: { id: s.pagamento!.id } })}>
+              <Text style={estilos.link}>Ver comprovante</Text>
+            </Tocavel>
+          ) : null}
           {s.message ? <Text style={estilos.recado}>“{s.message}”</Text> : null}
         </View>
 
@@ -182,7 +207,14 @@ export default function AcompanharPedido() {
           ) : null}
         </View>
       </ScrollView>
-      {!final && podeCancelar(s) ? (
+      {s.status === 'aguardando_pagamento' ? (
+        <View style={estilos.rodape}>
+          <BotaoPrimario titulo="Pagar com Pix" onPress={() => router.push({ pathname: '/pagamento/pix', params: { pedido: s.id } })} />
+          <Tocavel accessibilityRole="button" onPress={desistir} style={estilos.desistir}>
+            <Text style={estilos.desistirTexto}>Desistir do pedido</Text>
+          </Tocavel>
+        </View>
+      ) : !final && podeCancelar(s) ? (
         <View style={estilos.rodape}>
           <BotaoPrimario titulo="Cancelar solicitação" carregando={cancelando} onPress={cancelar} />
         </View>
@@ -226,7 +258,9 @@ const estilos = StyleSheet.create({
   acoes: { flexDirection: 'row', gap: 10 },
   acao: { flex: 1, height: 48, borderRadius: 24, borderWidth: 1.5, borderColor: colors.border, alignItems: 'center', justifyContent: 'center' },
   acaoTexto: { fontFamily: fontFamily.semiBold, fontSize: 14, color: colors.black },
-  rodape: { paddingHorizontal: 24, paddingTop: 12, paddingBottom: 28 },
+  rodape: { paddingHorizontal: 24, paddingTop: 12, paddingBottom: 28, gap: 10 },
+  desistir: { alignSelf: 'center', paddingVertical: 4 },
+  desistirTexto: { fontFamily: fontFamily.bold, fontSize: 14, color: colors.textMuted, textDecorationLine: 'underline' },
   conversa: { flexDirection: 'row', alignItems: 'center', backgroundColor: colors.primarySurface, borderRadius: 22, paddingHorizontal: 16, height: 54 },
   conversaTexto: { flex: 1, fontFamily: fontFamily.bold, fontSize: 15, color: colors.primaryDeep },
   conversaSeta: { fontFamily: fontFamily.bold, fontSize: 22, color: colors.primaryDeep },
