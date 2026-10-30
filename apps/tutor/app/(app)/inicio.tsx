@@ -33,9 +33,11 @@ import { colors } from '../../src/theme/colors';
 import { fontFamily } from '../../src/theme/typography';
 import { shadow } from '../../src/theme/tokens';
 
-/** Atalhos do Início (protótipo: fundo pastel, ícone num círculo branco). Só os da Fase 1. */
+/**
+ * Atalhos do Início (protótipo: fundo pastel, ícone num círculo branco). Só os da Fase 1.
+ * O SOS não entra aqui: ele fica no meio da barra de abas (versão 2).
+ */
 const ATALHOS: { nome: string; fundo: string; icone: NomeIcone; cor?: string; destino: Href | { pet: 'carteirinha' | 'medicamentos' } }[] = [
-  { nome: 'SOS', fundo: colors.emergency, icone: 'cruz', cor: colors.white, destino: '/sos' },
   { nome: 'Lembretes', fundo: colors.premiumSurface, icone: 'sino', cor: colors.premiumText, destino: '/lembretes' },
   { nome: 'Carteirinha', fundo: colors.healthSurface, icone: 'carteirinha', cor: colors.healthText, destino: { pet: 'carteirinha' } },
   { nome: 'Remédios', fundo: colors.healthSurface, icone: 'capsula', cor: colors.healthText, destino: { pet: 'medicamentos' } },
@@ -314,10 +316,10 @@ export default function Inicio() {
                 style={[estilos.atalho, i >= 4 && estilos.atalhoSecundario]}
               >
                 <View style={[estilos.atalhoIcone, i >= 4 && estilos.atalhoIconeSecundario, { backgroundColor: atalho.fundo }]}>
-                  <Icone nome={atalho.icone} size={i < 4 ? 26 : 20} cor={atalho.cor} espessura={i === 0 ? 2.6 : 2} />
+                  <Icone nome={atalho.icone} size={i < 4 ? 26 : 20} cor={atalho.cor} espessura={2} />
                 </View>
                 <Text
-                  style={[estilos.atalhoTexto, i === 0 && estilos.atalhoSos, i >= 4 && estilos.atalhoTextoSecundario]}
+                  style={[estilos.atalhoTexto, i >= 4 && estilos.atalhoTextoSecundario]}
                   numberOfLines={atalho.nome.includes(' ') ? 2 : 1}
                   adjustsFontSizeToFit
                   minimumFontScale={0.8}
@@ -584,7 +586,6 @@ const estilos = StyleSheet.create({
   atalhoIconeSecundario: { width: 48, height: 48, borderRadius: 18 },
   atalhoTexto: { fontFamily: fontFamily.bold, fontSize: 13, color: colors.black, textAlign: 'center' },
   atalhoTextoSecundario: { fontFamily: fontFamily.semiBold, fontSize: 12, color: colors.textMuted },
-  atalhoSos: { fontFamily: fontFamily.extraBold, color: colors.emergency },
   secao: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'baseline', marginTop: 2 },
   secaoTitulo: { fontFamily: fontFamily.bold, fontSize: 16, color: colors.black },
   secaoAcao: { fontFamily: fontFamily.semiBold, fontSize: 12, color: colors.textMuted },

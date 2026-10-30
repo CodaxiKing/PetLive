@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
+import { ArrowLeft } from 'phosphor-react-native/src/icons/ArrowLeft';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
-import Svg, { Path } from 'react-native-svg';
 import { voltarOuInicio } from '../lib/voltar';
 import { colors } from '../theme/colors';
 import { typography } from '../theme/typography';
@@ -30,15 +30,7 @@ export function CabecalhoTela({ titulo, acao, onAcao, aEsquerda, children }: Pro
         onPress={voltarOuInicio}
         style={({ pressed }) => [estilos.botaoVoltar, pressed && estilos.pressionado]}
       >
-        <Svg width={22} height={22} viewBox="0 0 24 24" fill="none">
-          <Path
-            d="M15 5l-7 7 7 7"
-            stroke={colors.black}
-            strokeWidth={2.2}
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </Svg>
+        <ArrowLeft size={22} color={colors.black} />
       </Pressable>
 
       <Text style={[estilos.titulo, aEsquerda && estilos.tituloEsquerda]} numberOfLines={1}>

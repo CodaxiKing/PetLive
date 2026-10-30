@@ -1,4 +1,5 @@
 import { useEffect, useState, type ReactNode } from 'react';
+import { ArrowLeft } from 'phosphor-react-native/src/icons/ArrowLeft';
 import {
   ActivityIndicator,
   Linking,
@@ -153,15 +154,7 @@ export default function Lugar() {
           onPress={() => router.back()}
           style={({ pressed }) => [estilos.voltar, pressed && estilos.voltarPressionado]}
         >
-          <Svg width={22} height={22} viewBox="0 0 24 24" fill="none">
-            <Path
-              d="M15 5l-7 7 7 7"
-              stroke={colors.black}
-              strokeWidth={2.2}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </Svg>
+          <ArrowLeft size={22} color={colors.black} />
         </Pressable>
 
         <Pressable

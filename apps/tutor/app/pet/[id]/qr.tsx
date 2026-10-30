@@ -2,6 +2,8 @@ import { useCallback, useRef, useState } from 'react';
 import { ActivityIndicator, Platform, Pressable, ScrollView, StyleSheet, Switch, Text, View, type ViewInstance } from 'react-native';
 import { router, useFocusEffect, useLocalSearchParams } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { ArrowLeft } from 'phosphor-react-native/src/icons/ArrowLeft';
+import { BotaoRedondo } from '../../../src/components/Layout';
 import { BotaoPrimario } from '../../../src/components/BotaoPrimario';
 import { EtiquetaColeira } from '../../../src/pets/EtiquetaColeira';
 import { usePets } from '../../../src/pets/PetsProvider';
@@ -67,7 +69,7 @@ function EditorQr({ pet, nome }: { pet: string; nome: string }) {
     } finally { trava.current = false; setOcupado(false); }
   }
   return <ScrollView style={s.tela} contentContainerStyle={{ padding: 24, paddingTop: insets.top + 16, paddingBottom: insets.bottom + 24, gap: 18 }}>
-    <Pressable accessibilityRole="button" onPress={() => router.back()}><Text style={s.link}>Voltar</Text></Pressable>
+    <BotaoRedondo acessibilidade="Voltar" onPress={() => router.back()}><ArrowLeft size={22} color={colors.black} /></BotaoRedondo>
     <Text accessibilityRole="header" style={s.titulo}>QR da coleira</Text>
     <Text style={s.texto}>Quem escanear verá o nome e a espécie de {nome}. Escolha os dados adicionais. As alterações valem também para etiquetas já impressas.</Text>
     {carregando ? <ActivityIndicator /> : carregado ? <>

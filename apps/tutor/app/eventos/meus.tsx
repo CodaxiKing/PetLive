@@ -2,7 +2,8 @@ import { useCallback, useRef, useState } from 'react';
 import { ActivityIndicator, Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useFocusEffect, router } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Icone } from '../../src/components/Icone';
+import { ArrowLeft } from 'phosphor-react-native/src/icons/ArrowLeft';
+import { BotaoRedondo } from '../../src/components/Layout';
 import { cancelarEvento, dataHoraEvento, meusEventos, STATUS_EVENTO, TIPO_EVENTO, type EventoMeu } from '../../src/mapa/eventos';
 import { colors } from '../../src/theme/colors';
 import { radius, shadow, spacing } from '../../src/theme/tokens';
@@ -48,7 +49,7 @@ export default function MeusEventos() {
   return (
     <View style={estilos.tela}>
       <View style={[estilos.topo, { paddingTop: insets.top + spacing.lg }]}>
-        <Pressable accessibilityRole="button" onPress={() => router.canGoBack() ? router.back() : router.replace('/(app)/perfil')} style={estilos.voltar}><Icone nome="seta" size={18} espessura={2} /><Text style={estilos.link}>Voltar</Text></Pressable>
+        <View style={estilos.voltar}><BotaoRedondo acessibilidade="Voltar" onPress={() => router.canGoBack() ? router.back() : router.replace('/(app)/perfil')}><ArrowLeft size={22} color={colors.black} /></BotaoRedondo></View>
         <Text style={estilos.titulo}>Meus eventos</Text>
         <Text style={estilos.subtitulo}>Acompanhe a análise, as presenças e os eventos encerrados.</Text>
         <Pressable accessibilityRole="button" disabled={cancelando !== null} onPress={() => router.push('/eventos/novo')} style={estilos.editar}><Text style={estilos.link}>Criar evento</Text></Pressable>
@@ -81,7 +82,7 @@ const estilos = StyleSheet.create({
   topo: { paddingHorizontal: spacing.xl, paddingTop: 58, paddingBottom: spacing.lg },
   voltar: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm, marginBottom: spacing.lg },
   link: { ...typography.captionMedium, color: colors.primaryDeep },
-  titulo: { ...typography.h1, fontFamily: fontFamily.bold, color: colors.black },
+  titulo: { ...typography.h1, fontFamily: fontFamily.bold, fontSize: 32, lineHeight: 38, letterSpacing: -1.1, color: colors.black },
   subtitulo: { ...typography.body, color: colors.textMuted, marginTop: spacing.xs },
   lista: { paddingHorizontal: spacing.xl, paddingBottom: 48, gap: spacing.md },
   card: { backgroundColor: colors.surface, padding: spacing.lg, borderRadius: radius.xl, gap: spacing.sm, ...shadow.card },

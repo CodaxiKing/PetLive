@@ -16,9 +16,9 @@ const RESPIRO = 3
 const CURSO = TRILHO - KNOB - RESPIRO * 2
 
 /**
- * Interruptor da tela Avisos (protótipo Notificacoes.dc.html): pílula preta
- * quando ligado com knob azul à direita, cinza quando desligado. A bolinha
- * desliza com mola e as cores mudam junto.
+ * Interruptor (versão 2 do protótipo): pílula escura quando ligado, cinza
+ * quando desligado, sempre com a bolinha branca. A bolinha desliza com mola
+ * e a cor do trilho muda junto.
  */
 export function Interruptor({ ligado, onToggle, rotulo, desabilitado }: Props) {
   const reduzido = useMovimentoReduzido()
@@ -59,7 +59,7 @@ export function Interruptor({ ligado, onToggle, rotulo, desabilitado }: Props) {
           style={[
             estilos.knob,
             {
-              backgroundColor: valor.interpolate({ inputRange: [0, 1], outputRange: [colors.white, colors.primary] }),
+              backgroundColor: colors.white,
               transform: [{ translateX: valor.interpolate({ inputRange: [0, 1], outputRange: [0, CURSO] }) }],
             },
           ]}

@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
+import { ArrowLeft } from 'phosphor-react-native/src/icons/ArrowLeft';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
-import Svg, { Path } from 'react-native-svg';
 import { voltarOuInicio } from '../lib/voltar';
 import { colors } from '../theme/colors';
 import { shadow } from '../theme/tokens';
@@ -46,8 +46,9 @@ export function HeroiOnda({
     <View
       style={[
         estilos.heroi,
-        // Sem a onda, o rodapé de 28 px que ela ocupava sobra.
-        { height: altura - 28, backgroundColor: colorido ? fundo : corOnda },
+        // Sem a onda sobra um pouco de rodapé, mas o título (que começa em
+        // 112) precisa de pelo menos 184 para não ser cortado.
+        { height: Math.max(altura - 16, 184), backgroundColor: colorido ? fundo : corOnda },
         colorido && estilos.faixa,
       ]}
     >
@@ -61,15 +62,7 @@ export function HeroiOnda({
           onPress={voltarOuInicio}
           style={({ pressed }) => [estilos.voltar, pressed && { opacity: 0.6 }]}
         >
-          <Svg width={20} height={20} viewBox="0 0 24 24" fill="none">
-            <Path
-              d="M15 5l-7 7 7 7"
-              stroke={colors.black}
-              strokeWidth={2.2}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </Svg>
+          <ArrowLeft size={22} color={colors.black} />
         </Pressable>
       )}
 

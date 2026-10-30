@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
+import { ArrowLeft } from 'phosphor-react-native/src/icons/ArrowLeft'
 import { useLimitesPlano } from '../../../src/premium/useLimitesPlano'
 import { AvisoLimitesPlano } from '../../../src/premium/AvisoLimitesPlano'
 import {
@@ -11,7 +12,6 @@ import {
   Text,
   View,
 } from 'react-native'
-import Svg, { Path } from 'react-native-svg'
 import { Redirect, router, useFocusEffect, useLocalSearchParams } from 'expo-router'
 import { useRecurso } from '../../../src/lib/configApp'
 import { useAuth } from '../../../src/auth/AuthProvider'
@@ -190,9 +190,7 @@ export default function PetDetalhe() {
 
           <View style={estilos.topo}>
             <BotaoRedondo rotulo="Voltar" onPress={() => router.back()}>
-              <Svg width={20} height={20} viewBox="0 0 24 24" fill="none">
-                <Path d="M15 5l-7 7 7 7" stroke={colors.black} strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round" />
-              </Svg>
+              <ArrowLeft size={22} color={colors.black} />
             </BotaoRedondo>
             <View style={estilos.topoDireita}>
               <BotaoRedondo rotulo={`Compartilhar a carteirinha de ${petAtual.nome}`} onPress={() => router.push(`/pet/${petAtual.id}/compartilhar`)}>

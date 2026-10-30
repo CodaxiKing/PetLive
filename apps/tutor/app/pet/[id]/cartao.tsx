@@ -2,6 +2,8 @@ import { useCallback, useRef, useState } from 'react';
 import { ActivityIndicator, Image, PixelRatio, Platform, Pressable, ScrollView, Share, StyleSheet, Text, useWindowDimensions, View, type ViewInstance } from 'react-native';
 import { router, useFocusEffect, useLocalSearchParams } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { ArrowLeft } from 'phosphor-react-native/src/icons/ArrowLeft';
+import { BotaoRedondo } from '../../../src/components/Layout';
 import { BotaoPrimario } from '../../../src/components/BotaoPrimario';
 import { conviteCartao, dadosCartaoPet, dimensoesCapturaCartao, FORMATOS_CARTAO, TEMAS_CARTAO, temaCartaoPermitido, type FormatoCartao, type TemaCartao } from '../../../src/pets/cartaoPet';
 import { CodigoQR } from '../../../src/components/CodigoQR';
@@ -86,7 +88,7 @@ export default function CartaoPet() {
   }
 
   return <ScrollView style={estilos.tela} contentContainerStyle={{ padding: spacing.xl, paddingTop: insets.top + spacing.lg, paddingBottom: insets.bottom + spacing.xl, gap: spacing.lg }}>
-    <Pressable accessibilityRole="button" onPress={() => router.canGoBack() ? router.back() : router.replace('/(app)/pets')} style={estilos.acao}><Text style={estilos.link}>Voltar</Text></Pressable>
+    <BotaoRedondo acessibilidade="Voltar" onPress={() => router.canGoBack() ? router.back() : router.replace('/(app)/pets')}><ArrowLeft size={22} color={colors.black} /></BotaoRedondo>
     <Text accessibilityRole="header" style={estilos.titulo}>Cartão do pet</Text>
     {carregando ? <ActivityIndicator accessibilityLabel="Carregando pet" /> : !dados ? <Text style={estilos.texto}>Pet não encontrado. Volte à lista de pets.</Text> : <>
       <Text accessibilityRole="header" style={estilos.secao}>Formato</Text>

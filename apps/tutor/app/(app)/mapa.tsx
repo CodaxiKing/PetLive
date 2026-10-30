@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { ArrowLeft } from 'phosphor-react-native/src/icons/ArrowLeft';
 import {
   ActivityIndicator,
   Alert,
@@ -340,9 +341,7 @@ export default function Mapa() {
           onPress={() => (router.canGoBack() ? router.back() : router.navigate('/inicio'))}
           style={({ pressed }) => [estilos.voltar, pressed && { opacity: 0.6 }]}
         >
-          <Svg width={20} height={20} viewBox="0 0 24 24" fill="none" stroke={colors.black} strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-            <Path d="M15 5l-7 7 7 7" />
-          </Svg>
+          <ArrowLeft size={22} color={colors.black} />
         </Pressable>
         <View style={estilos.busca}>
           <Svg

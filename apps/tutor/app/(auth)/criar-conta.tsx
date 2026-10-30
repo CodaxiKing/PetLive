@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { ArrowLeft } from 'phosphor-react-native/src/icons/ArrowLeft';
 import {
   KeyboardAvoidingView,
   Modal,
@@ -212,9 +213,7 @@ export default function CriarConta() {
           style={estilos.voltar}
           hitSlop={8}
         >
-          <Svg width={20} height={20} viewBox="0 0 24 24" fill="none">
-            <Path d="M15 5l-7 7 7 7" stroke={colors.black} strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round" />
-          </Svg>
+          <ArrowLeft size={22} color={colors.black} />
         </Pressable>
 
       </View>

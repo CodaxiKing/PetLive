@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
+import { ArrowLeft } from 'phosphor-react-native/src/icons/ArrowLeft'
 import {
   ActivityIndicator,
   Alert,
@@ -10,7 +11,6 @@ import {
   Text,
   View,
 } from 'react-native'
-import Svg, { Path } from 'react-native-svg'
 import { router, useFocusEffect } from 'expo-router'
 import { animarLista, Flutuar, Surgir, Tocavel } from '../../src/components/Animacoes'
 import { Icone } from '../../src/components/Icone'
@@ -180,9 +180,7 @@ export default function Lembretes() {
             onPress={() => router.back()}
             style={estilos.botaoBranco}
           >
-            <Svg width={20} height={20} viewBox="0 0 24 24" fill="none">
-              <Path d="M15 5l-7 7 7 7" stroke={colors.black} strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round" />
-            </Svg>
+            <ArrowLeft size={22} color={colors.black} />
           </Pressable>
           <View style={estilos.topoDireita}>
             <Text style={estilos.mes}>
@@ -405,10 +403,10 @@ const estilos = StyleSheet.create({
   mes: { fontSize: 15, fontFamily: fontFamily.medium, color: colors.black },
   titulo: {
     marginTop: 14,
-    fontSize: 40,
-    lineHeight: 46,
+    fontSize: 36,
+    lineHeight: 42,
     letterSpacing: -1.2,
-    fontFamily: fontFamily.medium,
+    fontFamily: fontFamily.bold,
     color: colors.black,
   },
   semana: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 16, marginHorizontal: -8 },
