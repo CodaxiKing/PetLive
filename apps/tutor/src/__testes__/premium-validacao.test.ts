@@ -21,6 +21,8 @@ const RAIZ_APP = join(__dirname, '..', '..', 'app');
 // criadas.
 const ARQUIVOS_PREMIUM = [
   join(RAIZ_APP, 'premium.tsx'),
+  join(RAIZ_APP, 'premium', 'assinatura.tsx'),
+  join(RAIZ_APP, 'premium', 'cancelar.tsx'),
   join(RAIZ_APP, '(app)', 'perfil.tsx'),
   join(RAIZ_APP, 'despesas', 'index.tsx'),
   join(RAIZ_APP, 'pet', '[id]', 'qualidade-de-vida.tsx'),
@@ -61,12 +63,18 @@ describe('Validação P-CJgTU — Premium sem pagamento externo às lojas', () =
     }
   });
 
-  it('o perfil abre a consulta do plano e a tela informa a indisponibilidade de compras', () => {
+  it('o Premium é comprado e restaurado só pela loja de apps, nunca por Pix', () => {
     const conteudo = lerConteudo(join(RAIZ_APP, '(app)', 'perfil.tsx'));
+    const premium = lerConteudo(join(RAIZ_APP, 'premium.tsx'));
 
-    // O perfil abre a consulta do plano; ainda não há compra integrada.
     expect(conteudo).toContain("router.push('/premium')");
-    expect(lerConteudo(join(RAIZ_APP, 'premium.tsx'))).toContain('A compra e a restauração de assinaturas ainda não estão disponíveis');
+    // Compra e restauração pela loja (RevenueCat); a Apple exige o botão de restaurar.
+    expect(premium).toContain('comprarNaLoja');
+    expect(premium).toContain('restaurarNaLoja');
+    // Nenhum caminho de pagamento do app (Pix) nas telas do Premium.
+    for (const caminho of ARQUIVOS_PREMIUM) {
+      expect(lerConteudo(caminho)).not.toMatch(/pagamento\/pix|gerarPix|create-pix-charge/);
+    }
     // Não deve conter window.open, Linking.openURL ou expo-web-browser para pagamento externo.
     expect(conteudo).not.toMatch(/Linking\.openURL\("https/);
     expect(conteudo).not.toMatch(/WebBrowser\.openAsync\("https/);

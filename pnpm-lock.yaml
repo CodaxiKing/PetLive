@@ -128,6 +128,9 @@ importers:
       react-native-maps:
         specifier: 1.29.11
         version: 1.29.11(react-native@0.88.0(@babel/core@7.29.7)(@react-native/metro-config@0.88.0(@babel/core@7.29.7))(@types/react@19.3.0)(react@19.3.0))(react@19.3.0)
+      react-native-purchases:
+        specifier: ^11.0.0
+        version: 11.0.0(react-native@0.88.0(@babel/core@7.29.7)(@react-native/metro-config@0.88.0(@babel/core@7.29.7))(@types/react@19.3.0)(react@19.3.0))(react@19.3.0)
       react-native-safe-area-context:
         specifier: ~5.10.1
         version: 5.10.1(react-native@0.88.0(@babel/core@7.29.7)(@react-native/metro-config@0.88.0(@babel/core@7.29.7))(@types/react@19.3.0)(react@19.3.0))(react@19.3.0)
@@ -1511,6 +1514,15 @@ packages:
     peerDependenciesMeta:
       '@types/react':
         optional: true
+
+  '@revenuecat/purchases-js-hybrid-mappings@20.1.0':
+    resolution: {integrity: sha512-z64fWoOBqbriflG/tycifXdFZJ6kyW6gQvbburRmobj5W4U8+/8B030wZMluD00MGhifW7Y044o8QFTEMzGl5A==}
+
+  '@revenuecat/purchases-js@1.73.1':
+    resolution: {integrity: sha512-TAwDzTqFfNCcIkbWOpxfYhvrUbnyW1XhgO78pp78InRRovBdMiXRgyrDT0ELYyCKjPZxtiSjzmHshIXIJ/H0dQ==}
+
+  '@revenuecat/purchases-typescript-internal@20.1.0':
+    resolution: {integrity: sha512-4SnBSFsivBXcy9l4FFcMS/lYPLaMZXR6X4aO44zVshzjay36aKb93qfJgSMYcsnmca9mm6NmSfL6N65nqqvuqw==}
 
   '@rolldown/binding-android-arm-eabi@1.2.14':
     resolution: {integrity: sha512-aWR+XKH9+rW7m5fWq/5360J3mHycrx/o6xZM2DQFdJnTMdyP7/WzxPjhtLbVWdKo2y612/4U1bWqb3HQhiF7vg==}
@@ -4453,6 +4465,16 @@ packages:
       react-native-web:
         optional: true
 
+  react-native-purchases@11.0.0:
+    resolution: {integrity: sha512-V4okgrP5F443mEkzhBrIHTvJoKJIdL2MI19QKvCUqndbB6HRtSL4laF8C06mDQN9utoSYt1UZCWqh5QJQwTBzQ==}
+    peerDependencies:
+      react: '>= 16.6.3'
+      react-native: '>= 0.80.0'
+      react-native-web: '*'
+    peerDependenciesMeta:
+      react-native-web:
+        optional: true
+
   react-native-reanimated@4.7.1:
     resolution: {integrity: sha512-HviDFSZ6V4KTRsrLS6hRbBJ4j63l/L8a5az0EoWdJwaMLYnBNyYISTDxwXpEYkMbAbLzCMCviIdiOxXHYQWcNA==}
     peerDependencies:
@@ -6816,6 +6838,14 @@ snapshots:
       react-native: 0.88.0(@babel/core@7.29.7)(@react-native/metro-config@0.88.0(@babel/core@7.29.7))(@types/react@19.3.0)(react@19.3.0)
     optionalDependencies:
       '@types/react': 19.3.0
+
+  '@revenuecat/purchases-js-hybrid-mappings@20.1.0':
+    dependencies:
+      '@revenuecat/purchases-js': 1.73.1
+
+  '@revenuecat/purchases-js@1.73.1': {}
+
+  '@revenuecat/purchases-typescript-internal@20.1.0': {}
 
   '@rolldown/binding-android-arm-eabi@1.2.14':
     optional: true
@@ -10069,6 +10099,13 @@ snapshots:
   react-native-maps@1.29.11(react-native@0.88.0(@babel/core@7.29.7)(@react-native/metro-config@0.88.0(@babel/core@7.29.7))(@types/react@19.3.0)(react@19.3.0))(react@19.3.0):
     dependencies:
       '@types/geojson': 7946.0.16
+      react: 19.3.0
+      react-native: 0.88.0(@babel/core@7.29.7)(@react-native/metro-config@0.88.0(@babel/core@7.29.7))(@types/react@19.3.0)(react@19.3.0)
+
+  react-native-purchases@11.0.0(react-native@0.88.0(@babel/core@7.29.7)(@react-native/metro-config@0.88.0(@babel/core@7.29.7))(@types/react@19.3.0)(react@19.3.0))(react@19.3.0):
+    dependencies:
+      '@revenuecat/purchases-js-hybrid-mappings': 20.1.0
+      '@revenuecat/purchases-typescript-internal': 20.1.0
       react: 19.3.0
       react-native: 0.88.0(@babel/core@7.29.7)(@react-native/metro-config@0.88.0(@babel/core@7.29.7))(@types/react@19.3.0)(react@19.3.0)
 

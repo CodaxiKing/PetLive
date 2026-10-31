@@ -51,6 +51,7 @@
     "react-native": "0.88.0",
     "react-native-android-widget": "0.22.1",
     "react-native-maps": "1.29.11",
+    "react-native-purchases": "^11.0.0",
     "react-native-safe-area-context": "~5.10.1",
     "react-native-screens": "~4.30.0",
     "react-native-svg": "15.16.0",

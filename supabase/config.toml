@@ -446,3 +446,7 @@ verify_jwt = false
 # Página de status (apps/status): pública e só de leitura.
 [functions.status]
 verify_jwt = false
+
+# RevenueCat chama sem sessão; a função confere o cabeçalho Authorization.
+[functions.revenuecat-webhook]
+verify_jwt = false

@@ -11,6 +11,7 @@ import { BotaoPrimario } from '../../src/components/BotaoPrimario';
 import { HeroiOnda } from '../../src/components/HeroiOnda';
 import { lerAssinatura, podeCancelar, podeManter, reativarAssinatura, resumoAssinatura, type MinhaAssinatura } from '../../src/perfil/assinatura';
 import { supabase } from '../../src/lib/supabase';
+import { gerenciarNaLoja } from '../../src/premium/loja';
 import { colors } from '../../src/theme/colors';
 import { shadow } from '../../src/theme/tokens';
 import { fontFamily } from '../../src/theme/typography';
@@ -89,7 +90,8 @@ function Gerenciar({ dados, aoMudar }: { dados: MinhaAssinatura; aoMudar: () => 
       reativarAssinatura().then(aoMudar, (e: Error) => Alert.alert('Não deu para manter', textoDeErro(e)))} />;
   }
   if (a?.provedor === 'google_play' || a?.provedor === 'app_store') {
-    return <Linha icone={icone} titulo="Gerenciar assinatura" texto={`Mudança e cancelamento ficam na ${a.provedor === 'google_play' ? 'Google Play' : 'App Store'}, em Assinaturas.`} ultima />;
+    const provedor = a.provedor;
+    return <Linha icone={icone} titulo={`Gerenciar na ${provedor === 'google_play' ? 'Google Play' : 'App Store'}`} texto="Cancele ou mude o plano a qualquer momento nas assinaturas da loja." onPress={() => gerenciarNaLoja(provedor)} ultima />;
   }
   return <Linha icone={icone} titulo="Gerenciar assinatura" texto={dados.plano === 'premium' ? 'Não há cobrança recorrente para gerenciar.' : 'Assine pela tela Premium.'} onPress={dados.plano === 'premium' ? undefined : () => router.push('/premium')} ultima />;
 }
