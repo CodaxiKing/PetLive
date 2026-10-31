@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import {
   Alert,
   KeyboardAvoidingView,
@@ -16,13 +16,12 @@ import { BotaoPrimario } from '../../src/components/BotaoPrimario'
 import { Campo } from '../../src/components/Campo'
 import { HeroiOnda } from '../../src/components/HeroiOnda'
 import { Icone, type NomeIcone } from '../../src/components/Icone'
-import { Interruptor } from '../../src/components/Interruptor'
 import { MarcaPata } from '../../src/components/MarcaPata'
 import { Mascote } from '../../src/components/Mascote'
 import { useLembretes } from '../../src/lembretes/LembretesProvider'
 import type { Repeticao, TipoLembrete } from '../../src/lembretes/types'
 import { LEMBRETE_FORM_VAZIO, PLACEHOLDER_TITULO, TIPOS } from '../../src/lembretes/types'
-import { preferenciasAvisos } from '../../src/notificacoes/prefs'
+import { ANTECEDENCIAS_MIN, textoAntecedencias } from '../../src/notificacoes/antecedencia'
 import { usePets } from '../../src/pets/PetsProvider'
 import type { Pet } from '../../src/pets/types'
 import { colors } from '../../src/theme/colors'
@@ -82,15 +81,6 @@ export default function NovoLembrete() {
   const [escolhendoPet, setEscolhendoPet] = useState(false)
   const horaEditada = useRef(false)
 
-  // Hora inicial vem da tela Avisos ("Horário dos avisos"), se o tutor não mexeu.
-  useEffect(() => {
-    preferenciasAvisos().then(
-      (avisos) => {
-        if (!horaEditada.current) setForm((atual) => ({ ...atual, hora: avisos.horario }))
-      },
-      () => undefined,
-    )
-  }, [])
 
   const alterar = <K extends keyof typeof form>(campo: K, valor: (typeof form)[K]) =>
     setForm((atual) => ({ ...atual, [campo]: valor }))
@@ -310,14 +300,9 @@ export default function NovoLembrete() {
 
           <View style={estilos.aviso}>
             <View style={estilos.flex}>
-              <Text style={estilos.avisoTitulo}>Avisar 1 dia antes</Text>
-              <Text style={estilos.avisoTexto}>Você recebe uma notificação.</Text>
+              <Text style={estilos.avisoTitulo}>Aviso: {textoAntecedencias(ANTECEDENCIAS_MIN[form.tipo]).toLowerCase()}</Text>
+              <Text style={estilos.avisoTexto}>Você recebe uma notificação no celular.</Text>
             </View>
-            <Interruptor
-              ligado={form.aviso_antes}
-              onToggle={() => alterar('aviso_antes', !form.aviso_antes)}
-              rotulo="Avisar 1 dia antes"
-            />
           </View>
         </View>
       </ScrollView>

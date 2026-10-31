@@ -15,7 +15,7 @@ import {
   type ItemRotina,
 } from '../../src/lembretes/rotina'
 import { agendarUmLembrete, cancelarLembrete } from '../../src/notificacoes/sincronizarLembretes'
-import { carregarAvisos, HORARIO_PADRAO } from '../../src/notificacoes/prefs'
+import { HORARIO_PADRAO } from '../../src/notificacoes/prefs'
 import { usePets } from '../../src/pets/PetsProvider'
 import { colors } from '../../src/theme/colors'
 import { spacing } from '../../src/theme/tokens'
@@ -24,7 +24,6 @@ import { EstadoTela } from '../../src/components/EstadoTela'
 import { textoDeErro } from '../../src/lib/erros'
 
 /** Horários oferecidos, de hora em hora no período do dia. */
-const HORARIOS = Array.from({ length: 16 }, (_, i) => `${String(i + 6).padStart(2, '0')}:00`)
 
 /**
  * Rotina de cuidados (protótipo Rotina; board P1 "Rotina de cuidados:
@@ -42,15 +41,12 @@ export default function Rotina() {
   const petId = petEscolhido ?? petParam ?? petAtivo?.id ?? pets[0]?.id ?? null
   const [estado, setEstado] = useState<EstadoRotina | null>(null)
   const [erroCarga, setErroCarga] = useState<string | null>(null)
-  const [escolhendoHorario, setEscolhendoHorario] = useState(false)
   const [salvando, setSalvando] = useState(false)
 
   const pet = pets.find((p) => p.id === petId) ?? null
 
   const carregar = useCallback((id: string) => {
-    carregarAvisos()
-      .then((avisos) => avisos.horario, () => HORARIO_PADRAO)
-      .then((horario) => carregarRotina(id, horario))
+    carregarRotina(id, HORARIO_PADRAO)
       .then(setEstado, (e) => setErroCarga(textoDeErro(e)))
   }, [])
 
@@ -169,39 +165,6 @@ export default function Rotina() {
               )
             })}
 
-            <Pressable
-              accessibilityRole="button"
-              accessibilityState={{ expanded: escolhendoHorario }}
-              accessibilityLabel={`Horário dos avisos: ${estado.horario}`}
-              onPress={() => setEscolhendoHorario((v) => !v)}
-              style={estilos.caixa}
-            >
-              <Text style={estilos.caixaRotulo}>Horário dos avisos</Text>
-              <Text style={estilos.caixaValor}>{estado.horario.replace(/^0/, '')}</Text>
-            </Pressable>
-
-            {escolhendoHorario ? (
-              <View style={estilos.horarios}>
-                {HORARIOS.map((horario) => {
-                  const ativo = horario === estado.horario
-                  return (
-                    <Pressable
-                      key={horario}
-                      accessibilityRole="radio"
-                      accessibilityState={{ checked: ativo }}
-                      onPress={() => {
-                        setEstado({ ...estado, horario })
-                        setEscolhendoHorario(false)
-                      }}
-                      style={[estilos.pilula, ativo && estilos.pilulaAtiva]}
-                    >
-                      <Text style={[estilos.pilulaTexto, ativo && estilos.pilulaTextoAtiva]}>{horario}</Text>
-                    </Pressable>
-                  )
-                })}
-              </View>
-            ) : null}
-
             <Text style={estilos.nota}>
               Cada lembrete aparece também na tela de Lembretes e respeita o Não perturbe.
             </Text>
@@ -254,10 +217,6 @@ const estilos = StyleSheet.create({
     fontFamily: typography.h1.fontFamily,
     color: colors.black,
   },
-  caixa: { backgroundColor: '#F5F6FA', borderRadius: 20, paddingVertical: 9, paddingHorizontal: 16 },
-  caixaRotulo: { fontSize: 11, fontFamily: typography.h1.fontFamily, color: '#566070' },
-  caixaValor: { fontSize: 14, fontFamily: typography.label.fontFamily, color: colors.black },
-  horarios: { flexDirection: 'row', flexWrap: 'wrap', gap: 6 },
   nota: {
     fontSize: 11,
     lineHeight: 16,

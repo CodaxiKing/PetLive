@@ -2,6 +2,7 @@ import * as Notifications from 'expo-notifications'
 import { supabase } from '../lib/supabase'
 import { CANAL_PADRAO, cancelarLocal } from './notificacoes'
 import { preferenciasAvisos } from './prefs'
+import { momentoAvisoDose } from './antecedencia'
 
 /**
  * Notificação da dose com os botões Feito e Adiar 15 min (BUSINESS.md 5.34 e
@@ -125,15 +126,16 @@ export async function sincronizarDoses(): Promise<number> {
     if (total >= LIMITE_AGENDADAS) break
     if (dadas.has(`${remedio.id}@${quando.getTime()}`)) continue
     const pet = remedio.pets?.nome ?? 'seu pet'
+    const hora = `${String(quando.getHours()).padStart(2, '0')}:${String(quando.getMinutes()).padStart(2, '0')}`
     await Notifications.scheduleNotificationAsync({
       identifier: `${PREFIXO}${remedio.id}-${quando.getTime()}`,
-      content: conteudo(`Hora do remédio do ${pet}`, `${remedio.nome} · ${remedio.dose}`, {
+      content: conteudo(`Remédio do ${pet} às ${hora}`, `${remedio.nome} · ${remedio.dose}. Toque em Dei quando der.`, {
         tipo: 'dose',
         medication_id: remedio.id,
         prevista_para: quando.toISOString(),
         url: `/pet/${remedio.pet_id}/medicamentos`,
       }),
-      trigger: { type: Notifications.SchedulableTriggerInputTypes.DATE, date: quando, channelId: CANAL_PADRAO },
+      trigger: { type: Notifications.SchedulableTriggerInputTypes.DATE, date: momentoAvisoDose(quando), channelId: CANAL_PADRAO },
     })
     total++
   }

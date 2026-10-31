@@ -1,25 +1,23 @@
 import type { Lembrete } from '../lembretes/types'
 import { ROTULO_TIPO } from '../lembretes/types'
 import { agendarLocal, cancelarLocal, contarAgendadas } from './notificacoes'
-import { HORARIO_PADRAO, preferenciasAvisos } from './prefs'
+import { momentosDoAviso } from './antecedencia'
+import { preferenciasAvisos } from './prefs'
 
 /** Prefixo dos ids que criamos, para não mexer nas notificações de terceiros. */
 const PREFIXO = 'petlive-lembrete-'
 
-/** Dias de antecedência em que o aviso dispara (às 9h do dia anterior-ish). */
-const ANTECEDENCIA_DIAS = 1
-
 /**
  * Reconstrói as notificações locais a partir da lista de lembretes.
  *
- * Chame depois de criar, concluir ou remover um lembrete. Como usamos o id
- * do lembrete como identificador da notificação, reagendar substitui a
- * antiga em vez de duplicar.
+ * Chame depois de criar, concluir ou remover um lembrete. Cada aviso do
+ * lembrete usa o id dele mais a ordem do aviso (vacina: 1 dia e 2 horas
+ * antes), então reagendar substitui os antigos em vez de duplicar.
  *
  * Retorna quantas notificações ficaram agendadas.
  */
 export async function sincronizarLembretes(lembretes: Lembrete[]): Promise<number> {
-  // Tela Avisos: tipos desligados não agendam e o horário vem da preferência.
+  // Tela Avisos: tipos desligados não agendam; a antecedência vem do tipo.
   const avisos = await preferenciasAvisos().catch(() => null)
 
   // Cancela só as nossas; deixa as outras notificações do aparelho em paz.
@@ -37,40 +35,9 @@ export async function sincronizarLembretes(lembretes: Lembrete[]): Promise<numbe
       avisos?.ativos[lembrete.tipo] !== false,
   )
 
-  for (const lembrete of futuros) {
-    const quando = calcularDisparo(lembrete, avisos?.horario ?? HORARIO_PADRAO)
-    if (!quando) continue
-
-    await agendarLocal(
-      tituloDe(lembrete),
-      corpoDe(lembrete),
-      quando,
-      { identificador: `${PREFIXO}${lembrete.id}`, url: '/lembretes' },
-    )
-  }
+  for (const lembrete of futuros) await agendarAvisos(lembrete)
 
   return contarAgendadas()
-}
-
-/**
- * Quando o aviso deve tocar: 1 dia antes, na "Hora dos avisos" (padrão 9h).
- * Se já passou (lembrete de hoje ou atrasado), agenda para daqui a 1 minuto
- * para o usuário receber o feedback imediato.
- */
-function calcularDisparo(lembrete: Lembrete, horaAvisos: string): Date | null {
-  const alvo = new Date(lembrete.proxima_em)
-  if (Number.isNaN(alvo.getTime())) return null
-
-  const disparo = new Date(alvo)
-  disparo.setDate(disparo.getDate() - ANTECEDENCIA_DIAS)
-  const [hora, minuto] = horaAvisos.split(':').map(Number)
-  disparo.setHours(hora ?? 9, minuto ?? 0, 0, 0)
-
-  const agora = Date.now()
-  if (disparo.getTime() <= agora) {
-    return new Date(agora + 60_000)
-  }
-  return disparo
 }
 
 function tituloDe(lembrete: Lembrete): string {
@@ -96,26 +63,31 @@ async function listarAgendadas(): Promise<string[]> {
   return todas.map((n) => n.identifier)
 }
 
-/** Cancela a notificação de um lembrete específico. */
+/** Agenda os avisos de um lembrete, um por antecedência do tipo. */
+async function agendarAvisos(lembrete: Lembrete): Promise<void> {
+  const momentos = momentosDoAviso(lembrete.tipo, lembrete.proxima_em)
+  for (const [i, quando] of momentos.entries()) {
+    await agendarLocal(tituloDe(lembrete), corpoDe(lembrete), quando, {
+      identificador: `${PREFIXO}${lembrete.id}-${i}`,
+      url: '/lembretes',
+    })
+  }
+}
+
+/** Cancela os avisos de um lembrete específico (todas as antecedências). */
 export async function cancelarLembrete(lembreteId: string): Promise<void> {
-  await cancelarLocal(`${PREFIXO}${lembreteId}`)
+  for (const identificador of await listarAgendadas()) {
+    if (identificador.startsWith(`${PREFIXO}${lembreteId}`)) await cancelarLocal(identificador)
+  }
 }
 
 /** Reagenda só um lembrete (usado ao criar/editar). */
 export async function agendarUmLembrete(lembrete: Lembrete): Promise<void> {
   const avisos = await preferenciasAvisos().catch(() => null)
 
-  // Desligado na tela Avisos, sem "Avisar 1 dia antes" ou lembrete inativo:
-  // nada agendado.
-  if (!lembrete.ativo || lembrete.aviso_antes === false || avisos?.ativos[lembrete.tipo] === false) {
-    await cancelarLembrete(lembrete.id)
-    return
-  }
-  const quando = calcularDisparo(lembrete, avisos?.horario ?? HORARIO_PADRAO)
-  if (!quando) return
-
-  await agendarLocal(tituloDe(lembrete), corpoDe(lembrete), quando, {
-    identificador: `${PREFIXO}${lembrete.id}`,
-    url: '/lembretes',
-  })
+  // Troca os avisos antigos deste lembrete pelos novos.
+  await cancelarLembrete(lembrete.id)
+  // Desligado na tela Avisos ou lembrete inativo: nada agendado.
+  if (!lembrete.ativo || lembrete.aviso_antes === false || avisos?.ativos[lembrete.tipo] === false) return
+  await agendarAvisos(lembrete)
 }
