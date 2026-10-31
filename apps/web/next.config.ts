@@ -8,6 +8,10 @@ const nextConfig: NextConfig = {
   outputFileTracingRoot: path.join(__dirname, "../.."),
   cacheComponents: true,
   partialPrefetching: true,
+  // Página de status (public/status): HTML próprio, sem o layout do site, em /status.
+  async rewrites() {
+    return [{ source: "/status", destination: "/status/index.html" }];
+  },
 };
 
 export default nextConfig;

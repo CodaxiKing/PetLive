@@ -1,7 +1,8 @@
 // Endereços que a página de status consulta. Não há segredo aqui: a função
-// "status" é pública e só de leitura. Troque pelos endereços de produção.
+// "status" é pública e só de leitura. A página fica em /status do domínio do
+// site, então o site é conferido pelo próprio domínio ("/").
 window.PETLIVE_STATUS = {
   funcaoStatus: 'https://qurdqbhjtgapyksrilyk.supabase.co/functions/v1/status',
-  site: 'http://nea67e6gbvk6kc25l5dct9qk.191.96.225.192.sslip.io',
+  site: '/',
   intervaloSegundos: 60,
 };

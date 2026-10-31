@@ -76,3 +76,26 @@ Testar a imagem no computador:
 docker build -f apps/web/Dockerfile -t petlive-site .
 docker run --rm -p 3000:3000 petlive-site
 ```
+
+## Página de status (`/status`)
+
+Fica em `public/status` e é servida pelo próprio site em `seu-dominio/status`,
+mas não usa o layout nem o código do Next: é HTML, CSS e JS puros
+(`index.html`, `status.js`, `config.js`, `logo.png`). O `next.config.ts` só
+aponta `/status` para o `index.html`.
+
+- Consulta a cada minuto a função pública `status` do Supabase
+  (`supabase/functions/status`): app e banco, login, arquivos, pagamentos e
+  funções, cada um operante, lento ou fora, com o tempo de resposta.
+- Se a função não responde, mostra **fora do ar**. O site é conferido pelo
+  próprio domínio.
+- A **manutenção planejada** é ligada pela equipe com
+  `admin_manutencao(true, 'mensagem', previsão)` (papel super); aparece aqui e
+  no app.
+- `config.js` tem o endereço da função; troque pelo do projeto de produção.
+- No app, `EXPO_PUBLIC_STATUS_URL=https://seu-dominio/status`.
+
+Como roda no mesmo container do site, se o site cair a página cai junto. Para
+saber disso, use um monitor externo (UptimeRobot, de graça) apontando para o
+site e para a função `status`.
+
