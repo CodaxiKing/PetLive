@@ -7,9 +7,10 @@ const LINKS = [
   { rotulo: "Como começar", href: "/#como-comecar" },
   { rotulo: "Planos", href: "/#planos" },
   { rotulo: "Para lojistas", href: "/lojistas" },
+  { rotulo: "Contato", href: "/contato" },
 ];
 
-/** Cabeçalho do site: uma barra simples com a marca, quatro links e uma ação. */
+/** Cabeçalho do site: uma barra simples com a marca, cinco links e uma ação. */
 export function Cabecalho() {
   return (
     <header className="relative z-20 bg-[#F2F4F7]">
