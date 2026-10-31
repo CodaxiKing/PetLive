@@ -13,6 +13,7 @@ import { AvatarPet } from '../../src/pets/AvatarPet';
 import { usePets } from '../../src/pets/PetsProvider';
 import { colors } from '../../src/theme/colors';
 import { fontFamily } from '../../src/theme/typography';
+import { textoDeErro } from '../../src/lib/erros';
 
 /** Convidar pessoa para a guarda, com um ou mais pets (protótipo GuardaConvidar, tela 102). */
 export default function ConvidarGuarda() {
@@ -54,7 +55,7 @@ export default function ConvidarGuarda() {
         ],
       );
     } catch (e) {
-      setErro(mensagemDeErro(e instanceof Error ? e.message : String(e)));
+      setErro(mensagemDeErro(textoDeErro(e)));
     } finally {
       setEnviando(false);
     }

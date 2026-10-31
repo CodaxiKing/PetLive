@@ -9,6 +9,7 @@ import { supabase } from '../lib/supabase';
 import { colors } from '../theme/colors';
 import { typography } from '../theme/typography';
 import { exportarDespesas } from './exportar';
+import { textoDeErro } from '../lib/erros';
 
 export function AcoesDespesas({ mes, petId }: { mes: string; petId: string | null }) {
   const { user } = useAuth();
@@ -31,7 +32,7 @@ function Acoes({ tutorId, mes, petId }: { tutorId: string; mes: string; petId: s
   async function executar(acao: () => Promise<void>) {
     if (trava.current) return;
     trava.current = true; setOcupado(true); setErro(null);
-    try { await acao(); } catch (e) { if (vida.current) setErro(e instanceof Error ? e.message : 'Tente novamente.'); }
+    try { await acao(); } catch (e) { if (vida.current) setErro(textoDeErro(e, 'Tente novamente.')); }
     finally { trava.current = false; if (vida.current) setOcupado(false); }
   }
   async function alterarResumo() {

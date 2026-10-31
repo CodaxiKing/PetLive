@@ -11,6 +11,7 @@ import { AvatarPet } from '../../src/pets/AvatarPet';
 import { usePets } from '../../src/pets/PetsProvider';
 import { colors } from '../../src/theme/colors';
 import { fontFamily } from '../../src/theme/typography';
+import { textoDeErro } from '../../src/lib/erros';
 
 const QUANDO = [
   { rotulo: 'Agora', min: 0 },
@@ -47,7 +48,7 @@ export default function PetPerdido() {
     try {
       setLocal(await posicaoAtual());
     } catch (e) {
-      setErro(e instanceof Error ? e.message : String(e));
+      setErro(textoDeErro(e));
     } finally {
       setLocalizando(false);
     }
@@ -70,7 +71,7 @@ export default function PetPerdido() {
       );
       router.replace(`/pet-perdido/${r.id}`);
     } catch (e) {
-      setErro(e instanceof Error ? e.message : String(e));
+      setErro(textoDeErro(e));
     } finally {
       setEnviando(false);
     }

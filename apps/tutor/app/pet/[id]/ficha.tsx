@@ -18,6 +18,7 @@ import { gerarLink, PRAZOS } from '../../../src/pets/linkCarteirinha'
 import { usePets } from '../../../src/pets/PetsProvider'
 import { colors } from '../../../src/theme/colors'
 import { fontFamily } from '../../../src/theme/typography'
+import { textoDeErro } from '../../../src/lib/erros'
 
 
 /**
@@ -71,7 +72,7 @@ export default function TelaFicha() {
       if (canal === 'qr') setQr(link)
       else await abrirWhatsAppComTexto(mensagemFicha(pet, link.codigo, horas))
     } catch (e) {
-      Alert.alert('Não deu para gerar a ficha', mensagemDeErro(e instanceof Error ? e.message : String(e)))
+      Alert.alert('Não deu para gerar a ficha', mensagemDeErro(textoDeErro(e)))
     } finally {
       setEnviando(null)
     }

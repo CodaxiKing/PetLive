@@ -15,6 +15,7 @@ import { atualizarEvento, carregarEventoEditavel, TIPO_EVENTO, type EventoMapa }
 import { isoLocal, validarFormularioEvento } from '../../src/mapa/formularioEvento';
 import { ArrowLeft } from 'phosphor-react-native/src/icons/ArrowLeft';
 import { BotaoRedondo } from '../../src/components/Layout';
+import { textoDeErro } from '../../src/lib/erros';
 
 type Tipo = EventoMapa['tipo'];
 const TIPOS: Tipo[] = ['adocao', 'vacinacao', 'passeio', 'encontro', 'palestra', 'outro'];
@@ -61,7 +62,7 @@ export default function NovoEvento() {
       setGratuito(evento.gratuito); setPreco(evento.preco_centavos == null ? '' : (evento.preco_centavos / 100).toFixed(2));
       setIngresso(evento.ingresso_url ?? ''); setVagas(evento.vagas == null ? '' : String(evento.vagas));
       setIdCarregado(id);
-    }).catch((erro: Error) => { if (ativo) setFalhaCarga({ id, mensagem: erro.message }); });
+    }).catch((erro: Error) => { if (ativo) setFalhaCarga({ id, mensagem: textoDeErro(erro) }); });
     return () => { ativo = false; };
   }, [id, tentativa]);
 
@@ -73,7 +74,7 @@ export default function NovoEvento() {
       const escolhida = resultado.assets[0];
       if (escolhida.fileSize && escolhida.fileSize > 5 * 1024 * 1024) throw new Error('A foto deve ter até 5 MB.');
       setFoto(escolhida);
-    } catch (e) { Alert.alert('Não foi possível selecionar a foto', e instanceof Error ? e.message : 'Tente novamente.'); }
+    } catch (e) { Alert.alert('Não foi possível selecionar a foto', textoDeErro(e, 'Tente novamente.')); }
   }
 
   async function enviar() {
@@ -116,7 +117,7 @@ export default function NovoEvento() {
       sucesso = true;
       Alert.alert(editando ? 'Evento atualizado' : 'Evento enviado', editando ? 'Confira o estado atualizado em Meus eventos. Mudanças de data, horário ou local voltam para análise.' : 'Acompanhe a publicação ou análise em Meus eventos.', [{ text: 'Ver meus eventos', onPress: () => router.replace('/eventos/meus') }], { cancelable: false });
     } catch (erro) {
-      Alert.alert('Não foi possível enviar o evento', erro instanceof Error ? erro.message : 'Tente novamente.');
+      Alert.alert('Não foi possível enviar o evento', textoDeErro(erro, 'Tente novamente.'));
     } finally {
       if (!sucesso) { enviandoRef.current = false; setEnviando(false); }
     }

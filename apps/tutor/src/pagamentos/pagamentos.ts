@@ -31,6 +31,19 @@ async function rpc<T>(nome: string, args?: Record<string, unknown>): Promise<T> 
 
 export const pagamentoDetalhe = (id: string) => rpc<Pagamento | null>('pagamento_detalhe', { p_id: id })
 export const desistirDoPix = (pedidoId: string) => rpc<void>('pagamento_desistir', { p_request: pedidoId })
+/** A conta ainda não tem cliente no provedor: o primeiro Pix pede nome e CPF. */
+export const precisaCpf = () => rpc<boolean>('pagamento_precisa_cpf')
+
+// Nome e CPF digitados na solicitação, só na memória, até a tela do Pix usar uma vez.
+let dadosPix: { nome: string; cpf: string } | null = null
+export function guardarDadosPix(dados: { nome: string; cpf: string }) {
+  dadosPix = dados
+}
+export function tomarDadosPix(): { nome: string; cpf: string } | undefined {
+  const d = dadosPix ?? undefined
+  dadosPix = null
+  return d
+}
 export const cuponsParaMim = (lojaId: string) => rpc<Cupom[]>('cupons_para_mim', { p_store: lojaId })
 export const aplicarCupom = (lojaId: string, codigo: string, subtotal: number) =>
   rpc<CupomAplicado>('cupom_aplicar', { p_store: lojaId, p_codigo: codigo, p_subtotal: subtotal })

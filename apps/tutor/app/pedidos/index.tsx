@@ -9,6 +9,7 @@ import { minhasSolicitacoes, STATUS_FINAIS, TEXTO_STATUS, type Solicitacao } fro
 import { haQuanto } from '../../src/perdido/perdido'
 import { colors } from '../../src/theme/colors'
 import { fontFamily } from '../../src/theme/typography'
+import { textoDeErro } from '../../src/lib/erros'
 
 /** Minhas solicitações às lojas, das mais recentes. */
 export default function Pedidos() {
@@ -17,7 +18,7 @@ export default function Pedidos() {
 
   useFocusEffect(
     useCallback(() => {
-      minhasSolicitacoes().then(setLista, (e: unknown) => setErro(mensagemDeErro(e instanceof Error ? e.message : String(e))))
+      minhasSolicitacoes().then(setLista, (e: unknown) => setErro(mensagemDeErro(textoDeErro(e))))
     }, []),
   )
 

@@ -13,6 +13,7 @@ import { hhmm, linkAgenda } from '../../../src/loja/reservas'
 import { desistirDoPix } from '../../../src/pagamentos/pagamentos'
 import { colors } from '../../../src/theme/colors'
 import { fontFamily } from '../../../src/theme/typography'
+import { textoDeErro } from '../../../src/lib/erros'
 
 const quando = (iso: string) => new Date(iso).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })
 
@@ -44,7 +45,7 @@ export default function AcompanharPedido() {
     if (!id) return
     avaliacaoDoPedido(id).then((a) => setAvaliado(a !== null), () => setAvaliado(null))
     entregaDetalhe(id).then(setEntrega, () => undefined)
-    abrirSolicitacao(id).then((r) => setS(r.disponivel ? r.solicitacao : 'indisponivel'), (e: unknown) => setErro(mensagemDeErro(e instanceof Error ? e.message : String(e))))
+    abrirSolicitacao(id).then((r) => setS(r.disponivel ? r.solicitacao : 'indisponivel'), (e: unknown) => setErro(mensagemDeErro(textoDeErro(e))))
   }, [id])
   useFocusEffect(carregar)
 
@@ -72,7 +73,7 @@ export default function AcompanharPedido() {
     if (s === null || s === 'indisponivel') return
     Alert.alert('Desistir do pedido?', 'O pedido não vai para a loja.', [
       { text: 'Voltar', style: 'cancel' },
-      { text: 'Desistir', style: 'destructive', onPress: () => desistirDoPix(s.id).then(carregar, (e: Error) => Alert.alert('Não deu para desistir', e.message)) },
+      { text: 'Desistir', style: 'destructive', onPress: () => desistirDoPix(s.id).then(carregar, (e: Error) => Alert.alert('Não deu para desistir', textoDeErro(e))) },
     ])
   }
 
@@ -85,7 +86,7 @@ export default function AcompanharPedido() {
         style: 'destructive',
         onPress: () => {
           setCancelando(true)
-          cancelarSolicitacao(s.id).then(carregar, (e: Error) => Alert.alert('Não deu para cancelar', e.message)).finally(() => setCancelando(false))
+          cancelarSolicitacao(s.id).then(carregar, (e: Error) => Alert.alert('Não deu para cancelar', textoDeErro(e))).finally(() => setCancelando(false))
         },
       },
     ])

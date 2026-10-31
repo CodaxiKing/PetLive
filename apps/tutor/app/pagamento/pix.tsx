@@ -6,10 +6,11 @@ import { BotaoPrimario } from '../../src/components/BotaoPrimario'
 import { HeroiOnda } from '../../src/components/HeroiOnda'
 import { reais } from '../../src/despesas/despesas'
 import { copiarTexto } from '../../src/lib/copiar'
-import { cpfValido, desistirDoPix, ErroPix, gerarPix, mascararCpf, pagamentoDetalhe, tempoRestante, type Pagamento } from '../../src/pagamentos/pagamentos'
+import { cpfValido, desistirDoPix, ErroPix, gerarPix, mascararCpf, pagamentoDetalhe, tempoRestante, tomarDadosPix, type Pagamento } from '../../src/pagamentos/pagamentos'
 import { colors } from '../../src/theme/colors'
 import { shadow } from '../../src/theme/tokens'
 import { fontFamily } from '../../src/theme/typography'
+import { textoDeErro } from '../../src/lib/erros'
 
 const PASSOS = ['Abra o app do seu banco e escolha Pix', 'Escaneie o QR ou cole o código', 'Confirmamos aqui, sem você fazer nada']
 
@@ -21,7 +22,7 @@ async function carregarPix(alvo: { pedido: string } | { album: string }, dados?:
     return { pg: await pagamentoDetalhe(await gerarPix(alvo, dados)) }
   } catch (e) {
     if (e instanceof ErroPix && e.codigo === 'cpf') return { cpf: true }
-    return { cpf: false, erro: e instanceof Error ? e.message : String(e) }
+    return { cpf: false, erro: textoDeErro(e) }
   }
 }
 
@@ -61,7 +62,8 @@ export default function PagarComPix() {
   useEffect(() => {
     if (!alvo) return
     let vivo = true
-    carregarPix(alvo).then((r) => vivo && aplicar(r))
+    // Nome e CPF que o tutor já digitou na solicitação, quando é o primeiro Pix.
+    carregarPix(alvo, tomarDadosPix()).then((r) => vivo && aplicar(r))
     return () => {
       vivo = false
     }
@@ -113,7 +115,7 @@ export default function PagarComPix() {
       {
         text: 'Desistir',
         style: 'destructive',
-        onPress: () => desistirDoPix(pedido).then(() => router.replace(`/pedidos/${pedido}`), (e: Error) => Alert.alert('Não deu para desistir', e.message)),
+        onPress: () => desistirDoPix(pedido).then(() => router.replace(`/pedidos/${pedido}`), (e: Error) => Alert.alert('Não deu para desistir', textoDeErro(e))),
       },
     ])
   }

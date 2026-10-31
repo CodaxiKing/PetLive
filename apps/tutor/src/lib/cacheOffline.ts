@@ -1,4 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { textoDeErro } from './erros';
 
 /**
  * Saúde do pet sem internet (BUSINESS.md 24: "funciona sem rede quando for
@@ -146,5 +147,5 @@ export function ehErroDeRede(mensagem: string): boolean {
 
 /** Erro de escrita para a tela: sem rede vira uma frase clara. */
 export function mensagemDeErro(mensagem: string): string {
-  return ehErroDeRede(mensagem) ? 'Sem internet: não deu para salvar. Tente de novo quando a conexão voltar.' : mensagem;
+  return ehErroDeRede(mensagem) ? 'Sem internet: não deu para salvar. Tente de novo quando a conexão voltar.' : textoDeErro(mensagem);
 }

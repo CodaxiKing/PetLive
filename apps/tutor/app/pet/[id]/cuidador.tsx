@@ -19,6 +19,7 @@ import { quando } from '../../../src/pets/linkCarteirinha'
 import { usePets } from '../../../src/pets/PetsProvider'
 import { colors } from '../../../src/theme/colors'
 import { fontFamily } from '../../../src/theme/typography'
+import { textoDeErro } from '../../../src/lib/erros'
 
 const PERMISSOES = [
   { chave: 'vacinas', titulo: 'Vacinas e vermífugo', descricao: 'Datas e próximas doses' },
@@ -78,7 +79,7 @@ export default function TelaCuidador() {
       carregar()
       await enviar(acesso.codigo, acesso.fim, ids)
     } catch (e) {
-      Alert.alert('Não deu para criar o acesso', mensagemDeErro(e instanceof Error ? e.message : String(e)))
+      Alert.alert('Não deu para criar o acesso', mensagemDeErro(textoDeErro(e)))
     } finally {
       setSalvando(false)
     }
@@ -90,7 +91,7 @@ export default function TelaCuidador() {
       {
         text: 'Revogar',
         style: 'destructive',
-        onPress: () => revogarAcesso(a.id).then(carregar, (e) => Alert.alert('Não deu para revogar', e instanceof Error ? e.message : String(e))),
+        onPress: () => revogarAcesso(a.id).then(carregar, (e) => Alert.alert('Não deu para revogar', textoDeErro(e))),
       },
     ])
   }

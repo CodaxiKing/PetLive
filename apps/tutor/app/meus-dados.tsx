@@ -17,6 +17,7 @@ import { enviarFotoPerfil, removerFotoPerfil, urlFotoPerfil } from '../src/perfi
 import { temSenha } from '../src/perfil/senha'
 import { colors } from '../src/theme/colors'
 import { fontFamily } from '../src/theme/typography'
+import { textoDeErro } from '../src/lib/erros'
 
 type Dados = {
   nome: string
@@ -110,7 +111,7 @@ function FormularioPerfil({ tutorId }: { tutorId: string }) {
         // Mostra a foto escolhida já, sem esperar o link assinado.
         setFotoUrl(ativo.uri)
       } catch (e) {
-        if (montado.current) Alert.alert('Não deu para trocar a foto', e instanceof Error ? e.message : String(e))
+        if (montado.current) Alert.alert('Não deu para trocar a foto', textoDeErro(e))
       } finally {
         trava.current = false
         if (montado.current) setEnviandoFoto(false)
@@ -126,7 +127,7 @@ function FormularioPerfil({ tutorId }: { tutorId: string }) {
         setFoto(null)
         setFotoUrl(null)
       } catch (e) {
-        if (montado.current) Alert.alert('Não deu para remover a foto', e instanceof Error ? e.message : String(e))
+        if (montado.current) Alert.alert('Não deu para remover a foto', textoDeErro(e))
       } finally {
         trava.current = false
         if (montado.current) setEnviandoFoto(false)
@@ -195,7 +196,7 @@ function FormularioPerfil({ tutorId }: { tutorId: string }) {
       if (!montado.current) return
       if (montado.current) router.back()
     } catch (e) {
-      if (montado.current) Alert.alert('Não deu para salvar', mensagemDeErro(e instanceof Error ? e.message : String(e)))
+      if (montado.current) Alert.alert('Não deu para salvar', mensagemDeErro(textoDeErro(e)))
     } finally {
       trava.current = false
       if (montado.current) setSalvando(false)

@@ -11,6 +11,7 @@ import { haQuanto } from '../../src/perdido/perdido'
 import { abrirVitrine, CATEGORIAS_PRODUTO, horarioDeHoje, subtotalCarrinho, useCarrinho, type CategoriaProduto, type Vitrine } from '../../src/loja/loja'
 import { colors } from '../../src/theme/colors'
 import { fontFamily } from '../../src/theme/typography'
+import { textoDeErro } from '../../src/lib/erros'
 
 /** Vitrine da loja (protótipo Loja): produtos por categoria, serviços e a solicitação em andamento. */
 export default function LojaVitrine() {
@@ -26,7 +27,7 @@ export default function LojaVitrine() {
     useCallback(() => {
       if (!id) return
       avaliacoesDaLoja(id).then(setAvaliacoes, () => undefined)
-      abrirVitrine(id).then(setVitrine, (e: unknown) => setErro(mensagemDeErro(e instanceof Error ? e.message : String(e))))
+      abrirVitrine(id).then(setVitrine, (e: unknown) => setErro(mensagemDeErro(textoDeErro(e))))
     }, [id]),
   )
 

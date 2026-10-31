@@ -14,6 +14,7 @@ import { TrajetoPasseio } from '../../src/passeios/TrajetoPasseio';
 import { colors } from '../../src/theme/colors';
 import { radius, spacing } from '../../src/theme/tokens';
 import { typography } from '../../src/theme/typography';
+import { textoDeErro } from '../../src/lib/erros';
 
 const km = (metros: number) => (metros / 1000).toFixed(2).replace('.', ',');
 
@@ -70,7 +71,7 @@ function Historico({ tutorId }: { tutorId: string }) {
       const valor = remover ? null : interpretarMeta(textoMeta);
       await repoMeta.salvar(valor);
       if (vivo.current) { setMeta(valor); setTextoMeta(valor === null ? '' : String(valor).replace('.', ',')); setAvisoMeta(valor === null ? 'Meta removida.' : 'Meta semanal salva neste aparelho.'); }
-    } catch (e) { if (vivo.current) setErroMeta(e instanceof Error ? e.message : 'Não foi possível salvar sua meta. Tente novamente.'); }
+    } catch (e) { if (vivo.current) setErroMeta(textoDeErro(e, 'Não foi possível salvar sua meta. Tente novamente.')); }
     finally { trava.current = false; if (vivo.current) setSalvandoMeta(false); }
   }
 

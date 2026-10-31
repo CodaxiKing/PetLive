@@ -19,6 +19,7 @@ import { mensagemDeErro } from '../../../src/lib/cacheOffline';
 import { usePets } from '../../../src/pets/PetsProvider';
 import { colors } from '../../../src/theme/colors';
 import { fontFamily } from '../../../src/theme/typography';
+import { textoDeErro } from '../../../src/lib/erros';
 
 // Saúde em rosa (prototipo/paleta.json).
 const VISUAL: Record<TipoAtividade, NomeIcone> = {
@@ -53,7 +54,7 @@ export default function AtualizacoesPet() {
           setCuidadores(quem);
           setErro(null);
         },
-        (e: unknown) => setErro(mensagemDeErro(e instanceof Error ? e.message : String(e))),
+        (e: unknown) => setErro(mensagemDeErro(textoDeErro(e))),
       );
     }, [id]),
   );

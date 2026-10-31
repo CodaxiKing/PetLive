@@ -4,6 +4,7 @@ import { Interruptor } from '../components/Interruptor';
 import { colors } from '../theme/colors';
 import { typography } from '../theme/typography';
 import { consultarRegiaoPerdidos, desligarRegiaoPerdidos, ligarRegiaoPerdidos, type RegiaoPerdidos } from './perdido';
+import { textoDeErro } from '../lib/erros';
 
 /** Alertas de pet perdido perto de você (BUSINESS.md 5.29): opt-in com região aproximada. */
 export function ConfigurarRegiaoPerdidos() {
@@ -31,7 +32,7 @@ export function ConfigurarRegiaoPerdidos() {
       const r = regiao.ativo ? await desligarRegiaoPerdidos() : await ligarRegiaoPerdidos();
       if (vida.current) setRegiao(r);
     } catch (e) {
-      if (vida.current) setErro(e instanceof Error ? e.message : 'Tente novamente.');
+      if (vida.current) setErro(textoDeErro(e, 'Tente novamente.'));
     } finally {
       if (vida.current) setOcupado(false);
     }

@@ -11,6 +11,7 @@ import { avisarClinica, clinicas24hPerto, minutosAte, mudarDeClinica, type Clini
 import { colors } from '../../src/theme/colors'
 import { shadow } from '../../src/theme/tokens'
 import { fontFamily } from '../../src/theme/typography'
+import { textoDeErro } from '../../src/lib/erros'
 
 const TEMPOS = [5, 10, 15, 20, 30, 45]
 
@@ -20,7 +21,7 @@ const TEMPOS = [5, 10, 15, 20, 30, 45]
  * ?trocar=<id>, muda o aviso em curso para outra clínica.
  */
 export default function EstouACaminho() {
-  const { trocar, atual } = useLocalSearchParams<{ trocar?: string; atual?: string }>()
+  const { trocar, atual, lugar, nome, telefone } = useLocalSearchParams<{ trocar?: string; atual?: string; lugar?: string; nome?: string; telefone?: string }>()
   const { pets, petAtivo } = usePets()
   const [clinicas, setClinicas] = useState<Clinica24h[] | null>(null)
   const [erro, setErro] = useState<string | null>(null)
@@ -42,7 +43,7 @@ export default function EstouACaminho() {
       })
       .catch((e: Error) => {
         setClinicas([])
-        setErro(e.message)
+        setErro(textoDeErro(e))
       })
   }, [atual])
 
@@ -59,7 +60,7 @@ export default function EstouACaminho() {
       const id = trocar ? await mudarDeClinica(trocar, clinicaId, eta) : await avisarClinica(petId as string, clinicaId, eta)
       router.replace({ pathname: '/sos/chegada/[id]', params: { id } })
     } catch (e) {
-      setErro(e instanceof Error ? e.message : String(e))
+      setErro(textoDeErro(e))
     } finally {
       setEnviando(false)
     }
@@ -70,7 +71,7 @@ export default function EstouACaminho() {
 
   return (
     <View style={s.tela}>
-      <HeroiOnda subtitulo="SOS" titulo={trocar ? 'Mudar de clínica' : 'Estou a caminho'} />
+      <HeroiOnda subtitulo="SOS" titulo={trocar ? 'Mudar de clínica' : 'Vou levar à clínica'} />
       <ScrollView contentContainerStyle={s.conteudo} showsVerticalScrollIndicator={false}>
         <Text style={s.texto}>A clínica recebe na hora a ficha de emergência e o tempo até vocês chegarem.</Text>
 
@@ -93,7 +94,7 @@ export default function EstouACaminho() {
           <ActivityIndicator color={colors.primaryDeep} />
         ) : clinicas.length === 0 ? (
           <View style={s.vazio}>
-            <Text style={s.texto}>{erro ?? 'Nenhuma clínica 24 h do PetLive por perto. Use o SOS para ligar para a mais perto.'}</Text>
+            <Text style={s.texto}>{erro ?? 'Nenhuma clínica 24 h do PetLive por perto. Mande a ficha pelo WhatsApp para a clínica que você escolher.'}</Text>
           </View>
         ) : (
           <View style={s.lista}>
@@ -137,6 +138,16 @@ export default function EstouACaminho() {
           </View>
         ) : null}
         {erro && clinicas?.length ? <Text style={s.erro} accessibilityRole="alert">{erro}</Text> : null}
+        {!trocar ? (
+          <Pressable
+            accessibilityRole="button"
+            onPress={() => router.push({ pathname: '/ficha/enviar', params: lugar ? { lugar, nome: nome ?? '', telefone: telefone ?? '' } : {} })}
+            style={({ pressed }) => [s.whatsapp, pressed && { opacity: 0.7 }]}
+          >
+            <Text style={s.whatsappTitulo}>A clínica não está no PetLive?</Text>
+            <Text style={s.texto}>{nome ? `Mande a ficha pelo WhatsApp para ${nome}.` : 'Mande a ficha pelo WhatsApp para qualquer clínica.'}</Text>
+          </Pressable>
+        ) : null}
       </ScrollView>
       <View style={s.rodape}>
         <BotaoPrimario
@@ -176,6 +187,8 @@ const s = StyleSheet.create({
   info: { backgroundColor: colors.primarySurface, borderRadius: 20, padding: 14, gap: 2 },
   infoTitulo: { fontFamily: fontFamily.bold, fontSize: 14, color: colors.primaryDeep },
   infoTexto: { fontFamily: fontFamily.regular, fontSize: 13, lineHeight: 19, color: colors.primaryDeep },
+  whatsapp: { backgroundColor: colors.surface, borderRadius: 22, padding: 16, gap: 2, ...shadow.card },
+  whatsappTitulo: { fontFamily: fontFamily.bold, fontSize: 15, color: colors.text },
   erro: { fontFamily: fontFamily.medium, fontSize: 13, color: colors.danger, paddingHorizontal: 4 },
   rodape: { paddingHorizontal: 20, paddingTop: 12, paddingBottom: 28 },
 })

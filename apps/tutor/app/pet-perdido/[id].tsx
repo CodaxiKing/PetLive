@@ -19,6 +19,7 @@ import {
 } from '../../src/perdido/perdido';
 import { colors } from '../../src/theme/colors';
 import { fontFamily } from '../../src/theme/typography';
+import { textoDeErro } from '../../src/lib/erros';
 
 const STATUS: Record<string, string> = { encontrado: 'Encontrado', encerrado: 'Encerrado', expirado: 'Expirou' };
 
@@ -43,7 +44,7 @@ export default function AlertaDoTutor() {
         setAvistamentos(lista);
         lista.filter((v) => v.foto_path).forEach((v) => urlFotoAvistamento(v.foto_path as string).then((url) => url && setFotos((f) => ({ ...f, [v.id]: url }))));
       },
-      (e: unknown) => setErro(mensagemDeErro(e instanceof Error ? e.message : String(e))),
+      (e: unknown) => setErro(mensagemDeErro(textoDeErro(e))),
     );
   }, [id]);
   useFocusEffect(carregar);
@@ -55,7 +56,7 @@ export default function AlertaDoTutor() {
         carregar();
         depois?.();
       },
-      (e: unknown) => Alert.alert('Não deu certo', mensagemDeErro(e instanceof Error ? e.message : String(e))),
+      (e: unknown) => Alert.alert('Não deu certo', mensagemDeErro(textoDeErro(e))),
     ).finally(() => setAgindo(false));
   };
 

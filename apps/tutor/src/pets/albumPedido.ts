@@ -54,6 +54,8 @@ async function rpc<T>(nome: string, args?: Record<string, unknown>): Promise<T> 
 
 export const cotarAlbum = (lembrancas: number) => rpc<FormatoAlbum[]>('album_formatos_cotar', { p_lembrancas: lembrancas })
 export const meusPedidosAlbum = (petId: string) => rpc<PedidoAlbum[]>('album_pedidos_meus', { p_pet: petId })
+/** Pedidos de álbum de todos os pets da conta (tela inicial). */
+export const meusPedidosAlbumTodos = () => rpc<PedidoAlbum[]>('album_pedidos_meus')
 export const cancelarPedidoAlbum = (id: string) => rpc<void>('album_pedido_cancelar', { p_order: id })
 export const pedirAlbum = (petId: string, ano: number, formato: string, itens: string[], enderecoId: string) =>
   rpc<{ id: string; total_cents: number }>('album_pedido_criar', { p_pet: petId, p_ano: ano, p_formato: formato, p_itens: itens, p_address: enderecoId })

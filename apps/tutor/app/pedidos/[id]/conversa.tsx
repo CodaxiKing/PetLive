@@ -7,6 +7,7 @@ import { mensagemDeErro } from '../../../src/lib/cacheOffline'
 import { abrirConversa, enviarMensagem, juntarMensagens, ouvirMensagens, RESPOSTAS_RAPIDAS, type Conversa } from '../../../src/loja/chat'
 import { colors } from '../../../src/theme/colors'
 import { fontFamily } from '../../../src/theme/typography'
+import { textoDeErro } from '../../../src/lib/erros'
 
 const hora = (iso: string) => new Date(iso).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
 
@@ -21,7 +22,7 @@ export default function ConversaLoja() {
 
   const carregar = useCallback(() => {
     if (!id) return
-    abrirConversa(id).then(setConversa, (e: unknown) => setErro(mensagemDeErro(e instanceof Error ? e.message : String(e))))
+    abrirConversa(id).then(setConversa, (e: unknown) => setErro(mensagemDeErro(textoDeErro(e))))
   }, [id])
   useFocusEffect(carregar)
 
@@ -40,7 +41,7 @@ export default function ConversaLoja() {
       setTexto('')
       carregar()
     } catch (e) {
-      setErro(e instanceof Error ? e.message : String(e))
+      setErro(textoDeErro(e))
     } finally {
       setEnviando(false)
     }

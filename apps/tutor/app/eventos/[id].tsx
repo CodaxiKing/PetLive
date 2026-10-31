@@ -11,6 +11,7 @@ import { radius, spacing } from '../../src/theme/tokens';
 import { typography } from '../../src/theme/typography';
 import { ArrowLeft } from 'phosphor-react-native/src/icons/ArrowLeft';
 import { BotaoRedondo } from '../../src/components/Layout';
+import { textoDeErro } from '../../src/lib/erros';
 
 const quando = (valor: string) => new Intl.DateTimeFormat('pt-BR', {
   dateStyle: 'long', timeStyle: 'short', timeZone: 'America/Sao_Paulo',
@@ -46,7 +47,7 @@ export default function FichaEvento() {
       return;
     }
     carregarEvento(id).then((dados) => { if (ativo) setEvento(dados); })
-      .catch((e: unknown) => { if (ativo) setErro(e instanceof Error ? e.message : 'Tente novamente.'); })
+      .catch((e: unknown) => { if (ativo) setErro(textoDeErro(e, 'Tente novamente.')); })
       .finally(() => { if (ativo) setCarregando(false); });
     return () => { ativo = false; invalidarOperacao(); };
   // A tentativa precisa recriar o efeito de foco para refazer a consulta.
@@ -64,7 +65,7 @@ export default function FichaEvento() {
       setEvento(atualizado);
       setAvisoPresenca(atualizado.eu_vou ? 'Presença confirmada.' : 'Presença cancelada.');
     } catch (e: unknown) {
-      if (versao === geracao.current) setErroPresenca(e instanceof Error ? e.message : 'Não foi possível atualizar sua presença. Tente novamente.');
+      if (versao === geracao.current) setErroPresenca(textoDeErro(e, 'Não foi possível atualizar sua presença. Tente novamente.'));
     } finally {
       if (versao === geracao.current) { operacaoEmCurso.current = false; setConfirmando(false); }
     }

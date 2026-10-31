@@ -8,6 +8,7 @@ import { Icone, type NomeIcone } from '../../src/components/Icone';
 import { carregarAvisos, marcarLido, type Aviso } from '../../src/notificacoes/caixa';
 import { colors } from '../../src/theme/colors';
 import { fontFamily } from '../../src/theme/typography';
+import { textoDeErro } from '../../src/lib/erros';
 
 const VISUAL: Record<Aviso['type'], { icone: NomeIcone; fundo: string }> = {
   // Cores com significado (prototipo/paleta.json): rosa saúde, lilás rotina, azul o resto.
@@ -65,7 +66,7 @@ export default function CaixaAvisos() {
           setAvisos(lista);
           setDono(user.id);
         },
-        (e) => { if (token === versao.current) setErro(e instanceof Error ? e.message : String(e)); },
+        (e) => { if (token === versao.current) setErro(textoDeErro(e)); },
       ).finally(() => { if (token === versao.current) setCarregando(false); });
     }, [user]);
   useFocusEffect(useCallback(() => { recarregar(); return () => { versao.current++; }; }, [recarregar]));
@@ -83,7 +84,7 @@ export default function CaixaAvisos() {
       setAvisos((atual) => atual.map((a) => a.id === aviso.id ? { ...a, read_at: a.read_at ?? new Date().toISOString() } : a));
       if (aviso.deep_link) router.push(aviso.deep_link as Href);
     } catch (e) {
-      if (token === versao.current) Alert.alert('Não foi possível abrir o aviso', e instanceof Error ? e.message : String(e));
+      if (token === versao.current) Alert.alert('Não foi possível abrir o aviso', textoDeErro(e));
     } finally {
       if (token === versao.current) { ocupado.current=false; setAbrindo(false); }
     }

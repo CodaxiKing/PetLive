@@ -17,6 +17,7 @@ import type { GravadorPasseio } from '../../src/passeios/gravador';
 import { colors } from '../../src/theme/colors';
 import { spacing, radius } from '../../src/theme/tokens';
 import { typography } from '../../src/theme/typography';
+import { textoDeErro } from '../../src/lib/erros';
 
 export default function ResumoPasseio() {
   const { user, carregando } = useAuth();
@@ -64,7 +65,7 @@ function EditorResumo({ passeio, gravador, ocupado, erro }: { passeio: Passeio; 
     if (trava.current || bloqueado) return;
     trava.current = true; setEscolhendo(true); setErroFoto(null);
     try { const uri = await escolherFotoPasseio(origem); if (uri && vivo.current) { setFoto(uri); setErroImagem(false); } }
-    catch (e) { if (vivo.current) setErroFoto(e instanceof Error ? e.message : 'Não foi possível escolher a foto.'); }
+    catch (e) { if (vivo.current) setErroFoto(textoDeErro(e, 'Não foi possível escolher a foto.')); }
     finally { trava.current = false; if (vivo.current) setEscolhendo(false); }
   }
   async function salvar() {

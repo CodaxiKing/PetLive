@@ -8,6 +8,7 @@ import { reativarPet } from '../../../src/pets/memorial'
 import { usePets } from '../../../src/pets/PetsProvider'
 import { colors } from '../../../src/theme/colors'
 import { fontFamily } from '../../../src/theme/typography'
+import { textoDeErro } from '../../../src/lib/erros'
 
 /** Reativar o pet (protótipo ReativarPet): diz o que volta e o que não volta. */
 export default function TelaReativar() {
@@ -29,7 +30,7 @@ export default function TelaReativar() {
       router.dismissAll()
       router.push({ pathname: '/pet/[id]', params: { id: pet.id } })
     } catch (e) {
-      Alert.alert('Não deu para reativar', e instanceof Error ? e.message : String(e))
+      Alert.alert('Não deu para reativar', textoDeErro(e))
     } finally {
       setSalvando(false)
     }

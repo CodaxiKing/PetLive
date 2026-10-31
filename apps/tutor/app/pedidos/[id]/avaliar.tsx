@@ -10,6 +10,7 @@ import { enviarAvaliacao, TAGS, TEXTO_NOTA, type Tag } from '../../../src/loja/a
 import { escolherFoto, type AtivoFoto } from '../../../src/pets/CampoFoto'
 import { colors } from '../../../src/theme/colors'
 import { fontFamily } from '../../../src/theme/typography'
+import { textoDeErro } from '../../../src/lib/erros'
 
 /** Avaliar loja e serviço (protótipo Avaliar). */
 export default function AvaliarPedido() {
@@ -31,7 +32,7 @@ export default function AvaliarPedido() {
       Alert.alert('Obrigado!', 'Sua avaliação ajuda outros tutores.')
       router.back()
     } catch (e) {
-      setErro(e instanceof Error ? e.message : String(e))
+      setErro(textoDeErro(e))
     } finally {
       setEnviando(false)
     }

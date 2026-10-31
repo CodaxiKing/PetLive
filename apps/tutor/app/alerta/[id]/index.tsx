@@ -10,6 +10,7 @@ import { mensagemDeErro } from '../../../src/lib/cacheOffline';
 import { abrirAlerta, distanciaKm, haQuanto, textoDistancia, type Alerta } from '../../../src/perdido/perdido';
 import { colors } from '../../../src/theme/colors';
 import { fontFamily } from '../../../src/theme/typography';
+import { textoDeErro } from '../../../src/lib/erros';
 
 /** Alerta de pet perdido para quem está perto (protótipo PerdidoAlerta, tela 65). */
 export default function AlertaPerdido() {
@@ -21,7 +22,7 @@ export default function AlertaPerdido() {
   useFocusEffect(
     useCallback(() => {
       if (!id) return;
-      abrirAlerta(id).then(setAlerta, (e: unknown) => setErro(mensagemDeErro(e instanceof Error ? e.message : String(e))));
+      abrirAlerta(id).then(setAlerta, (e: unknown) => setErro(mensagemDeErro(textoDeErro(e))));
     }, [id]),
   );
 

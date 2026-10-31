@@ -21,6 +21,7 @@ import { hojeComoCampo, dataParaIso, dataParaExibicao } from '../../../src/saude
 import { colors } from '../../../src/theme/colors'
 import { fontFamily } from '../../../src/theme/typography'
 import { FotografarCartao } from '../../../src/saude/FotografarCartao'
+import { textoDeErro } from '../../../src/lib/erros'
 
 const ROTULOS: Record<TipoDocumentoSaude, string> = {
   cartao_vacina: 'Cartão de vacina',
@@ -79,7 +80,7 @@ export default function DocumentosSaude() {
       recarregar()
     } catch (erro) {
       if (caminho) await supabase.storage.from('anexos').remove([caminho])
-      Alert.alert('Não foi possível salvar', erro instanceof Error ? erro.message : 'Tente novamente.')
+      Alert.alert('Não foi possível salvar', textoDeErro(erro, 'Tente novamente.'))
     } finally {
       setEnviando(false)
     }
@@ -96,7 +97,7 @@ export default function DocumentosSaude() {
       const url = await urlDocumentoSaude(doc.arquivo_path)
       await Linking.openURL(url)
     } catch (erro) {
-      Alert.alert('Não foi possível abrir', erro instanceof Error ? erro.message : 'Tente novamente.')
+      Alert.alert('Não foi possível abrir', textoDeErro(erro, 'Tente novamente.'))
     }
   }
 
@@ -107,7 +108,7 @@ export default function DocumentosSaude() {
         await apagarDocumentoSaude(doc)
         setDocumentos((lista) => lista.filter((item) => item.id !== doc.id))
       } catch (erro) {
-        Alert.alert('Não foi possível remover', erro instanceof Error ? erro.message : 'Tente novamente.')
+        Alert.alert('Não foi possível remover', textoDeErro(erro, 'Tente novamente.'))
       }
     } },
   ])

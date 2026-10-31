@@ -8,6 +8,7 @@ import { BotaoPrimario } from '../../src/components/BotaoPrimario';
 import { CabecalhoTela } from '../../src/components/CabecalhoTela';
 import { colors } from '../../src/theme/colors';
 import { typography } from '../../src/theme/typography';
+import { textoDeErro } from '../../src/lib/erros';
 
 export default function FichaAdocao() {
   const { user, carregando } = useAuth();
@@ -28,7 +29,7 @@ function FichaDaConta({ tutorId, petId }: { tutorId: string; petId: string }) {
   const buscar = useCallback(async (inicio: number) => {
     setCarregando(true); setErro(null); setDetalhe(null); setFormulario(false);
     try { const d = await carregarDetalheAdocao(tutorId, petId); if (epoca.current === inicio) setDetalhe(d); }
-    catch (e) { if (epoca.current === inicio) setErro(e instanceof Error ? e.message : 'Tente novamente.'); }
+    catch (e) { if (epoca.current === inicio) setErro(textoDeErro(e, 'Tente novamente.')); }
     finally { if (epoca.current === inicio) setCarregando(false); }
   }, [tutorId, petId]);
   useFocusEffect(useCallback(() => {
@@ -46,7 +47,7 @@ function FichaDaConta({ tutorId, petId }: { tutorId: string; petId: string }) {
         const favorito = await favoritarAdocao(tutorId, petId, !detalhe.pet.favorito);
         if (epoca.current === inicio) setDetalhe((d) => d && { ...d, pet: { ...d.pet, favorito } });
       }
-    } catch (e) { if (epoca.current === inicio) setErro(e instanceof Error ? e.message : 'Tente novamente.'); }
+    } catch (e) { if (epoca.current === inicio) setErro(textoDeErro(e, 'Tente novamente.')); }
     finally { trava.current = false; setAcao(null); }
   }
   const pet = detalhe?.pet;

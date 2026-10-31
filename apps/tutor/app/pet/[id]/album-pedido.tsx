@@ -21,6 +21,7 @@ import { usePets } from '../../../src/pets/PetsProvider'
 import { colors } from '../../../src/theme/colors'
 import { shadow } from '../../../src/theme/tokens'
 import { fontFamily } from '../../../src/theme/typography'
+import { textoDeErro } from '../../../src/lib/erros'
 
 type Novo = { street: string; number: string; complement: string; neighborhood: string; city: string; cep: string }
 const NOVO: Novo = { street: '', number: '', complement: '', neighborhood: '', city: '', cep: '' }
@@ -51,7 +52,7 @@ export default function PedidoAlbum() {
     cotarAlbum(itens.length).then((l) => {
       setFormatos(l)
       setFormato((f) => f ?? l[0]?.formato ?? null)
-    }, (e: Error) => setErro(e.message))
+    }, (e: Error) => setErro(textoDeErro(e)))
     enderecosPostais().then((l) => {
       setEnderecos(l)
       const pronto = l.find(enderecoPostalCompleto)
@@ -76,7 +77,7 @@ export default function PedidoAlbum() {
       setNovo(null)
       setTrocando(false)
     } catch (e) {
-      setErro(e instanceof Error ? e.message : String(e))
+      setErro(textoDeErro(e))
     }
   }
 
@@ -88,7 +89,7 @@ export default function PedidoAlbum() {
       const r = await pedirAlbum(pet.id, Number(ano), escolhido.formato, itens, endereco.id)
       router.replace({ pathname: '/pagamento/pix', params: { album: r.id } })
     } catch (e) {
-      setErro(e instanceof Error ? e.message : String(e))
+      setErro(textoDeErro(e))
     } finally {
       setEnviando(false)
     }

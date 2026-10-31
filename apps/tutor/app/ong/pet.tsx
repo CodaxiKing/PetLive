@@ -9,6 +9,7 @@ import { BotaoPrimario } from '../../src/components/BotaoPrimario';
 import { CabecalhoTela } from '../../src/components/CabecalhoTela';
 import { colors } from '../../src/theme/colors';
 import { typography } from '../../src/theme/typography';
+import { textoDeErro } from '../../src/lib/erros';
 const uuid = (v: unknown): v is string => typeof v === 'string' && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(v);
 export default function PetDaOng() {
   const { user, carregando } = useAuth();
@@ -28,7 +29,7 @@ function Editor({ tutor, petInicial, ongInicial }: { tutor: string; petInicial?:
     if (trava.current) return;
     const req = epoca.current; trava.current = true; setOcupado(true); setErro(null); setAviso(null);
     try { const p = await obterPetOng(tutor, id); if (foco.current && req === epoca.current) { setDados(dadosDaEdicao(p)); setOng(p.ong_id); setVersao(p.versao); setAviso('Ficha atualizada com os dados salvos no servidor.'); } }
-    catch (e) { if (foco.current && req === epoca.current) setErro(e instanceof Error ? e.message : 'Não foi possível carregar.'); }
+    catch (e) { if (foco.current && req === epoca.current) setErro(textoDeErro(e, 'Não foi possível carregar.')); }
     finally { if (req === epoca.current) { trava.current = false; setOcupado(false); } }
   }, [tutor, id]);
   useFocusEffect(useCallback(() => { foco.current = true; if (petInicial) void carregar(); return () => { foco.current = false; epoca.current += 1; trava.current = false; setOcupado(false); }; }, [carregar, petInicial]));
@@ -39,7 +40,7 @@ function Editor({ tutor, petInicial, ongInicial }: { tutor: string; petInicial?:
     try {
       const p = await salvarPetOng(tutor, id, ong, versao, { ...dados, status: publicar ? 'publicado' : dados.status });
       if (foco.current && req === epoca.current) { setDados(dadosDaEdicao(p)); setVersao(p.versao); setAviso(p.status === 'publicado' ? 'Pet publicado. A disponibilidade foi confirmada hoje.' : 'Rascunho salvo. Agora você pode adicionar fotos.'); }
-    } catch (e) { if (foco.current && req === epoca.current) setErro(e instanceof Error ? e.message : 'Não foi possível salvar.'); }
+    } catch (e) { if (foco.current && req === epoca.current) setErro(textoDeErro(e, 'Não foi possível salvar.')); }
     finally { if (req === epoca.current) { trava.current = false; setOcupado(false); } }
   }
   async function foto() {
@@ -50,7 +51,7 @@ function Editor({ tutor, petInicial, ongInicial }: { tutor: string; petInicial?:
       if (r.canceled || !foco.current || req !== epoca.current) return;
       const url = await enviarFotoOng(tutor, id, r.assets[0]);
       if (foco.current && req === epoca.current) { setDados((d) => ({ ...d, fotos: [...d.fotos, url] })); setAviso('Foto enviada. Salve as alterações para incluí-la na ficha.'); }
-    } catch (e) { if (foco.current && req === epoca.current) setErro(e instanceof Error ? e.message : 'Não foi possível escolher a foto.'); }
+    } catch (e) { if (foco.current && req === epoca.current) setErro(textoDeErro(e, 'Não foi possível escolher a foto.')); }
     finally { if (req === epoca.current) { trava.current = false; setOcupado(false); } }
   }
   function escolhas(campo: 'especie' | 'porte' | 'sexo' | 'castrado' | 'vacinado' | 'vermifugado', titulo: string, opcoes: [string | boolean | null, string][]) {

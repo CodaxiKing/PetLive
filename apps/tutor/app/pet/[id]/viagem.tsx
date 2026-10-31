@@ -27,6 +27,7 @@ import { supabase } from '../../../src/lib/supabase'
 import type { Vacina } from '../../../src/saude/types'
 import { colors } from '../../../src/theme/colors'
 import { fontFamily } from '../../../src/theme/typography'
+import { textoDeErro } from '../../../src/lib/erros'
 
 const MODOS: Modo[] = ['carro', 'aviao']
 
@@ -110,7 +111,7 @@ export default function TelaViagem() {
       setViagemId(await salvarViagem({ id: viagemId, ...viagemAtual() }))
       Alert.alert('Checklist salvo', `${feitos.size} de ${lista.length} itens prontos. ${modo === 'aviao' ? AVISO_REGRAS : ''}`)
     } catch (e) {
-      Alert.alert('Não deu para salvar', mensagemDeErro(e instanceof Error ? e.message : String(e)))
+      Alert.alert('Não deu para salvar', mensagemDeErro(textoDeErro(e)))
     } finally {
       setSalvando(false)
     }

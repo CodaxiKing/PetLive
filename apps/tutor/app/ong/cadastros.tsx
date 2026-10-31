@@ -8,6 +8,7 @@ import { BotaoPrimario } from '../../src/components/BotaoPrimario';
 import { CabecalhoTela } from '../../src/components/CabecalhoTela';
 import { colors } from '../../src/theme/colors';
 import { typography } from '../../src/theme/typography';
+import { textoDeErro } from '../../src/lib/erros';
 export default function CadastrosOng(){const {user,carregando}=useAuth();if(carregando)return <ActivityIndicator accessibilityLabel="Carregando conta"/>;if(!user)return <Redirect href="/welcome"/>;return <DaConta key={user.id} tutor={user.id}/>;}
 function DaConta({tutor}:{tutor:string}){
  const [itens,setItens]=useState<ResumoCadastroOng[]>([]),[mais,setMais]=useState(false),[ocupado,setOcupado]=useState(false),[erro,setErro]=useState<string|null>(null);
@@ -15,7 +16,7 @@ function DaConta({tutor}:{tutor:string}){
  const buscar=useCallback(async(proxima=false)=>{
   if(proxima&&trava.current)return;const r=++req.current;trava.current=true;setOcupado(true);setErro(null);if(!proxima){setItens([]);setMais(false);}
   try{const p=await listarCadastrosOng(tutor,proxima?cursor.current:null);if(foco.current&&req.current===r){setItens(a=>proxima?[...new Map([...a,...p.itens].map(i=>[i.id,i])).values()]:p.itens);setMais(p.tem_mais);cursor.current=p.itens.at(-1)??null;}}
-  catch(e){if(foco.current&&req.current===r)setErro(e instanceof Error?e.message:'Tente novamente.');}
+  catch(e){if(foco.current&&req.current===r)setErro(textoDeErro(e, 'Tente novamente.'));}
   finally{if(req.current===r){trava.current=false;setOcupado(false);}}
  },[tutor]);
  useFocusEffect(useCallback(()=>{foco.current=true;void buscar();return()=>{foco.current=false;req.current++;trava.current=false;setItens([]);};},[buscar]));

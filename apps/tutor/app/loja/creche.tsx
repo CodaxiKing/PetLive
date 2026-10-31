@@ -11,6 +11,7 @@ import { diaIso, proximosDias } from '../../src/loja/reservas'
 import { detalheServico, precoCreche, reservarCreche, type DetalheServico } from '../../src/loja/servicos'
 import { usePets } from '../../src/pets/PetsProvider'
 import { colors } from '../../src/theme/colors'
+import { textoDeErro } from '../../src/lib/erros'
 
 /** Reservar creche (protótipo AgendarCreche): período, dias e pacote. */
 export default function ReservarCreche() {
@@ -26,7 +27,7 @@ export default function ReservarCreche() {
   const [erro, setErro] = useState<string | null>(null)
 
   useEffect(() => {
-    if (id) detalheServico(id).then(setDetalhe, (e: Error) => setErro(e.message))
+    if (id) detalheServico(id).then(setDetalhe, (e: Error) => setErro(textoDeErro(e)))
   }, [id])
 
   if (!detalhe || !detalhe.disponivel) {
@@ -47,7 +48,7 @@ export default function ReservarCreche() {
       const r = await reservarCreche(servico.id, dias, periodo, pacote, petId, mensagem)
       router.replace(`/pedidos/${r.id}`)
     } catch (e) {
-      setErro(e instanceof Error ? e.message : String(e))
+      setErro(textoDeErro(e))
       detalheServico(servico.id).then(setDetalhe, () => undefined)
     } finally {
       setEnviando(false)

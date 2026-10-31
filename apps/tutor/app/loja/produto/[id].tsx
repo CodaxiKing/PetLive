@@ -10,6 +10,7 @@ import { abrirProduto, adicionarAoCarrinho, denunciarItem, esvaziarCarrinho, MOT
 import { tracarRota } from '../../../src/mapa/acoes'
 import { colors } from '../../../src/theme/colors'
 import { fontFamily } from '../../../src/theme/typography'
+import { textoDeErro } from '../../../src/lib/erros'
 
 /**
  * Produto (protótipos Produto e ProdutoReceita). Produto "só no local, com
@@ -26,7 +27,7 @@ export default function ProdutoLoja() {
       if (!id) return
       abrirProduto(id).then(
         (r) => setDados(r.disponivel ? { produto: r.produto, loja: r.loja } : 'indisponivel'),
-        (e: unknown) => setErro(mensagemDeErro(e instanceof Error ? e.message : String(e))),
+        (e: unknown) => setErro(mensagemDeErro(textoDeErro(e))),
       )
     }, [id]),
   )
@@ -101,7 +102,7 @@ export default function ProdutoLoja() {
               Alert.alert('Denunciar este anúncio', 'A equipe do PetLive revisa.', [
                 ...MOTIVOS_DENUNCIA_LOJA.map((m) => ({
                   text: m,
-                  onPress: () => denunciarItem('produto', produto.id, m).then(() => Alert.alert('Obrigado', 'Recebemos a denúncia.'), (e: Error) => Alert.alert('Não deu certo', e.message)),
+                  onPress: () => denunciarItem('produto', produto.id, m).then(() => Alert.alert('Obrigado', 'Recebemos a denúncia.'), (e: Error) => Alert.alert('Não deu certo', textoDeErro(e))),
                 })),
                 { text: 'Cancelar', style: 'cancel' as const },
               ])

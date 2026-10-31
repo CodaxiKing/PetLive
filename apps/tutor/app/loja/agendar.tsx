@@ -13,6 +13,7 @@ import { usePets } from '../../src/pets/PetsProvider'
 import { colors } from '../../src/theme/colors'
 import { shadow } from '../../src/theme/tokens'
 import { fontFamily } from '../../src/theme/typography'
+import { textoDeErro } from '../../src/lib/erros'
 
 const SEMANA = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb']
 const TIPOS: { valor: TipoClinico; rotulo: string }[] = [
@@ -56,7 +57,7 @@ export default function Agendar() {
       setServicos(porHorario)
       const doTipo = tipoParam ? porHorario.find((s) => s.tipo_clinico === tipoParam) : undefined
       setServicoId((atual) => atual ?? doTipo?.id ?? porHorario[0]?.id ?? null)
-    }, (e: Error) => setErro(e.message))
+    }, (e: Error) => setErro(textoDeErro(e)))
     // O tipo pedido pela ficha do lugar só vale na primeira carga.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lojaId])
@@ -70,7 +71,7 @@ export default function Agendar() {
       (e: Error) => {
         if (!vivo) return
         setGrade({ chave: consulta, lista: [] })
-        setErro(e.message)
+        setErro(textoDeErro(e))
       },
     )
     return () => {
@@ -98,7 +99,7 @@ export default function Agendar() {
         router.replace(`/pedidos/${r.id}`)
       }
     } catch (e) {
-      setErro(e instanceof Error ? e.message : String(e))
+      setErro(textoDeErro(e))
       // Horário tomado por outra pessoa: recarrega a grade.
       horariosLivres(servico.id, dia, reservaId).then((lista) => setGrade({ chave, lista }), () => undefined)
     } finally {

@@ -8,6 +8,7 @@ import { cancelarEvento, dataHoraEvento, meusEventos, STATUS_EVENTO, TIPO_EVENTO
 import { colors } from '../../src/theme/colors';
 import { radius, shadow, spacing } from '../../src/theme/tokens';
 import { fontFamily, typography } from '../../src/theme/typography';
+import { textoDeErro } from '../../src/lib/erros';
 
 export default function MeusEventos() {
   const insets = useSafeAreaInsets();
@@ -25,7 +26,7 @@ export default function MeusEventos() {
     const numero = ++sequencia.current;
     setCarregando(true); setErroCarga(null);
     try { const dados = await meusEventos(); if (numero === sequencia.current) setEventos(dados); }
-    catch (erro) { if (numero === sequencia.current) setErroCarga(erro instanceof Error ? erro.message : 'Tente novamente.'); }
+    catch (erro) { if (numero === sequencia.current) setErroCarga(textoDeErro(erro, 'Tente novamente.')); }
     finally { if (numero === sequencia.current) setCarregando(false); }
   }, []);
 
@@ -40,7 +41,7 @@ export default function MeusEventos() {
         if (!foco.current) { ocupado.current = false; return; }
         setCancelando(evento.id); setConcluido(null);
         try { await cancelarEvento(evento.id); if (foco.current) { setConcluido('Evento cancelado.'); await carregar(); } }
-        catch (erro) { if (foco.current) Alert.alert('Não foi possível cancelar', erro instanceof Error ? erro.message : 'Tente novamente.'); }
+        catch (erro) { if (foco.current) Alert.alert('Não foi possível cancelar', textoDeErro(erro, 'Tente novamente.')); }
         finally { ocupado.current = false; if (foco.current) setCancelando(null); }
       } },
     ], { cancelable: false });

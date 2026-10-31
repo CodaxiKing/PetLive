@@ -14,6 +14,7 @@ import { AVISO_ESCALA, carregarEscala, htmlResumo, ITENS_ESCALA, salvarEscala, t
 import { idadeEmAnos } from '../../../src/pets/types'
 import { colors } from '../../../src/theme/colors'
 import { fontFamily } from '../../../src/theme/typography'
+import { textoDeErro } from '../../../src/lib/erros'
 
 type Notas = Record<ItemEscala, number>
 const INICIAL = Object.fromEntries(ITENS_ESCALA.map((i) => [i.chave, 5])) as Notas
@@ -86,7 +87,7 @@ export default function TelaQualidadeVida() {
       setHistorico(await carregarEscala(pet.id))
       Alert.alert('Respostas guardadas', AVISO_ESCALA)
     } catch (e) {
-      Alert.alert('Não deu para salvar', mensagemDeErro(e instanceof Error ? e.message : String(e)))
+      Alert.alert('Não deu para salvar', mensagemDeErro(textoDeErro(e)))
     } finally {
       setSalvando(false)
     }

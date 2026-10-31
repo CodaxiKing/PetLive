@@ -18,6 +18,7 @@ import { usePets } from '../../src/pets/PetsProvider'
 import { colors } from '../../src/theme/colors'
 import { shadow } from '../../src/theme/tokens'
 import { fontFamily } from '../../src/theme/typography'
+import { textoDeErro } from '../../src/lib/erros'
 
 const AMARELO = '#FFF0C9'
 const HORAS = 24
@@ -60,7 +61,7 @@ export default function TelaEnviarFicha() {
       else if (canal === 'qr') setQr(link)
       else await Share.share({ message: urlFicha(link.codigo) })
     } catch (e) {
-      Alert.alert('Não deu para gerar a ficha', mensagemDeErro(e instanceof Error ? e.message : String(e)))
+      Alert.alert('Não deu para gerar a ficha', mensagemDeErro(textoDeErro(e)))
     } finally {
       setEnviando(null)
     }

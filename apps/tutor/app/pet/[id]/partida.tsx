@@ -11,6 +11,7 @@ import { usePets } from '../../../src/pets/PetsProvider'
 import { dataParaIso, hojeComoCampo } from '../../../src/saude/types'
 import { colors } from '../../../src/theme/colors'
 import { fontFamily } from '../../../src/theme/typography'
+import { textoDeErro } from '../../../src/lib/erros'
 
 /**
  * Registrar a partida (protótipos RegistrarPartida e ConfirmarPartida): data,
@@ -49,7 +50,7 @@ export default function TelaPartida() {
       setConfirmando(false)
       router.replace({ pathname: '/pet/[id]/memorial', params: { id: pet.id } })
     } catch (e) {
-      Alert.alert('Não deu para registrar', mensagemDeErro(e instanceof Error ? e.message : String(e)))
+      Alert.alert('Não deu para registrar', mensagemDeErro(textoDeErro(e)))
     } finally {
       setSalvando(false)
     }

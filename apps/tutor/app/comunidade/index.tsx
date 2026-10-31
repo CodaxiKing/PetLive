@@ -10,6 +10,7 @@ import { AvatarPet } from '../../src/pets/AvatarPet';
 import { usePets } from '../../src/pets/PetsProvider';
 import { colors } from '../../src/theme/colors';
 import { fontFamily } from '../../src/theme/typography';
+import { textoDeErro } from '../../src/lib/erros';
 
 /** Comunidade (protótipo Comunidade, tela 62; BUSINESS.md 5.28). */
 export default function Comunidade() {
@@ -30,7 +31,7 @@ export default function Comunidade() {
         setFim(f.posts.length < 20);
         juntarFotos(f.posts);
       },
-      (e: unknown) => setErro(mensagemDeErro(e instanceof Error ? e.message : String(e))),
+      (e: unknown) => setErro(mensagemDeErro(textoDeErro(e))),
     );
   }, []);
   useFocusEffect(

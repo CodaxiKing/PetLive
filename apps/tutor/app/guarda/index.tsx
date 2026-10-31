@@ -20,6 +20,7 @@ import { AvatarPet } from '../../src/pets/AvatarPet';
 import { usePets } from '../../src/pets/PetsProvider';
 import { colors } from '../../src/theme/colors';
 import { fontFamily } from '../../src/theme/typography';
+import { textoDeErro } from '../../src/lib/erros';
 
 function dataCurta(iso: string): string {
   return new Date(iso).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
@@ -58,7 +59,7 @@ export default function GuardaCompartilhada() {
         setPainel(p);
         setErro(null);
       },
-      (e: unknown) => setErro(mensagemDeErro(e instanceof Error ? e.message : String(e))),
+      (e: unknown) => setErro(mensagemDeErro(textoDeErro(e))),
     );
   }, []);
   useFocusEffect(carregar);
@@ -69,7 +70,7 @@ export default function GuardaCompartilhada() {
         carregar();
         void recarregar();
       },
-      (e: unknown) => Alert.alert('Não deu certo', mensagemDeErro(e instanceof Error ? e.message : String(e))),
+      (e: unknown) => Alert.alert('Não deu certo', mensagemDeErro(textoDeErro(e))),
     );
   };
 

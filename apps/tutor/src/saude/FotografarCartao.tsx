@@ -10,6 +10,7 @@ import { typography } from '../theme/typography';
 import { conferirArquivoCartao, descartarFotoCartao, salvarFotoCartao } from './fotoCartao';
 import { guardarLeitura, lerCartao } from './leituraCartao';
 import { dadosFotoCartao, tamanhoFotoCartao, type FotoCartao } from './fotoCartaoDados';
+import { textoDeErro } from '../lib/erros';
 
 type Props = { tutorId: string; petId: string; titulo: string; data: string; onSalvo: () => void };
 export function FotografarCartao(props: Props) {
@@ -19,7 +20,7 @@ export function FotografarCartao(props: Props) {
   const abrir = () => {
     if (plano.plano !== 'premium') { router.push('/premium'); return; }
     try { dadosFotoCartao(props.titulo, props.data); setErro(null); setAberta(true); }
-    catch (e) { setErro(e instanceof Error ? e.message : 'Confira os campos.'); }
+    catch (e) { setErro(textoDeErro(e, 'Confira os campos.')); }
   };
   if (Platform.OS === 'web') return <Text style={s.texto}>A captura com guia está disponível no app do celular.</Text>;
   return <>
@@ -72,7 +73,7 @@ function Captura({ tutorId, petId, titulo, data, onSalvo, onFechar }: Props & { 
       conferirArquivoCartao(capturada); temporaria.current = capturada.uri; setFoto(capturada);
     } catch (e) {
       if (capturada) descartarFotoCartao(capturada.uri);
-      if (viva.current) setErro(e instanceof Error ? e.message : 'Não foi possível fotografar.');
+      if (viva.current) setErro(textoDeErro(e, 'Não foi possível fotografar.'));
     } finally { trava.current = false; if (viva.current) setOcupada(false); }
   }
   // Lê as vacinas da foto e abre a revisão; a foto não é guardada (BUSINESS.md 5.22).
@@ -85,7 +86,7 @@ function Captura({ tutorId, petId, titulo, data, onSalvo, onFechar }: Props & { 
       guardarLeitura(petId, leitura);
       onFechar();
       router.push({ pathname: '/pet/[id]/revisar-vacinas', params: { id: petId } });
-    } catch (e) { if (viva.current) setErro(e instanceof Error ? e.message : 'Não foi possível ler o cartão.'); }
+    } catch (e) { if (viva.current) setErro(textoDeErro(e, 'Não foi possível ler o cartão.')); }
     finally { trava.current = false; if (viva.current) setOcupada(false); }
   }
   async function salvar() {
@@ -94,7 +95,7 @@ function Captura({ tutorId, petId, titulo, data, onSalvo, onFechar }: Props & { 
     try {
       await salvarFotoCartao(tutorId, petId, foto, titulo, data);
       if (viva.current) { onSalvo(); onFechar(); }
-    } catch (e) { if (viva.current) setErro(e instanceof Error ? e.message : 'Não foi possível salvar.'); }
+    } catch (e) { if (viva.current) setErro(textoDeErro(e, 'Não foi possível salvar.')); }
     finally { trava.current = false; if (viva.current) setOcupada(false); }
   }
   return <Modal visible animationType="slide" onRequestClose={() => { if (!trava.current) onFechar(); }}><ScrollView style={s.tela} contentContainerStyle={{ padding: 20, paddingTop: insets.top + 16, paddingBottom: insets.bottom + 24, gap: 16 }}>

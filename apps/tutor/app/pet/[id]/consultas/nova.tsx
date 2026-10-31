@@ -18,6 +18,7 @@ import {
 import { dataParaIso, hojeComoCampo } from '../../../../src/saude/types'
 import { colors } from '../../../../src/theme/colors'
 import { spacing } from '../../../../src/theme/tokens'
+import { textoDeErro } from '../../../../src/lib/erros'
 
 /**
  * Registrar consulta (board: [APP-CLIENTE] "Saúde: Registrar consulta").
@@ -50,7 +51,7 @@ export default function NovaConsulta() {
       await registrarConsulta(id, { ...form, realizada_em: data })
       router.back()
     } catch (e) {
-      Alert.alert('Não foi possível salvar', e instanceof Error ? e.message : String(e))
+      Alert.alert('Não foi possível salvar', textoDeErro(e))
     } finally {
       setSalvando(false)
     }

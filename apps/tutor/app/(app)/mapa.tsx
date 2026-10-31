@@ -45,6 +45,7 @@ import { dataHoraEvento, eventosPorPerto, TIPO_EVENTO, type EventoMapa } from '.
 import { colors } from '../../src/theme/colors';
 import { radius, shadow, spacing } from '../../src/theme/tokens';
 import { fontFamily, typography } from '../../src/theme/typography';
+import { textoDeErro } from '../../src/lib/erros';
 
 /** 'pet_friendly' chega da tela Pet friendly ("Ver no mapa"). */
 type Filtro = 'todos' | CategoriaLugar | '24h' | 'salvos' | 'pet_friendly';
@@ -223,7 +224,7 @@ export default function Mapa() {
     setCarregandoEventos(true); setErroEventos(null); setEventos([]);
     eventosPorPerto({ lat: centro.lat, lng: centro.lng }, raioKm, filtroEvento, tipoEvento)
       .then((lista) => { if (vivo) setEventos(lista); })
-      .catch((erro: unknown) => { if (vivo) setErroEventos(erro instanceof Error ? erro.message : 'Tente novamente.'); })
+      .catch((erro: unknown) => { if (vivo) setErroEventos(textoDeErro(erro, 'Tente novamente.')); })
       .finally(() => { if (vivo) setCarregandoEventos(false); });
     return () => { vivo = false; };
   // Recria a consulta ao tocar em Tentar novamente.

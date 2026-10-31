@@ -9,6 +9,7 @@ import { atualizarWidget } from '../src/widget/tarefaWidget';
 import { confirmarDoseWidget } from '../src/widget/proximo';
 import { colors } from '../src/theme/colors';
 import { typography } from '../src/theme/typography';
+import { textoDeErro } from '../src/lib/erros';
 
 /** Links do widget nunca confirmam medicação automaticamente. */
 export default function ConfirmarDoseDoWidget() {
@@ -50,7 +51,7 @@ export default function ConfirmarDoseDoWidget() {
       if (versao !== ciclo.current) return;
       setSucesso(true);
       await atualizarWidget().catch(() => undefined);
-    } catch (e) { if (versao === ciclo.current) setErro(e instanceof Error ? e.message : 'Dose não confirmada. Tente novamente.'); }
+    } catch (e) { if (versao === ciclo.current) setErro(textoDeErro(e, 'Dose não confirmada. Tente novamente.')); }
     finally { if (versao === ciclo.current) setOcupado(false); }
   }
   return <View style={s.tela}>

@@ -24,6 +24,7 @@ import { usePets } from '../../src/pets/PetsProvider'
 import { dataParaExibicao, dataParaIso, hojeComoCampo } from '../../src/saude/types'
 import { colors } from '../../src/theme/colors'
 import { fontFamily } from '../../src/theme/typography'
+import { textoDeErro } from '../../src/lib/erros'
 
 /** Só dígitos -> centavos: "1990" = R$ 19,90 (o teclado numérico vai preenchendo). */
 function centavosDe(texto: string): number {
@@ -102,7 +103,7 @@ export default function TelaNovaDespesa() {
       })
       router.back()
     } catch (e) {
-      Alert.alert('Não deu para salvar', mensagemDeErro(e instanceof Error ? e.message : String(e)))
+      Alert.alert('Não deu para salvar', mensagemDeErro(textoDeErro(e)))
     } finally {
       setSalvando(false)
     }

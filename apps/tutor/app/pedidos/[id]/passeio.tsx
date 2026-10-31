@@ -10,6 +10,7 @@ import { hhmm } from '../../../src/loja/reservas'
 import { TrajetoPasseio } from '../../../src/passeios/TrajetoPasseio'
 import { colors } from '../../../src/theme/colors'
 import { fontFamily } from '../../../src/theme/typography'
+import { textoDeErro } from '../../../src/lib/erros'
 
 /** Passeio ao vivo e resumo (protótipos PasseioAoVivo e PasseioFim). */
 export default function PasseioLoja() {
@@ -28,7 +29,7 @@ export default function PasseioLoja() {
       .then((d) => {
         setDados(d)
         if (d.disponivel) urlsFotosPasseio(d.registros).then(setFotos, () => undefined)
-      }, (e: unknown) => setErro(mensagemDeErro(e instanceof Error ? e.message : String(e))))
+      }, (e: unknown) => setErro(mensagemDeErro(textoDeErro(e))))
       .finally(() => { pendente.current = false })
     avaliacaoDoPedido(id).then((a) => setAvaliado(a !== null), () => undefined)
   }, [id])

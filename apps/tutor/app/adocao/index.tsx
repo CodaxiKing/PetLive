@@ -9,6 +9,7 @@ import { BotaoPrimario } from '../../src/components/BotaoPrimario';
 import { CabecalhoTela } from '../../src/components/CabecalhoTela';
 import { colors } from '../../src/theme/colors';
 import { typography } from '../../src/theme/typography';
+import { textoDeErro } from '../../src/lib/erros';
 
 export default function Adocao() {
   const { user, carregando } = useAuth();
@@ -38,7 +39,7 @@ function Catalogo({ tutorId, filtros, painel }: { tutorId: string; filtros: Filt
       if (!vida.current || requisicao.current !== req) return;
       setItens((anteriores) => proxima ? juntarPaginaAdocao(anteriores, p.itens) : p.itens); setMais(p.tem_mais);
       const ultimo = p.itens.at(-1); cursor.current = ultimo ? { criado_em: ultimo.criado_em, id: ultimo.id } : null;
-    } catch (e) { if (vida.current && requisicao.current === req) setErro(e instanceof Error ? e.message : 'Tente novamente.'); }
+    } catch (e) { if (vida.current && requisicao.current === req) setErro(textoDeErro(e, 'Tente novamente.')); }
     finally { if (vida.current && requisicao.current === req) { ocupado.current = false; setCarregando(false); setPaginando(false); } }
   }, [tutorId, filtros]);
   useFocusEffect(useCallback(() => { vida.current = true; epoca.current += 1; void buscar(); return () => { vida.current = false; epoca.current += 1; requisicao.current += 1; ocupado.current = false; }; }, [buscar]));
@@ -49,7 +50,7 @@ function Catalogo({ tutorId, filtros, painel }: { tutorId: string; filtros: Filt
     try {
       const ativo = await favoritarAdocao(tutorId, pet.id, !pet.favorito);
       if (vida.current && epoca.current === inicio) setItens((anteriores) => anteriores.flatMap((p) => p.id !== pet.id ? [p] : filtros.favoritos && !ativo ? [] : [{ ...p, favorito: ativo }]));
-    } catch (e) { if (vida.current && epoca.current === inicio) setErro(e instanceof Error ? e.message : 'Não foi possível salvar o favorito.'); }
+    } catch (e) { if (vida.current && epoca.current === inicio) setErro(textoDeErro(e, 'Não foi possível salvar o favorito.')); }
     finally { favs.current.delete(pet.id); if (vida.current) setFavoritando([...favs.current]); }
   }
   const resumo = [filtros.especie === 'cao' ? 'Cães' : filtros.especie === 'gato' ? 'Gatos' : 'Cães e gatos', filtros.filhote ? 'até 1 ano' : null,

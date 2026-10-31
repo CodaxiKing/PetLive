@@ -26,7 +26,6 @@ import { BotaoPrimario } from '../../src/components/BotaoPrimario';
 import { Campo } from '../../src/components/Campo';
 import { BotaoRedondo } from '../../src/components/Layout';
 import { voltarOuInicio } from '../../src/lib/voltar';
-import { AvatarPet } from '../../src/pets/AvatarPet';
 import { usePets } from '../../src/pets/PetsProvider';
 import { useRecurso } from '../../src/lib/configApp';
 import { registrarEvento } from '../../src/lib/eventos';
@@ -234,39 +233,24 @@ export default function Sos() {
         {pets.length ? (
           <Pressable
             accessibilityRole="button"
-            onPress={() => (chegadaId ? router.push({ pathname: '/sos/chegada/[id]', params: { id: chegadaId } }) : router.push('/sos/caminho'))}
+            onPress={() =>
+              chegadaId
+                ? router.push({ pathname: '/sos/chegada/[id]', params: { id: chegadaId } })
+                : router.push({
+                    pathname: '/sos/caminho',
+                    params: clinica ? { lugar: clinica.lugar.id, nome: clinica.lugar.nome, telefone: telefoneClinica ?? '' } : {},
+                  })
+            }
             style={({ pressed }) => [estilos.ficha, pressed && { opacity: 0.85 }]}
           >
             <View style={[estilos.linhaIcone, estilos.caminhoIcone]}>
               <Car size={22} color={colors.emergency} weight="fill" />
             </View>
             <View style={estilos.flex}>
-              <Text style={estilos.linhaTitulo} numberOfLines={1}>{chegadaId ? 'Acompanhar a chegada' : 'Estou a caminho'}</Text>
+              <Text style={estilos.linhaTitulo} numberOfLines={1}>{chegadaId ? 'Acompanhar a chegada' : 'Vou levar à clínica'}</Text>
               <Text style={estilos.linhaSub} numberOfLines={1}>
-                {chegadaId ? 'Veja a resposta da clínica e toque em Cheguei' : 'Avise uma clínica 24 h do PetLive com a ficha'}
+                {chegadaId ? 'Veja a resposta da clínica e toque em Cheguei' : nomePet ? `Avise a clínica e mande a ficha ${fotoPet?.sexo === 'femea' ? 'da' : 'do'} ${nomePet}` : 'Avise a clínica e mande a ficha'}
               </Text>
-            </View>
-            <CaretRight size={18} color={colors.textMuted} />
-          </Pressable>
-        ) : null}
-
-        {clinica ? (
-          <Pressable
-            accessibilityRole="button"
-            onPress={() =>
-              router.push({
-                pathname: '/ficha/enviar',
-                params: { lugar: clinica.lugar.id, nome: clinica.lugar.nome, telefone: telefoneClinica ?? '' },
-              })
-            }
-            style={({ pressed }) => [estilos.ficha, pressed && { opacity: 0.85 }]}
-          >
-            {fotoPet ? <AvatarPet especie={fotoPet.especie} foto={fotoPet.foto_url} size={46} /> : null}
-            <View style={estilos.flex}>
-              <Text style={estilos.linhaTitulo} numberOfLines={1}>
-                {nomePet ? `Enviar a ficha ${fotoPet?.sexo === 'femea' ? 'da' : 'do'} ${nomePet} à clínica` : 'Enviar a ficha à clínica'}
-              </Text>
-              <Text style={estilos.linhaSub} numberOfLines={1}>A equipe chega sabendo das alergias</Text>
             </View>
             <CaretRight size={18} color={colors.textMuted} />
           </Pressable>

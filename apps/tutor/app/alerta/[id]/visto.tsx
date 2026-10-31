@@ -11,6 +11,7 @@ import { avistar, enviarFotoAvistamento, posicaoAtual } from '../../../src/perdi
 import { escolherFoto, type AtivoFoto } from '../../../src/pets/CampoFoto';
 import { colors } from '../../../src/theme/colors';
 import { fontFamily } from '../../../src/theme/typography';
+import { textoDeErro } from '../../../src/lib/erros';
 
 const QUANDO = [
   { rotulo: 'Agora', min: 0 },
@@ -41,7 +42,7 @@ export default function ViEstePet() {
       Alert.alert('Aviso enviado', 'O tutor recebeu onde você viu o pet. Obrigado por ajudar!');
       router.back();
     } catch (e) {
-      setErro(e instanceof Error ? e.message : String(e));
+      setErro(textoDeErro(e));
     } finally {
       setEnviando(false);
     }

@@ -7,6 +7,7 @@ import { haQuanto } from '../perdido/perdido';
 import { colors } from '../theme/colors';
 import { fontFamily } from '../theme/typography';
 import { apagarPost, denunciar, MOTIVOS_DENUNCIA, type Post } from './comunidade';
+import { textoDeErro } from '../lib/erros';
 
 /** Post da comunidade (protótipo Comunidade): foto, legenda, curtir e comentar. */
 export function CartaoPost({ post, foto, onCurtir, onMudou }: { post: Post; foto?: string; onCurtir: () => void; onMudou: () => void }) {
@@ -14,14 +15,14 @@ export function CartaoPost({ post, foto, onCurtir, onMudou }: { post: Post; foto
     if (post.meu) {
       Alert.alert('Apagar este post?', 'Ele some da comunidade e do perfil do pet.', [
         { text: 'Voltar', style: 'cancel' },
-        { text: 'Apagar', style: 'destructive', onPress: () => apagarPost(post.id).then(onMudou, (e: Error) => Alert.alert('Não deu certo', e.message)) },
+        { text: 'Apagar', style: 'destructive', onPress: () => apagarPost(post.id).then(onMudou, (e: Error) => Alert.alert('Não deu certo', textoDeErro(e))) },
       ]);
       return;
     }
     Alert.alert('Denunciar post', 'A equipe revisa. Com várias denúncias, o post some até a revisão.', [
       ...MOTIVOS_DENUNCIA.map((m) => ({
         text: m,
-        onPress: () => denunciar('post', post.id, m).then(() => Alert.alert('Obrigado', 'Recebemos a denúncia.'), (e: Error) => Alert.alert('Não deu certo', e.message)),
+        onPress: () => denunciar('post', post.id, m).then(() => Alert.alert('Obrigado', 'Recebemos a denúncia.'), (e: Error) => Alert.alert('Não deu certo', textoDeErro(e))),
       })),
       { text: 'Cancelar', style: 'cancel' as const },
     ]);

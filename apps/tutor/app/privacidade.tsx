@@ -22,6 +22,7 @@ import {
 } from '../src/privacidade/conta';
 import { colors } from '../src/theme/colors';
 import { typography } from '../src/theme/typography';
+import { textoDeErro } from '../src/lib/erros';
 
 type Alternavel = { tipo: TipoConsentimento; rotulo: string; descricao: string };
 
@@ -60,7 +61,7 @@ export default function Privacidade() {
         setExclusao(estado);
         setAcessos(resumo);
       },
-      (e) => { if (token === geracao.current) setErroConsulta(e instanceof Error ? e.message : String(e)); },
+      (e) => { if (token === geracao.current) setErroConsulta(textoDeErro(e)); },
     ).finally(() => { if (token === geracao.current) setCarregando(false); });
   }, [user]);
 
@@ -75,7 +76,7 @@ export default function Privacidade() {
       await registrarConsentimento(item.tipo, ligado);
       if (token === geracao.current) recarregar();
     } catch (e) {
-      if (token === geracao.current) Alert.alert('Não foi possível salvar', e instanceof Error ? e.message : String(e));
+      if (token === geracao.current) Alert.alert('Não foi possível salvar', textoDeErro(e));
     } finally {
       if (token === geracao.current) setProcessando(false);
     }
@@ -86,7 +87,7 @@ export default function Privacidade() {
     const token = geracao.current;
     setProcessando(true);
     exportarMeusDados()
-      .catch((e) => { if (token === geracao.current) Alert.alert('Não foi possível exportar', e instanceof Error ? e.message : String(e)); })
+      .catch((e) => { if (token === geracao.current) Alert.alert('Não foi possível exportar', textoDeErro(e)); })
       .finally(() => { if (token === geracao.current) setProcessando(false); });
   }
 
@@ -107,7 +108,7 @@ export default function Privacidade() {
             solicitarExclusaoConta(user.id)
               .then(() => { if (token === geracao.current) recarregar(); })
               .catch((e) =>
-                token === geracao.current && Alert.alert('Não foi possível pedir', e instanceof Error ? e.message : String(e)),
+                token === geracao.current && Alert.alert('Não foi possível pedir', textoDeErro(e)),
               )
               .finally(() => { if (token === geracao.current) setProcessando(false); });
           },
@@ -122,7 +123,7 @@ export default function Privacidade() {
     setProcessando(true);
     cancelarExclusaoConta(user.id, exclusao.pedidoId)
       .then(() => { if (token === geracao.current) recarregar(); })
-      .catch((e) => { if (token === geracao.current) Alert.alert('Não foi possível cancelar', e instanceof Error ? e.message : String(e)); })
+      .catch((e) => { if (token === geracao.current) Alert.alert('Não foi possível cancelar', textoDeErro(e)); })
       .finally(() => { if (token === geracao.current) setProcessando(false); });
   }
 

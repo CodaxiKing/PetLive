@@ -5,6 +5,7 @@ import { BotaoPrimario } from '../components/BotaoPrimario';
 import { colors } from '../theme/colors';
 import { typography } from '../theme/typography';
 import { carregarRegiaoEventos, desligarRegiaoEventos, RAIOS_EVENTOS, salvarRaioEventos, usarRegiaoAtualEventos, type RegiaoEventos } from './regiaoEventos';
+import { textoDeErro } from '../lib/erros';
 
 export function ConfigurarRegiaoEventos({ eventosLigados }: { eventosLigados: boolean }) {
   const { user } = useAuth();
@@ -23,7 +24,7 @@ function Configuracao({ tutorId, eventosLigados }: { tutorId: string; eventosLig
     let ativo = true;
     carregarRegiaoEventos(tutorId).then((r) => {
       if (ativo) { setRegiao(r); setRaio(r.raio_km); }
-    }, (e) => { if (ativo) setErro(e instanceof Error ? e.message : 'Não foi possível carregar a região.'); });
+    }, (e) => { if (ativo) setErro(textoDeErro(e, 'Não foi possível carregar a região.')); });
     return () => { ativo = false; vida.current = false; };
   }, [tutorId, tentativa]);
   async function aplicar(acao: () => Promise<RegiaoEventos>) {
@@ -33,7 +34,7 @@ function Configuracao({ tutorId, eventosLigados }: { tutorId: string; eventosLig
     try {
       const r = await acao();
       if (vida.current) { setRegiao(r); setRaio(r.raio_km); setAviso(r.ativo ? 'Região salva para avisos de eventos próximos.' : 'Avisos próximos desligados e região removida.'); }
-    } catch (e) { if (vida.current) setErro(e instanceof Error ? e.message : 'Tente novamente.'); }
+    } catch (e) { if (vida.current) setErro(textoDeErro(e, 'Tente novamente.')); }
     finally { trava.current = false; if (vida.current) setOcupado(false); }
   }
   return <View style={s.card}>

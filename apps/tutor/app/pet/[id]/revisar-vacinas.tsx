@@ -12,6 +12,7 @@ import { esquecerLeitura, linhasDaLeitura, marcarJaCadastradas, pegarLeitura, sa
 import { useVacinas } from '../../../src/saude/VacinasProvider';
 import { colors } from '../../../src/theme/colors';
 import { fontFamily } from '../../../src/theme/typography';
+import { textoDeErro } from '../../../src/lib/erros';
 
 /**
  * Revisar as vacinas lidas da foto do cartão (protótipo CartaoRevisar, tela 53).
@@ -55,7 +56,7 @@ export default function RevisarVacinas() {
       Alert.alert('Vacinas salvas', `${total} ${total === 1 ? 'vacina entrou' : 'vacinas entraram'} na carteirinha de ${pet?.nome ?? 'seu pet'}.`);
       router.back();
     } catch (e) {
-      setErro(e instanceof Error ? e.message : String(e));
+      setErro(textoDeErro(e));
     } finally {
       setSalvando(false);
     }

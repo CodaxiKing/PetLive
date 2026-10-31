@@ -25,6 +25,7 @@ import { supabase, supabaseConfigurado } from '../../src/lib/supabase';
 import { colors } from '../../src/theme/colors';
 import { shadow, spacing } from '../../src/theme/tokens';
 import { fontFamily, typography } from '../../src/theme/typography';
+import { textoDeErro } from '../../src/lib/erros';
 
 type Modo = 'criar' | 'entrar';
 
@@ -142,7 +143,7 @@ export default function CriarConta() {
         // Com sessão ativa o layout raiz redireciona sozinho para o Início.
       }
     } catch (e) {
-      setErro(traduzirErro(e instanceof Error ? e.message : String(e)));
+      setErro(traduzirErro(textoDeErro(e)));
     } finally {
       setCarregando(false);
     }
@@ -160,7 +161,7 @@ export default function CriarConta() {
       await pedirNovaSenha(email.trim());
       setAviso('Se houver uma conta com esse e-mail, enviamos um link para criar uma nova senha. Abra-o neste celular.');
     } catch (e) {
-      setErro(traduzirErro(e instanceof Error ? e.message : String(e)));
+      setErro(traduzirErro(textoDeErro(e)));
     } finally {
       setCarregando(false);
     }
@@ -174,7 +175,7 @@ export default function CriarConta() {
       // Com sessão criada, o layout raiz troca a rota sozinho (e pede o aceite dos termos).
       await entrarComApple();
     } catch (e) {
-      setErro(traduzirErro(e instanceof Error ? e.message : String(e)));
+      setErro(traduzirErro(textoDeErro(e)));
     } finally {
       setCarregando(false);
     }
@@ -194,7 +195,7 @@ export default function CriarConta() {
       // Com sessão criada, o layout raiz troca a rota sozinho.
       await entrarComGoogle();
     } catch (e) {
-      setErro(traduzirErro(e instanceof Error ? e.message : String(e)));
+      setErro(traduzirErro(textoDeErro(e)));
     } finally {
       setCarregando(false);
     }

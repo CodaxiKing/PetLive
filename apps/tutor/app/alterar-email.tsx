@@ -7,6 +7,7 @@ import { HeroiOnda } from '../src/components/HeroiOnda';
 import { solicitarTrocaEmail, validarTrocaEmail } from '../src/perfil/email';
 import { colors } from '../src/theme/colors';
 import { fontFamily } from '../src/theme/typography';
+import { textoDeErro } from '../src/lib/erros';
 
 export default function AlterarEmail() {
   const { user } = useAuth();
@@ -47,7 +48,7 @@ function Formulario({ tutorId }: { tutorId: string }) {
         setMensagem('Solicitação aceita. Siga as instruções de confirmação recebidas por e-mail. Depois volte e toque em Verificar confirmação.');
       }
     } catch (e) {
-      if (ativo.current) setErro(e instanceof Error ? e.message : 'Não foi possível concluir. Tente novamente.');
+      if (ativo.current) setErro(textoDeErro(e, 'Não foi possível concluir. Tente novamente.'));
     } finally {
       trava.current = false;
       if (ativo.current) setOcupado(false);

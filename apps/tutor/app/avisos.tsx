@@ -26,6 +26,7 @@ import { fontFamily, typography } from '../src/theme/typography'
 import { ConfigurarRegiaoEventos } from '../src/notificacoes/ConfigurarRegiaoEventos'
 import { ConfigurarRegiaoPerdidos } from '../src/perdido/ConfigurarRegiaoPerdidos'
 import { ConfigurarWidget } from '../src/widget/ConfigurarWidget'
+import { textoDeErro } from '../src/lib/erros'
 
 /** Opções do "Horário dos avisos": de 30 em 30 minutos. */
 const HORARIOS = Array.from({ length: 48 }, (_, i) => {
@@ -112,7 +113,7 @@ export default function TelaAvisos() {
       (e) =>
         Alert.alert(
           'Não foi possível carregar',
-          e instanceof Error ? e.message : String(e),
+          textoDeErro(e),
         ),
     )
   }, [])
@@ -123,7 +124,7 @@ export default function TelaAvisos() {
     try {
       await salvarAvisos({ ...(estado as EstadoAvisos), ...mudanca })
     } catch (e) {
-      Alert.alert('Não foi possível salvar', e instanceof Error ? e.message : String(e))
+      Alert.alert('Não foi possível salvar', textoDeErro(e))
       const recarregado = await carregarAvisos().catch(() => null)
       if (recarregado) setEstado(recarregado)
     } finally {

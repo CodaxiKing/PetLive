@@ -12,6 +12,7 @@ import { diaIso, proximosDias } from '../../src/loja/reservas'
 import { detalheServico, noitesEntre, porteDoPet, precoHotel, reservarHotel, TEXTO_PORTE, type DetalheServico } from '../../src/loja/servicos'
 import { usePets } from '../../src/pets/PetsProvider'
 import { colors } from '../../src/theme/colors'
+import { textoDeErro } from '../../src/lib/erros'
 
 /** Reservar hotelzinho (protótipo AgendarHotel): entrada, saída, porte e extras. */
 export default function ReservarHotel() {
@@ -27,7 +28,7 @@ export default function ReservarHotel() {
   const [erro, setErro] = useState<string | null>(null)
 
   useEffect(() => {
-    if (id) detalheServico(id).then(setDetalhe, (e: Error) => setErro(e.message))
+    if (id) detalheServico(id).then(setDetalhe, (e: Error) => setErro(textoDeErro(e)))
   }, [id])
 
   if (!detalhe || !detalhe.disponivel) {
@@ -62,7 +63,7 @@ export default function ReservarHotel() {
       const r = await reservarHotel(servico.id, entrada, saida, petId, extras, mensagem)
       router.replace(`/pedidos/${r.id}`)
     } catch (e) {
-      setErro(e instanceof Error ? e.message : String(e))
+      setErro(textoDeErro(e))
     } finally {
       setEnviando(false)
     }

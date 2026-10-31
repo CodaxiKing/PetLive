@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react'
-import { ActivityIndicator, Alert, Image, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native'
+import { Alert, Image, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native'
 import { router, useFocusEffect, useLocalSearchParams } from 'expo-router'
 import { Tocavel } from '../../../src/components/Animacoes'
 import { Gradiente } from '../../../src/components/Gradiente'
@@ -10,6 +10,8 @@ import { carregarMemorial, htmlAlbum, reativarPet, resumoLinha, type Memorial } 
 import { usePets } from '../../../src/pets/PetsProvider'
 import { colors } from '../../../src/theme/colors'
 import { fontFamily } from '../../../src/theme/typography'
+import { EstadoTela } from '../../../src/components/EstadoTela'
+import { textoDeErro } from '../../../src/lib/erros'
 
 /** Até 24 h depois de registrar, o "Desfazer" fica em destaque. */
 const JANELA_DESFAZER_MS = 24 * 3_600_000
@@ -23,7 +25,9 @@ export default function TelaMemorial() {
   const { id } = useLocalSearchParams<{ id: string }>()
   const { petsMemoria, recarregar } = usePets()
   const pet = petsMemoria.find((p) => p.id === id) ?? null
-  const [memorial, setMemorial] = useState<Memorial | null>(null)
+  const [memorial, setMemorial] = useState<Memorial | null | 'nenhum'>(null)
+  const [erroCarga, setErroCarga] = useState<string | null>(null)
+  const [tentativa, setTentativa] = useState(0)
   const [resumo, setResumo] = useState<{ marcos: number; fotos: number } | null>(null)
   const [recente, setRecente] = useState(false)
   const [gerando, setGerando] = useState(false)
@@ -32,17 +36,34 @@ export default function TelaMemorial() {
     useCallback(() => {
       if (!id) return
       carregarMemorial(id).then((m) => {
-        setMemorial(m)
+        setErroCarga(null)
+        setMemorial(m ?? 'nenhum')
         setRecente(Boolean(m && Date.now() - new Date(m.criado_em).getTime() < JANELA_DESFAZER_MS))
-      }, () => undefined)
+      }, (e) => setErroCarga(textoDeErro(e)))
       resumoLinha(id).then(setResumo, () => undefined)
-    }, [id]),
+      // A tentativa refaz a busca quando o tutor toca em Tentar de novo.
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [id, tentativa]),
   )
 
+  if (erroCarga) {
+    return (
+      <View style={estilos.tela}>
+        <EstadoTela tipo="erro" texto={erroCarga} onTentar={() => { setErroCarga(null); setTentativa((n) => n + 1) }} />
+      </View>
+    )
+  }
+  if (memorial === 'nenhum' || (memorial && !pet)) {
+    return (
+      <View style={estilos.tela}>
+        <EstadoTela tipo="vazio" titulo="Sem memorial" texto="Este pet não está em memória nesta conta." acao={{ titulo: 'Voltar', onPress: () => router.back() }} />
+      </View>
+    )
+  }
   if (!pet || !memorial) {
     return (
-      <View style={[estilos.tela, estilos.centro]}>
-        <ActivityIndicator color={colors.premiumText} />
+      <View style={estilos.tela}>
+        <EstadoTela tipo="carregando" />
       </View>
     )
   }
@@ -60,7 +81,7 @@ export default function TelaMemorial() {
             await recarregar()
             router.replace({ pathname: '/pet/[id]', params: { id: pet!.id } })
           } catch (e) {
-            Alert.alert('Não deu para desfazer', e instanceof Error ? e.message : String(e))
+            Alert.alert('Não deu para desfazer', textoDeErro(e))
           }
         },
       },
@@ -68,7 +89,7 @@ export default function TelaMemorial() {
   }
 
   async function baixarAlbum() {
-    if (!pet || !memorial) return
+    if (!pet || !memorial || memorial === 'nenhum') return
     setGerando(true)
     try {
       const resultado = await abrirPdf(await htmlAlbum(pet, memorial))

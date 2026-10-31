@@ -11,6 +11,7 @@ import { AvatarPet } from '../../../src/pets/AvatarPet';
 import { usePets } from '../../../src/pets/PetsProvider';
 import { colors } from '../../../src/theme/colors';
 import { fontFamily } from '../../../src/theme/typography';
+import { textoDeErro } from '../../../src/lib/erros';
 
 const SITUACAO: Record<string, string> = {
   aceito: 'Este convite já foi aceito.',
@@ -40,7 +41,7 @@ export default function ConviteGuarda() {
           setConvite(c);
           if (c.encontrado) setEscolhidos(c.pets.map((p) => p.id));
         },
-        (e: unknown) => setErro(mensagemDeErro(e instanceof Error ? e.message : String(e))),
+        (e: unknown) => setErro(mensagemDeErro(textoDeErro(e))),
       );
     }, [idConvite, token]),
   );
@@ -62,7 +63,7 @@ export default function ConviteGuarda() {
         router.back();
       }
     } catch (e) {
-      setErro(mensagemDeErro(e instanceof Error ? e.message : String(e)));
+      setErro(mensagemDeErro(textoDeErro(e)));
     } finally {
       setRespondendo(null);
     }

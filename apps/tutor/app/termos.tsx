@@ -15,6 +15,7 @@ import { SECOES_TERMOS, VERSAO_TERMOS_TEXTO } from '../src/privacidade/textos';
 import { colors } from '../src/theme/colors';
 import { spacing } from '../src/theme/tokens';
 import { typography } from '../src/theme/typography';
+import { textoDeErro } from '../src/lib/erros';
 
 type ItemConsentimento = {
   tipo: TipoConsentimento;
@@ -102,7 +103,7 @@ export default function Termos() {
         router.back();
       }
     } catch (e) {
-      Alert.alert('Não foi possível registrar', e instanceof Error ? e.message : String(e));
+      Alert.alert('Não foi possível registrar', textoDeErro(e));
     } finally {
       setRegistrando(false);
     }

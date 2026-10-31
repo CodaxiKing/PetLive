@@ -14,6 +14,7 @@ import { usePets } from '../../../src/pets/PetsProvider'
 import { dataParaExibicao, dataParaIso, hojeComoCampo } from '../../../src/saude/types'
 import { colors } from '../../../src/theme/colors'
 import { fontFamily } from '../../../src/theme/typography'
+import { textoDeErro } from '../../../src/lib/erros'
 
 const SUGESTOES = ['Chegou em casa', 'Primeiro passeio', 'Primeiro banho', 'Aprendeu um truque', 'Viagem', 'Castração']
 
@@ -80,7 +81,7 @@ export default function TelaMarco() {
       if (original?.foto_path && original.foto_path !== caminho) await removerFotoMarco(original.foto_path)
       router.back()
     } catch (e) {
-      Alert.alert('Não deu para salvar', mensagemDeErro(e instanceof Error ? e.message : String(e)))
+      Alert.alert('Não deu para salvar', mensagemDeErro(textoDeErro(e)))
     } finally {
       setSalvando(false)
     }

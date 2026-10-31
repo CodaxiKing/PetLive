@@ -14,6 +14,7 @@ import { supabase } from '../../src/lib/supabase';
 import { colors } from '../../src/theme/colors';
 import { shadow } from '../../src/theme/tokens';
 import { fontFamily } from '../../src/theme/typography';
+import { textoDeErro } from '../../src/lib/erros';
 
 export default function Assinatura() {
   const { user } = useAuth();
@@ -85,7 +86,7 @@ function Gerenciar({ dados, aoMudar }: { dados: MinhaAssinatura; aoMudar: () => 
   }
   if (podeManter(dados)) {
     return <Linha icone={icone} titulo="Manter o Premium" texto="Desfaz o cancelamento e volta a renovar" ultima onPress={() =>
-      reativarAssinatura().then(aoMudar, (e: Error) => Alert.alert('Não deu para manter', e.message))} />;
+      reativarAssinatura().then(aoMudar, (e: Error) => Alert.alert('Não deu para manter', textoDeErro(e)))} />;
   }
   if (a?.provedor === 'google_play' || a?.provedor === 'app_store') {
     return <Linha icone={icone} titulo="Gerenciar assinatura" texto={`Mudança e cancelamento ficam na ${a.provedor === 'google_play' ? 'Google Play' : 'App Store'}, em Assinaturas.`} ultima />;

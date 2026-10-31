@@ -7,6 +7,7 @@ import { carregarPetsConta, criarCargaPets } from './carregarPetsConta'
 import { escreverPet, excluirPet } from './escreverPet'
 import type { Pet, PetForm } from './types'
 import { FORM_VAZIO, formParaRegistro } from './types'
+import { textoDeErro } from '../lib/erros'
 
 interface PetsContextValue {
   /** Pets ativos (sem os que estão em memória). */
@@ -58,7 +59,7 @@ export function PetsProvider({ children }: { children: ReactNode }) {
       setCarregando(false)
     },
     (erro) => {
-      const mensagem = erro instanceof Error ? erro.message : 'Não foi possível carregar seus pets. Tente novamente.'
+      const mensagem = textoDeErro(erro, 'Não foi possível carregar seus pets. Tente novamente.')
       setErro(ehErroDeRede(mensagem) ? 'Sem internet: não foi possível atualizar seus pets. Tente novamente quando a conexão voltar.' : mensagem)
       setCarregando(false)
     },
@@ -86,7 +87,7 @@ export function PetsProvider({ children }: { children: ReactNode }) {
         setPetAtivoId(pet.id)
         return pet
       } catch (e) {
-        setErro(mensagemDeErro(e instanceof Error ? e.message : 'Não foi possível salvar o pet. Tente novamente.'))
+        setErro(mensagemDeErro(textoDeErro(e, 'Não foi possível salvar o pet. Tente novamente.')))
         return null
       } finally {
         setSalvando(false)
@@ -107,7 +108,7 @@ export function PetsProvider({ children }: { children: ReactNode }) {
       setPets((atual) => atual.map((p) => (p.id === id ? pet : p)))
       return pet
     } catch (e) {
-      setErro(mensagemDeErro(e instanceof Error ? e.message : 'Não foi possível salvar o pet. Tente novamente.'))
+      setErro(mensagemDeErro(textoDeErro(e, 'Não foi possível salvar o pet. Tente novamente.')))
       return null
     } finally { setSalvando(false) }
   }, [tutorId, carga])
@@ -134,7 +135,7 @@ export function PetsProvider({ children }: { children: ReactNode }) {
         setPets((atual) => atual.map((p) => (p.id === id ? pet : p)))
         return resultado.url
       } catch (e) {
-        setErro(mensagemDeErro(e instanceof Error ? e.message : 'Não foi possível enviar a foto. Tente novamente.'))
+        setErro(mensagemDeErro(textoDeErro(e, 'Não foi possível enviar a foto. Tente novamente.')))
         return null
       } finally { setSalvando(false) }
     },
@@ -153,7 +154,7 @@ export function PetsProvider({ children }: { children: ReactNode }) {
         setPets((atual) => atual.map((p) => (p.id === id ? pet : p)))
         return true
       } catch (e) {
-        setErro(mensagemDeErro(e instanceof Error ? e.message : 'Não foi possível remover a foto. Tente novamente.'))
+        setErro(mensagemDeErro(textoDeErro(e, 'Não foi possível remover a foto. Tente novamente.')))
         return false
       } finally { setSalvando(false) }
     },
@@ -173,7 +174,7 @@ export function PetsProvider({ children }: { children: ReactNode }) {
         if (petAtivoId === id) setPetAtivoId(null)
         return true
       } catch (e) {
-        setErro(mensagemDeErro(e instanceof Error ? e.message : 'Não foi possível excluir o pet. Tente novamente.'))
+        setErro(mensagemDeErro(textoDeErro(e, 'Não foi possível excluir o pet. Tente novamente.')))
         return false
       } finally { setSalvando(false) }
     },

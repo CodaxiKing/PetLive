@@ -32,6 +32,7 @@ import { BarraProgresso } from '../../../src/components/Animacoes'
 import { colors } from '../../../src/theme/colors'
 import { fontFamily, typography } from '../../../src/theme/typography'
 import { radius, spacing } from '../../../src/theme/tokens'
+import { textoDeErro } from '../../../src/lib/erros'
 
 const CARTOES = [
   { fundo: colors.warningSurface, borda: '#F3DC8E', texto: colors.warningText },
@@ -90,7 +91,7 @@ export default function TelaMedicamentos() {
           setCarregando(false)
         },
         (e) => {
-          Alert.alert('Não foi possível carregar', e instanceof Error ? e.message : String(e))
+          Alert.alert('Não foi possível carregar', textoDeErro(e))
           setCarregando(false)
         },
       )
@@ -114,7 +115,7 @@ export default function TelaMedicamentos() {
         ),
       )
     } catch (e) {
-      const msg = e instanceof Error ? e.message : String(e)
+      const msg = textoDeErro(e)
       if (msg.includes('já marcou')) {
         // Guarda compartilhada: outra pessoa já deu esta dose.
         setDoses((atual) => atual.map((d) => (d.id === dose.id ? { ...d, confirmada_em: d.confirmada_em ?? new Date().toISOString() } : d)))

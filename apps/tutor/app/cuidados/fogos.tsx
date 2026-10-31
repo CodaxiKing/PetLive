@@ -20,6 +20,7 @@ import {
 import { usePets } from '../../src/pets/PetsProvider'
 import { colors } from '../../src/theme/colors'
 import { fontFamily } from '../../src/theme/typography'
+import { textoDeErro } from '../../src/lib/erros'
 
 function quandoFalta(dias: number): string {
   if (dias === 0) return 'é hoje'
@@ -54,7 +55,7 @@ export default function TelaFogos() {
       await salvarPrefs(user.id, novo)
     } catch (e) {
       setPrefs(anterior)
-      Alert.alert('Não deu para salvar', e instanceof Error ? e.message : String(e))
+      Alert.alert('Não deu para salvar', textoDeErro(e))
     }
   }
 

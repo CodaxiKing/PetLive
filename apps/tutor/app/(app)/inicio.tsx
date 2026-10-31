@@ -8,6 +8,10 @@ import { Gradiente } from '../../src/components/Gradiente';
 import { Icone, type NomeIcone } from '../../src/components/Icone';
 import { Surgir, Tocavel } from '../../src/components/Animacoes';
 import { AvisoOffline } from '../../src/components/AvisoOffline';
+import { itensEmAndamento, type ItemAndamento } from '../../src/inicio/emAndamento';
+import { minhasSolicitacoes } from '../../src/loja/loja';
+import { meusPedidosAlbumTodos } from '../../src/pets/albumPedido';
+import { chegadaAtual } from '../../src/sos/chegada';
 import { AVISO_SEM_SALVAR } from '../../src/lib/cacheOffline';
 import { useLembretes } from '../../src/lembretes/LembretesProvider';
 import type { Lembrete, TipoLembrete } from '../../src/lembretes/types';
@@ -34,6 +38,7 @@ import { useVacinas } from '../../src/saude/VacinasProvider';
 import { colors } from '../../src/theme/colors';
 import { fontFamily } from '../../src/theme/typography';
 import { shadow } from '../../src/theme/tokens';
+import { textoDeErro } from '../../src/lib/erros';
 
 /**
  * Atalhos do Início (protótipo: fundo pastel, ícone num círculo branco). Só os da Fase 1.
@@ -107,6 +112,24 @@ export default function Inicio() {
       contarNaoLidos().then(setNaoLidos);
     }, []),
   );
+
+  // Em andamento: pedido, Pix por pagar, ida à clínica. Falha de rede só esconde a seção.
+  const [andamento, setAndamento] = useState<ItemAndamento[]>([]);
+  useFocusEffect(
+    useCallback(() => {
+      let vivo = true;
+      Promise.all([
+        minhasSolicitacoes().catch(() => []),
+        chegadaAtual().catch(() => null),
+        meusPedidosAlbumTodos().catch(() => []),
+      ]).then(([pedidos, chegada, albuns]) => {
+        if (vivo) setAndamento(itensEmAndamento(pedidos, chegada, albuns));
+      });
+      return () => {
+        vivo = false;
+      };
+    }, []),
+  );
   const { vacinas } = useVacinas();
   const [ola] = useState(saudacao);
   const [limiteHoje] = useState(fimDeHoje);
@@ -171,7 +194,7 @@ export default function Inicio() {
             },
             (e: unknown) => {
               // Guarda compartilhada: outra pessoa já deu esta dose.
-              const msg = e instanceof Error ? e.message : '';
+              const msg = textoDeErro(e, '');
               if (!msg.includes('já marcou')) return false;
               setDoses((atual) => atual.filter((d) => d.id !== item.dose.id));
               sincronizarDoses().catch(() => undefined);
@@ -293,6 +316,32 @@ export default function Inicio() {
               </View>
             </Tocavel>
           </Surgir>
+        ) : null}
+
+        {andamento.length ? (
+          <>
+            <Text style={[estilos.secaoTitulo, estilos.andamentoTitulo]}>Em andamento</Text>
+            <View style={estilos.lista}>
+              {andamento.map((item, i) => (
+                <Tocavel
+                  key={item.chave}
+                  accessibilityRole="button"
+                  accessibilityLabel={`${item.titulo}. ${item.sub}`}
+                  onPress={() => router.push(item.destino)}
+                  style={[estilos.linha, i > 0 && estilos.divisoria]}
+                >
+                  <View style={[estilos.linhaIcone, { backgroundColor: item.urgente ? '#FDE0E6' : colors.primarySurface }]}>
+                    <Icone nome={item.urgente ? 'sino' : 'relogio'} size={20} cor={item.urgente ? colors.emergency : colors.primaryDeep} />
+                  </View>
+                  <View style={estilos.flex}>
+                    <Text style={estilos.linhaTitulo} numberOfLines={1}>{item.titulo}</Text>
+                    <Text style={estilos.linhaSub} numberOfLines={1}>{item.sub}</Text>
+                  </View>
+                  <Icone nome="seta" size={18} cor={colors.textMuted} />
+                </Tocavel>
+              ))}
+            </View>
+          </>
         ) : null}
 
         <View style={estilos.secao}>
@@ -460,6 +509,7 @@ const estilos = StyleSheet.create({
   linhaSub: { fontFamily: fontFamily.regular, fontSize: 13, color: colors.textMuted, marginTop: 1 },
   feito: { height: 38, paddingHorizontal: 16, borderRadius: 19, backgroundColor: colors.black, justifyContent: 'center' },
   feitoTexto: { fontFamily: fontFamily.bold, fontSize: 13, color: colors.white },
+  andamentoTitulo: { marginTop: 4 },
   atalhosTitulo: { marginTop: 10, marginHorizontal: 4 },
   atalhos: { flexDirection: 'row', flexWrap: 'wrap', marginHorizontal: -5 },
   atalhoCelula: { width: '50%', padding: 5 },

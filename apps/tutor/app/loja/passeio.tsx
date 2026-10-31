@@ -12,6 +12,7 @@ import { diaIso, hhmm, proximosDias } from '../../src/loja/reservas'
 import { detalheServico, horariosPasseio, reservarPasseio, type DetalheServico } from '../../src/loja/servicos'
 import { usePets } from '../../src/pets/PetsProvider'
 import { colors } from '../../src/theme/colors'
+import { textoDeErro } from '../../src/lib/erros'
 
 /** Agendar passeio (protótipo AgendarPasseio): duração, dia, horário de saída e endereço de busca. */
 export default function AgendarPasseio() {
@@ -32,7 +33,7 @@ export default function AgendarPasseio() {
   const [erro, setErro] = useState<string | null>(null)
 
   useEffect(() => {
-    if (id) detalheServico(id).then(setDetalhe, (e: Error) => setErro(e.message))
+    if (id) detalheServico(id).then(setDetalhe, (e: Error) => setErro(textoDeErro(e)))
     carregarEnderecos().then((l) => {
       setEnderecos(l)
       setEnderecoId(l[0]?.id ?? null)
@@ -65,7 +66,7 @@ export default function AgendarPasseio() {
       const r = await reservarPasseio(servico.id, inicio, duracao, petId, enderecoId, mensagem)
       router.replace(`/pedidos/${r.id}`)
     } catch (e) {
-      setErro(e instanceof Error ? e.message : String(e))
+      setErro(textoDeErro(e))
     } finally {
       setEnviando(false)
     }

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
-import { ActivityIndicator, Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native'
+import { Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native'
 import { router, useLocalSearchParams } from 'expo-router'
 import { BotaoPrimario } from '../../src/components/BotaoPrimario'
 import { HeroiOnda } from '../../src/components/HeroiOnda'
@@ -20,6 +20,8 @@ import { usePets } from '../../src/pets/PetsProvider'
 import { colors } from '../../src/theme/colors'
 import { spacing } from '../../src/theme/tokens'
 import { typography } from '../../src/theme/typography'
+import { EstadoTela } from '../../src/components/EstadoTela'
+import { textoDeErro } from '../../src/lib/erros'
 
 /** Horários oferecidos, de hora em hora no período do dia. */
 const HORARIOS = Array.from({ length: 16 }, (_, i) => `${String(i + 6).padStart(2, '0')}:00`)
@@ -39,6 +41,7 @@ export default function Rotina() {
   // Derivado: os pets podem chegar depois de a tela abrir.
   const petId = petEscolhido ?? petParam ?? petAtivo?.id ?? pets[0]?.id ?? null
   const [estado, setEstado] = useState<EstadoRotina | null>(null)
+  const [erroCarga, setErroCarga] = useState<string | null>(null)
   const [escolhendoHorario, setEscolhendoHorario] = useState(false)
   const [salvando, setSalvando] = useState(false)
 
@@ -48,9 +51,7 @@ export default function Rotina() {
     carregarAvisos()
       .then((avisos) => avisos.horario, () => HORARIO_PADRAO)
       .then((horario) => carregarRotina(id, horario))
-      .then(setEstado, (e) =>
-        Alert.alert('Não foi possível carregar', e instanceof Error ? e.message : String(e)),
-      )
+      .then(setEstado, (e) => setErroCarga(textoDeErro(e)))
   }, [])
 
   useEffect(() => {
@@ -59,6 +60,7 @@ export default function Rotina() {
 
   function escolherPet(id: string) {
     setEstado(null)
+    setErroCarga(null)
     setPetEscolhido(id)
   }
 
@@ -82,7 +84,7 @@ export default function Rotina() {
       await recarregar()
       router.back()
     } catch (e) {
-      Alert.alert('Não foi possível salvar', e instanceof Error ? e.message : String(e))
+      Alert.alert('Não foi possível salvar', textoDeErro(e))
     } finally {
       setSalvando(false)
     }
@@ -114,8 +116,10 @@ export default function Rotina() {
 
         {!pet ? (
           <Text style={estilos.vazio}>Cadastre um pet para montar a rotina de cuidados.</Text>
+        ) : erroCarga ? (
+          <EstadoTela tipo="erro" texto={erroCarga} onTentar={() => { setErroCarga(null); carregar(pet.id) }} />
         ) : !estado ? (
-          <ActivityIndicator color={colors.primaryDark} style={{ marginTop: spacing.xl }} />
+          <EstadoTela tipo="carregando" texto="Montando a rotina…" />
         ) : (
           <>
             {ITENS_ROTINA.map((definicao) => {

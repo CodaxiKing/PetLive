@@ -4,6 +4,7 @@ import { denunciarEvento } from './eventos';
 import { colors } from '../theme/colors';
 import { components, spacing } from '../theme/tokens';
 import { typography } from '../theme/typography';
+import { textoDeErro } from '../lib/erros';
 
 const MOTIVOS = [
   ['spam', 'Spam ou propaganda'], ['inadequado', 'Conteúdo inadequado'], ['fraude', 'Golpe ou fraude'],
@@ -31,7 +32,7 @@ export function DenunciaEvento({ eventoId, onConcluido }: { eventoId: string; on
         if (!controle.current.ativo) return;
         setEnviando(true); setErro(null);
         try { await denunciarEvento(eventoId, motivo, detalhe.trim() || undefined); if (controle.current.ativo) { setRecebida(true); setAberto(false); onConcluido(); } }
-        catch (e) { if (controle.current.ativo) setErro(e instanceof Error ? e.message : 'Não foi possível enviar. Tente novamente.'); }
+        catch (e) { if (controle.current.ativo) setErro(textoDeErro(e, 'Não foi possível enviar. Tente novamente.')); }
         finally { ocupado.current = false; if (controle.current.ativo) setEnviando(false); }
       } },
     ], { cancelable: false });

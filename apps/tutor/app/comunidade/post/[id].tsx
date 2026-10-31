@@ -21,6 +21,7 @@ import { mensagemDeErro } from '../../../src/lib/cacheOffline';
 import { haQuanto } from '../../../src/perdido/perdido';
 import { colors } from '../../../src/theme/colors';
 import { fontFamily } from '../../../src/theme/typography';
+import { textoDeErro } from '../../../src/lib/erros';
 
 /** Post com os comentários. */
 export default function PostComunidade() {
@@ -38,7 +39,7 @@ export default function PostComunidade() {
         setAberto(a);
         if (a.disponivel) urlsDasFotos([a.post]).then((u) => setFoto(u[a.post.foto_path]));
       },
-      (e: unknown) => setErro(mensagemDeErro(e instanceof Error ? e.message : String(e))),
+      (e: unknown) => setErro(mensagemDeErro(textoDeErro(e))),
     );
   }, [id]);
   useFocusEffect(carregar);
@@ -52,7 +53,7 @@ export default function PostComunidade() {
       setTexto('');
       carregar();
     } catch (e) {
-      setErro(e instanceof Error ? e.message : String(e));
+      setErro(textoDeErro(e));
     } finally {
       setEnviando(false);
     }
@@ -62,7 +63,7 @@ export default function PostComunidade() {
     if (c.meu || (aberto?.disponivel && aberto.post.meu)) {
       Alert.alert('Apagar comentário?', undefined, [
         { text: 'Voltar', style: 'cancel' },
-        { text: 'Apagar', style: 'destructive', onPress: () => apagarComentario(c.id).then(carregar, (e: Error) => Alert.alert('Não deu certo', e.message)) },
+        { text: 'Apagar', style: 'destructive', onPress: () => apagarComentario(c.id).then(carregar, (e: Error) => Alert.alert('Não deu certo', textoDeErro(e))) },
       ]);
       if (c.meu) return;
     }

@@ -26,6 +26,7 @@ import {
 import { usePets } from '../../../src/pets/PetsProvider'
 import { colors } from '../../../src/theme/colors'
 import { fontFamily } from '../../../src/theme/typography'
+import { textoDeErro } from '../../../src/lib/erros'
 
 /** Seções com texto que o tutor escreve aqui mesmo, se ainda não escreveu. */
 type Texto = 'alergias' | 'veterinario' | 'observacoes' | 'telefone'
@@ -123,7 +124,7 @@ export default function TelaCompartilhar() {
       carregarLinks()
       await Share.share({ title: `Carteirinha de ${pet.nome}`, message: mensagemLink(pet.nome, link.codigo, link.expira_em) })
     } catch (e) {
-      Alert.alert('Não deu para gerar o link', mensagemDeErro(e instanceof Error ? e.message : String(e)))
+      Alert.alert('Não deu para gerar o link', mensagemDeErro(textoDeErro(e)))
     } finally {
       setEnviando(false)
     }
@@ -135,7 +136,7 @@ export default function TelaCompartilhar() {
       {
         text: 'Cancelar link',
         style: 'destructive',
-        onPress: () => cancelarLink(link.id).then(carregarLinks, (e: unknown) => Alert.alert('Não deu para cancelar', e instanceof Error ? e.message : 'Tente de novo.')),
+        onPress: () => cancelarLink(link.id).then(carregarLinks, (e: unknown) => Alert.alert('Não deu para cancelar', textoDeErro(e, 'Tente de novo.'))),
       },
     ])
   }

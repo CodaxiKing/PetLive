@@ -11,6 +11,7 @@ import { reais } from '../../../src/despesas/despesas';
 import { usePets } from '../../../src/pets/PetsProvider';
 import { colors } from '../../../src/theme/colors';
 import { fontFamily } from '../../../src/theme/typography';
+import { textoDeErro } from '../../../src/lib/erros';
 
 export default function AlbumAnual() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -38,7 +39,7 @@ export default function AlbumAnual() {
       if (atual !== token.current) return;
       setItens(lista); setDono(identidade); setEscolhidas(selecaoInicialAlbum(lista, new Date().getFullYear()));
       setAno(new Date().getFullYear());
-    }).catch(e => { if (atual === token.current) setErro(e instanceof Error ? e.message : String(e)); })
+    }).catch(e => { if (atual === token.current) setErro(textoDeErro(e)); })
       .finally(() => { if (atual === token.current) setCarregando(false); });
     return () => { token.current++; };
   }, [user, id, identidade]);
@@ -53,13 +54,13 @@ export default function AlbumAnual() {
     if (!user || carregando) return;
     let paginas: ItemLinha[];
     try { paginas = montarAlbum(itens, ano, escolhidas); }
-    catch (e) { Alert.alert('Monte seu álbum', e instanceof Error ? e.message : String(e)); return; }
+    catch (e) { Alert.alert('Monte seu álbum', textoDeErro(e)); return; }
     const atual = ++token.current;
     setCarregando(true); setErro(null);
     try {
       const fotos = await fotosAlbum(user.id, paginas);
       if (atual === token.current) { setUrls(fotos); setPrevia(true); }
-    } catch (e) { if (atual === token.current) setErro(e instanceof Error ? e.message : String(e)); }
+    } catch (e) { if (atual === token.current) setErro(textoDeErro(e)); }
     finally { if (atual === token.current) setCarregando(false); }
   }
   function pedirImpresso() {
@@ -70,7 +71,7 @@ export default function AlbumAnual() {
     if (p.status !== 'aguardando_pagamento') return;
     Alert.alert(`Pedido nº ${p.numero}`, `${reais(p.total_cents)} esperando o Pix.`, [
       { text: 'Voltar', style: 'cancel' },
-      { text: 'Cancelar pedido', style: 'destructive', onPress: () => cancelarPedidoAlbum(p.id).then(() => meusPedidosAlbum(p.pet_id ?? '').then(setPedidos), (e: Error) => Alert.alert('Não deu para cancelar', e.message)) },
+      { text: 'Cancelar pedido', style: 'destructive', onPress: () => cancelarPedidoAlbum(p.id).then(() => meusPedidosAlbum(p.pet_id ?? '').then(setPedidos), (e: Error) => Alert.alert('Não deu para cancelar', textoDeErro(e))) },
       { text: 'Pagar com Pix', onPress: () => router.push({ pathname: '/pagamento/pix', params: { album: p.id } }) },
     ]);
   }

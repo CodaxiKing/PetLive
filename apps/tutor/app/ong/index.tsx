@@ -8,6 +8,7 @@ import { BotaoPrimario } from '../../src/components/BotaoPrimario';
 import { CabecalhoTela } from '../../src/components/CabecalhoTela';
 import { colors } from '../../src/theme/colors';
 import { typography } from '../../src/theme/typography';
+import { textoDeErro } from '../../src/lib/erros';
 const status: Record<string, string> = { pendente: 'Em análise', aprovada: 'Aprovada', suspensa: 'Suspensa', recusada: 'Recusada', publicado: 'Publicado', adotado: 'Adotado', rascunho: 'Rascunho', oculto: 'Oculto' };
 export default function ModoOng() {
   const { user, carregando } = useAuth();
@@ -34,7 +35,7 @@ function PainelDaConta({ tutorId }: { tutorId: string }) {
         if (!foco.current || epoca.current !== req) return;
         setPainel((antes) => ({ ...p, itens: proxima ? [...new Map([...(antes?.itens ?? []), ...p.itens].map((i) => [i.id, i])).values()] : p.itens })); setMais(p.tem_mais); cursor.current = p.itens.at(-1) ?? null;
       }
-    } catch (e) { if (foco.current && epoca.current === req) setErro(e instanceof Error ? e.message : 'Tente novamente.'); }
+    } catch (e) { if (foco.current && epoca.current === req) setErro(textoDeErro(e, 'Tente novamente.')); }
     finally { if (epoca.current === req) { trava.current = false; setCarregando(false); } }
   }, [tutorId]);
   useFocusEffect(useCallback(() => {
@@ -61,7 +62,7 @@ function PainelDaConta({ tutorId }: { tutorId: string }) {
   async function adotar(p: PetOng, inicio: number) {
     if (acaoRef.current || trava.current) return; acaoRef.current = true; setAcao(true); setErro(null);
     try { await marcarAdotadoOng(tutorId, p.id); if (foco.current && epoca.current === inicio) await buscar(null); }
-    catch (e) { if (foco.current && epoca.current === inicio) setErro(e instanceof Error ? e.message : 'Atualize o painel.'); }
+    catch (e) { if (foco.current && epoca.current === inicio) setErro(textoDeErro(e, 'Atualize o painel.')); }
     finally { acaoRef.current = false; setAcao(false); }
   }
   function confirmarDisponivel(p: PetOng) {
@@ -71,7 +72,7 @@ function PainelDaConta({ tutorId }: { tutorId: string }) {
         if (!foco.current || epoca.current !== inicio || acaoRef.current || trava.current) return;
         acaoRef.current = true; setAcao(true); setErro(null);
         try { await confirmarDisponibilidadeOng(tutorId, p.id); if (foco.current && epoca.current === inicio) await buscar(null); }
-        catch (e) { if (foco.current && epoca.current === inicio) setErro(e instanceof Error ? e.message : 'Atualize o painel.'); }
+        catch (e) { if (foco.current && epoca.current === inicio) setErro(textoDeErro(e, 'Atualize o painel.')); }
         finally { acaoRef.current = false; setAcao(false); }
       } },
     ]);

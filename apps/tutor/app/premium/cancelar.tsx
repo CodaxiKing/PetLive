@@ -10,6 +10,7 @@ import { cancelarAssinatura, lerAssinatura, podeCancelar, type MinhaAssinatura }
 import { colors } from '../../src/theme/colors'
 import { shadow } from '../../src/theme/tokens'
 import { fontFamily } from '../../src/theme/typography'
+import { textoDeErro } from '../../src/lib/erros'
 
 const MOTIVOS = ['Está caro', 'Não uso os recursos Premium', 'Vou pausar por um tempo', 'Outro motivo']
 const MANTEM = ['Todos os pets, vacinas, remédios e o histórico', 'Os lembretes e a carteirinha', 'O SOS, a ficha de emergência e o mapa']
@@ -40,7 +41,7 @@ export default function CancelarAssinatura() {
       const r = await cancelarAssinatura(motivo)
       setFeito(new Date(r.periodo_fim).toLocaleDateString('pt-BR'))
     } catch (e) {
-      setErro(e instanceof Error ? e.message : String(e))
+      setErro(textoDeErro(e))
     } finally {
       setEnviando(false)
     }

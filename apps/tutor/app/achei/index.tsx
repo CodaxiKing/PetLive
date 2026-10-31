@@ -11,6 +11,7 @@ import { buscarPorFoto, haQuanto, posicaoAtual, TEXTO_NIVEL, textoDistancia, typ
 import { escolherFoto, type AtivoFoto } from '../../src/pets/CampoFoto';
 import { colors } from '../../src/theme/colors';
 import { fontFamily } from '../../src/theme/typography';
+import { textoDeErro } from '../../src/lib/erros';
 
 const COR_NIVEL: Record<NivelSemelhanca, { fundo: string; texto: string }> = {
   muito_parecido: { fundo: colors.successSurface, texto: colors.successText },
@@ -43,7 +44,7 @@ export default function AcheiUmPet() {
       const base64 = await new File(foto.uri).base64();
       setCandidatos(await buscarPorFoto(base64, foto.mimeType ?? 'image/jpeg', lat, lng));
     } catch (e) {
-      setErro(e instanceof Error ? e.message : String(e));
+      setErro(textoDeErro(e));
     } finally {
       setBuscando(false);
     }

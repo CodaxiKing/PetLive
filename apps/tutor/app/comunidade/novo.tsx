@@ -12,6 +12,7 @@ import { escolherFoto, type AtivoFoto } from '../../src/pets/CampoFoto';
 import { usePets } from '../../src/pets/PetsProvider';
 import { colors } from '../../src/theme/colors';
 import { fontFamily } from '../../src/theme/typography';
+import { textoDeErro } from '../../src/lib/erros';
 
 /** Novo post na comunidade: pet, foto e legenda. */
 export default function NovoPost() {
@@ -32,7 +33,7 @@ export default function NovoPost() {
       await publicar(user.id, pet.id, foto, legenda);
       router.back();
     } catch (e) {
-      const msg = e instanceof Error ? e.message : String(e);
+      const msg = textoDeErro(e);
       if (msg.includes('perfil público') && pet.tutor_id === user.id) {
         // Perfil desligado: pergunta antes de tornar o pet visível.
         Alert.alert(`Ligar o perfil público do ${pet.nome}?`, 'Quem tem conta no PetLive passa a ver a foto, a raça, a idade e a cidade do pet, e os posts. Você pode desligar quando quiser.', [

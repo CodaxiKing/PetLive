@@ -10,6 +10,7 @@ import { BotaoPrimario } from '../../src/components/BotaoPrimario';
 import { CabecalhoTela } from '../../src/components/CabecalhoTela';
 import { colors } from '../../src/theme/colors';
 import { typography } from '../../src/theme/typography';
+import { textoDeErro } from '../../src/lib/erros';
 const rotulos={estatuto:'Estatuto da organização',comprovante:'Comprovante da organização',responsavel:'Documento do responsável'};
 const nomes:Record<string,string>={pendente:'Em análise',aprovada:'Aprovada',recusada:'Recusada',suspensa:'Suspensa'};
 export default function CadastroDaOng(){
@@ -27,7 +28,7 @@ function Formulario({tutor,inicial}:{tutor:string;inicial?:string}){
  const aplicar=useCallback((c:CadastroOng)=>{setRegistro(c);setVersao(c.versao);setDados(dadosCadastroOng(c));setConcordo(false);},[]);
  const carregar=useCallback(async()=>{
   if(trava.current)return;const req=epoca.current;trava.current=true;setOcupado(true);setErro(null);setAviso(null);
-  try{const c=await obterCadastroOng(tutor,id);if(foco.current&&req===epoca.current)aplicar(c);}catch(e){if(foco.current&&req===epoca.current)setErro(e instanceof Error?e.message:'Tente novamente.');}
+  try{const c=await obterCadastroOng(tutor,id);if(foco.current&&req===epoca.current)aplicar(c);}catch(e){if(foco.current&&req===epoca.current)setErro(textoDeErro(e, 'Tente novamente.'));}
   finally{if(req===epoca.current){trava.current=false;setOcupado(false);}}
  },[tutor,id,aplicar]);
  useFocusEffect(useCallback(()=>{foco.current=true;if(inicial)void carregar();return()=>{foco.current=false;epoca.current++;trava.current=false;setOcupado(false);};},[carregar,inicial]));
@@ -36,7 +37,7 @@ function Formulario({tutor,inicial}:{tutor:string;inicial?:string}){
  async function salvar(enviar=false){
   if(trava.current)return;const req=epoca.current;trava.current=true;setOcupado(true);setErro(null);setAviso(null);
   try{const c=await salvarCadastroOng(tutor,id,versao,dados,enviar,concordo);if(foco.current&&req===epoca.current){aplicar(c);setAviso(c.status==='enviado'?'Cadastro enviado para análise. A publicação de pets depende da aprovação.':'Rascunho salvo. Anexe os documentos e envie para análise.');}}
-  catch(e){if(foco.current&&req===epoca.current)setErro(e instanceof Error?e.message:'Não foi possível salvar.');}
+  catch(e){if(foco.current&&req===epoca.current)setErro(textoDeErro(e, 'Não foi possível salvar.'));}
   finally{if(req===epoca.current){trava.current=false;setOcupado(false);}}
  }
  async function anexar(tipo:TipoDocumentoOng){
@@ -46,7 +47,7 @@ function Formulario({tutor,inicial}:{tutor:string;inicial?:string}){
    if(r.canceled)return;uri=r.assets[0].uri;if(!foco.current||req!==epoca.current)return;
    const caminho=await enviarDocumentoOng(tutor,id,tipo,r.assets[0]);
    if(foco.current&&req===epoca.current){setDados(d=>({...d,documentos:{...d.documentos,[tipo]:caminho}}));setConcordo(false);setAviso('Documento anexado. Salve o rascunho ou envie para análise para confirmar a inclusão.');}
-  }catch(e){if(foco.current&&req===epoca.current)setErro(e instanceof Error?e.message:'Não foi possível anexar.');}
+  }catch(e){if(foco.current&&req===epoca.current)setErro(textoDeErro(e, 'Não foi possível anexar.'));}
   finally{try{if(uri&&uri.startsWith(Paths.cache.uri))new File(uri).delete();}catch{/* Cache será limpo pelo sistema. */}if(req===epoca.current){trava.current=false;setOcupado(false);}}
  }
  function campo(k:Exclude<keyof DadosCadastroOng,'documentos'>,rotulo:string,max:number){return <View style={s.grupo}><Text style={s.rotulo}>{rotulo}</Text><TextInput accessibilityLabel={rotulo} value={dados[k]} editable={!ocupado&&!enviado} maxLength={max} autoCapitalize={k==='cnpj'?'characters':k==='email'?'none':'words'} keyboardType={k==='email'?'email-address':k==='telefone'?'phone-pad':'default'} autoCorrect={false} onChangeText={v=>alterar(k,v)} style={s.campo}/></View>;}

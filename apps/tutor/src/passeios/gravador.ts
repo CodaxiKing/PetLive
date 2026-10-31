@@ -1,6 +1,7 @@
 import { concluirPasseio, novoPasseio, pausarPasseio, registrarPonto, retomarPasseio, type AmostraGps, type Passeio } from './passeio';
 import type { RepositorioPasseios } from './repositorio';
 import { anotacaoPasseio, type FotosPasseio } from './resumo';
+import { textoDeErro } from '../lib/erros';
 
 export type GpsPasseio = { observar(ponto: (p: AmostraGps) => void | Promise<void>, erro: (mensagem: string) => void | Promise<void>): Promise<() => void | Promise<void>> };
 type Estado = { carregando: boolean; ocupado: boolean; erro: string | null; aviso: string | null; passeios: Passeio[] };
@@ -63,7 +64,7 @@ export class GravadorPasseio {
     try { await this.enfileirar(fn); return true; }
     catch (e) {
       await this.pararGps().catch(() => undefined);
-      this.emitir({ erro: e instanceof Error ? e.message : 'Não foi possível salvar o passeio.' });
+      this.emitir({ erro: textoDeErro(e, 'Não foi possível salvar o passeio.') });
       const p = this.atual();
       if (p?.status === 'gravando') {
         const pausado = pausarPasseio(p, this.agora());

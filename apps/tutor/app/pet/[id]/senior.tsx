@@ -11,6 +11,7 @@ import { ligarLembrete, rotinaSenior } from '../../../src/pets/senior'
 import { idadeEmAnos } from '../../../src/pets/types'
 import { colors } from '../../../src/theme/colors'
 import { fontFamily } from '../../../src/theme/typography'
+import { textoDeErro } from '../../../src/lib/erros'
 
 const ROTULOS: Record<string, { titulo: string; detalhe: (l: Lembrete) => string }> = {
   senior_consulta: { titulo: 'Consulta a cada 6 meses', detalhe: (l) => `Próxima: ${dataCurta(l.proxima_em)}` },
@@ -50,7 +51,7 @@ export default function TelaSenior() {
       await ligarLembrete(l.id, !l.ativo)
     } catch (e) {
       setRotina((atual) => atual?.map((x) => (x.id === l.id ? { ...x, ativo: l.ativo } : x)) ?? null)
-      Alert.alert('Não deu para mudar', e instanceof Error ? e.message : String(e))
+      Alert.alert('Não deu para mudar', textoDeErro(e))
     }
   }
 

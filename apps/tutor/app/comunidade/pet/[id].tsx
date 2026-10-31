@@ -10,6 +10,7 @@ import { abrirPerfil, configurarPerfil, idadeTexto, seguir, urlsDasFotos, type P
 import { mensagemDeErro } from '../../../src/lib/cacheOffline';
 import { colors } from '../../../src/theme/colors';
 import { fontFamily } from '../../../src/theme/typography';
+import { textoDeErro } from '../../../src/lib/erros';
 
 /** Perfil público do pet (protótipo PerfilPet, tela 63). Tudo privado até o titular ligar. */
 export default function PerfilPet() {
@@ -27,7 +28,7 @@ export default function PerfilPet() {
         setPerfil(p);
         if (p.disponivel) urlsDasFotos(p.posts).then(setFotos);
       },
-      (e: unknown) => setErro(mensagemDeErro(e instanceof Error ? e.message : String(e))),
+      (e: unknown) => setErro(mensagemDeErro(textoDeErro(e))),
     );
   }, [id]);
   useFocusEffect(carregar);
@@ -39,7 +40,7 @@ export default function PerfilPet() {
       const segue = await seguir(perfil.pet.id);
       setPerfil({ ...perfil, seguindo: segue, seguidores: perfil.seguidores + (segue ? 1 : -1) });
     } catch (e) {
-      Alert.alert('Não deu certo', e instanceof Error ? e.message : String(e));
+      Alert.alert('Não deu certo', textoDeErro(e));
     } finally {
       setOcupado(false);
     }
@@ -53,7 +54,7 @@ export default function PerfilPet() {
       setEditando(null);
       carregar();
     } catch (e) {
-      Alert.alert('Não deu certo', e instanceof Error ? e.message : String(e));
+      Alert.alert('Não deu certo', textoDeErro(e));
     } finally {
       setOcupado(false);
     }

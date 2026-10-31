@@ -18,6 +18,7 @@ import { urlFotoPerfil } from '../../src/perfil/foto';
 import { colors } from '../../src/theme/colors';
 import { shadow } from '../../src/theme/tokens';
 import { fontFamily } from '../../src/theme/typography';
+import { textoDeErro } from '../../src/lib/erros';
 
 function fimDeHoje(): number {
   const fim = new Date();
@@ -92,7 +93,7 @@ export default function Perfil() {
       const { error } = await supabase.auth.signOut();
       if (error) {
         registroPush.retomar();
-        Alert.alert('Não foi possível sair', error.message);
+        Alert.alert('Não foi possível sair', textoDeErro(error));
         return;
       }
       // Sem sessão o layout raiz volta para as boas-vindas.

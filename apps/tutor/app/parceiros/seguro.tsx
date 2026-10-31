@@ -8,6 +8,7 @@ import { mensagemDeErro } from '../../src/lib/cacheOffline';
 import { carregarParceiros, cotar, type Parceiro } from '../../src/parceiros/parceiros';
 import { colors } from '../../src/theme/colors';
 import { fontFamily } from '../../src/theme/typography';
+import { textoDeErro } from '../../src/lib/erros';
 
 /** Plano e seguro pet (protótipo Seguro, tela 61; BUSINESS.md 5.30). */
 export default function Seguro() {
@@ -17,7 +18,7 @@ export default function Seguro() {
 
   useFocusEffect(
     useCallback(() => {
-      carregarParceiros().then(setParceiros, (e: unknown) => setErro(mensagemDeErro(e instanceof Error ? e.message : String(e))));
+      carregarParceiros().then(setParceiros, (e: unknown) => setErro(mensagemDeErro(textoDeErro(e))));
     }, []),
   );
 
@@ -26,7 +27,7 @@ export default function Seguro() {
     try {
       await Linking.openURL(await cotar(p));
     } catch (e) {
-      Alert.alert('Não deu para abrir', mensagemDeErro(e instanceof Error ? e.message : String(e)));
+      Alert.alert('Não deu para abrir', mensagemDeErro(textoDeErro(e)));
     } finally {
       setAbrindo(null);
     }

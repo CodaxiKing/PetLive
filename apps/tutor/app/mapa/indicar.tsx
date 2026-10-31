@@ -21,6 +21,7 @@ import {
 import { useLocalizacao } from '../../src/mapa/useLocalizacao';
 import { colors } from '../../src/theme/colors';
 import { fontFamily } from '../../src/theme/typography';
+import { textoDeErro } from '../../src/lib/erros';
 
 const CATEGORIAS: { valor: CategoriaSugestao; rotulo: string }[] = [
   { valor: 'restaurante', rotulo: 'Restaurante' },
@@ -112,7 +113,7 @@ export default function IndicarLugar() {
       setUsarPosicao(false);
       minhasSugestoes().then(setMinhas, () => undefined);
     } catch (e) {
-      setErro(mensagemDeErro(e instanceof Error ? e.message : String(e)));
+      setErro(mensagemDeErro(textoDeErro(e)));
     } finally {
       setEnviando(false);
     }

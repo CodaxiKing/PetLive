@@ -27,6 +27,7 @@ import { dataParaExibicao } from '../../../src/saude/types'
 import { colors } from '../../../src/theme/colors'
 import { fontFamily, typography } from '../../../src/theme/typography'
 import { shadow, spacing } from '../../../src/theme/tokens'
+import { textoDeErro } from '../../../src/lib/erros'
 
 /**
  * Peso do pet (board: [APP-CLIENTE] "Registrar peso" e "Peso: gráfico e
@@ -77,7 +78,7 @@ export default function TelaPeso() {
       // Atualiza o peso_atual exibido no resumo e na ficha do pet.
       await recarregar()
     } catch (e) {
-      Alert.alert('Não foi possível salvar', e instanceof Error ? e.message : String(e))
+      Alert.alert('Não foi possível salvar', textoDeErro(e))
     } finally {
       setSalvando(false)
     }

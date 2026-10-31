@@ -11,6 +11,7 @@ import { aplicarCupom, cuponsParaMim, escolherCupom, textoCupom, useCupom, type 
 import { colors } from '../../src/theme/colors'
 import { shadow } from '../../src/theme/tokens'
 import { fontFamily } from '../../src/theme/typography'
+import { textoDeErro } from '../../src/lib/erros'
 
 const ate = (iso: string | null) => (iso ? ` · até ${new Date(iso).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' })}` : '')
 
@@ -38,7 +39,7 @@ export default function TelaCupom() {
       escolherCupom(lojaId, c)
       setCodigo(c.code)
     } catch (e) {
-      setErro(e instanceof Error ? e.message : String(e))
+      setErro(textoDeErro(e))
     } finally {
       setAplicando(false)
     }
@@ -139,7 +140,7 @@ export default function TelaCupom() {
         </View>
       </ScrollView>
       <View style={s.rodape}>
-        <BotaoPrimario titulo="Voltar ao pagamento" onPress={() => router.back()} />
+        <BotaoPrimario titulo="Voltar à solicitação" onPress={() => router.back()} />
       </View>
     </View>
   )

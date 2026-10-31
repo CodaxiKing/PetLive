@@ -8,6 +8,7 @@ import { HeroiOnda } from '../src/components/HeroiOnda';
 import { MINIMO_SENHA, temSenha, trocarSenha, validarTrocaSenha } from '../src/perfil/senha';
 import { colors } from '../src/theme/colors';
 import { fontFamily } from '../src/theme/typography';
+import { textoDeErro } from '../src/lib/erros';
 
 /**
  * Alterar senha (Editar perfil › Alterar senha): confirma a senha atual e
@@ -32,7 +33,7 @@ export default function AlterarSenha() {
       Alert.alert('Senha alterada', 'Use a senha nova na próxima vez que entrar.');
       router.back();
     } catch (e) {
-      setErro(e instanceof Error ? e.message : String(e));
+      setErro(textoDeErro(e));
     } finally {
       setSalvando(false);
     }

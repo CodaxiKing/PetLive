@@ -8,6 +8,7 @@ import { AtribuicaoGoogle } from './AtribuicaoGoogle';
 import { colors } from '../theme/colors';
 import { components, spacing } from '../theme/tokens';
 import { typography } from '../theme/typography';
+import { textoDeErro } from '../lib/erros';
 
 type Ponto = { lat: number; lng: number };
 export type LocalEvento = { modo: 'ponto'; ponto: Ponto } | { modo: 'google'; placeId: string };
@@ -49,7 +50,7 @@ export function SeletorLocalEvento({ inicial, onEscolher, onFechar }: {
         mapa.current?.irPara(encontrado, 16);
         setPonto(encontrado);
       }
-    } catch (e) { if (numero === consulta.current) setErro(e instanceof Error ? e.message : 'Não foi possível buscar o local.'); }
+    } catch (e) { if (numero === consulta.current) setErro(textoDeErro(e, 'Não foi possível buscar o local.')); }
     finally { if (numero === consulta.current) { setBuscando(false); ocupado.current = false; } }
   }
 

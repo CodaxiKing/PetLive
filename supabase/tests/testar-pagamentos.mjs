@@ -47,6 +47,7 @@ try {
   await assert.rejects(pedir('na_loja', 'PRIMEIRA10'), /já usou/);
 
   // Cobrança: preparar é idempotente enquanto o Pix está em aberto.
+  assert.equal(await um('select public.pagamento_precisa_cpf() as r'), true, 'primeiro Pix pede CPF');
   const prep = await um('select public.pagamento_preparar($1) as r', [pedido.id]);
   assert.equal(prep.pronto, false);
   assert.equal(prep.amount_cents, 17091);
@@ -58,6 +59,7 @@ try {
   await entrar(db, null, 'service_role');
   await um("select public.pagamento_registrar($1, 'pay_1', '000201pix', 'qr64', now() + interval '1 hour', 'cus_1') as r", [prep.id]);
   await entrar(db, tutor);
+  assert.equal(await um('select public.pagamento_precisa_cpf() as r'), false, 'cliente guardado: não pede de novo');
   assert.deepEqual(await um('select public.pagamento_preparar($1) as r', [pedido.id]), { id: prep.id, pronto: true });
   const aberto = await um('select public.pagamento_detalhe($1) as r', [prep.id]);
   assert.equal(aberto.status, 'pendente');

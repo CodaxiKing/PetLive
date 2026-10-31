@@ -1,14 +1,16 @@
 import { useCallback, useEffect, useState } from 'react'
-import { ActivityIndicator, Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native'
+import { Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native'
 import { router, useFocusEffect, useLocalSearchParams } from 'expo-router'
 import { Check } from 'phosphor-react-native/src/icons/Check'
 import { BotaoPrimario } from '../../../src/components/BotaoPrimario'
 import { HeroiOnda } from '../../../src/components/HeroiOnda'
+import { EstadoTela } from '../../../src/components/EstadoTela'
 import { ligarPara } from '../../../src/mapa/acoes'
 import { cancelarIda, CHEGADA_ENCERRADA, chegadaDetalhe, cheguei, haQuanto, textoChego, type Chegada } from '../../../src/sos/chegada'
 import { colors } from '../../../src/theme/colors'
 import { shadow } from '../../../src/theme/tokens'
 import { fontFamily } from '../../../src/theme/typography'
+import { textoDeErro } from '../../../src/lib/erros'
 
 type Passo = { titulo: string; em: string | null; dica?: string }
 
@@ -28,9 +30,14 @@ export default function AcompanharChegada() {
   const [c, setC] = useState<Chegada | null | 'indisponivel'>(null)
   const [agora, setAgora] = useState(() => Date.now())
   const [chegando, setChegando] = useState(false)
+  const [erroCarga, setErroCarga] = useState<string | null>(null)
 
   const carregar = useCallback(() => {
-    if (id) chegadaDetalhe(id).then((r) => setC(r ?? 'indisponivel'), () => undefined)
+    if (!id) return
+    chegadaDetalhe(id).then((r) => {
+      setErroCarga(null)
+      setC(r ?? 'indisponivel')
+    }, (e) => setErroCarga(textoDeErro(e)))
   }, [id])
   useFocusEffect(carregar)
 
@@ -49,7 +56,13 @@ export default function AcompanharChegada() {
     return (
       <View style={s.tela}>
         <HeroiOnda subtitulo="SOS" titulo="Estou a caminho" />
-        <View style={s.centro}>{c ? <Text style={s.texto}>Aviso não encontrado.</Text> : <ActivityIndicator color={colors.primaryDeep} />}</View>
+        {c ? (
+          <EstadoTela tipo="vazio" titulo="Aviso não encontrado" acao={{ titulo: 'Voltar ao SOS', onPress: () => router.replace('/sos') }} />
+        ) : erroCarga ? (
+          <EstadoTela tipo="erro" texto={erroCarga} onTentar={carregar} />
+        ) : (
+          <EstadoTela tipo="carregando" />
+        )}
       </View>
     )
   }
@@ -68,13 +81,13 @@ export default function AcompanharChegada() {
 
   function confirmarCheguei() {
     setChegando(true)
-    cheguei(chegada.id).then(carregar, (e: Error) => Alert.alert('Não deu para avisar', e.message)).finally(() => setChegando(false))
+    cheguei(chegada.id).then(carregar, (e: Error) => Alert.alert('Não deu para avisar', textoDeErro(e))).finally(() => setChegando(false))
   }
 
   function cancelar() {
     Alert.alert('Cancelar o aviso?', 'A clínica deixa de esperar vocês.', [
       { text: 'Voltar', style: 'cancel' },
-      { text: 'Cancelar aviso', style: 'destructive', onPress: () => cancelarIda(chegada.id).then(carregar, (e: Error) => Alert.alert('Não deu para cancelar', e.message)) },
+      { text: 'Cancelar aviso', style: 'destructive', onPress: () => cancelarIda(chegada.id).then(carregar, (e: Error) => Alert.alert('Não deu para cancelar', textoDeErro(e))) },
     ])
   }
 
