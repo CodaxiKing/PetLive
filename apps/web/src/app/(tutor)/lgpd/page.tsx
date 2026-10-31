@@ -41,7 +41,7 @@ const SECOES = [
   {
     titulo: "Como exercer fora do app",
     paragrafos: [
-      "Envie sua solicitação para dpo@petlive.app.br informando o que deseja (acesso, exclusão, portabilidade etc.), o e-mail da sua conta e, se possível, uma cópia de documento para conferência de identidade.",
+      "Envie sua solicitação para dpo@petlive.app informando o que deseja (acesso, exclusão, portabilidade etc.), o e-mail da sua conta e, se possível, uma cópia de documento para conferência de identidade.",
       "Responderemos confirmando o recebimento e concluído o pedido dentro dos prazos legais (em regra, 15 dias para resposta sobre a existência de tratamento e até 3 dias úteis para pedidos simplificados).",
     ],
   },

@@ -79,7 +79,7 @@ const SECOES = [
   {
     titulo: "Encarregado de dados (DPO)",
     paragrafos: [
-      "Canal oficial: dpo@petlive.app.br. Responderemos às suas solicitações nos prazos previstos em lei.",
+      "Canal oficial: dpo@petlive.app. Responderemos às suas solicitações nos prazos previstos em lei.",
     ],
   },
   {

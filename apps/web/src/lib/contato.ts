@@ -6,8 +6,8 @@
 const URL_SUPABASE = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
 const CHAVE_ANON = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "";
 
-export const EMAIL_CONTATO = "contato@petlive.app.br";
-export const EMAIL_PARCEIROS = "parceiros@petlive.app.br";
+export const EMAIL_CONTATO = "contato@petlive.app";
+export const EMAIL_PARCEIROS = "parceiros@petlive.app";
 
 export const contatoConfigurado = Boolean(URL_SUPABASE && CHAVE_ANON);
 

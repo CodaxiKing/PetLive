@@ -68,7 +68,7 @@ const SECOES = [
   {
     titulo: "Contato",
     paragrafos: [
-      "Dúvidas sobre estes termos: suporte@petlive.app.br. Consulte também a nossa Política de Privacidade e a página de Direitos na LGPD.",
+      "Dúvidas sobre estes termos: suporte@petlive.app. Consulte também a nossa Política de Privacidade e a página de Direitos na LGPD.",
     ],
   },
 ];
