@@ -60,3 +60,11 @@ Deno.test('webhook: token, pagamento recebido e outros eventos', () => {
     { tipo: 'pago', id: 'pay_1', valorCentavos: 17091, pagoEm: '2026-10-30' });
   assertEquals(p.lerWebhook(ok, { event: 'PAYMENT_CREATED', payment: { id: 'pay_1', value: 1 } }), { tipo: 'ignorado' });
 });
+
+Deno.test('saúde do provedor: só leitura', async () => {
+  const { buscar, chamadas } = falso({ 'GET /v3/customers': { corpo: { data: [] } } });
+  assertEquals(await asaas({ chave: 'k', buscar }).saude(), true);
+  assertEquals(chamadas[0].metodo, 'GET');
+  const fora = falso({ 'GET /v3/customers': { status: 503, corpo: {} } });
+  await assertRejects(() => asaas({ chave: 'k', buscar: fora.buscar }).saude(), ErroPagamento);
+});

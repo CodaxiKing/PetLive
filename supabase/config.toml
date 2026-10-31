@@ -442,3 +442,7 @@ enabled = true
 # O provedor de pagamento chama sem sessão; a função confere o token do webhook.
 [functions.pix-webhook]
 verify_jwt = false
+
+# Página de status (apps/status): pública e só de leitura.
+[functions.status]
+verify_jwt = false

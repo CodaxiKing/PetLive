@@ -12,6 +12,8 @@ export interface ProvedorPagamento {
   criarCliente(dados: { nome: string; cpf: string; referencia: string }): Promise<string>;
   criarPix(dados: { cliente: string; valorCentavos: number; descricao: string; referencia: string; venceEm: Date }): Promise<CobrancaPix>;
   cancelarAssinatura(id: string): Promise<void>;
+  /** O provedor responde (página de status). Só leitura, sem criar nada. */
+  saude(): Promise<boolean>;
   lerWebhook(cabecalhos: Headers, corpo: unknown): EventoPagamento;
 }
 
@@ -82,6 +84,10 @@ export function asaas(opcoes: { chave: string; url?: string; tokenWebhook?: stri
     },
     async cancelarAssinatura(id) {
       await chamar('DELETE', `/subscriptions/${encodeURIComponent(id)}`);
+    },
+    async saude() {
+      await chamar('GET', '/customers?limit=1');
+      return true;
     },
     lerWebhook(cabecalhos, corpo) {
       if (!opcoes.tokenWebhook || cabecalhos.get('asaas-access-token') !== opcoes.tokenWebhook) {

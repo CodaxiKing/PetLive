@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Status do PetLive</title>
+  <meta name="description" content="Veja se o app, o site, o login, as fotos e os pagamentos do PetLive estão funcionando agora.">
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --fundo: #F2F4F7;
+      --cartao: #FFFFFF;
+      --texto: #0E1726;
+      --apoio: #566070;
+      --linha: #E3E7EE;
+      --azul: #14506F;
+      --azul-claro: #E0F1FA;
+      --verde: #1F6B45;
+      --verde-claro: #D8F2E3;
+      --amarelo: #8A6414;
+      --amarelo-claro: #FFF0C9;
+      --vermelho: #C0392B;
+      --vermelho-claro: #FDE0E6;
+      --cinza-claro: #EDEFF3;
+      --sombra: 0 1px 2px rgba(14, 23, 38, .04), 0 8px 24px rgba(14, 23, 38, .06);
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --fundo: #0E141D;
+        --cartao: #161E29;
+        --texto: #EEF2F7;
+        --apoio: #9AA6B6;
+        --linha: #26313F;
+        --azul: #9AD6F8;
+        --azul-claro: #16324A;
+        --verde: #7BD9A4;
+        --verde-claro: #143325;
+        --amarelo: #F2C14E;
+        --amarelo-claro: #3A2F12;
+        --vermelho: #FF8A80;
+        --vermelho-claro: #3D1A1E;
+        --cinza-claro: #222C38;
+        --sombra: none;
+      }
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--fundo);
+      color: var(--texto);
+      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    main { max-width: 720px; margin: 0 auto; padding: 32px 16px 56px; }
+    header { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 28px; }
+    .marca { display: flex; align-items: center; gap: 10px; text-decoration: none; color: inherit; }
+    .marca img { width: 36px; height: 36px; border-radius: 10px; }
+    .marca span { font-weight: 800; font-size: 18px; letter-spacing: -.3px; }
+    .marca small { display: block; font-weight: 500; font-size: 12px; color: var(--apoio); letter-spacing: 0; }
+    .atualizar {
+      border: 0; border-radius: 999px; padding: 10px 16px; font: inherit; font-weight: 700; font-size: 14px;
+      background: var(--cartao); color: var(--texto); box-shadow: var(--sombra); cursor: pointer;
+    }
+    .atualizar:active { transform: scale(.98); }
+    .atualizar:disabled { opacity: .6; cursor: default; }
+
+    .geral { border-radius: 28px; padding: 28px; margin-bottom: 16px; }
+    .geral h1 { margin: 0 0 6px; font-size: clamp(26px, 6vw, 34px); letter-spacing: -1px; line-height: 1.1; }
+    .geral p { margin: 0; font-size: 15px; line-height: 1.5; }
+    .geral[data-estado="operante"] { background: var(--verde-claro); color: var(--verde); }
+    .geral[data-estado="lenta"], .geral[data-estado="parcial"] { background: var(--amarelo-claro); color: var(--amarelo); }
+    .geral[data-estado="fora"] { background: var(--vermelho-claro); color: var(--vermelho); }
+    .geral[data-estado="manutencao"], .geral[data-estado="verificando"] { background: var(--azul-claro); color: var(--azul); }
+    .previsao { display: inline-block; margin-top: 12px; font-weight: 700; font-size: 13px; padding: 6px 12px; border-radius: 999px; background: rgba(255,255,255,.55); }
+    @media (prefers-color-scheme: dark) { .previsao { background: rgba(0,0,0,.25); } }
+
+    .lista { background: var(--cartao); border-radius: 26px; box-shadow: var(--sombra); overflow: hidden; }
+    .item { display: flex; align-items: center; gap: 14px; padding: 16px 18px; }
+    .item + .item { border-top: 1px solid var(--linha); }
+    .ponto { width: 12px; height: 12px; border-radius: 50%; flex: none; }
+    .ponto[data-estado="operante"] { background: var(--verde); }
+    .ponto[data-estado="lenta"] { background: var(--amarelo); }
+    .ponto[data-estado="fora"] { background: var(--vermelho); }
+    .ponto[data-estado="nao_configurado"], .ponto[data-estado="verificando"] { background: var(--apoio); opacity: .5; }
+    .nome { flex: 1; min-width: 0; font-weight: 700; font-size: 15px; }
+    .nome small { display: block; font-weight: 500; font-size: 13px; color: var(--apoio); margin-top: 2px; }
+    .rotulo { font-weight: 700; font-size: 13px; white-space: nowrap; }
+    .rotulo[data-estado="operante"] { color: var(--verde); }
+    .rotulo[data-estado="lenta"] { color: var(--amarelo); }
+    .rotulo[data-estado="fora"] { color: var(--vermelho); }
+    .rotulo[data-estado="nao_configurado"], .rotulo[data-estado="verificando"] { color: var(--apoio); }
+
+    h2 { font-size: 15px; margin: 28px 4px 10px; }
+    .historico { background: var(--cartao); border-radius: 22px; box-shadow: var(--sombra); padding: 16px 18px; }
+    .barras { display: grid; grid-template-columns: repeat(30, 1fr); gap: 3px; height: 34px; align-items: end; }
+    .barra { height: 100%; border-radius: 3px; background: var(--cinza-claro); }
+    .barra[data-estado="operante"] { background: var(--verde); }
+    .barra[data-estado="lenta"], .barra[data-estado="parcial"] { background: var(--amarelo); }
+    .barra[data-estado="fora"] { background: var(--vermelho); }
+    .barra[data-estado="manutencao"] { background: var(--azul); }
+    .legenda { display: flex; justify-content: space-between; margin-top: 8px; font-size: 12px; color: var(--apoio); }
+    footer { margin-top: 28px; font-size: 13px; color: var(--apoio); line-height: 1.6; text-align: center; }
+    footer a { color: var(--azul); font-weight: 700; }
+    .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <a class="marca" id="marca" href="#">
+        <img src="logo.png" alt="">
+        <span>PetLive<small>Status da operação</small></span>
+      </a>
+      <button class="atualizar" id="atualizar" type="button">Atualizar</button>
+    </header>
+
+    <section class="geral" id="geral" data-estado="verificando" aria-live="polite">
+      <h1 id="geral-titulo">Verificando…</h1>
+      <p id="geral-texto">Conferindo cada parte do PetLive agora.</p>
+    </section>
+
+    <section class="lista" id="lista" aria-label="Partes do serviço"></section>
+
+    <h2>Últimas verificações neste navegador</h2>
+    <section class="historico" aria-label="Histórico das últimas verificações">
+      <div class="barras" id="barras"></div>
+      <div class="legenda"><span id="legenda-inicio">—</span><span>agora</span></div>
+    </section>
+
+    <footer>
+      <div id="verificado">Ainda não verificado.</div>
+      <div>A página confere sozinha a cada minuto. Emergência com o pet? O SOS do app funciona sem internet.</div>
+    </footer>
+  </main>
+
+  <script src="config.js"></script>
+  <script src="status.js"></script>
+</body>
+</html>

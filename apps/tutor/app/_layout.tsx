@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import '../src/passeios/segundoPlano';
-import { Stack } from 'expo-router';
+import { router, Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { ActivityIndicator, AppState, StyleSheet, View } from 'react-native';
 import * as Sentry from '@sentry/react-native';
@@ -21,6 +21,8 @@ import { colors } from '../src/theme/colors';
 import { useConfigApp } from '../src/lib/configApp';
 import { registrarAberturaDiaria } from '../src/lib/eventos';
 import { TelaAtualizar } from '../src/components/TelaAtualizar';
+import { TelaManutencao } from '../src/components/TelaManutencao';
+import { useOperacao } from '../src/lib/operacao';
 import { verificarEAplicarAtualizacao } from '../src/lib/atualizacao';
 import { RetomarAtalho } from '../src/atalhos/RetomarAtalho';
 import { ObservadorNotificacoes } from '../src/notificacoes/ObservadorNotificacoes';
@@ -45,6 +47,10 @@ function RaizProtegida() {
   const { session, carregando } = useAuth();
   const { precisaAtualizar } = useConfigApp();
   const logado = Boolean(session);
+  // API fora do ar ou manutenção planejada: tela de manutenção por cima do app.
+  const operacao = useOperacao();
+  // O tutor pode sair da tela de manutenção para o SOS, que funciona sem o servidor (por 10 min).
+  const [sosLiberado, setSosLiberado] = useState(false);
 
   // Tutores ativos (métrica da Fase 1): uma abertura por dia, também ao voltar ao app.
   useEffect(() => {
@@ -70,6 +76,7 @@ function RaizProtegida() {
   }
 
   return (
+    <View style={estilos.raiz}>
     <PetsProvider key={session?.user.id ?? 'sem-conta'}>
       <VacinasProvider>
         <LembretesProvider>
@@ -173,6 +180,22 @@ function RaizProtegida() {
         </LembretesProvider>
       </VacinasProvider>
     </PetsProvider>
+    {operacao.tipo === 'manutencao' && !sosLiberado ? (
+      <TelaManutencao
+        planejada={operacao.planejada}
+        detalhes={operacao.detalhes}
+        onAbrirSos={
+          logado
+            ? () => {
+                setSosLiberado(true);
+                setTimeout(() => setSosLiberado(false), 10 * 60_000);
+                router.push('/sos/primeiros-socorros');
+              }
+            : undefined
+        }
+      />
+    ) : null}
+    </View>
   );
 }
 
@@ -217,6 +240,7 @@ function RootLayout() {
 export default Sentry.wrap(RootLayout);
 
 const estilos = StyleSheet.create({
+  raiz: { flex: 1 },
   carregando: {
     flex: 1,
     alignItems: 'center',
