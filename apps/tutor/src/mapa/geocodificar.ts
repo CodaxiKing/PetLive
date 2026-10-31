@@ -34,7 +34,7 @@ export async function acharEndereco(texto: string, perto?: Ponto | null): Promis
   }
   try {
     const resposta = await fetch(`https://nominatim.openstreetmap.org/search?${params}`, {
-      headers: { 'User-Agent': 'PetLive/1.0 (contato@petlive.app.br)' },
+      headers: { 'User-Agent': 'PetLive/1.0 (contato@petlive.app)' },
     });
     if (!resposta.ok) return null;
     const [primeiro] = (await resposta.json()) as { lat: string; lon: string }[];
